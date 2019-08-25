@@ -1,0 +1,141 @@
+
+
+@import 'variables';
+
+@mixin tooltip-frames($direction) {
+
+    // Touch devices.
+    @media (hover: none) {
+        animation: tooltip-#{$direction} 1s ease-in both;
+
+        @keyframes tooltip-#{$direction} {
+            0% {opacity: 0;}
+            50% {opacity: 100;}
+            100% {opacity: 0;}
+        }
+    }
+
+    @media (hover) {
+        animation: tooltip-#{$direction} 1s ease-out forwards;
+
+        @keyframes tooltip-#{$direction} {
+            0% {
+                opacity: 0;
+            }
+
+            75% {
+                opacity: 0;
+                @if $direction == 'bottom' {
+                    transform: translateY(-$spacer / 2);
+                } @else if $direction == 'top' {
+                    transform: translateY($spacer / 2);
+                } @else if $direction == 'left' {
+                    transform: translateX($spacer / 2);
+                } @else if $direction == 'right' {
+                    transform: translateX(-$spacer / 2);
+                }
+            }
+
+            100% {
+                opacity: 100;
+
+                @if $direction == 'bottom' {
+                    transform: translateY($spacer / 2);
+                } @else if $direction == 'top' {
+                    transform: translateY(-$spacer / 2);
+                } @else if $direction == 'left' {
+                    transform: translateX(-$spacer / 2);
+                } @else if $direction == 'right' {
+                    transform: translateX($spacer / 2);
+                }
+            }
+        }
+    }
+}
+
+// Based on https://chrisbracco.com/a-simple-css-tooltip/
+.tooltip {
+    cursor: pointer;
+    position: relative;
+    text-transform: capitalize;
+    white-space: nowrap;
+}
+
+.tooltip::after {
+    opacity: 0;
+    pointer-events: none;
+    position: absolute;
+}
+
+// Base styles for the tooltip's content area.
+.tooltip::after,
+[data-tooltip]::after {
+    background: var(--grey-100);
+    border-radius: $spacer / 4;
+    box-shadow: 0 0 8px var(--grey-400);
+    color: var(--primary-base);
+    content: attr(data-tooltip);
+    font-family: 'Rajdhani';
+    font-size: var(--text-small);
+    font-weight: 600;
+    padding: var(--spacer-05) var(--spacer);
+    z-index: 10000000000;
+}
+
+// Directions.
+
+// Top (default).
+[data-tooltip]::after,
+.tooltip::after,
+.tooltip-top::after {
+    bottom: 100%;
+    left: 50%;
+}
+
+
+// Left.
+.tooltip-left::after {
+    bottom: 50%;
+    left: auto;
+    right: 75%;
+}
+
+
+// Bottom.
+.tooltip-bottom::after {
+    bottom: auto;
+    left: 50%;
+    top: 100%;
+}
+
+
+// Right.
+.tooltip-right::after {
+    bottom: 50%;
+    left: 75%;
+}
+
+
+
+// Vertically center tooltip content for left/right tooltips.
+.tooltip-left::after,
+.tooltip-right::after {
+    margin-bottom: -$spacer * 2;
+    margin-left: 0;
+}
+
+.tooltip-top:hover::after {
+    @include tooltip-frames('top');
+}
+
+.tooltip-left:hover::after {
+    @include tooltip-frames('left');
+}
+
+.tooltip-bottom:hover::after {
+    @include tooltip-frames('bottom');
+}
+
+.tooltip-right:hover::after {
+    @include tooltip-frames('right');
+}

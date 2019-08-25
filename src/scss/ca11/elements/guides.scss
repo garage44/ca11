@@ -1,0 +1,25 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+.tip {
+    color: var(--grey-300);
+    font-family: 'Rajdhani';
+    font-size: var(--text-small);
+    font-style: italic;
+    font-weight: 600;
+    line-height: 1.5rem;
+    margin-bottom: $spacer * 2;
+    width: 100%;
+
+    svg {
+        @include icon-size($spacer * 2);
+    }
+
+    a {
+        color: var(--grey-300);
+
+        &:hover {
+            color: var(--primary-base);
+        }
+    }
+}

@@ -1,0 +1,58 @@
+// All grid divisions are defined n, instead of being scattered
+// across component files. This makes it easier to comprehend
+// the whole layout.
+
+.c-main {
+    display: grid;
+    grid-gap: $spacer-05;
+    grid-template-areas:
+        'main-status main-status main-status'
+        'main-menu main-content media-controls';
+    grid-template-columns: $space-4 1fr $space-4; // menu content
+    grid-template-rows: #{$space-4} 1fr; // status height remains static.
+
+    .c-media-controls {
+        grid-area: media-controls;
+    }
+
+    &__menu {
+        grid-area: main-menu;
+    }
+
+    &__status {
+        grid-area: main-status;
+    }
+
+    &__content {
+        display: grid;
+        grid-area: main-content;
+        grid-gap: $spacer-05;
+        grid-template-areas:
+            'main-content-header'
+            'main-content-base';
+        grid-template-rows: #{$space-4} fit-content(100%);
+        justify-items: start;
+
+        .header {
+            grid-area: main-content-header;
+        }
+
+        &.c-calls {
+            .media-preview {
+                grid-area: main-content-header;
+            }
+
+            .media-view {
+                grid-area: main-content-base;
+            }
+        }
+    }
+}
+
+
+.c-session {
+    grid-column-end: 4;
+    grid-column-start: 1;
+    grid-row-end: main-content;
+    grid-row-start: main-status;
+}

@@ -1,0 +1,79 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+html.chrome.android {
+    .c-network {
+        .svg-container {
+            height: calc(100vh - #{$space-4 * 2 + $spacer * 1.5} - #{$android-toolbar-height});
+
+            svg {
+                height: calc(100vh - #{$space-4 * 2 + $spacer * 1.5} - #{$android-toolbar-height});
+            }
+        }
+    }
+}
+
+
+.c-network {
+    // margin-top: $spacer-05;
+    width: 100%;
+
+    .svg-container {
+        // background: linear-gradient(to right, $white-color, var(--grey-100));
+        background: linear-gradient(to right, $white-color, var(--grey-50));
+        height: calc(100vh - #{$space-4 * 2 + $spacer * 1.5});
+        position: relative;
+        width: 100%;
+
+        svg {
+            height: calc(100vh - #{$space-4 * 2 + $spacer * 1.5});
+            width: 100%;
+            z-index: 10000;
+
+            .node-id {
+                fill: var(--grey-200);
+                font-size: 0.7rem;
+            }
+        }
+
+
+    }
+
+    label {
+        display: block;
+    }
+
+    line {
+        stroke: var(--grey-200);
+    }
+
+    .node {
+        fill: var(--grey-400);
+        stroke: var(--grey-400);
+        stroke-width: 5;
+
+        &:hover {
+            cursor: move;
+        }
+
+        &.selected {
+            stroke-width: 15;
+            transition: stroke-width 0.25s ease-in-out;
+        }
+
+        &.own {
+            fill: $white-color;
+            stroke: $green-color;
+        }
+
+        &.headless {
+            fill: $red-color;
+            stroke: $red-color;
+        }
+    }
+
+    .nodes circle {
+        // stroke: #fff;
+        stroke-width: 1.5px;
+    }
+}

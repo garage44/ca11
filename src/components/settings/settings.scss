@@ -1,0 +1,52 @@
+@import 'ca11/lib/variables';
+
+.c-settings {
+
+    .soundmeter {
+        border: 1px solid var(--grey-50);
+    }
+
+    .tip {
+        display: none;
+    }
+
+    // The switch is disabled, but use more opacity to indicate
+    // that it's value is set from the browser.
+    .webrtc-switch {
+        input[type='checkbox'][disabled] {
+            &:checked {
+                + label {
+                    opacity: 0.9;
+
+                    &::before {
+                        background: $green-color;
+                    }
+                }
+            }
+
+            &:not(:checked) {
+                + label {
+                    opacity: 0.9;
+
+                    &::before {
+                        background: $red-color;
+                    }
+                }
+            }
+        }
+    }
+
+    .network-public-key {
+        textarea {
+            font-size: 0.6rem !important;
+        }
+    }
+
+    .sip-disclaimer {
+        color: var(--grey-300);
+        font-family: 'Rajdhani';
+        font-size: var(--text-small);
+        max-width: $breakpoint-mobile;
+        padding: $spacer 0;
+    }
+}

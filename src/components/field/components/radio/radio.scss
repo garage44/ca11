@@ -1,0 +1,52 @@
+@import 'ca11/lib/variables';
+
+.c-radio {
+    input {
+        border: 0;
+        height: 0;
+        overflow: hidden;
+        position: absolute !important;
+        width: 0;
+
+        &[disabled='disabled'] + label {
+            background: var(--grey-100);
+            color: var(--grey-200);
+
+            &:hover {
+                cursor: not-allowed;
+            }
+        }
+
+        &:checked + label {
+            background: var(--primary-base);
+            color: $white-color;
+        }
+    }
+
+    label {
+        background: var(--grey-50);
+        color: var(--grey-300);
+        display: inline-block;
+        font-family: 'Rajdhani';
+        font-size: 0.9rem;
+        font-weight: 600;
+        height: $spacer * 3;
+        line-height: $spacer * 3;
+        text-align: center;
+        text-shadow: none;
+        transition: all 0.2s ease-in-out;
+        width: $spacer * 6;
+
+        &:first-of-type {
+            border-right: 0;
+        }
+
+        &:last-of-type {
+            border-left: 0;
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}

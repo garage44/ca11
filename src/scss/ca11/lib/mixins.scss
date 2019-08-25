@@ -1,0 +1,24 @@
+@mixin glow($name, $color) {
+    @keyframes #{$name} {
+        0% {
+            fill: $color;
+            filter: drop-shadow(0 0 1px $color);
+        }
+
+        75% {
+            fill: $color;
+            filter: drop-shadow(0 0 3px $color);
+        }
+
+        100% {
+            fill: $color;
+            filter: drop-shadow(0 0 1px $color);
+        }
+    }
+}
+
+@mixin icon-size($size) {
+    height: $size;
+    width: $size;
+}
+

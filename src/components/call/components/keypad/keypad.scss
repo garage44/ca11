@@ -1,0 +1,142 @@
+@import 'ca11/lib/variables';
+@import 'ca11/lib/mixins';
+
+.c-keypad {
+    $self: &;
+
+    .content__header {
+        flex: $space-4 0 0;
+        margin-bottom: $spacer-05;
+    }
+
+    &__input {
+
+        align-items: center;
+        color: var(--primary-base);
+        display: flex;
+        position: relative;
+        width: 100%;
+
+        input {
+            background: none;
+            border: 0;
+            border-bottom: 1px solid var(--grey-100);
+            color: var(--primary-base);
+            font-size: var(--text-huge);
+            font-weight: 600;
+            height: $space-4 * 1.5;
+            outline: none;
+            overflow: hidden;
+            margin-bottom: $spacer * 2;
+            text-align: center;
+            text-overflow: ellipsis;
+            width: 100%;
+
+            &[disabled='disabled'] {
+                &::placeholder {
+                    color: var(--grey-200);
+                }
+            }
+
+            &::placeholder {
+                color: var(--grey-200);
+            }
+        }
+
+        #{$self}__correct {
+            color: var(--primary-base);
+            position: absolute;
+            right: $spacer-05;
+            user-select: none;
+
+            &.disabled {
+                opacity: 0.5;
+
+                &:hover {
+                    cursor: not-allowed;
+                }
+            }
+
+            svg {
+                height: 1.8rem;
+                width: 1.8rem;
+            }
+
+            &:hover {
+                cursor: pointer;
+                svg {fill: var(--primary-base);}
+            }
+        }
+
+        + .number-input-match {
+            color: var(--grey-400);
+            height: $spacer * 5;
+            line-height: $spacer * 5;
+        }
+    }
+
+
+    &__keys {
+        align-content: center;
+        display: flex;
+        flex-direction: column;
+        // flex-wrap: wrap;
+        // height: 100%;
+        justify-content: space-between;
+        max-width: $breakpoint-desktop;
+        width: 100%;
+        padding: $spacer * 2;
+
+        &.disabled {
+            opacity: 0.5;
+
+            .key-row {
+                .key {
+                    &:hover {
+                        background: $white-color;
+                        color: var(--primary-base);
+                        cursor: not-allowed;
+                    }
+                }
+            }
+        }
+
+        #{$self}__key-row {
+            display: flex;
+            flex: 1;
+            justify-content: center;
+            // Don't allow the mobile virtual keyboard to distort the
+            // key layout when the input is active.
+            min-height: 80px;
+            width: 100%;
+
+            #{$self}__key {
+                border: 0;
+                break-inside: avoid;
+                color: var(--grey-200);
+                font-family: 'Rajdhani';
+                font-size: 1.7rem;
+                font-weight: 600;
+                height: 100%;
+                outline: none;
+
+                width: 100%;
+
+                &:hover {
+                    color: var(--primary-base);
+                    cursor: pointer;
+                }
+
+                &.function {
+                    color: var(--grey-300);
+                    font-size: 1.5rem;
+                }
+
+                .sub {
+                    color: var(--grey-300);
+                    font-size: 0.9rem;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,75 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+.field {
+    margin-bottom: var(--gutter);
+
+    &__label {
+        align-items: center;
+        color: var(--grey-300);
+        display: flex;
+        font-family: 'Rajdhani';
+        font-size: $text-base;
+        font-weight: 600;
+        text-transform: capitalize;
+    }
+
+    // Default behaviour is to capitalize
+    // placeholders, unless the lc class
+    // is added to the field.
+    &:not(.lc) {
+        input::placeholder {
+            text-transform: capitalize;
+        }
+    }
+
+    &__element {
+        border: 0;
+        border-bottom: 1px solid var(--grey-100);
+        color: var(--grey-300);
+        font-size: var(--text-small);
+        padding: $spacer 0;
+
+        &::placeholder {
+            color: var(--grey-200);
+        }
+
+        &:focus,
+        &:active {
+            border: 0;
+            border-bottom: 1px solid var(--primary-base);
+            // box-shadow: 0 0 var(--border) var(--primary-base);
+        }
+    }
+
+
+    &__help {
+        color: var(--grey-300);
+        font-size: var(--text-small);
+        font-style: italic;
+        padding-top: var(--spacer-05);
+
+        &::first-letter {
+            text-transform: uppercase;
+        }
+    }
+
+    &__row {
+        display: flex;
+    }
+}
+
+
+// Obfiscate text-input during test runs and screenshot
+// generation. No need to give usernames away.
+html.test {
+    input {
+        // We really, really don't want anything else here.
+        color: transparent !important;  // sass-lint:disable-line no-important
+        text-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+
+        &::placeholder {
+            text-shadow: none;
+        }
+    }
+}

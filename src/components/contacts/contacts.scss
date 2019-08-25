@@ -1,0 +1,65 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+.c-contacts {
+    $self: &;
+    // align-items: center;
+    display: flex;
+    flex-direction: column;
+
+    .context__entry-icon {
+        &.available svg {fill: $green-color;}
+        &.busy svg {fill: $red-color;}
+        &.not-set svg {fill: var(--grey-300)}
+
+        &.failed {
+            background: $red-color;
+
+            svg {
+                fill: $white-color;
+            }
+        }
+    }
+
+
+    .item-list {
+
+        .item {
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+
+    }
+}
+
+.endpoint__leds {
+    display: flex;
+    padding-left: var(--spacer-025);
+    width: 100%;
+
+    @at-root .endpoint__led {
+        @include icon-size($spacer * 1.5);
+        background: var(--grey-100);
+        border-radius: 50%;
+        margin-right: $spacer / 1.5;
+
+        &.available {background: $green-color;}
+        &.busy {background: $red-color;}
+        &.not-set {background: var(--grey-100);}
+
+        &.failed {
+            background: var(--grey-50);
+            border: 1px solid $red-color;
+        }
+
+        &.ringing {
+            animation: ringing-svg 0.75s ease-in-out infinite;
+
+            path[pid='0'] {fill: $red-color;}
+            path[pid='1'] {fill: $white-color;}
+        }
+    }
+}
+

@@ -1,0 +1,14 @@
+.c-textarea {
+    display: flex;
+    flex-direction: column;
+
+    &__label {
+        width: 100%;
+    }
+
+    &__element {
+        border: 1px solid var(--grey-200);
+        padding: var(--spacer);
+        width: 100%;
+    }
+}

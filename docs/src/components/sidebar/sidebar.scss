@@ -1,0 +1,209 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+.c-sidebar {
+    background: var(--grey-50);
+    display: flex;
+    flex: 0 0 250px;
+    flex-direction: column;
+    font-family: 'Rajdhani';
+    position: fixed;
+    width: var(--sidebar-width);
+
+    .header {
+        align-items: center;
+        background: var(--primary-base);
+        border-bottom: var(--spacer-05) solid var(--primary-base);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: $spacer-05;
+        position: relative;
+
+        &__version {
+            color: var(--grey-50);
+            font-size: 0.6rem;
+            font-weight: 600;
+        }
+
+        &__logo {
+            height: $space-4;
+            margin-top: $spacer-05;
+            position: relative;
+            text-align: center;
+            width: 100%;
+
+            svg {
+                display: none;
+                fill: $white-color;
+                height: 50px;
+            }
+        }
+
+        &__title {
+            color: $white-color;
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -2px;
+            margin-top: -40px;
+            position: absolute;
+            text-transform: uppercase;
+            top: 45px;
+            transform: rotate(90deg);
+            width: 100%;
+            z-index: 10000;
+        }
+
+        &__description {
+            color: var(--grey-100);
+            display: none;
+            font-family: 'Rajdhani';
+            font-size: var(--text-small);
+            font-weight: bold;
+            height: $spacer * 2;
+            text-align: center;
+            text-transform: uppercase;
+            width: 100%;
+            z-index: 100;
+        }
+
+        @media screen and (min-width: $breakpoint-mobile) {
+            &__description {
+                display: block;
+            }
+
+            &__logo {
+                height: auto;
+
+                svg {
+                    display: inline;
+                }
+            }
+
+            &__title {
+                font-size: 2rem;
+                margin-top: 0;
+                position: inherit;
+                transform: rotate(0deg);
+            }
+
+            &__version {
+                bottom: 0;
+                position: absolute;
+                right: $spacer;
+                top: $spacer;
+            }
+        }
+    }
+
+    .navigation {
+        font-family: 'Rajdhani';
+
+        .l-accordion {
+            position: relative;
+        }
+
+        input {
+            display: none;
+
+            &:checked ~ .accordion {
+                max-height: 100vh;
+            }
+
+            // Flip icon.
+            &:checked + label::after {
+
+            }
+        }
+
+        .accordion {
+            max-height: 0;
+            overflow: hidden;
+            position: relative;
+            transition: max-height 0.5s ease-in-out;
+        }
+
+        &__button,
+        &__header {
+            align-items: center;
+            display: flex;
+            height: $spacer * 5;
+            justify-content: center;
+            padding: var(--spacer);
+            width: 100%;
+
+            span {
+                display: none;
+            }
+
+            svg {
+                @include icon-size(var(--icon-small));
+                fill: var(--grey-300);
+            }
+        }
+
+        &__header {
+            background: var(--grey-400);
+            border-bottom: var(--border) solid var(--grey-300);
+            border-top: 1px solid var(--grey-500);
+            color: var(--grey-200);
+            font-weight: 600;
+            padding: var(--spacer);
+            text-transform: uppercase;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        &__button {
+            background: var(--grey-50);
+            border-bottom: var(--border) solid transparent;
+            border-top: var(--border) solid transparent;
+            color: var(--grey-300);
+            font-weight: 500;
+
+            &.active,
+            &:hover {
+                background: $white-color;
+                border-bottom: var(--border) solid var(--primary-base);
+                color: var(--primary-base);
+                cursor: pointer;
+
+                svg {
+                    fill: var(--primary-base);
+                }
+            }
+        }
+
+        @media screen and (min-width: $breakpoint-mobile) {
+            &__button,
+            &__header {
+                justify-content: flex-start;
+
+                svg {
+                    margin-right: $spacer;
+                }
+            }
+
+            span {
+                display: block;
+            }
+        }
+    }
+}
+
+
+.slogan-leave-to,
+.slogan-enter {
+    opacity: 0;
+}
+
+.slogan-leave,
+.slogan-enter-to {
+    opacity: 1;
+}
+
+.slogan-enter-active {
+    transition: opacity 1s;
+}

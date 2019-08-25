@@ -1,0 +1,163 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+.c-session {
+    $self: &;
+    align-items: stretch;
+    background: var(--grey-0);
+    border-radius: 22px;
+    box-shadow: 0 0 16px var(--grey-400);
+    display: flex;
+    max-height: 500px;
+    flex-direction: column;
+    font-family: 'Rajdhani';
+    justify-content: stretch;
+    justify-items: stretch;
+    margin: 0 auto;
+    max-width: 400px;
+    padding: $spacer * 3;
+    width: 100%;
+
+    .resources {
+        color: var(--grey-300);
+        margin-top: var(--gutter);
+        position: absolute;
+        right: $spacer;
+        top: 0;
+        text-align: center;
+
+        svg {
+            color: var(--primary-base);
+            margin-top: -2px;
+            padding: 0 ($spacer / 6);
+            width: $spacer * 2.5;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+    }
+
+    .buttons button {
+        margin: 0;
+        width: 100%;
+        border-radius: 22px;
+        max-width: 150px;
+    }
+
+    header {
+        text-align: center;
+        width: 100%;
+
+        a:hover {
+            cursor: help;
+        }
+
+    }
+
+    &__logo {
+        @include icon-size($spacer * 7);
+        fill: var(--primary-base);
+    }
+
+    &__slogan {
+        color: var(--primary-base);
+        font-size: var(--text-base);
+        font-weight: 500;
+        height: $spacer * 4;
+        letter-spacing: 0;
+        margin-bottom: var(--gutter);
+        margin-top: var(--spacer);
+        text-transform: uppercase;
+    }
+
+    .sessions {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: center;
+        padding: var(--gutter) 0;
+
+        .new-session-text {
+            color: var(--grey-300);
+            margin-bottom: $spacer;
+            margin-top: $spacer * 2;
+        }
+
+        .new-session {
+            margin-top: var(--spacer);
+
+            svg {
+                margin-right: $spacer;
+            }
+
+            &:hover {
+                color: var(--primary-base);
+                cursor: pointer;
+            }
+        }
+
+        .session {
+            align-items: center;
+            background: var(--grey-50);
+            border-bottom: 2px solid var(--grey-100);
+            border-top: 2px solid transparent;
+            display: flex;
+            width: 100%;
+
+            svg {
+                color: var(--grey-300);
+                margin: 0 $spacer;
+                transition: color 0.2s ease-in;
+            }
+
+            .icon-session svg {
+                @include icon-size($spacer * 3);
+            }
+
+            .icon-remove svg {
+                @include icon-size($spacer * 2.5);
+
+                &:hover {
+                    color: var(--primary-base);
+                }
+            }
+
+            &:hover {
+                border-bottom: 2px solid var(--primary-base);
+                cursor: pointer;
+
+                .icon-session svg {
+                    color: var(--primary-base);
+                }
+            }
+
+            &__description {
+                color: var(--grey-300);
+                font-weight: 600;
+                height: $spacer * 5;
+                line-height: $spacer * 5;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                width: 100%;
+            }
+        }
+    }
+
+
+}
+
+.slogan-leave-to,
+.slogan-enter {
+    opacity: 0;
+}
+
+.slogan-leave,
+.slogan-enter-to {
+    opacity: 1;
+}
+
+.slogan-enter-active {
+    transition: opacity 1s;
+}

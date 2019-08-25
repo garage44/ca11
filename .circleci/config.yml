@@ -1,0 +1,27 @@
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:latest-browsers
+    working_directory: ~/ca11
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore node modules cache
+          keys:
+            - node_modules-v1-{{ checksum "yarn.lock" }}
+      - run:
+          name: Install node modules
+          command: yarn
+      - save_cache:
+          name: Save node modules cache
+          key: node_modules-v1-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/ca11/node_modules/
+      - run: npm run commitlint-ci
+      - run: npm run eslint
+      - run: npm run stylelint
+      - run: cp .circleci/.ca11rc.ci .ca11rc
+      - run: npm run test-unit
+      - run: npm run test-browser

@@ -1,0 +1,13 @@
+.tabs-actions {
+    padding: 0;
+    padding-left: var(--gutter);
+}
+
+.tab {
+    display: none;
+    padding: var(--gutter);
+
+    &.active {
+        display: block;
+    }
+}

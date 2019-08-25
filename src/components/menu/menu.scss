@@ -1,0 +1,7 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+.c-menu {
+    background: var(--grey-500);
+    z-index: 100;
+}

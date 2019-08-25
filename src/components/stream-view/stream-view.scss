@@ -1,0 +1,112 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+
+html.chrome.android {
+    &:not(.standalone) {
+        .c-stream-view {
+            // height: calc(100vh - #{($spacer * 13) + $android-toolbar-height});
+        }
+    }
+}
+
+.c-stream-view {
+    align-items: stretch;
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    position: relative;
+    width: 100%;
+
+    &.slots-preview {
+        .slot {
+            // height: 100%;
+            // width: 100%;
+        }
+    }
+
+    &.slots-call {
+        .slot {
+            height: 50%;
+            width: 100%;
+        }
+
+        @media screen and (min-width: $breakpoint-mobile) {
+            .slot {
+                height: 50%;
+                width: 100%;
+            }
+        }
+
+        @media screen and (min-width: $breakpoint-desktop) {
+            .slot {
+                height: 100%;
+                width: 50%;
+            }
+        }
+    }
+
+    &.slots-conference {
+        .slot {
+            height: calc(100% / 3);
+            width: 50%;
+        }
+
+        @media screen and (min-width: $breakpoint-mobile) {
+            .slot {
+                height: calc(100% / 3);
+                width: 50%;
+            }
+        }
+
+        @media screen and (min-width: $breakpoint-desktop) {
+            .slot {
+                height: 50%;
+                width: calc(100% / 3);
+            }
+        }
+    }
+
+
+    .c-stream {
+        background: var(--grey-500);
+        display: flex;
+        flex: 1;
+        height: 100%;
+        transition: all 0.25s;
+
+        &.placeholder {
+            background: none;
+
+            svg {
+                fill: var(--grey-100);
+            }
+        }
+
+        video {
+            background: none;
+        }
+    }
+}
+
+.tr-stream-enter {
+    opacity: 0;
+}
+
+.tr-stream-enter-to {
+    opacity: 1;
+}
+
+.tr-stream-leave {
+    opacity: 1;
+}
+
+.tr-stream-leave-to {
+    opacity: 0;
+}
+
+.tr-stream-enter-active {
+    transition: opacity 0.5s;
+}

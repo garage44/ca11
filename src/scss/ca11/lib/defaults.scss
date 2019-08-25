@@ -1,0 +1,184 @@
+/**
+* Generic styles. Keep this file small.
+*/
+html,
+body {
+    background: palette('grey', 500);
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    width: 100%;
+}
+
+// Animations get in the way while running browser tests
+// and while taking documentation screenshots, so we
+// forcefully suppress them when a testrunner is using
+// the application.
+html {
+    font-family: 'Roboto';
+    font-size: var(--text-base);
+    touch-action: manipulation;
+
+    // Styling adapted for Puppeteer screenshots/tests.
+    &.test {
+        * {
+            transition: none !important; // sass-lint:disable-line no-important
+        }
+    }
+}
+
+a {
+    color: var(--primary-base);
+    text-decoration: none;
+}
+
+b {
+    font-family: 'Rajdhani';
+}
+
+em {
+    font-family: 'Rajdhani';
+    font-weight: 600;
+}
+
+ol {
+    padding: 0;
+}
+
+component {
+    display: block;
+}
+
+button {
+    background: none;
+    border: 0;
+    color: var(--grey-200);
+    padding: 0;
+    user-select: none;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &[disabled] {
+        svg {fill: var(--grey-200);}
+
+        &:hover {
+            cursor: not-allowed;
+            svg {fill: var(--grey-100);}
+        }
+    }
+}
+
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+// Editable inputs are styled like regular text nodes,
+// unless they are not read-only.
+.editable {
+    border: 1px solid transparent;
+
+    &:not([readonly]) {
+        border: 1px dashed var(--grey-100);
+    }
+}
+
+
+// A generic link class that can be used on non-html elements
+// that function like a link.
+.link {
+    &:hover {
+        color: var(--primary-base);
+        cursor: pointer;
+    }
+}
+
+video {
+    display: none;
+}
+
+* {
+    box-sizing: border-box;
+    outline: none;
+}
+
+::selection {
+    background: var(--primary-base);
+    color: $white-color;
+}
+
+.hide {display: none;}
+
+.scrollable {
+    overflow-y: scroll;
+
+    &--dark {
+        overflow-y: auto;
+
+        &::-webkit-scrollbar {
+            background: var(--grey-500);
+            width: $spacer-05;
+        }
+    }
+}
+
+::-webkit-scrollbar {
+    width: $spacer;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-base);
+}
+
+::selection {
+    background: var(--primary-base);
+    color: var(--grey-50);
+}
+
+// Small helper classes to apply proper capitalizing without polluting translations.
+.lc {text-transform: lowercase;}
+.uc {text-transform: uppercase;}
+.ca {text-transform: ca;}
+
+.cf {
+    display: inline-block;
+    &::first-letter {text-transform: uppercase;}
+}
+
+html body .hidden {
+    display: none;
+}
+
+input {
+    color: var(--grey-300);
+    padding: var(--spacer-05) var(--spacer-025);
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: 'Rajdhani';
+}
+
+.content-wide {
+    margin: 0 auto;
+    max-height: 500px;
+    max-width: 700px;
+    width: 100%;
+
+    .main {
+        background: #fff;
+        padding: 15px;
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+    }
+}

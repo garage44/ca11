@@ -1,0 +1,62 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+.c-checkbox {
+    $self: &;
+
+    &__row {
+        align-items: center;
+        display: flex;
+    }
+
+    &__switch {
+        height: $spacer * 3;
+        margin-right: var(--spacer);
+        position: relative;
+        user-select: none;
+        width: $spacer * 5;
+
+        #{$self}__input {
+            height: 0;
+            opacity: 0;
+            width: 0;
+
+            &:focus + #{$self}__slider {
+                box-shadow: 0 0 1px var(--primary-base);
+            }
+
+            &:checked + #{$self}__slider {
+                background: var(--primary-base);
+
+                &::before {
+                    transform: translateX($spacer * 2);
+                }
+            }
+
+        }
+
+        #{$self}__slider {
+            background-color: var(--grey-100);
+            border-radius: 10px;
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: 0.4s;
+
+            &::before {
+                background: $white-color;
+                border-radius: 50%;
+                bottom: $spacer / 2;
+                content: '';
+                height: $spacer * 2;
+                left: $spacer / 2;
+                position: absolute;
+                transition: 0.4s;
+                width: $spacer * 2;
+            }
+        }
+    }
+}

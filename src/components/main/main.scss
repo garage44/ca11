@@ -1,0 +1,52 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+.c-main {
+    height: 100vh;
+    overflow: hidden;
+    width: 100vw;
+    background-size: cover !important;
+    // background-repeat: no-repeat center center fixed;
+    // background-position: center center;
+    background-blend-mode: darken;
+    align-items: center;
+    transition: background 3s;
+
+    &.splash-0 {
+        background: url('/img/splash-0.jpg');
+    }
+
+    &.splash-1 {
+        background: url('/img/splash-1.jpg');
+    }
+
+    &.splash-2 {
+        background: url('/img/splash-2.jpg');
+    }
+
+    &.splash-3 {
+        background: url('/img/splash-3.jpg');
+    }
+    &.splash-4 {
+        background: url('/img/splash-4.jpg');
+    }
+    &.splash-5 {
+        background: url('/img/splash-5.jpg');
+    }
+
+    &__content {
+        .main {
+            padding-right: 0;
+            width: 100%;
+        }
+    }
+}
+
+// 100vh on Android doesn't take the toolbar in account.
+html.chrome.android {
+    &:not(.standalone) {
+        .c-main {
+            height: calc(100vh - #{$android-toolbar-height});
+        }
+    }
+}

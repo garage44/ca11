@@ -1,0 +1,223 @@
+/**
+* Generic layout for an item list.
+*/
+.items {
+    align-items: stretch;
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: scroll;
+    padding: $spacer;
+
+    &__empty {
+        align-items: center;
+        color: var(--grey-200);
+        display: flex;
+        flex-direction: column;
+        margin-top: $spacer * 5;
+        width: 100%;
+
+        &-icon {
+            @include icon-size($spacer * 8);
+        }
+
+        &-text {
+            font-family: 'Rajdhani';
+            font-size: 2rem;
+            font-weight: 500;
+            margin-top: $spacer;
+            text-align: center;
+        }
+    }
+
+    @media screen and (min-width: $breakpoint-mobile) {
+        .item {
+            width: 50%;
+        }
+    }
+
+    @media screen and (min-width: $breakpoint-desktop) {
+        .item {
+            width: calc(100% / 3);
+        }
+    }
+}
+
+
+.item {
+    $item: &;
+    // border-left: $spacer solid transparent;
+    display: flex;
+    flex-direction: column;
+    margin-top: $spacer;
+    padding: $spacer-05  $spacer;
+    width: 100%;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &.selected {
+        #{$item}__context {
+            display: flex;
+        }
+
+        #{$item}__icon {
+            border: $spacer / 4 solid var(--primary-base);
+            fill: var(--primary-base);
+        }
+
+        #{$item}__text:hover,
+        &:hover {
+            cursor: default;
+        }
+    }
+
+    &__header {
+        display: flex;
+        flex-direction: row;
+        // Required to have ellipsis text overflow on .name.
+        text-overflow: ellipsis;
+        width: 100%;
+
+        #{$item}__icon {
+            @include icon-size($icon-large);
+            background: var(--grey-50);
+            border: $spacer / 4 solid $white-color;
+            border-radius: 50%;
+            fill: var(--grey-200);
+            // Force a static width.
+            flex: 0 0 $icon-large;
+            margin-right: $spacer;
+            padding: $spacer-05;
+        }
+
+        #{$item}__text .editable,
+        #{$item}__text {
+            color: var(--grey-300);
+            display: inline-block;
+            font-family: 'Rajdhani';
+            font-size: $text-large;
+            font-weight: 600;
+            justify-content: space-between;
+            overflow: hidden;
+            padding: 0;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 100%;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            // Smaller sub-title that adds extra context for the item.
+            #{$item}__description {
+                color: var(--grey-200);
+                font-size: $text-small;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        // Options for this item.
+        #{$item}__options {
+            align-items: center;
+            display: flex;
+
+            #{$item}__option {
+                align-items: center;
+                color: var(--grey-200);
+                display: flex;
+                justify-content: center;
+
+                transition: color ease-in-out 0.1s;
+                user-select: none;
+
+                &.active {
+                    svg {
+                        color: var(--primary-base);
+                    }
+                }
+
+                svg {
+                    @include icon-size($icon-small);
+                }
+            }
+        }
+    }
+
+    // Extra context to show when item is selected.
+    &__context {
+        color: var(--grey-200);
+        display: none;
+        flex-direction: column;
+        font-size: text-scale('lg');
+        width: 100%;
+
+        // Textarea field that 'labels' the item.
+        #{$item}__label {
+            background: var(--grey-50);
+            border: 1px solid var(--grey-100);
+            color: var(--primary-base);
+            font-family: 'Rajdhani';
+            font-weight: 600;
+            height: 1rem;
+            padding: $spacer;
+            resize: none;
+            text-transform: uppercase;
+            width: 100%;
+        }
+
+        // No context items.
+        @at-root .context__empty {
+            color: var(--grey-300);
+            font-family: 'Rajdhani';
+            font-weight: 600;
+            padding: $spacer;
+            padding-left: 0;
+            width: 100%;
+        }
+
+        // A selected item context entry.
+        @at-root .context__entry {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            margin-top: $spacer / 2;
+            padding-left: 0;
+            width: 100%;
+
+            @at-root .context__entry-icon {
+                color: var(--grey-300);
+                display: flex;
+                // flex: 0 0 $spacer * 6;
+                justify-content: center;
+                text-align: center;
+                width: $icon-large;
+
+                svg {
+                    @include icon-size($icon-normal);
+                }
+            }
+
+            @at-root .context__entry-input {
+                color: var(--grey-200);
+                flex: 1 1 auto;
+                font-family: 'Rajdhani';
+                font-size: $text-base;
+                font-weight: 600;
+                width: 0;
+            }
+
+            @at-root .context__entry-options {
+                align-items: center;
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-end;
+
+                svg {
+                    @include icon-size($icon-small);
+                }
+            }
+        }
+    }
+}

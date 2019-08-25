@@ -1,0 +1,27 @@
+@import 'ca11/lib/variables';
+
+.c-text {
+    display: flex;
+    flex-direction: column;
+
+
+    &:focus-within {
+        &__label {
+            background: #f00;
+        }
+    }
+
+    &__label {
+        width: 100%;
+    }
+
+    &__element {
+        background: none;
+        width: 100%;
+        padding: $spacer * 1.5 0;
+    }
+
+    &__help {
+        margin-top: var(--spacer-05);
+    }
+}

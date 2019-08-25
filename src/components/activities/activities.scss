@@ -1,0 +1,23 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+.c-activities {
+    .activity-label {
+        background: var(--grey-50);
+        border: 1px solid var(--grey-100);
+        border-radius: $spacer * 4;
+        color: var(--primary-base);
+        flex: 1 1 auto;
+        font-family: 'Rajdhani';
+        font-weight: 600;
+        padding: $spacer / 4;
+        text-align: center;
+        text-overflow: ellipsis;
+        text-transform: uppercase;
+        width: 100%;
+
+        &::placeholder {
+            color: var(--primary-base);
+        }
+    }
+}

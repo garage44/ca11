@@ -1,0 +1,151 @@
+{
+  "name": "@garage11/ca11",
+  "productName": "CA11",
+  "version": "0.8.0",
+  "description": "Free, Secure Communication suite",
+  "engines": {
+    "node": ">=11.0.0"
+  },
+  "scripts": {
+    "commitlint-ci": "commitlint-circle",
+    "eslint": "eslint '{src/**/*.js,gulpfile.js,gulp/**/*.js,tests/**/*.js}'",
+    "link": "npm link @garage11/ca11-theme-default;npm link @garage11/vue-compiler-gulp; npm link @garage11/vue-i18n",
+    "lint": "npm run eslint;npm run stylelint",
+    "release-alpha": "standard-version --prerelease alpha",
+    "release-beta": "standard-version --prerelease beta",
+    "release-production": "standard-version",
+    "stylelint": "stylelint 'src/**/*.scss'",
+    "test-browser": "gulp test-browser",
+    "test-release-alpha": "standard-version --dry-run --prerelease alpha",
+    "test-release-beta": "standard-version --dry-run --prerelease beta",
+    "test-release-production": "standard-version --dry-run",
+    "test-unit": "gulp test-unit",
+    "test": "npm run test-unit;npm run test-lint"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "**/*.js": "eslint",
+    "**/*.scss": "stylelint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/garage11/ca11.git"
+  },
+  "keywords": [
+    "communication",
+    "decentralized",
+    "electron",
+    "p2p",
+    "sip",
+    "softphone",
+    "vue",
+    "webrtc"
+  ],
+  "author": "Jeroen van Veen",
+  "main": "main.js",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/garage11/ca11/issues"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^7.2.1",
+    "@commitlint/config-conventional": "^7.1.2",
+    "@garage11/commitlint-circle": "git+ssh://git@github.com:garage11/commitlint-circle#master",
+    "@garage11/vue-compiler-gulp": "git+ssh://git@github.com:garage11/vue-compiler-gulp#master",
+    "ansi-colors": "^3.2.1",
+    "archiver": "2.x.x",
+    "browserify": "16.x.x",
+    "connect": "3.x.x",
+    "connect-mount": "1.x.x",
+    "cz-conventional-changelog": "^2.1.0",
+    "del": "2.x.x",
+    "electron-packager": "12.x.x",
+    "electron-reload": "1.x.x",
+    "eslint": "4.x.x",
+    "eslint-plugin-sort-class-members": "1.x.x",
+    "glob": "7.x.x",
+    "gulp": "4.x.x",
+    "gulp-add-src": "1.x.x",
+    "gulp-clean-css": "3.x.x",
+    "gulp-cli": "^2.0.1",
+    "gulp-concat": "2.x.x",
+    "gulp-envify": "1.x.x",
+    "gulp-eslint": "^5.0.0",
+    "gulp-filter": "5.x.x",
+    "gulp-flatten": "0.x.x",
+    "gulp-if-else": "1.x.x",
+    "gulp-imagemin": "3.x.x",
+    "gulp-insert": "0.x.x",
+    "gulp-livereload": "3.x.x",
+    "gulp-notify": "3.x.x",
+    "gulp-rename": "1.x.x",
+    "gulp-sass": "3.x.x",
+    "gulp-sentry-release-manager": "0.x.x",
+    "gulp-size": "2.x.x",
+    "gulp-sourcemaps": "2.x.x",
+    "gulp-stylelint": "^8.0.0",
+    "gulp-svgo": "1.x.x",
+    "gulp-tape": "^1.x.x",
+    "gulp-template": "5.x.x",
+    "gulp-uglify": "3.x.x",
+    "gulplog": "^1.0.0",
+    "husky": "^1.1.4",
+    "inquirer": "^6.2.0",
+    "lint-staged": "^8.0.4",
+    "mkdirp": "0.x.x",
+    "puppeteer": "1.x.x",
+    "rc": "1.x.x",
+    "serve-static": "1.x.x",
+    "standard-version": "^4.4.0",
+    "stylelint": "^9.8.0",
+    "stylelint-order": "^1.0.0",
+    "stylelint-scss": "^3.4.0",
+    "tap-spec": "^5.x.x",
+    "tape": "4.x.x",
+    "tape-catch": "^1.x.x",
+    "through2": "^3.0.0",
+    "tildify": "^1.2.0",
+    "uglify-es": "3.x.x",
+    "v-runtime-template": "1.5.2",
+    "vinyl-buffer": "1.x.x",
+    "vinyl-source-stream": "2.x.x",
+    "vue-highlightjs": "1.x.x",
+    "vue-router": "3.x.x",
+    "vue-svgicon": "3.x.x",
+    "watchify": "3.x.x",
+    "yargs": "7.x.x"
+  },
+  "dependencies": {
+    "@garage11/ca11-theme-default": "git++ssh://git@github.com:garage11/ca11-theme-default#master",
+    "@garage11/vue-i18n": "git++ssh://git@github.com:garage11/vue-i18n#master",
+    "d3-array": "^2.0.3",
+    "d3-force": "^2.0.0",
+    "electron": "3.0.x",
+    "eventemitter3": "2.x.x",
+    "graphlib": "^2.1.5",
+    "module-alias": "2.x.x",
+    "raven-js": "3.x.x",
+    "roboto-fontface": "0.8.x",
+    "sdp-interop-sl": "https://github.com/StarLeafAPIs/sdp-interop-sl",
+    "shortid": "2.x.x",
+    "sip.js": "^0.11.6",
+    "v-click-outside": "^2.0.1",
+    "vue": "2.5.x",
+    "vue-autosize": "git+ssh://git@github.com:garage11/vue-autosize#master",
+    "vue-stash": "2.0.1-beta",
+    "vuelidate": "0.7.x"
+  },
+  "_moduleAliases": {
+    "ca11": "./src/js"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}

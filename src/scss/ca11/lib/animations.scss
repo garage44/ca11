@@ -1,0 +1,13 @@
+@import 'variables';
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes ringing-svg {
+    0% {filter: drop-shadow(0);}
+    50% {filter: drop-shadow(0 0 $spacer / 4 $red-color);}
+    100% {filter: drop-shadow(0);}
+}

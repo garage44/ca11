@@ -1,0 +1,75 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+.c-transfer {
+    $self: &;
+    align-items: center;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    margin: 0 auto;
+    margin-top: var(--gutter);
+    max-width: 400px;
+
+    &__options {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+
+        #{$self}__button {
+            margin: var(--spacer) 0;
+
+            &.disabled {
+                opacity: 0.5;
+
+                &:hover {
+                    background: none;
+                    color: $white-color;
+                    cursor: not-allowed;
+                }
+            }
+        }
+    }
+
+    &__text {
+        color: var(--primary-base);
+        font-family: 'Rajdhani';
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    &__instruction {
+        background: var(--grey-50);
+        border: var(--border) solid var(--grey-100);
+        color: var(--grey-200);
+        font-size: 0.9rem;
+        font-weight: 500;
+        list-style: none;
+        margin: var(--gutter);
+        padding: var(--gutter);
+        text-align: left;
+        width: 100%;
+
+        li {
+            font-family: 'Rajdhani';
+            font-weight: 500;
+
+            &.action {
+                color: var(--grey-300);
+            }
+
+            &::first-letter {
+                text-transform: uppercase;
+            }
+        }
+
+        ol {
+
+        }
+    }
+
+    .transfer-keypad {
+        text-align: center;
+    }
+}

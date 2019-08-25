@@ -1,0 +1,58 @@
+@import 'variables';
+
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Roboto Light'), local('Roboto-Light'), url('#{$font-path}/Roboto-Light.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Roboto'), local('Roboto-Regular'), url('#{$font-path}/Roboto-Regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    src: local('Roboto Medium'), local('Roboto-Medium'), url('#{$font-path}/Roboto-Medium.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Roboto';
+    font-style: bold;
+    font-weight: 600;
+    src: local('Roboto Bold'), local('Roboto-Bold'), url('#{$font-path}/Roboto-Bold.woff2') format('woff2');
+}
+
+
+@font-face {
+    font-family: 'Rajdhani';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Roboto Light'), local('Rajdhani-Light'), url('#{$font-path}/Rajdhani-Light.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Rajdhani';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Rajdhani'), local('Rajdhani-Regular'), url('#{$font-path}/Rajdhani-Regular.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Rajdhani';
+    font-style: normal;
+    font-weight: 500;
+    src: local('Rajdhani Medium'), local('Rajdhani-Medium'), url('#{$font-path}/Rajdhani-Medium.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Rajdhani';
+    font-style: bold;
+    font-weight: 600;
+    src: local('Rajdhani Bold'), local('Rajdhani-Bold'), url('#{$font-path}/Rajdhani-Bold.woff2') format('woff2');
+}

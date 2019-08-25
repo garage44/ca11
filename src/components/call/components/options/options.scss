@@ -1,0 +1,43 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+.c-options {
+    &__option {
+        background: var(--grey-50);
+        border-left: 0;
+        border-right: 0;
+        color: var(--grey-300);
+        height: $space-4;
+        padding: $spacer * 1.5 0;
+        text-align: center;
+        user-select: none;
+        width: 100%;
+
+        &:not([disabled]):hover {
+            color: var(--primary-base);
+            cursor: pointer;
+        }
+
+        &.active {
+            color: var(--primary-base);
+        }
+
+        &[disabled] {
+            background: none;
+            cursor: not-allowed;
+
+            &:hover {
+                svg {
+                    fill: var(--grey-200);
+                }
+            }
+        }
+
+        p {
+            color: var(--grey-50);
+            font-size: 0.9rem;
+            font-weight: 500;
+            user-select: none;
+        }
+    }
+}

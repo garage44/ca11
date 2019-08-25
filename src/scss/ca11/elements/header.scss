@@ -1,0 +1,122 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+
+.header {
+    $self: &;
+
+    align-items: center;
+    background: var(--grey-300);
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    display: flex;
+    height: 60px;
+    min-height: 60px;
+    justify-content: flex-start;
+    position: relative;
+    padding: 0 15px;
+
+    width: 100%;
+
+    &__text {
+        align-items: center;
+        bottom: 0;
+        color: var(--grey-200);
+        display: flex;
+        font-family: 'Rajdhani';
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-right: var(--spacer);
+        position: absolute;
+        right: var(--spacer);
+        text-transform: uppercase;
+    }
+
+    &__actions {
+        align-items: center;
+        // Border in the same style as the scroll trackbar.
+        color: var(--primary-base);
+        display: flex;
+        flex-direction: row-reverse;
+
+
+        #{$self}__action {
+            padding-right: var(--gutter12);
+
+            &.active {
+                svg {
+                    fill: var(--primary-base);
+                }
+            }
+
+            svg {
+                @include icon-size($spacer * 3);
+            }
+        }
+    }
+
+    &__filters {
+        align-items: center;
+        display: flex;
+        flex: 1;
+        height: 100%;
+
+        #{$self}__filter {
+            align-items: center;
+            color: var(--grey-200);
+            display: flex;
+            filter: drop-shadow(0 0 1px var(--grey-200));
+            justify-content: center;
+            // Override .field's margin-bottom.
+            margin: 0;
+            margin-left: $spacer;
+            padding: 0;
+            user-select: none;
+
+            &.active {
+                color: var(--grey-200);
+
+                svg {
+                    border: $spacer / 4 solid var(--primary-base);
+                    fill: var(--primary-base);
+                }
+            }
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            svg {
+                @include icon-size($spacer * 4.5);
+                background: var(--grey-50);
+                border: $spacer / 4 solid $white-color;
+                border-radius: 50%;
+                padding: $spacer-05;
+            }
+        }
+    }
+
+    &__tabs {
+        display: flex;
+        justify-content: flex-start;
+        width: 100%;
+
+        li {
+            align-items: center;
+            border-left: 0;
+            border-right: 0;
+            color: var(--grey-200);
+            display: flex;
+            justify-content: center;
+            width: $space-4;
+
+            &.disabled {
+                opacity: 0.3;
+
+                &:hover {
+                    cursor: not-allowed;
+                }
+            }
+        }
+    }
+}
