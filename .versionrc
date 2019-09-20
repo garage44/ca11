@@ -6,8 +6,8 @@
         {"type": "chore", "hidden": true},
         {"type": "docs", "hidden": true},
         {"type": "style", "hidden": true},
-        {"type": "ref", "section": "Refactoring"},
-        {"type": "perf", "section": "Performance"},
-        {"type": "test", "hidden": true}
+        {"type": "perf", "section": "QA"},
+        {"type": "refactor", "section": "QA"},
+        {"type": "test", "section": "QA"}
     ]
 }
