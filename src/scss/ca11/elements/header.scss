@@ -6,15 +6,15 @@
     $self: &;
 
     align-items: center;
-    background: var(--grey-300);
+    background: palette('bg', 'default');
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     display: flex;
     height: 60px;
-    min-height: 60px;
     justify-content: flex-start;
-    position: relative;
+    min-height: 60px;
     padding: 0 15px;
+    position: relative;
 
     width: 100%;
 
@@ -63,7 +63,7 @@
 
         #{$self}__filter {
             align-items: center;
-            color: var(--grey-200);
+            color: palette('grey', 400);
             display: flex;
             filter: drop-shadow(0 0 1px var(--grey-200));
             justify-content: center;
@@ -73,6 +73,7 @@
             padding: 0;
             user-select: none;
 
+            &:hover,
             &.active {
                 color: var(--grey-200);
 
@@ -88,9 +89,10 @@
 
             svg {
                 @include icon-size($spacer * 4.5);
-                background: var(--grey-50);
-                border: $spacer / 4 solid $white-color;
+                background: palette('grey', 400);
+                border: $spacer / 4 solid palette('grey', 200);
                 border-radius: 50%;
+                fill: palette('grey', 100);
                 padding: $spacer-05;
             }
         }
@@ -105,7 +107,7 @@
             align-items: center;
             border-left: 0;
             border-right: 0;
-            color: var(--grey-200);
+            color: palette('grey', 50);
             display: flex;
             justify-content: center;
             width: $space-4;

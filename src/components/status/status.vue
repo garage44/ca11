@@ -6,10 +6,5 @@
             class="c-status__context"
             :call="callActive"
         />
-        <StatusMenu
-            v-else
-            class="c-status__context"
-            key="menu"
-        />
     </transition>
 </component>

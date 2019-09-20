@@ -28,7 +28,7 @@
             width: 100%;
 
             &::placeholder {
-                color: var(--grey-300);
+                color: palette('grey', 50);
                 font-style: italic;
             }
 

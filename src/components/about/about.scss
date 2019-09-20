@@ -37,7 +37,6 @@
         width: 100%;
 
         .support-item {
-            background: var(--grey-50);
             border-bottom: var(--border) solid transparent;
             display: flex;
             margin: var(--gutter12);
@@ -61,7 +60,7 @@
             }
 
             &__title {
-                color: var(--grey-400);
+                color: palette('grey', 50);
                 font-family: 'Rajdhani';
                 font-size: var(--text-large);
                 font-weight: 600;
@@ -69,7 +68,7 @@
             }
 
             &__description {
-                color: var(--grey-300);
+                color: palette('grey', 50);
             }
 
             &:hover {

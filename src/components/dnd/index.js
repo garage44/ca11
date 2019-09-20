@@ -7,9 +7,13 @@ module.exports = (app, actions) => {
         render: templates.dnd.r,
         staticRenderFns: templates.dnd.s,
         store: {
+            description: 'caller.description',
             dnd: 'app.dnd',
         },
         watch: {
+            'description.protocol': function(protocol) {
+                app.setState({calls: {description: {protocol}}}, {persist: true})
+            },
             dnd: function(dnd) {
                 app.setState({app: {dnd}}, {persist: true})
             },

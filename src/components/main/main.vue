@@ -12,5 +12,5 @@
     <!-- Dynamic component from layer name -->
     <AudioBg/>
     <Main v-if="wizard.completed && session.authenticated" :is="layer" class="c-main__content"/>
-    <MediaControls v-if="wizard.completed && session.authenticated" :call="callActive"/>
+    <MediaControls v-if="wizard.completed && session.authenticated" :call="callActive" class="c-main__media-controls"/>
 </component>

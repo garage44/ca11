@@ -2,15 +2,14 @@
 @import 'ca11/lib/variables';
 
 .c-main {
+    align-items: center;
+    background-blend-mode: darken;
+    background-size: cover !important;
     height: 100vh;
     overflow: hidden;
     width: 100vw;
-    background-size: cover !important;
     // background-repeat: no-repeat center center fixed;
     // background-position: center center;
-    background-blend-mode: darken;
-    align-items: center;
-    transition: background 3s;
 
     &.splash-0 {
         background: url('/img/splash-0.jpg');
@@ -27,11 +26,17 @@
     &.splash-3 {
         background: url('/img/splash-3.jpg');
     }
+
     &.splash-4 {
         background: url('/img/splash-4.jpg');
     }
+
     &.splash-5 {
         background: url('/img/splash-5.jpg');
+    }
+
+    &.splash-6 {
+        background: url('/img/splash-6.jpg');
     }
 
     &__content {

@@ -11,14 +11,12 @@
     "eslint": "eslint '{src/**/*.js,gulpfile.js,gulp/**/*.js,tests/**/*.js}'",
     "link": "npm link @garage11/ca11-theme-default;npm link @garage11/vue-compiler-gulp; npm link @garage11/vue-i18n",
     "lint": "npm run eslint;npm run stylelint",
-    "release-alpha": "standard-version --prerelease alpha",
     "release-beta": "standard-version --prerelease beta",
-    "release-production": "standard-version",
+    "release": "standard-version",
     "stylelint": "stylelint 'src/**/*.scss'",
     "test-browser": "gulp test-browser",
-    "test-release-alpha": "standard-version --dry-run --prerelease alpha",
     "test-release-beta": "standard-version --dry-run --prerelease beta",
-    "test-release-production": "standard-version --dry-run",
+    "test-release": "standard-version --dry-run",
     "test-unit": "gulp test-unit",
     "test": "npm run test-unit;npm run test-lint"
   },
@@ -46,7 +44,7 @@
     "vue",
     "webrtc"
   ],
-  "author": "Jeroen van Veen",
+  "author": "Garage 11",
   "main": "main.js",
   "license": "MIT",
   "bugs": {
@@ -55,8 +53,9 @@
   "devDependencies": {
     "@commitlint/cli": "^7.2.1",
     "@commitlint/config-conventional": "^7.1.2",
+    "@garage11/ca11-skeleton": "git+ssh://git@github.com:garage11/ca11-skeleton#master",
     "@garage11/commitlint-circle": "git+ssh://git@github.com:garage11/commitlint-circle#master",
-    "@garage11/vue-compiler-gulp": "git+ssh://git@github.com:garage11/vue-compiler-gulp#master",
+    "@garage11/vue-compiler-gulp": "1.1.0",
     "ansi-colors": "^3.2.1",
     "archiver": "2.x.x",
     "browserify": "16.x.x",
@@ -101,7 +100,7 @@
     "puppeteer": "1.x.x",
     "rc": "1.x.x",
     "serve-static": "1.x.x",
-    "standard-version": "^4.4.0",
+    "standard-version": "7.x.x",
     "stylelint": "^9.8.0",
     "stylelint-order": "^1.0.0",
     "stylelint-scss": "^3.4.0",
@@ -121,8 +120,9 @@
     "yargs": "7.x.x"
   },
   "dependencies": {
-    "@garage11/ca11-theme-default": "git++ssh://git@github.com:garage11/ca11-theme-default#master",
-    "@garage11/vue-i18n": "git++ssh://git@github.com:garage11/vue-i18n#master",
+    "@garage11/ca11-theme-default": "git+https://git@github.com/garage11/ca11-theme-default#master",
+    "@garage11/vue-i18n": "git+https://git@github.com/garage11/vue-i18n#master",
+    "cz-customizable": "^6.2.0",
     "d3-array": "^2.0.3",
     "d3-force": "^2.0.0",
     "electron": "3.0.x",
@@ -135,8 +135,8 @@
     "shortid": "2.x.x",
     "sip.js": "^0.11.6",
     "v-click-outside": "^2.0.1",
-    "vue": "2.5.x",
-    "vue-autosize": "git+ssh://git@github.com:garage11/vue-autosize#master",
+    "vue": "2.6.x",
+    "vue-autosize": "git+https://git@github.com/garage11/vue-autosize#master",
     "vue-stash": "2.0.1-beta",
     "vuelidate": "0.7.x"
   },
@@ -145,7 +145,7 @@
   },
   "config": {
     "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
+      "path": "./node_modules/cz-customizable"
     }
   }
 }

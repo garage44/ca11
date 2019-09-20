@@ -31,13 +31,13 @@
 
     @media screen and (min-width: $breakpoint-mobile) {
         .item {
-            width: 50%;
+            width: 100%;
         }
     }
 
     @media screen and (min-width: $breakpoint-desktop) {
         .item {
-            width: calc(100% / 3);
+            width: 50%;
         }
     }
 }
@@ -45,11 +45,10 @@
 
 .item {
     $item: &;
-    // border-left: $spacer solid transparent;
     display: flex;
     flex-direction: column;
     margin-top: $spacer;
-    padding: $spacer-05  $spacer;
+    padding: $spacer  $spacer;
     width: 100%;
 
     &:hover {
@@ -62,6 +61,7 @@
         }
 
         #{$item}__icon {
+            background: palette('grey', 300);
             border: $spacer / 4 solid var(--primary-base);
             fill: var(--primary-base);
         }
@@ -93,7 +93,8 @@
 
         #{$item}__text .editable,
         #{$item}__text {
-            color: var(--grey-300);
+            background: none;
+            color: palette('primary', 'base');
             display: inline-block;
             font-family: 'Rajdhani';
             font-size: $text-large;
@@ -125,13 +126,14 @@
 
             #{$item}__option {
                 align-items: center;
-                color: var(--grey-200);
+                color: palette('grey', 100);
                 display: flex;
                 justify-content: center;
 
                 transition: color ease-in-out 0.1s;
                 user-select: none;
 
+                &:hover,
                 &.active {
                     svg {
                         color: var(--primary-base);
@@ -200,7 +202,8 @@
             }
 
             @at-root .context__entry-input {
-                color: var(--grey-200);
+                background: none;
+                color: var(--grey-100);
                 flex: 1 1 auto;
                 font-family: 'Rajdhani';
                 font-size: $text-base;

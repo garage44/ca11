@@ -20,17 +20,6 @@ module.exports = (app) => {
                     app.emit('caller:call-activate', {callId: null})
                 }
             },
-            activateMedia: function() {
-                let selected = this.stream[this.stream.type].selected
-                if (!selected) selected = new Date().getTime()
-                else selected = null
-                app.setState({
-                    settings: {webrtc: {media: {stream: {[this.stream.type]: {selected}}}}},
-                    ui: {layer: 'caller'},
-                }, {persist: true})
-
-                app.emit('caller:call-activate', {callId: null})
-            },
             callIcon: function(call) {
                 if (['answered_elsewhere', 'bye', 'caller_unavailable', 'callee_busy'].includes(call.status)) {
                     return 'call-end'

@@ -1,6 +1,14 @@
 module.exports = (app) => {
 
     const MediaControls = {
+        data: function() {
+            return {
+                tooltip: {
+                    sig11: '',
+                    sip: '',
+                },
+            }
+        },
         methods: {
             classes: function(block) {
                 const classes = {}
@@ -24,6 +32,9 @@ module.exports = (app) => {
         staticRenderFns: templates.media_controls.s,
         store: {
             calls: 'caller.calls',
+            settings: 'settings',
+            sig11: 'sig11',
+            sip: 'sip',
             stream: 'settings.webrtc.media.stream',
         },
     }

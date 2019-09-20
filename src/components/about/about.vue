@@ -6,7 +6,7 @@
          <div class="header__actions"></div>
     </header>
 
-    <main class="about">
+    <main class="about main">
         <div class="support-l">
 
             <div
@@ -17,7 +17,7 @@
                 <div class="support-item-l">
                     <div class="support-item__title cf">{{$t('need help?')}}</div>
                     <div class="support-item__description cf">
-                        {{$t('the documentation is here to help you make the most out of the {vendor} softphone', {vendor: app.name})}}!
+                        {{$t('the documentation is here to help you make the most out of CA11')}}!
                     </div>
                   </div>
             </div>

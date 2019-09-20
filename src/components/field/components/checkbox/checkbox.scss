@@ -21,10 +21,6 @@
             opacity: 0;
             width: 0;
 
-            &:focus + #{$self}__slider {
-                box-shadow: 0 0 1px var(--primary-base);
-            }
-
             &:checked + #{$self}__slider {
                 background: var(--primary-base);
 
@@ -36,7 +32,7 @@
         }
 
         #{$self}__slider {
-            background-color: var(--grey-100);
+            background-color: palette('grey', 200);
             border-radius: 10px;
             bottom: 0;
             cursor: pointer;

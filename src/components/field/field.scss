@@ -6,7 +6,7 @@
 
     &__label {
         align-items: center;
-        color: var(--grey-300);
+        color: palette('primary', 'base');
         display: flex;
         font-family: 'Rajdhani';
         font-size: $text-base;
@@ -24,9 +24,10 @@
     }
 
     &__element {
+        background: none;
         border: 0;
         border-bottom: 1px solid var(--grey-100);
-        color: var(--grey-300);
+        color: palette('grey', 50);
         font-size: var(--text-small);
         padding: $spacer 0;
 
@@ -44,7 +45,7 @@
 
 
     &__help {
-        color: var(--grey-300);
+        color: palette('grey', 50);
         font-size: var(--text-small);
         font-style: italic;
         padding-top: var(--spacer-05);

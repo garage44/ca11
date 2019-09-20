@@ -32,9 +32,9 @@
 
     // Typical menu button used in status and menu.
     &--menu {
-        border-top: $border solid transparent;
         border-bottom: $border solid transparent;
-        color: var(--grey-200);
+        border-top: $border solid transparent;
+        color: var(--grey-100);
         height: $space-4;
         width: $space-4;
 
@@ -48,8 +48,10 @@
         }
 
         &[disabled] {
+            color: palette('grey', 50);
+
             &:hover {
-                border-left: $border solid var(--grey-200);
+                // border-left: $border solid var(--grey-200);
             }
         }
     }
@@ -74,9 +76,10 @@
         }
 
         &.primary {
-            background: var(--primary-base);
+            background: palette('grey', 500);
             border-bottom: 1px solid lighten($primary-color, 5%);
-            color: var(--grey-50);
+            border-radius: $spacer / 2;
+            color: palette('primary', 'base');
 
             &[disabled] {
                 background: var(--grey-100);
@@ -84,7 +87,7 @@
             }
 
             &:not([disabled]):hover {
-                background: lighten($primary-color, 5%);
+                background: lighten(palette('grey', 500), 5%);
                 color: var(--grey-50);
             }
         }

@@ -3,6 +3,7 @@
 
 
 .c-notifications {
+    bottom: 0;
     left: 0;
     position: absolute;
     width: 100%;
@@ -10,9 +11,7 @@
 
     .notification {
         align-items: center;
-        background: var(--primary-base);
-        border-bottom: var(--spacer-05) solid var(--grey-50);
-        border-radius: 0;
+        background: palette('bg', 'default');
         color: var(--grey-50);
         display: flex;
         flex-direction: row;
@@ -26,7 +25,6 @@
 
         .icon {
             align-items: center;
-            background: var(--primary-base);
             display: flex;
             height: 100%;
             justify-content: center;
@@ -34,7 +32,7 @@
 
             svg {
                 @include icon-size(var(--icon-normal));
-                fill: var(--grey-50);
+                fill: palette('primary', 'base');
                 height: $spacer * 3;
                 width: $spacer * 3;
             }
@@ -66,11 +64,11 @@
 
     .notification-enter-to {
         opacity: 1;
-        transform: scale(1);
+        // transform: scale(1);
     }
 
     .notification-leave-active {
-        transform: scale(0);
+        // transform: scale(0);
     }
 
     .notification-move {

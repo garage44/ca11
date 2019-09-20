@@ -1,4 +1,11 @@
 <component class="c-dnd">
+            <FieldRadio
+                v-model="description.protocol"
+                elementclass="t-rd-calls-protocol"
+                class="header__filter"
+                name="protocol"
+                :options="protocols"
+            />
     <FieldCheckbox
         v-model="dnd"
         class="tooltip tooltip-bottom"

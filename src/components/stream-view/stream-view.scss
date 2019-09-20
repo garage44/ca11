@@ -71,10 +71,13 @@ html.chrome.android {
 
 
     .c-stream {
-        background: var(--grey-500);
+        background: palette('bg', 'default');
+        border-radius: $spacer;
         display: flex;
         flex: 1;
         height: 100%;
+        margin: $spacer;
+        padding: $spacer * 2;
         transition: all 0.25s;
 
         &.placeholder {

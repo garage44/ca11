@@ -6,28 +6,91 @@
 
     .content__header {
         flex: $space-4 0 0;
-        margin-bottom: $spacer-05;
+    }
+
+    .main {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .call-btn {
+        background: #f00 !important;
+        // width: 100%;
+        flex: 1;
+    }
+
+    .container {
+        display: flex;
+        // flex-direction: column;
+        padding: 0;
+    }
+
+    .keypad-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .c-media-type {
+        align-items: center;
+        background: palette('grey', 400);
+        color: $white-color;
+        display: flex;
+        height: $space-4;
+        justify-content: center;
+
+        &.selected {
+            background: palette('primary', 'base');
+            color: $white-color;
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        svg {
+            @include icon-size($icon-normal);
+        }
+    }
+
+    .c-stream {
+        background: none;
+        border: $spacer / 2 solid palette('grey', 300);
+        border-radius: $spacer;
+        margin-bottom: 100px;
+
+        video {
+            // opacity: 0.5;
+        }
+
+
+        &.selected {
+            filter: grayscale(0%);
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
+
     }
 
     &__input {
-
-        align-items: center;
+        align-items: flex-start;
         color: var(--primary-base);
         display: flex;
+
         position: relative;
         width: 100%;
 
         input {
             background: none;
             border: 0;
-            border-bottom: 1px solid var(--grey-100);
             color: var(--primary-base);
             font-size: var(--text-huge);
             font-weight: 600;
-            height: $space-4 * 1.5;
+            // height: $space-4 * 1.5;
+            margin-bottom: $spacer * 2;
             outline: none;
             overflow: hidden;
-            margin-bottom: $spacer * 2;
             text-align: center;
             text-overflow: ellipsis;
             width: 100%;
@@ -80,12 +143,10 @@
         align-content: center;
         display: flex;
         flex-direction: column;
-        // flex-wrap: wrap;
-        // height: 100%;
         justify-content: space-between;
         max-width: $breakpoint-desktop;
-        width: 100%;
         padding: $spacer * 2;
+        width: 100%;
 
         &.disabled {
             opacity: 0.5;
@@ -113,7 +174,7 @@
             #{$self}__key {
                 border: 0;
                 break-inside: avoid;
-                color: var(--grey-200);
+                color: var(--grey-100);
                 font-family: 'Rajdhani';
                 font-size: 1.7rem;
                 font-weight: 600;
@@ -133,7 +194,7 @@
                 }
 
                 .sub {
-                    color: var(--grey-300);
+                    color: var(--grey-100);
                     font-size: 0.9rem;
                 }
             }

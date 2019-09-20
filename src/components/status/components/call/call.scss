@@ -4,8 +4,8 @@
 
 .c-status-call {
     $self: &;
-    background: var(--primary-base);
-    color: $white-color;
+    background: palette('bg', 'default');
+    color: var(--primary-base);
     height: $space-4;
 
     &__direction {

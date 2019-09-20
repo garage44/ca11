@@ -83,7 +83,7 @@ ul {
     border: 1px solid transparent;
 
     &:not([readonly]) {
-        border: 1px dashed var(--grey-100);
+        border: 1px dashed var(--grey-200);
     }
 }
 
@@ -171,14 +171,17 @@ h4 {
 
 .content-wide {
     margin: 0 auto;
+
     max-height: 500px;
     max-width: 700px;
     width: 100%;
 
     .main {
-        background: #fff;
-        padding: 15px;
+        background: palette('bg', 'default');
+        // min-height: 400px;
         border-bottom-left-radius: 15px;
         border-bottom-right-radius: 15px;
+        max-height: 550px;
+        padding: 15px;
     }
 }

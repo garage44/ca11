@@ -9,8 +9,8 @@
         width: 0;
 
         &[disabled='disabled'] + label {
-            background: var(--grey-100);
-            color: var(--grey-200);
+            background: var(--grey-300);
+            color: var(--grey-300);
 
             &:hover {
                 cursor: not-allowed;
@@ -24,18 +24,18 @@
     }
 
     label {
-        background: var(--grey-50);
-        color: var(--grey-300);
+        background: var(--grey-300);
+        color: var(--grey-100);
         display: inline-block;
         font-family: 'Rajdhani';
         font-size: 0.9rem;
         font-weight: 600;
-        height: $spacer * 3;
-        line-height: $spacer * 3;
+        height: $spacer * 4;
+        line-height: $spacer * 4;
         text-align: center;
         text-shadow: none;
         transition: all 0.2s ease-in-out;
-        width: $spacer * 6;
+        width: $spacer * 5;
 
         &:first-of-type {
             border-right: 0;
