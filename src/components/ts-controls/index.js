@@ -1,12 +1,18 @@
 module.exports = (app) => {
 
-    const MediaControls = {
+    const TsControls = {
+        computed: {
+            protocols: function() {
+                let protocols = [
+                    {disabled: !this.sip.enabled, name: 'SIP', value: 'sip'},
+                    {disabled: !this.sig11.enabled, name: 'SIG11', value: 'sig11'},
+                ]
+                return protocols
+            },
+        },
         data: function() {
             return {
-                tooltip: {
-                    sig11: '',
-                    sip: '',
-                },
+                tooltip: 'SIG11: enabled\nSIP:Disabled',
             }
         },
         methods: {
@@ -28,16 +34,26 @@ module.exports = (app) => {
             },
         },
         props: ['call'],
-        render: templates.media_controls.r,
-        staticRenderFns: templates.media_controls.s,
+        render: templates.ts_controls.r,
+        staticRenderFns: templates.ts_controls.s,
         store: {
             calls: 'caller.calls',
+            description: 'caller.description',
+            dnd: 'app.dnd',
             settings: 'settings',
             sig11: 'sig11',
             sip: 'sip',
             stream: 'settings.webrtc.media.stream',
         },
+        watch: {
+            'description.protocol': function(protocol) {
+                app.setState({calls: {description: {protocol}}}, {persist: true})
+            },
+            dnd: function(dnd) {
+                app.setState({app: {dnd}}, {persist: true})
+            },
+        },
     }
 
-    return MediaControls
+    return TsControls
 }

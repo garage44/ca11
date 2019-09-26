@@ -53,8 +53,7 @@
   "devDependencies": {
     "@commitlint/cli": "^7.2.1",
     "@commitlint/config-conventional": "^7.1.2",
-    "@garage11/ca11-skeleton": "git+ssh://git@github.com:garage11/ca11-skeleton#master",
-    "@garage11/commitlint-circle": "git+ssh://git@github.com:garage11/commitlint-circle#master",
+    "@garage11/ca11-skeleton": "git+https://github.com/garage11/ca11-skeleton#master",
     "@garage11/vue-compiler-gulp": "1.1.0",
     "ansi-colors": "^3.2.1",
     "archiver": "2.x.x",
@@ -65,7 +64,7 @@
     "del": "2.x.x",
     "electron-packager": "12.x.x",
     "electron-reload": "1.x.x",
-    "eslint": "4.x.x",
+    "eslint": "6.4.0",
     "eslint-plugin-sort-class-members": "1.x.x",
     "glob": "7.x.x",
     "gulp": "4.x.x",
@@ -120,8 +119,8 @@
     "yargs": "7.x.x"
   },
   "dependencies": {
-    "@garage11/ca11-theme-default": "git+https://git@github.com/garage11/ca11-theme-default#master",
-    "@garage11/vue-i18n": "git+https://git@github.com/garage11/vue-i18n#master",
+    "@garage11/ca11-theme-default": "https://github.com/garage11/ca11-theme-default#master",
+    "@garage11/vue-i18n": "https://git@github.com/garage11/vue-i18n#master",
     "cz-customizable": "^6.2.0",
     "d3-array": "^2.0.3",
     "d3-force": "^2.0.0",
@@ -136,7 +135,7 @@
     "sip.js": "^0.11.6",
     "v-click-outside": "^2.0.1",
     "vue": "2.6.x",
-    "vue-autosize": "git+https://git@github.com/garage11/vue-autosize#master",
+    "vue-autosize": "https://git@github.com/garage11/vue-autosize#master",
     "vue-stash": "2.0.1-beta",
     "vuelidate": "0.7.x"
   },

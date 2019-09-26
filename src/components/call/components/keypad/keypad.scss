@@ -9,19 +9,27 @@
     }
 
     .main {
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
         display: flex;
         flex-direction: column;
+        padding: 0;
     }
 
     .call-btn {
-        background: #f00 !important;
-        // width: 100%;
-        flex: 1;
+        background: palette('bg', 'default');
+        border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px;
+        height: 65px;
+        width: 100%;
+
+        &:hover {
+            background: palette('bg', 'dark');
+        }
     }
 
     .container {
         display: flex;
-        // flex-direction: column;
         padding: 0;
     }
 
@@ -54,14 +62,7 @@
 
     .c-stream {
         background: none;
-        border: $spacer / 2 solid palette('grey', 300);
-        border-radius: $spacer;
-        margin-bottom: 100px;
-
-        video {
-            // opacity: 0.5;
-        }
-
+        border-top-left-radius: 15px;
 
         &.selected {
             filter: grayscale(0%);
@@ -77,7 +78,6 @@
         align-items: flex-start;
         color: var(--primary-base);
         display: flex;
-
         position: relative;
         width: 100%;
 
@@ -87,8 +87,7 @@
             color: var(--primary-base);
             font-size: var(--text-huge);
             font-weight: 600;
-            // height: $space-4 * 1.5;
-            margin-bottom: $spacer * 2;
+            height: $space-4 * 1.5;
             outline: none;
             overflow: hidden;
             text-align: center;
@@ -102,14 +101,15 @@
             }
 
             &::placeholder {
-                color: var(--grey-200);
+                color: var(--primary-base);
             }
         }
 
         #{$self}__correct {
             color: var(--primary-base);
             position: absolute;
-            right: $spacer-05;
+            right: $spacer;
+            top: $spacer * 4;
             user-select: none;
 
             &.disabled {
@@ -144,8 +144,6 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        max-width: $breakpoint-desktop;
-        padding: $spacer * 2;
         width: 100%;
 
         &.disabled {

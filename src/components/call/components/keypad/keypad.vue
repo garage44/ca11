@@ -1,6 +1,9 @@
 <component class="c-keypad t-keypad content-wide" tabindex="-1">
 
-    <header class="content__header header">
+<!-- <header class="content__header header">
+</header> -->
+
+    <!-- <header class="content__header header">
         <div v-if="sip.enabled" class="header__filters">
             <FieldRadio
                 v-model="description.protocol"
@@ -21,7 +24,7 @@
                 <icon name="nodes"/>
             </button>
         </div>
-    </header>
+    </header> -->
 
 
     <Network v-if="description.protocol === 'sig11' && sig11.network.view"/>
@@ -108,7 +111,7 @@
 
         <button
             :disabled="!description.number"
-            class="button button--menu call-btn t-btn-options-call-start tooltip tooltip-left"
+            class="button button--menu call-btn t-btn-options-call-start tooltip tooltip-top"
             :data-tooltip="$t('start new call')"
             @click="callDescription({description})"
         ><icon name="phone"/></button>

@@ -38,6 +38,9 @@ module.exports = (app) => {
 
                 return classes
             },
+            logout: function() {
+                app.session.close()
+            },
         }, app.helpers.sharedMethods()),
         mounted: function() {
             splashInterval = setInterval(() => {

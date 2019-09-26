@@ -1,0 +1,46 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+
+.c-ts-controls {
+    background: palette('bg', 'dark');
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+    width: 100%;
+
+    &__bar {
+
+        box-shadow: 0 0 1px 1px palette('grey', 400);
+        flex: 1;
+    }
+
+    .protocol-switch {
+        margin-bottom: $spacer / 2;
+        white-space: normal;
+
+        label {
+            width: 100%;
+        }
+    }
+
+    .protocol-status {
+        display: flex;
+        flex-direction: column;
+
+        button {
+            padding: $spacer 0;
+
+            &.registered {
+                color: var(--primary-base);
+            }
+
+            svg {
+                @include icon-size($spacer * 2);
+            }
+        }
+    }
+
+
+
+}

@@ -19,7 +19,6 @@
         grid-template-areas:
             'main-content-header'
             'main-content-base';
-        // grid-template-rows: #{$space-4} fit-content(100%);
         justify-items: start;
 
         .header {

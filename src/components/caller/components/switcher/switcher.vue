@@ -12,7 +12,10 @@
 
         <button
             class="button call t-btn-switcher-call-new placeholder tooltip tooltip-left"
-            :class="{active: !stream[stream.type].selected && !callActive.id && ui.layer === 'caller', hint: 'true'}"
+            :class="{
+                active: !stream[stream.type].selected && !callActive.id && ui.layer === 'caller',
+                hint: 'true'
+            }"
             :data-tooltip="$t('add new call')"
             @click="activateCall()"
         >

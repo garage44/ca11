@@ -2,6 +2,10 @@
 @import 'ca11/lib/variables';
 
 .c-options {
+    display: flex;
+    flex: 1;
+    padding-left: $spacer;
+
     &__option {
         border-left: 0;
         border-right: 0;
@@ -9,7 +13,7 @@
         padding: $spacer * 1.5 0;
         text-align: center;
         user-select: none;
-        width: 100%;
+        // width: 100%;
 
         &:not([disabled]):hover {
             color: var(--primary-base);
