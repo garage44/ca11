@@ -33,7 +33,7 @@
             elementclass="t-txt-sig11-number"
             name="sig11_number"
             :help="$t('the number (or name) that people may call you on.')"
-            :label="$t('choose your own number')"
+            :label="$t('choose a CA11 number')"
             :validation="$v.sig11.identity.number"
         />
 
@@ -43,7 +43,7 @@
             name="session-pw"
             :autofocus="true"
             :help="$t('used to encrypt persistent phone data with.')"
-            :label="$t('remember your password')"
+            :label="$t('password protection')"
             :validation="$v.password"
         />
 
@@ -66,7 +66,7 @@
                 :class="{'is-loading': session.status === 'login'}"
                 :disabled="$v.$invalid || session.status === 'login'"
                 @click="login"
-            >{{$t('start phone')}}</button>
+            >{{$t('connect')}}</button>
         </div>
     </div>
 

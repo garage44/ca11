@@ -2,13 +2,22 @@
 @import 'ca11/lib/variables';
 
 
-.c-status-call {
+.c-caller-bar {
     $self: &;
-    background: var(--primary-base);
-    color: $white-color;
+    background: palette('bg', 'default');
+    bottom: 0;
+    color: var(--primary-base);
+    display: flex;
+    font-family: 'Rajdhani';
+    font-weight: 600;
     height: $space-4;
+    justify-content: space-between;
+    position: absolute;
+    width: 100%;
+    z-index: 100;
 
-    &__direction {
+
+    .call-direction {
         align-items: center;
         display: flex;
         justify-content: center;
@@ -20,15 +29,14 @@
         }
     }
 
-    &__endpoint {
+    .call-endpoint {
         align-items: center;
         display: flex;
-        flex-grow: 1;
         padding-left: $spacer-05;
         text-transform: uppercase;
     }
 
-    &__status {
+    .call-status {
         align-items: center;
         display: flex;
         text-transform: uppercase;
@@ -43,5 +51,20 @@
             text-align: right;
             width: $space-4;
         }
+    }
+
+    &__context-switch-leave-active,
+    &__context-switch-enter-active {
+        transition: transform 0.3s ease;
+    }
+
+    &__context-switch-enter,
+    &__context-switch-leave-to {
+        transform: translateY(#{-$space-4});
+    }
+
+    &__context-switch-enter-to,
+    &__context-switch-leave {
+        transform: translateY(0);
     }
 }

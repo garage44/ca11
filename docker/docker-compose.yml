@@ -1,0 +1,9 @@
+version: "3.0"
+services:
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+  asterisk:
+    build: asterisk

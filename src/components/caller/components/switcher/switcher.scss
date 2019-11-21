@@ -38,42 +38,4 @@
             svg {fill: var(--grey-50);}
         }
     }
-
-
-    .c-media-type {
-        align-items: center;
-        background: palette('grey', 400);
-        color: $white-color;
-        display: flex;
-        height: $space-4;
-        justify-content: center;
-
-        &.selected {
-            background: palette('primary', 'base');
-            color: $white-color;
-        }
-
-        &:hover {
-            cursor: pointer;
-        }
-
-        svg {
-            @include icon-size($icon-normal);
-        }
-    }
-
-    .c-stream {
-        filter: grayscale(100%);
-        height: $space-4;
-        margin-bottom: $spacer-05;
-
-        &.selected {
-            filter: grayscale(0%);
-        }
-
-        &:hover {
-            cursor: pointer;
-        }
-
-    }
 }

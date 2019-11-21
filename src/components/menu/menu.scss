@@ -2,6 +2,13 @@
 @import 'ca11/lib/variables';
 
 .c-menu {
-    background: var(--grey-500);
+    background: palette('bg', 'default');
     z-index: 100;
+
+    button {
+        svg {
+            height: 40px;
+            width: 40px;
+        }
+    }
 }

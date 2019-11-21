@@ -5,32 +5,20 @@
 .c-main {
     display: grid;
     grid-gap: $spacer-05;
-    grid-template-areas:
-        'main-status main-status main-status'
-        'main-menu main-content media-controls';
-    grid-template-columns: $space-4 1fr $space-4; // menu content
-    grid-template-rows: #{$space-4} 1fr; // status height remains static.
-
-    .c-media-controls {
-        grid-area: media-controls;
-    }
+    grid-template-areas: 'main-menu main-content media-controls';
+    grid-template-columns: $space-4 1fr $space-4; // menu content menu
+    grid-template-rows: 1fr; // status height remains static.
 
     &__menu {
         grid-area: main-menu;
     }
 
-    &__status {
-        grid-area: main-status;
-    }
-
     &__content {
         display: grid;
         grid-area: main-content;
-        grid-gap: $spacer-05;
         grid-template-areas:
             'main-content-header'
             'main-content-base';
-        grid-template-rows: #{$space-4} fit-content(100%);
         justify-items: start;
 
         .header {
@@ -47,6 +35,10 @@
             }
         }
     }
+
+    &__media-controls {
+        grid-area: media-controls;
+    }
 }
 
 
@@ -54,5 +46,5 @@
     grid-column-end: 4;
     grid-column-start: 1;
     grid-row-end: main-content;
-    grid-row-start: main-status;
+    grid-row-start: main-content;
 }

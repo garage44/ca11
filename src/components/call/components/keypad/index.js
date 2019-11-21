@@ -29,6 +29,33 @@ module.exports = (app) => {
             },
         }, app.helpers.sharedComputed()),
         methods: Object.assign({
+            activateMedia: function() {
+                let selected = this.stream[this.stream.type].selected
+                if (!selected) selected = new Date().getTime()
+                else selected = null
+
+
+                app.setState({
+                    settings: {webrtc: {media: {stream: {[this.stream.type]: {selected}}}}},
+                    ui: {layer: 'caller'},
+                }, {persist: true})
+
+                app.emit('caller:call-activate', {callId: null})
+            },
+            callDescription: function(...args) {app.plugins.caller.call(...args)},
+            callTitle: function(call) {
+                const translations = app.helpers.getTranslations().call
+                let text
+                if (!call) {
+                    text = translations.media
+                } else {
+                    text = `${call.number} - `
+                    if (call.hold.active) text += translations.hold
+                    else text += translations[call.status]
+                }
+
+                return text.ca()
+            },
             inputChange: function(newVal) {
                 this.$emit('update:model', newVal)
             },

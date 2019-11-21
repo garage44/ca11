@@ -38,10 +38,13 @@ module.exports = (app) => {
 
                 return classes
             },
+            logout: function() {
+                app.session.close()
+            },
         }, app.helpers.sharedMethods()),
         mounted: function() {
             splashInterval = setInterval(() => {
-                this.currentSplash = (this.currentSplash + 1) % 6
+                this.currentSplash = (this.currentSplash + 1) % 7
             }, 10000)
         },
         render: templates.main.r,

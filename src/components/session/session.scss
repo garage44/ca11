@@ -4,16 +4,16 @@
 .c-session {
     $self: &;
     align-items: stretch;
-    background: var(--grey-0);
+    background: rgba(palette('grey', 500), 0.7);
     border-radius: 22px;
     box-shadow: 0 0 16px var(--grey-400);
     display: flex;
-    max-height: 500px;
     flex-direction: column;
     font-family: 'Rajdhani';
     justify-content: stretch;
     justify-items: stretch;
     margin: 0 auto;
+    max-height: 500px;
     max-width: 400px;
     padding: $spacer * 3;
     width: 100%;
@@ -23,8 +23,8 @@
         margin-top: var(--gutter);
         position: absolute;
         right: $spacer;
-        top: 0;
         text-align: center;
+        top: 0;
 
         svg {
             color: var(--primary-base);
@@ -40,10 +40,10 @@
     }
 
     .buttons button {
-        margin: 0;
-        width: 100%;
         border-radius: 22px;
+        margin: 0;
         max-width: 150px;
+        width: 100%;
     }
 
     header {

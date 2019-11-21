@@ -4,7 +4,7 @@ $font-path: '../fonts';
 $spacer: 8px;
 $spacer-05: 2px; // static spacer.
 
-$space-4: $spacer * 7;
+$space-4: $spacer * 8;
 $space-3: $space-4 / 4 * 3;
 $space-2: $space-4 / 4 * 2;
 
@@ -24,12 +24,12 @@ $breakpoint-desktop: 992px;
 
 $android-toolbar-height: 56px;
 
-$primary-color: #0073aa !default;
+$primary-color: #9ddc4b !default;
 $secondary-color: adjust_hue($primary-color, 200);
 
-$green-color: #508654 !default;
+$green-color: #9ddc4b !default;
 $orange-color: #f98644 !default;
-$red-color: #d9534f !default;
+$red-color: #c80000 !default;
 $white-color: #fff;
 
 
@@ -37,7 +37,7 @@ $palette: (
     'primary': (
         'base': $primary-color,
         'dark': mix(black, $primary-color, 35%),
-        'light': mix(white, $primary-color, 25%)
+        'light': mix(white, $primary-color, 25%),
     ),
     'secondary': (
         'base': $secondary-color,
@@ -51,7 +51,11 @@ $palette: (
         200: #5c6167,
         100: #b0b6bd,
         50: #e1e6ec,
-        0: #ffffff
+        0: #fff
+    ),
+    'bg': (
+        'default': rgba(#23282d, 0.7),
+        'dark': rgba(#111, 0.8)
     )
 );
 

@@ -22,12 +22,7 @@
             @click="setLayer('contacts')"
         ><icon name="contacts"/></button>
 
-        <button
-            class="button button--menu c-menu__option t-btn-menu-caller tooltip tooltip-right"
-            :class="classes('caller')"
-            :data-tooltip="$t('calling')"
-            @click="setLayer('caller')"
-        ><icon name="caller"/></button>
+
 
         <button
             v-if="plugin.menubarIcon"

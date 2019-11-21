@@ -1,13 +1,5 @@
 <component class="c-options">
     <button
-        v-if="!call.id && ui.layer === 'caller'"
-        :disabled="!description.number"
-        class="button button--menu c-options__option t-btn-options-call-start tooltip tooltip-left"
-        :data-tooltip="$t('start new call')"
-        @click="callDescription({description})"
-    ><icon name="phone"/></button>
-
-    <button
         v-if="call.status === 'invite'"
         class="button button--menu c-options__option t-btn-options-call-accept tooltip tooltip-left hint"
         :data-tooltip="$t('accept call')"

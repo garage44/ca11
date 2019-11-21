@@ -1,11 +1,11 @@
-<component class="c-status-call">
+<component class="c-caller-bar" v-if="callsExist">
 
-    <div class="c-status-call__direction">
+    <div class="call-direction">
         <icon v-if="call" :name="`call-${call.direction}`"/>
         <icon v-else name="call-outgoing"/>
     </div>
 
-    <div class="c-status-call__endpoint">
+    <div class="call-endpoint">
         <span v-if="call">
             <span v-if="call.name" class="c-status-call__number">{{call.name}} - </span>
             <span class="c-status-call__number">
@@ -19,16 +19,17 @@
         </span>
     </div>
 
-    <div v-if="call" class="c-status-call__status">
+    <CallOptions :call="callActive"/>
+
+    <div v-if="call" class="call-status">
         <span>{{callStatus}}</span>
         <icon name="nodes" v-if="call.protocol === 'sig11'"/>
         <icon name="cloud" v-else-if="call.protocol === 'sip'"/>
         <span class="c-status-call__status-timer">{{sessionTime}}</span>
     </div>
-    <div v-else class="c-status-call__status">
+    <div v-else class="call-status">
         <span>{{$t('new call')}}</span>
         <icon name="nodes" v-if="description.protocol === 'sig11'"/>
         <icon name="cloud" v-else-if="description.protocol === 'sip'"/>
     </div>
-
 </component>

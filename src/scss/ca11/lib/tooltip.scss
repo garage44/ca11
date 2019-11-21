@@ -70,7 +70,7 @@
 // Base styles for the tooltip's content area.
 .tooltip::after,
 [data-tooltip]::after {
-    background: var(--grey-100);
+    background: palette('bg', 'default');
     border-radius: $spacer / 4;
     box-shadow: 0 0 8px var(--grey-400);
     color: var(--primary-base);
