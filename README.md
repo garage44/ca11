@@ -3,6 +3,9 @@
 # Install
     git clone git@github.com:garage11/ca11.git
     cd ca11
+    cd docker
+    docker build -t ca11 .
+
     yarn
     gulp build develop
 

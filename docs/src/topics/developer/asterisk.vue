@@ -13,10 +13,12 @@
 <code class="bash"># Asterisk installation (Archlinux)
 git clone git@github.com:asterisk/asterisk.git
 cd asterisk
-git checkout 16.1.1
+git checkout 17.0.0
 sudo ./contrib/scripts/install_prereq install
-# Needed to enable external codec selection in make menuselect
-sudo pacman -S libsrtp xmlstarlet
+# libsrtp & xmlstarlet are needed to enable external codec
+# selection in make menuselect. inetutils for the `hostname`
+# command in ast_tls_cert
+sudo pacman -S libsrtp xmlstarlet inetutils cmake
 
 ./configure
 make menuselect
@@ -26,11 +28,12 @@ make menuselect
 # Save/Exit
 sudo make install
 sudo useradd -d /var/lib/asterisk asterisk
-# Uncomment: %wheel ALL=(ALL) ALL
+
 sudo vim /etc/sudoers
+# Uncomment: %wheel ALL=(ALL) ALL
 
 # Add asterisk group to wheel, e.g.: wheel:x:10:root,asterisk
-vim /etc/group
+sudo vim /etc/group
 
 Generate TLS/DTLS keys for WebRTC support
 # Replace the IP with your own IP or domain name
@@ -50,32 +53,24 @@ sudo chown -R asterisk:asterisk /var/spool/asterisk/
 sudo chown -R asterisk:asterisk /var/log/asterisk/
 sudo chown -R asterisk:asterisk /var/run/asterisk/
 
-sudo su asterisk
-cd /etc/asterisk
-# Change unsecurepassword to a more secure password.
-vim pjsip.conf
 
-# Setup mysql
-# For more info, see https://wiki.asterisk.org/wiki/display/AST/Setting+up+PJSIP+Realtime
 
-sudo pip install alembic
-cd contrib/ast-db-manage/
-# Change config.ini sqlalchemy.url
-alembic -c config.ini upgrade head
+# Setup mysql. Make sure you have a running MariaDB/MySQL instance.
+# For more background info, see https://wiki.asterisk.org/wiki/display/AST/Setting+up+PJSIP+Realtime
 
 git clone git@github.com:MariaDB/mariadb-connector-odbc.git
 cd mariadb-connector-odbc
 git checkout 3.1.3
 cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCONC_WITH_UNIT_TESTS=Off  -DWITH_SSL=OPENSSL -DCMAKE_INSTALL_PREFIX=/usr/local
 sudo make install
-vim /etc/odbcinst.ini
+sudo vim /etc/odbcinst.ini
 
 [MySQL]
 Description = ODBC for MySQL
 Driver = /usr/local/lib/libmaodbc.so
 UsageCount = 2
 
-vim /etc/odbc.ini
+sudo vim /etc/odbc.ini
 [asterisk]
 Driver = MySQL
 Description = MySQL connection to ‘asterisk’ database
@@ -86,7 +81,7 @@ UserName = root
 Password = password
 Socket = /var/run/mysqld/mysqld.sock
 
-vim /etc/asterisk/res_odbc.conf
+sudo vim /etc/asterisk/res_odbc.conf
 [asterisk]
 enabled => yes
 dsn => asterisk
@@ -94,7 +89,7 @@ username => root
 password => password
 pre-connect => yes
 
-vim /etc/asterisk/sorcery.conf
+sudo vim /etc/asterisk/sorcery.conf
 
 [res_pjsip] ; Realtime PJSIP configuration wizard
 endpoint=realtime,ps_endpoints
@@ -106,7 +101,7 @@ contact=realtime,ps_contacts
 [res_pjsip_endpoint_identifier_ip]
 identify=realtime,ps_endpoint_id_ips
 
-vim /etc/asterisk/extconfig.conf
+sudo vim /etc/asterisk/extconfig.conf
 
 [settings]
 ps_endpoints => odbc,asterisk
@@ -117,10 +112,20 @@ ps_endpoint_id_ips => odbc,asterisk
 ps_contacts => odbc,asterisk
 
 
-vim /etc/asterisk/modules.conf
+sudo vim /etc/asterisk/modules.conf
 preload => res_odbc.so
 preload => res_config_odbc.so
 noload => chan_sip.so
+
+sudo pip install alembic
+cd contrib/ast-db-manage/
+cp config.ini.sample config.ini
+# Change sqlalchemy.url connection string in config.ini
+
+# mysql -u root -p;
+# > create database asterisk;
+
+alembic -c config.ini upgrade head
 
 # mysql -u root -p -D asterisk;
 mysql> insert into ps_aors (id, max_contacts) values (1000, 1);
@@ -139,3 +144,11 @@ asterisk
 </pre>
 
 </component>
+
+
+
+
+sudo su asterisk
+cd /etc/asterisk
+# Change unsecurepassword to a more secure password.
+vim pjsip.conf
