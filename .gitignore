@@ -1,8 +1,5 @@
 node_modules
 build
 dist
-package-lock.json
-.tags
-.publish
 .ca11rc
-.directory
+docker/nginx/ssl

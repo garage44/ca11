@@ -53,7 +53,7 @@ module.exports = function(settings) {
             'src/**/*.js',
             'tests/**/*.js',
             'tools/**/*.js',
-            path.join(settings.SRC_DIR, '**', '*.scss'),
+            path.join(settings.BASE_DIR, '**', '*.scss'),
             '.ca11rc*',
         ])
             .pipe(jsFilter)

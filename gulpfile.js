@@ -1,9 +1,11 @@
+const path = require('path')
+
 const c = require('ansi-colors')
 const gulp = require('gulp')
 const inquirer = require('inquirer')
 const logger = require('gulplog')
 
-const settings = require('@garage11/ca11-skeleton/settings')(__dirname)
+const settings = require('./src/base/settings')(__dirname, path.join(__dirname, 'src', 'phone'))
 const helpers = require('./gulp/helpers')(settings)
 
 // Load Gulp task modules.

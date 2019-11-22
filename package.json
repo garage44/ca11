@@ -53,7 +53,6 @@
   "devDependencies": {
     "@commitlint/cli": "^7.2.1",
     "@commitlint/config-conventional": "^7.1.2",
-    "@garage11/ca11-skeleton": "git+https://github.com/garage11/ca11-skeleton#master",
     "@garage11/vue-compiler-gulp": "1.1.0",
     "ansi-colors": "^3.2.1",
     "archiver": "2.x.x",
@@ -97,7 +96,7 @@
     "lint-staged": "^8.0.4",
     "mkdirp": "0.x.x",
     "puppeteer": "1.x.x",
-    "rc": "1.x.x",
+    "rc": "^1.2.8",
     "serve-static": "1.x.x",
     "standard-version": "7.x.x",
     "stylelint": "^9.8.0",
@@ -121,13 +120,17 @@
   "dependencies": {
     "@garage11/ca11-theme-default": "https://github.com/garage11/ca11-theme-default#master",
     "@garage11/vue-i18n": "https://git@github.com/garage11/vue-i18n#master",
+    "btoa": "^1.2.1",
     "cz-customizable": "^6.2.0",
     "d3-array": "^2.0.3",
     "d3-force": "^2.0.0",
     "electron": "3.0.x",
     "eventemitter3": "2.x.x",
     "graphlib": "^2.1.5",
+    "knex": "^0.20.2",
     "module-alias": "2.x.x",
+    "mysql2": "^2.0.1",
+    "node-webcrypto-ossl": "^1.0.48",
     "raven-js": "3.x.x",
     "roboto-fontface": "0.8.x",
     "sdp-interop-sl": "https://github.com/StarLeafAPIs/sdp-interop-sl",
@@ -137,7 +140,8 @@
     "vue": "2.6.x",
     "vue-autosize": "https://git@github.com/garage11/vue-autosize#master",
     "vue-stash": "2.0.1-beta",
-    "vuelidate": "0.7.x"
+    "vuelidate": "0.7.x",
+    "ws": "^7.2.0"
   },
   "_moduleAliases": {
     "ca11": "./src/js"

@@ -67,7 +67,7 @@ module.exports = function(settings) {
 
 
     tasks.app = function stylesApp() {
-        let addons = [path.join(settings.SRC_DIR, 'components', '**', '*.scss')]
+        let addons = [path.join(settings.BASE_DIR, 'components', '**', '*.scss')]
         const builtin = settings.brands[settings.BRAND_TARGET].plugins.builtin
         const custom = settings.brands[settings.BRAND_TARGET].plugins.custom
 

@@ -3,8 +3,22 @@
 # Install
     git clone git@github.com:garage11/ca11.git
     cd ca11
+    cp .ca11rc.example .ca11rc
     cd docker
-    docker build -t ca11 .
+    # Generate dev.ca11.app certificate and Garage11 CA for
+    # local SSL without browser warnings.
+    cd docker/nginx/ssl
+    ./ca_cert.sh dev.ca11.app
+    ./ca_cert.sh sip.dev.ca11.app
+    ./ca_cert.sh sig11.dev.ca11.app
+    # Manually import development CA (Archlinux only)
+    sudo ./ca_system.sh
+    # Enable hostname lookup
+    echo "127.0.0.1 dev.ca11.app" >> /etc/hosts
+    echo "127.0.0.1 sip.dev.ca11.app" >> /etc/hosts
+    echo "127.0.0.1 sig11.dev.ca11.app" >> /etc/hosts
+    # Start supporting services: Asterisk, Nginx, MariaDB
+    docker-compose up
 
     yarn
     gulp build develop

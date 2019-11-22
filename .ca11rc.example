@@ -22,7 +22,7 @@
                 "endpoint": "sip.dev.ca11.app"
             },
             "stun": [
-                "stun:ca11.app"
+                "stun:dev.ca11.app"
             ],
             "telemetry": {
                 "sentry": {

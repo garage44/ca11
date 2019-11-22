@@ -107,7 +107,7 @@ module.exports = function(settings) {
             function sentryUpload() {
                 const base = path.join(settings.BUILD_DIR, 'js')
                 return gulp.src(path.join(base, '{*.js,*.map}'), {base})
-                    .pipe(addsrc(path.join(settings.SRC_DIR, 'js', '**', '*.js'), {base: path.join('./')}))
+                    .pipe(addsrc(path.join(settings.BASE_DIR, 'js', '**', '*.js'), {base: path.join('./')}))
                     .pipe(sentryManager.upload())
             }
         )(done)
