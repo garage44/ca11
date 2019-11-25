@@ -8,13 +8,19 @@ services:
     network_mode: host
     volumes:
       - ./asterisk/config:/etc/asterisk
+      - ./asterisk/config.ini:/root/asterisk/contrib/ast-db-manage/config.ini
+      - ./asterisk/odbcinst.ini:/etc/odbcinst.ini
+      - ./asterisk/odbc.ini:/etc/odbc.ini
   db:
     container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: ca11ftw
+      MYSQL_DATABASE: asterisk
     image: mariadb
     network_mode: host
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: example
+    volumes:
+      -  ./mariadb/my.cnf:/etc/mysql/my.cnf
   nginx:
     container_name: nginx
     image: nginx

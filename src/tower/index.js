@@ -60,7 +60,6 @@ class Ca11Tower extends Skeleton {
 
                 .then((rows) => {
                     if (!rows.length) {
-
                         this.knex('sig11_asterisk').insert({
                             id: uuidv4(),
                             pubkey: endpoint.id,
@@ -68,6 +67,8 @@ class Ca11Tower extends Skeleton {
                             .then((res) => {
                                 console.log('RES', res)
                             })
+                    } else {
+                        console.log(rows)
                     }
                 })
 

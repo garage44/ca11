@@ -58,7 +58,7 @@ sudo chown -R asterisk:asterisk /var/run/asterisk/
 # Setup mysql. Make sure you have a running MariaDB/MySQL instance.
 # For more background info, see https://wiki.asterisk.org/wiki/display/AST/Setting+up+PJSIP+Realtime
 
-git clone git@github.com:MariaDB/mariadb-connector-odbc.git
+git clone https://github.com/MariaDB/mariadb-connector-odbc.git
 cd mariadb-connector-odbc
 git checkout 3.1.3
 cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCONC_WITH_UNIT_TESTS=Off  -DWITH_SSL=OPENSSL -DCMAKE_INSTALL_PREFIX=/usr/local

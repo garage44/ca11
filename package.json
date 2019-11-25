@@ -7,17 +7,16 @@
     "node": ">=11.0.0"
   },
   "scripts": {
-    "commitlint-ci": "commitlint-circle",
-    "eslint": "eslint '{src/**/*.js,gulpfile.js,gulp/**/*.js,tests/**/*.js}'",
+    "build": "gulp -f src/phone/gulpfile.js build",
     "link": "npm link @garage11/ca11-theme-default;npm link @garage11/vue-compiler-gulp; npm link @garage11/vue-i18n",
-    "lint": "npm run eslint;npm run stylelint",
+    "lint": "npm run eslint;npm run lint:scss",
+    "lint:js": "eslint '{src/**/*.js,gulpfile.js,gulp/**/*.js,tests/**/*.js}'",
+    "lint:scss": "stylelint 'src/**/*.scss'",
     "release-beta": "standard-version --prerelease beta",
     "release": "standard-version",
-    "stylelint": "stylelint 'src/**/*.scss'",
-    "test-browser": "gulp test-browser",
-    "test-release-beta": "standard-version --dry-run --prerelease beta",
-    "test-release": "standard-version --dry-run",
-    "test-unit": "gulp test-unit",
+    "test:e2e": "gulp test-browser",
+    "test:release": "standard-version --dry-run",
+    "test:unit": "gulp test-unit",
     "test": "npm run test-unit;npm run test-lint"
   },
   "husky": {
