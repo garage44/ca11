@@ -1,94 +1,70 @@
 {
-    "brands": {
-        "ca11": {
-            "plugins": {
-                "builtin": {
-                    "contacts": {
-                        "i18n": [],
-                        "providers": []
-                    }
-                },
-                "custom": {}
-            },
-            "name": {
-                "alpha": "CA11-alpha",
-                "beta": "CA11-beta",
-                "production": "CA11"
-            },
-            "sig11": {
-                "endpoint": "sig11.dev.ca11.app"
-            },
-            "sip": {
-                "endpoint": "sip.dev.ca11.app"
-            },
-            "stun": [
-                "stun:dev.ca11.app"
-            ],
-            "telemetry": {
-                "sentry": {
-                    "apiKey": "",
-                    "dsn": "",
-                    "host": "",
-                    "org": "",
-                    "project": "ca11"
-                }
-            },
-            "tests": {
-                "alice": {
-                    "session": {
-                        "username": "alice",
-                        "password": "testing"
-                    },
-                    "sip": {
-                        "number": "1000",
-                        "password": "unsecurepassword"
-                    },
-                    "sig11": {
-                        "number": "1100000001"
-                    }
-                },
-                "bob": {
-                    "session": {
-                        "username": "bob",
-                        "password": "testing"
-                    },
-                    "sip": {
-                        "number": "2000",
-                        "password": "unsecurepassword"
-                    },
-                    "sig11": {
-                        "number": "1100000002"
-                    }
-                },
-                "charlie": {
-                    "session": {
-                        "username": "charlie",
-                        "password": "testing"
-                    },
-                    "sip": {
-                        "number": "3000",
-                        "password": "unsecurepassword"
-                    },
-                    "sig11": {
-                        "number": "1100000003"
-                    }
-                },
-                "headless": false,
-                "port": 3000
-            },
-            "theme": "@garage11/ca11-theme-default",
-            "vendor": {
-                "name": "CA11",
-                "support": {
-                    "email": "",
-                    "phone": "",
-                    "website": ""
-                },
-                "website": "https://ca11.app"
-            }
-        }
+    "name": {
+        "alpha": "CA11-alpha",
+        "beta": "CA11-beta",
+        "production": "CA11"
     },
     "sig11": {
+        "endpoint": "sig11.dev.ca11.app",
         "port": 3001
-    }
+    },
+    "sip": {
+        "endpoint": "sip.dev.ca11.app"
+    },
+    "stun": [
+        "stun:dev.ca11.app"
+    ],
+    "telemetry": {
+        "sentry": {
+            "apiKey": "",
+            "dsn": "",
+            "host": "",
+            "org": "",
+            "project": "ca11"
+        }
+    },
+    "tests": {
+        "alice": {
+            "session": {
+                "username": "alice",
+                "password": "testing"
+            },
+            "sip": {
+                "number": "1000",
+                "password": "unsecurepassword"
+            },
+            "sig11": {
+                "number": "1100000001"
+            }
+        },
+        "bob": {
+            "session": {
+                "username": "bob",
+                "password": "testing"
+            },
+            "sip": {
+                "number": "2000",
+                "password": "unsecurepassword"
+            },
+            "sig11": {
+                "number": "1100000002"
+            }
+        },
+        "charlie": {
+            "session": {
+                "username": "charlie",
+                "password": "testing"
+            },
+            "sip": {
+                "number": "3000",
+                "password": "unsecurepassword"
+            },
+            "sig11": {
+                "number": "1100000003"
+            }
+        },
+        "headless": false,
+        "port": 3000
+    },
+    "theme": "@garage11/ca11-theme-default"
 }

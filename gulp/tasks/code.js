@@ -37,7 +37,6 @@ module.exports = function(settings) {
      * @returns {Promise} - Resolves when bundling is finished.
      */
     helpers.compile = function({addons = [], destination = './js', entry, name, requires = []}) {
-        const brand = settings.brands[settings.BRAND_TARGET]
 
         if (!bundlers[name]) {
             let bundlerOptions = {
@@ -47,7 +46,7 @@ module.exports = function(settings) {
                 packageCache: {},
                 paths: [
                     settings.NODE_DIR,
-                    path.join(settings.ROOT_DIR, '../'),
+                    path.join(settings.PROJECT_DIR, '../'),
                 ],
             }
 
@@ -74,7 +73,7 @@ module.exports = function(settings) {
                 .pipe(source(`${name}.js`))
                 .pipe(buffer())
                 .pipe(sourcemaps.init({loadMaps: true}))
-                .pipe(helpers.envify(brand))
+                .pipe(helpers.envify(settings))
                 .pipe(ifElse(settings.BUILD_OPTIMIZED, () => minifier()))
                 .pipe(sourcemaps.write('./'))
                 .pipe(size(_extend({title: `${name}.js`}, settings.SIZE_OPTIONS)))
@@ -83,29 +82,18 @@ module.exports = function(settings) {
     }
 
 
-    helpers.envify = function(brand) {
+    helpers.envify = function() {
         return envify({
-            APP_NAME: brand.name.production,
-            BRAND_TARGET: settings.BRAND_TARGET,
-
+            APP_NAME: settings.name.production,
             BUILD_VERBOSE: settings.BUILD_VERBOSE,
-            BUILTIN_CONTACTS_I18N: brand.plugins.builtin.contacts.i18n,
-            BUILTIN_CONTACTS_PROVIDERS: brand.plugins.builtin.contacts.providers,
-            CUSTOM_MOD: brand.plugins.custom,
             LANGUAGE: 'en-US',
 
             NODE_ENV: settings.NODE_ENV,
             PUBLISH_CHANNEL: settings.PUBLISH_CHANNEL,
-            SENTRY_DSN: brand.telemetry.sentry.dsn,
-            SIG11_ENDPOINT: brand.sig11.endpoint,
-            SIP_ENDPOINT: brand.sip.endpoint,
-            STUN: brand.stun,
-
-            VENDOR_NAME: brand.vendor.name,
-            VENDOR_SUPPORT_EMAIL: brand.vendor.support.email,
-            VENDOR_SUPPORT_PHONE: brand.vendor.support.phone,
-            VENDOR_SUPPORT_WEBSITE: brand.vendor.support.website,
-            VENDOR_WEBSITE: brand.vendor.website,
+            SENTRY_DSN: settings.telemetry.sentry.dsn,
+            SIG11_ENDPOINT: settings.endpoints.sig11,
+            SIP_ENDPOINT: settings.endpoints.sip,
+            STUN: settings.endpoints.stun,
             VERSION: settings.PACKAGE.version,
         })
     }
@@ -156,7 +144,7 @@ module.exports = function(settings) {
             // Include ca11/* requires.
             const aliasMatch = /(require\('ca11)\//g
             return through(function(buf, enc, next) {
-                this.push(buf.toString('utf8').replace(aliasMatch, 'require(\'ca11/src/js/'))
+                this.push(buf.toString('utf8').replace(aliasMatch, 'require(\'ca11/src/phone/js/'))
                 next()
             })
         })
@@ -164,14 +152,14 @@ module.exports = function(settings) {
 
 
     tasks.app = async function codeApp(done) {
-        await helpers.compile({entry: './src/js/index.js', name: 'app'})
+        await helpers.compile({entry: './js/index.js', name: 'app'})
         done()
     }
 
 
     tasks.appI18n = async function codeAppI18n(done) {
         await Promise.all([
-            helpers.compile({entry: './src/js/i18n/index.js', name: 'app_i18n'}),
+            helpers.compile({entry: './js/i18n/index.js', name: 'app_i18n'}),
         ])
         done()
     }
@@ -185,24 +173,11 @@ module.exports = function(settings) {
 
         // Vendor-specific info for Electron's main.js file.
         fs.createReadStream('./src/js/main.js').pipe(
-            fs.createWriteStream(`./build/${settings.BRAND_TARGET}/${settings.BUILD_TARGET}/main.js`)
+            fs.createWriteStream(`./build/${settings.BUILD_TARGET}/main.js`)
         )
 
-        const electronBrandSettings = settings.brands[settings.BRAND_TARGET].vendor
-        const settingsFile = `./build/${settings.BRAND_TARGET}/${settings.BUILD_TARGET}/settings.json`
-        writeFileAsync(settingsFile, JSON.stringify(electronBrandSettings)).then(() => {done()})
-    }
-
-
-    tasks.plugins = function codeAppPlugins(done) {
-        const builtin = settings.brands[settings.BRAND_TARGET].plugins.builtin
-        const custom = settings.brands[settings.BRAND_TARGET].plugins.custom
-
-        Promise.all([
-            helpers.plugins(Object.assign(builtin, custom)),
-        ]).then(() => {
-            done()
-        })
+        const settingsFile = `./build/${settings.BUILD_TARGET}/settings.json`
+        writeFileAsync(settingsFile, JSON.stringify(settings)).then(() => {done()})
     }
 
 
@@ -216,9 +191,9 @@ module.exports = function(settings) {
         await helpers.compile({
             // Add the compiled svg icon components to the vendor build.
             addons: [
-                path.join(settings.TEMP_DIR, settings.BRAND_TARGET, 'build', 'index.js'),
+                path.join(settings.TEMP_DIR, 'build', 'index.js'),
             ],
-            entry: './src/js/vendor.js',
+            entry: './js/vendor.js',
             name: 'vendor',
         })
         done()

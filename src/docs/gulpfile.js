@@ -32,7 +32,7 @@ tasks.codeApp = async function codeApp() {
 tasks.codeVendor = async function codeVendor() {
     await code.helpers.compile({
         addons: [
-            path.join(settings.TEMP_DIR, settings.BRAND_TARGET, 'build', 'index.js'),
+            path.join(settings.TEMP_DIR, 'build', 'index.js'),
         ],
         entry: './src/js/vendor.js',
         name: 'vendor',
@@ -46,9 +46,8 @@ tasks.files = assets.tasks.files
 tasks.screens = function screens(done) {
     logger.info('Generating screenshots; use gulp -LLLL to show process output')
     const childProcess = spawn('gulp test-browser', {
-        cwd: settings.ROOT_DIR,
+        cwd: settings.PROJECT_DIR,
         env: Object.assign({
-            BRAND: settings.BRAND_TARGET,
             LOGGER: 'stdout',
             SCREENS: '1',
         }, process.env),
@@ -136,7 +135,7 @@ tasks.watch = function watchProject() {
 
     gulp.watch([
         // Watch for changes from App code.
-        path.join(settings.ROOT_DIR, 'src', 'js', '**', '*.js'),
+        path.join(settings.PROJECT_DIR, 'src', 'js', '**', '*.js'),
         path.join(settings.BASE_DIR, 'components', '**', '*.js'),
         path.join(settings.BASE_DIR, 'js', '**', '*.js'),
         `!${path.join(settings.BASE_DIR, 'js', 'vendor.js')}`,

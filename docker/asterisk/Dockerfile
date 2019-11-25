@@ -27,4 +27,4 @@ RUN cd $HOME/asterisk && \
  make install
 
 EXPOSE 5060/udp 5060/tcp
-CMD /usr/bin/asterisk -W -vf -n
+CMD /usr/bin/asterisk -W -vvvf -n

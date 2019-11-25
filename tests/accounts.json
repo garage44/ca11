@@ -1,0 +1,41 @@
+{
+    "alice": {
+        "session": {
+            "username": "alice",
+            "password": "testing"
+        },
+        "sip": {
+            "number": "1000",
+            "password": "unsecurepassword"
+        },
+        "sig11": {
+            "number": "1100000001"
+        }
+    },
+    "bob": {
+        "session": {
+            "username": "bob",
+            "password": "testing"
+        },
+        "sip": {
+            "number": "2000",
+            "password": "unsecurepassword"
+        },
+        "sig11": {
+            "number": "1100000002"
+        }
+    },
+    "charlie": {
+        "session": {
+            "username": "charlie",
+            "password": "testing"
+        },
+        "sip": {
+            "number": "3000",
+            "password": "unsecurepassword"
+        },
+        "sig11": {
+            "number": "1100000003"
+        }
+    }
+}

@@ -63,7 +63,7 @@ class CA11 extends App {
             }
         }
 
-        this._loadPlugins(this.__plugins)
+        this._loadModules(this.__modules)
 
         this.media = new Media(this)
         this.sounds = new Sounds(this)

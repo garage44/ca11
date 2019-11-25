@@ -26,13 +26,13 @@ module.exports = function(settings) {
     * @returns {Function} Gulp stream.
     */
     helpers.compile = function({addons = [], debug = false, entry}) {
-        const brandColors = this.toScss(settings.theme.colors)
+        const themeColors = this.toScss(settings.theme.colors)
         let includePaths = [
             settings.NODE_DIR,
             // Use a directory up to the project directory,
             // because we want to expose ca11 as an import
             // prefix in project-related SCSS files.
-            path.join(settings.ROOT_DIR, 'src', 'scss'),
+            path.join(settings.BASE_DIR, 'scss'),
         ]
         const name = path.basename(entry, '.scss')
 
@@ -40,7 +40,7 @@ module.exports = function(settings) {
         if (addons.length) sources = sources.concat(addons)
 
         return gulp.src(sources)
-            .pipe(insert.prepend(brandColors))
+            .pipe(insert.prepend(themeColors))
             .pipe(ifElse(debug, () => sourcemaps.init({loadMaps: true})))
             .pipe(sass({
                 includePaths,
@@ -67,29 +67,10 @@ module.exports = function(settings) {
 
 
     tasks.app = function stylesApp() {
-        let addons = [path.join(settings.BASE_DIR, 'components', '**', '*.scss')]
-        const builtin = settings.brands[settings.BRAND_TARGET].plugins.builtin
-        const custom = settings.brands[settings.BRAND_TARGET].plugins.custom
-
-        const sectionModules = Object.assign(builtin, custom)
-        for (const moduleName of Object.keys(sectionModules)) {
-            const sectionModule = sectionModules[moduleName]
-            if (sectionModule.addons && sectionModule.addons.length) {
-                for (const addon of sectionModule.addons) {
-                    const dirName = addon.split('/')[0]
-                    logger.info(`[fg] addon styles for ${moduleName} (${addon})`)
-                    addons.push(path.join(settings.NODE_DIR, dirName, 'src', 'components', '**', '*.scss'))
-                }
-            } else if (sectionModule.parts) {
-                logger.info(`[fg] addon styles for ${moduleName} (${sectionModule.name})`)
-                // The module may include a path to the source file.
-                addons.push(path.join(settings.NODE_DIR, sectionModule.name, 'src', 'components', '**', '*.scss'))
-            }
-        }
         return helpers.compile({
-            addons,
+            addons: [path.join(settings.BASE_DIR, 'components', '**', '*.scss')],
             debug: !settings.BUILD_OPTIMIZED,
-            entry: './src/scss/ca11/app.scss',
+            entry: './scss/ca11/app.scss',
         })
     }
 

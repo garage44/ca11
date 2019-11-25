@@ -9,7 +9,7 @@ server {
   ssl_certificate_key /etc/nginx/ssl/sig11.dev.ca11.app.key;
 
   location / {
-    proxy_pass http://localhost:30001/;
+    proxy_pass http://localhost:3001/;
     proxy_http_version 1.1;
     proxy_set_header Host $http_host;
     proxy_set_header Upgrade $http_upgrade;

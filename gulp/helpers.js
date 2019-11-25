@@ -15,7 +15,7 @@ module.exports = function(settings) {
      */
     helpers.format = {
         context: () => {
-            return `${settings.BRAND_TARGET} ${settings.BUILD_TARGET}`
+            return `${settings.BUILD_TARGET}`
         },
         selected: (options, selected) => {
             let styledOptions = options.map((option) => {
@@ -102,10 +102,10 @@ module.exports = function(settings) {
             tasks.package.description = 'not available'
         }
 
-        tasks['test-browser'].description = `run functional tests on a forced webview for ${settings.BRAND_TARGET} `
+        tasks['test-browser'].description = 'run functional tests on a forced webview '
         tasks.styles.description = helpers.desc.styles
         tasks['test-lint'].description = 'lint project consistency and styleguides'
-        tasks['test-unit'].description = `run unit tests for ${settings.BRAND_TARGET}`
+        tasks['test-unit'].description = 'run unit tests'
     }
 
 

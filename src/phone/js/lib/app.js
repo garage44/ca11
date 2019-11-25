@@ -24,7 +24,8 @@ class App extends Skeleton {
 
         // Contains all registered plugins.
         this.plugins = {}
-        this.__plugins = settings.plugins
+        console.log(settings)
+        this.__modules = settings.modules
     }
 
 
@@ -165,11 +166,11 @@ class App extends Skeleton {
     * Load section plugins from browserified modules. This is basically
     * the browser-side of the `jsPlugins` browserify handler in
     * `tools/helpers.js`.
-    * @param {Object} plugins - See .ca11rc.example for the format.
+    * @param {Object} modules - See .ca11rc.example for the format.
     */
-    _loadPlugins(plugins) {
+    _loadModules(modules) {
         // Start by initializing builtin plugins.
-        for (const builtin of plugins.builtin) {
+        for (const builtin of modules) {
             if (builtin.addons) {
                 const addonModules = builtin.addons[this._appSection].map((addon) => {
                     return require(`${addon}/src/js/${this._appSection}`)
@@ -186,15 +187,6 @@ class App extends Skeleton {
             } else {
                 // Other plugins without any config.
                 this.plugins[builtin.name] = new builtin.module(this, null)
-            }
-        }
-
-        // Then process custom modules.
-        for (const moduleName of Object.keys(this.__plugins.custom)) {
-            const customPlugin = this.__plugins.custom[moduleName]
-            if (customPlugin.parts.includes(this._appSection)) {
-                const CustomPlugin = require(`${customPlugin.name}/src/js/${this._appSection}`)
-                this.plugins[moduleName] = new CustomPlugin(this)
             }
         }
     }

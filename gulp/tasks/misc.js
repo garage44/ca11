@@ -157,7 +157,6 @@ module.exports = function(settings) {
 
         gulp.watch([
             path.join(settings.BASE_DIR, 'js', 'i18n', '*.js'),
-            path.join(settings.ROOT_DIR, '../', 'ca11-*', 'src', 'js', 'i18n', '*.js'),
         ], gulp.series(code.tasks.appI18n, helpers.reload('app_i18n.js')))
 
 
@@ -165,55 +164,35 @@ module.exports = function(settings) {
             path.join(settings.BASE_DIR, 'index.html'),
         ], gulp.series(assets.tasks.html, helpers.reload('app.js')))
 
-
-        // if (!settings.NO_SIG11) {
-        //     helpers.serveSIG11(null, false)
-
-        //     gulp.watch([
-        //         path.join(settings.BASE_DIR, 'js', 'sig11', 'index.js'),
-        //     ], helpers.serveSIG11)
-
-        //     // SIG11 logic that is shared between CA11 and SIG11 super node service.
-        //     gulp.watch([
-        //         path.join(settings.BASE_DIR, 'js', 'sig11', '**', '*.js'),
-        //         `!${path.join(settings.BASE_DIR, 'js', 'sig11', 'index.js')}`,
-        //     ], gulp.series(
-        //         code.tasks.app,
-        //         helpers.serveSIG11,
-        //         helpers.reload('app.js'),
-        //     ))
-        // }
-
         gulp.watch([
             path.join(settings.BASE_DIR, 'components', '**', '*.js'),
-            path.join(settings.BASE_DIR, 'js', 'sig11', 'd3.js'),
             path.join(settings.BASE_DIR, 'js', 'index.js'),
             path.join(settings.BASE_DIR, 'js', 'lib', '**', '*.js'),
-            path.join(settings.BASE_DIR, 'js', 'plugins', '**', '*.js'),
-            path.join(settings.ROOT_DIR, '../', 'ca11-skeleton', '**', '*.js'),
-            path.join(settings.ROOT_DIR, '../', 'sig11', '**', '*.js'),
+            path.join(settings.BASE_DIR, 'js', 'modules', '**', '*.js'),
+            path.join(settings.PROJECT_DIR, '../', 'base', '**', '*.js'),
+            path.join(settings.PROJECT_DIR, '../', 'sig11', '**', '*.js'),
         ], gulp.series(code.tasks.app, helpers.reload('app.js')))
 
 
-        gulp.watch([
-            path.join(settings.ROOT_DIR, '../', 'ca11-*', 'src', '**', '*.js'),
-        ], gulp.series(
-            gulp.parallel(code.tasks.appI18n, code.tasks.app),
-            code.tasks.plugins,
-            helpers.reload('app_plugins.js'),
-        ))
+        // gulp.watch([
+        //     path.join(settings.PROJECT_DIR, '../', 'ca11-*', 'src', '**', '*.js'),
+        // ], gulp.series(
+        //     gulp.parallel(code.tasks.appI18n, code.tasks.app),
+        //     code.tasks.plugins,
+        //     helpers.reload('app_plugins.js'),
+        // ))
 
 
         gulp.watch([
             path.join(settings.BASE_DIR, 'scss', '**', '*.scss'),
             path.join(settings.BASE_DIR, 'components', '**', '*.scss'),
-            path.join(settings.ROOT_DIR, '../', 'ca11-*', 'src', 'components', '**', '*.scss'),
+            path.join(settings.PROJECT_DIR, '../', 'ca11-*', 'src', 'components', '**', '*.scss'),
         ], {followSymlinks: true}, gulp.series(styles.tasks.app, helpers.reload('app.css')))
 
 
         gulp.watch([
             path.join(settings.BASE_DIR, 'components', '**', '*.vue'),
-            path.join(settings.ROOT_DIR, '../', 'ca11-*', 'src', 'components', '**', '*.vue'),
+            path.join(settings.PROJECT_DIR, '../', 'ca11-*', 'src', 'components', '**', '*.vue'),
         ], gulp.series(assets.tasks.templates, helpers.reload('templates.js')))
 
 

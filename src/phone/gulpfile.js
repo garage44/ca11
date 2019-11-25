@@ -5,16 +5,14 @@ const gulp = require('gulp')
 const inquirer = require('inquirer')
 const logger = require('gulplog')
 
-const settings = require('./src/base/settings')(__dirname, path.join(__dirname, 'src', 'phone'))
-const helpers = require('./gulp/helpers')(settings)
-
-// Load Gulp task modules.
-const assets = require('./gulp/tasks/assets')(settings)
-const code = require('./gulp/tasks/code')(settings)
-const publish = require('./gulp/tasks/publish')(settings)
-const misc = require('./gulp/tasks/misc')(settings)
-const styles = require('./gulp/tasks/styles')(settings)
-const test = require('./gulp/tasks/test')(settings)
+const settings = require('../../gulp/settings')(path.join(__dirname, '../../'), __dirname)
+const helpers = require('../../gulp/helpers')(settings)
+const assets = require('../../gulp/tasks/assets')(settings)
+const code = require('../../gulp/tasks/code')(settings)
+const publish = require('../../gulp/tasks/publish')(settings)
+const misc = require('../../gulp/tasks/misc')(settings)
+const styles = require('../../gulp/tasks/styles')(settings)
+const test = require('../../gulp/tasks/test')(settings)
 
 
 const build = gulp.series(misc.tasks.buildClean, function build(done) {
@@ -34,7 +32,6 @@ gulp.task('code', (done) => {
         code.tasks.app,
         code.tasks.appI18n,
         gulp.series(assets.tasks.icons, code.tasks.vendor),
-        code.tasks.plugins,
     ]
     if (settings.BUILD_TARGET === 'electron') {
         runTasks.push(code.tasks.electron)
@@ -66,7 +63,7 @@ gulp.task('publish', async(done) => {
     process.env.NODE_ENV = 'production'
 
     helpers.showBuildConfig()
-    const storeTarget = c.bold.red(`${settings.BRAND_TARGET} ${settings.PUBLISH_CHANNEL}`)
+    const storeTarget = c.bold.red(settings.PUBLISH_CHANNEL)
     const answers = await inquirer.prompt([{
         default: false,
         message: `Publish ${storeTarget} version ${c.bold.red(settings.PACKAGE.version)} to ${settings.BUILD_TARGET} store?`,
@@ -101,7 +98,6 @@ gulp.task('styles', (done) => {
 
 
 gulp.task('test-browser', function testBrowser(done) {
-    process.env.BRAND = settings.BRAND_TARGET
     const BUILD_TARGET = settings.BUILD_TARGET
     // Browser testing requires a webview build; the
     // previous build target is restored afterwards.

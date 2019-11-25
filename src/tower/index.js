@@ -5,9 +5,9 @@ global.crypto = new WebCrypto()
 
 const Skeleton = require('../base')
 
-const Crypto = require('@garage11/sig11/crypto')
-const Endpoint = require('@garage11/sig11/endpoint')
-const Network = require('@garage11/sig11/network')
+const Crypto = require('../sig11/crypto')
+const Endpoint = require('../sig11/endpoint')
+const Network = require('../sig11/network')
 
 global.EventEmitter = require('eventemitter3')
 global.btoa = require('btoa')
@@ -17,8 +17,7 @@ const uuidv4 = require('uuid/v4')
 
 const rc = require('rc')
 let settings = {}
-rc('ca11-tower', settings)
-
+rc('ca11', settings)
 
 class Ca11Tower extends Skeleton {
 
@@ -28,7 +27,7 @@ class Ca11Tower extends Skeleton {
         this.crypto = new Crypto(this)
         this.network = new Network(this)
 
-        this.knex = require('knex')(settings.knex)
+        this.knex = require('knex')(settings.tower.knex)
 
         this.setup()
     }
@@ -56,21 +55,21 @@ class Ca11Tower extends Skeleton {
             this.knex.from('sig11_asterisk')
                 .select('*')
                 .where({
-                    pubkey: endpoint.id
+                    pubkey: endpoint.id,
                 })
 
-            .then((rows) => {
-                if (!rows.length) {
+                .then((rows) => {
+                    if (!rows.length) {
 
-                    this.knex('sig11_asterisk').insert({
-                        id: uuidv4(),
-                        pubkey: endpoint.id
-                    })
-                    .then((res) => {
-                        console.log("RES", res)
-                    })
-                }
-            })
+                        this.knex('sig11_asterisk').insert({
+                            id: uuidv4(),
+                            pubkey: endpoint.id,
+                        })
+                            .then((res) => {
+                                console.log('RES', res)
+                            })
+                    }
+                })
 
             this.network.addEndpoint(endpoint, this.network.identity)
             endpoint.send(this.network.protocol.out('network', this.network.export()))
@@ -89,7 +88,7 @@ class Ca11Tower extends Skeleton {
             this.network.broadcast(msg)
         })
     }
-async setup() {
+    async setup() {
         this.keypair = await this.crypto.createIdentity()
         this.network.setIdentity(this.keypair)
 
@@ -102,11 +101,11 @@ async setup() {
         })
 
         this.wss.on('connection', this.onConnection.bind(this))
-        this.server.listen(settings.port)
+        this.server.listen(settings.tower.port)
         console.log('starting service')
     }
 
-    
+
 }
 
 global.ca11tower = new Ca11Tower()

@@ -18,12 +18,11 @@ let tasks = {}
 
 module.exports = function(settings) {
     /**
-     * Generate a brand-specific distribution name.
-     * @param {String} brand - The brand name to use for the distribution.
+     * Generate a distribution name.
      * @returns {String} - The distribution name to use.
      */
-    helpers.buildName = function(brand) {
-        let distName = `${brand}-${settings.BUILD_TARGET}-${PACKAGE.version}`
+    helpers.buildName = function() {
+        let distName = `${settings.BUILD_TARGET}-${PACKAGE.version}`
         if (settings.BUILD_TARGET === 'electron') distName += `-${settings.ELECTRON_ARCH}`
 
         if (settings.PUBLISH_CHANNEL !== 'production') distName += `-${settings.PUBLISH_CHANNEL}`
@@ -38,7 +37,7 @@ module.exports = function(settings) {
      * @returns {SentryManager} The sentry manager to operate on.
      */
     helpers.sentryManager = function() {
-        const sentry = settings.BRAND.telemetry.sentry
+        const sentry = settings.telemetry.sentry
         return createReleaseManager({
             apiKey: sentry.apiKey,
             host: sentry.host,
@@ -56,10 +55,10 @@ module.exports = function(settings) {
      */
     tasks.package = function publishPackage() {
         return new Promise(async(resolve, reject) => {
-            const distDir = path.join(settings.BASE_DIR, 'dist', settings.BRAND_TARGET)
+            const distDir = path.join(settings.BASE_DIR, 'dist')
             await mkdirp(distDir)
 
-            let distName = helpers.buildName(settings.BRAND_TARGET)
+            let distName = helpers.buildName()
             // Not using Gulp's Vinyl-based zip, because of a symlink issue that
             // prevents the MacOS build to be zipped properly.
             // See https://github.com/gulpjs/gulp/issues/1427 for more info.
@@ -78,8 +77,8 @@ module.exports = function(settings) {
                 // This is broken when used in combination with Wine due to rcedit.
                 // See: https://github.com/electron-userland/electron-packager/issues/769
                 if (settings.ELECTRON_PLATFORM !== 'win32') buildParams += iconParam
-                const distBuildName = `${settings.BRAND_TARGET}-${settings.ELECTRON_PLATFORM}-${settings.ELECTRON_ARCH}`
-                const execCommand = `./node_modules/electron-packager/cli.js ${settings.BUILD_DIR} ${settings.BRAND_TARGET} ${buildParams} --out=${distDir}`
+                const distBuildName = `${settings.ELECTRON_PLATFORM}-${settings.ELECTRON_ARCH}`
+                const execCommand = `./node_modules/electron-packager/cli.js ${settings.BUILD_DIR} ca11 ${buildParams} --out=${distDir}`
                 childExec(execCommand, undefined, (err, stdout, stderr) => {
                     if (stderr) logger.info(stderr)
                     if (stdout) logger.info(stdout)

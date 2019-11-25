@@ -120,7 +120,7 @@ class PluginSettings extends Plugin {
             return
         }
 
-        const release = process.env.VERSION + '-' + process.env.PUBLISH_CHANNEL + '-' + process.env.BRAND_TARGET + '-' + this.app.env.name
+        const release = process.env.VERSION + '-' + process.env.PUBLISH_CHANNEL + '-' + this.app.env.name
         this.app.logger.info(`${this}monitoring exceptions for release ${release}`)
         Raven.config(process.env.SENTRY_DSN, {
             allowSecretKey: true,

@@ -3,14 +3,6 @@ require('module-alias/register')
 const App = require('ca11/lib/app')
 require('./i18n')
 
-/**
-* A minimal Vue-powered documentation website, reusing as much
-* as possible from the source. Reason for building
-* is that we want branded documentation, and a higher degree
-* of control over how the documentation looks and is being
-* generated. It is also a good testingground to optimize
-* the App & Skeleton abstraction.
-*/
 class Docs extends App {
 
     constructor(options) {

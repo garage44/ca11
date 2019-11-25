@@ -39,7 +39,6 @@ module.exports = function config(projectDir, baseDir, {overrides = {}} = {}) {
         PUBLISH_CHANNEL: argv.channel ? argv.channel : 'alpha',
         PUBLISH_CHANNELS: ['alpha', 'beta', 'production'],
         PUBLISH_TARGETS: ['pwa'],
-        ROOT_DIR: projectDir,
         // Generate screenshots during browser tests?
         SIZE_OPTIONS: {showFiles: true, showTotal: true},
 
@@ -50,18 +49,13 @@ module.exports = function config(projectDir, baseDir, {overrides = {}} = {}) {
 
     Object.assign(settings, overrides)
 
-    // Setup directory config.
-    settings.BRAND_TARGET = argv.brand ? argv.brand : process.env.BRAND ? process.env.BRAND : 'ca11'
-    settings.BRAND_TARGETS = Object.keys(settings.brands)
-    settings.BUILD_ROOT_DIR = argv.buildroot ? argv.buildroot : path.join(settings.BASE_DIR, 'build')
+    settings.BUILD_ROOT_DIR = argv.buildroot ? argv.buildroot : path.join(settings.PROJECT_DIR, 'build')
 
-    settings.PACKAGE = require(`${settings.ROOT_DIR}/package`)
+    settings.PACKAGE = require(`${settings.PROJECT_DIR}/package`)
 
-    // BRAND_TARGET and BUILD_TARGET can be modified during runtime.
-    Object.defineProperty(settings, 'BRAND', {get: () => settings.brands[settings.BRAND_TARGET]})
     Object.defineProperty(settings, 'BUILD_DIR', {
         get: function() {
-            return path.join(settings.BUILD_ROOT_DIR, settings.BRAND_TARGET, settings.BUILD_TARGET)
+            return path.join(settings.BUILD_ROOT_DIR, settings.BUILD_TARGET)
         },
     })
 
@@ -70,21 +64,21 @@ module.exports = function config(projectDir, baseDir, {overrides = {}} = {}) {
     Object.defineProperty(settings, 'SENTRY_RELEASE', {
         get: function() {
             if (argv.release) return argv.release
-            else return `${settings.PACKAGE.version}-${settings.PUBLISH_CHANNEL}-${settings.BRAND_TARGET}-${settings.BUILD_TARGET}`
+            else return `${settings.PACKAGE.version}-${settings.PUBLISH_CHANNEL}-${settings.BUILD_TARGET}`
         },
     })
 
-    settings.SCREENS_DIR = path.join(settings.ROOT_DIR, 'docs', 'build', settings.BRAND_TARGET, 'docs', 'screens')
-    settings.DIST_DIR = path.join(settings.ROOT_DIR, 'dist')
-    settings.NODE_DIR = path.join(settings.ROOT_DIR, 'node_modules') || process.env.NODE_DIR
+    settings.SCREENS_DIR = path.join(settings.BUILD_ROOT_DIR, 'docs', 'screens')
+    settings.DIST_DIR = path.join(settings.PROJECT_DIR, 'dist')
+    settings.NODE_DIR = path.join(settings.PROJECT_DIR, 'node_modules') || process.env.NODE_DIR
     settings.TEMP_DIR = path.join(settings.BUILD_ROOT_DIR, '.tmp')
-    settings.THEME_DIR = path.join(settings.NODE_DIR, settings.BRAND.theme, 'src')
+    settings.THEME_DIR = path.join(settings.NODE_DIR, settings.theme, 'src')
     // The theme-config from ca11-theme.json
-    settings.theme = require(path.join(settings.NODE_DIR, settings.BRAND.theme, 'ca11-theme.json'))
+    settings.theme = require(path.join(settings.NODE_DIR, settings.theme, 'ca11-theme.json'))
 
     // Setup environment config.
     if (process.env.HEADLESS) settings.HEADLESS = process.env.HEADLESS === '1' ? true : false
-    else settings.HEADLESS = settings.BRAND.tests.headless
+    else settings.HEADLESS = settings.testing.headless
     settings.NODE_ENV = process.env.NODE_ENV ? process.env.NODE_ENV : 'development'
     settings.SCREENS = process.env.SCREENS === '1' ? true : false
 
@@ -117,7 +111,7 @@ module.exports = function config(projectDir, baseDir, {overrides = {}} = {}) {
                             {label: `BASE_DIR             ${tildify(settings.BASE_DIR)}`},
                             {label: `BUILD_DIR            ${tildify(settings.BUILD_DIR)}`},
                             {label: `DIST_DIR             ${tildify(settings.DIST_DIR)}`},
-                            {label: `PROJECT_DIR          ${tildify(settings.ROOT_DIR)}`},
+                            {label: `PROJECT_DIR          ${tildify(settings.PROJECT_DIR)}`},
                             {label: `THEME_DIR            ${tildify(settings.THEME_DIR)}`},
                             {label: `SCREENS_DIR          ${tildify(settings.SCREENS_DIR)}`},
                             {label: `TEMP_DIR             ${tildify(settings.TEMP_DIR)}`},
@@ -126,7 +120,6 @@ module.exports = function config(projectDir, baseDir, {overrides = {}} = {}) {
                     {
                         label: c.cyan('Flags'),
                         nodes: [
-                            {label: `BRAND_TARGET         --brand ${format.selected(settings.BRAND_TARGETS, settings.BRAND_TARGET)}`},
                             {label: `BUILD_ROOT_DIR       --buildroot <${c.bold.white(tildify(settings.BUILD_ROOT_DIR))}>`},
                             {label: `BUILD_TARGET         --target ${format.selected(settings.BUILD_TARGETS, settings.BUILD_TARGET)}`},
                             {label: `BUILD_OPTIMIZED      --optimized <${settings.BUILD_OPTIMIZED ? c.bold.red('yes') : c.bold.red('no')}>`},

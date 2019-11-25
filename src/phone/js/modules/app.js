@@ -58,11 +58,11 @@ class PluginApp extends Plugin {
                 unlocked: false,
             },
             vendor: {
-                name: process.env.VENDOR_NAME,
+                name: 'ca11',
                 support: {
-                    email: process.env.VENDOR_SUPPORT_EMAIL,
-                    phone: process.env.VENDOR_SUPPORT_PHONE,
-                    website: process.env.VENDOR_SUPPORT_WEBSITE,
+                    email: 'info@ca11.app',
+                    phone: 'S11-CA11',
+                    website: 'https://ca11.app',
                 },
             },
             version: {

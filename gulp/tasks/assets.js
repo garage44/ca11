@@ -24,9 +24,9 @@ let tasks = {}
 
 module.exports = function(settings) {
 
-    // Check if the brand theme directory exists.
+    // Check if the theme directory exists.
     if (!fs.existsSync(settings.THEME_DIR)) {
-        throw new Error(`Cannot find ${settings.BRAND_TARGET} theme (${settings.THEME_DIR}`)
+        throw new Error(`Cannot find CA11 theme (${settings.THEME_DIR}`)
     }
 
     tasks.files = function assetsFiles() {
@@ -39,10 +39,10 @@ module.exports = function(settings) {
             .pipe(addsrc(path.join(settings.THEME_DIR, 'audio', '**', '*'), {base: settings.THEME_DIR}))
             .pipe(ifElse(settings.BUILD_OPTIMIZED, imagemin))
             .pipe(ifElse(settings.BUILD_TARGET === 'electron', () => {
-                return addsrc(path.join(settings.ROOT_DIR, 'package.json'))
+                return addsrc(path.join(settings.PROJECT_DIR, 'package.json'))
             }))
-            .pipe(addsrc(path.join(settings.ROOT_DIR, 'LICENSE')))
-            .pipe(addsrc(path.join(settings.ROOT_DIR, 'README.md')))
+            .pipe(addsrc(path.join(settings.PROJECT_DIR, 'LICENSE')))
+            .pipe(addsrc(path.join(settings.PROJECT_DIR, 'README.md')))
             .pipe(addsrc(path.join(settings.BASE_DIR, '_locales', '**'), {base: './src/'}))
             .pipe(gulp.dest(path.join(settings.BUILD_DIR)))
             .pipe(size(_extend({title: 'assets'}, settings.SIZE_OPTIONS)))
@@ -59,14 +59,14 @@ module.exports = function(settings) {
 
     tasks.icons = function assetsIcons(done) {
         // Use relative paths or vsvg will choke.
-        gulp.src(path.join(settings.ROOT_DIR, 'src', 'svg', '*.svg'), {base: path.join(settings.ROOT_DIR, 'src')})
+        gulp.src(path.join(settings.BASE_DIR, 'svg', '*.svg'), {base: path.join(settings.BASE_DIR)})
             .pipe(addsrc(path.join(settings.THEME_DIR, 'svg', '*.svg'), {base: settings.THEME_DIR}))
             .pipe(svgo())
             .pipe(size(_extend({title: 'icons'}, settings.SIZE_OPTIONS)))
-            .pipe(gulp.dest(path.join(settings.TEMP_DIR, settings.BRAND_TARGET)))
+            .pipe(gulp.dest(path.join(settings.TEMP_DIR)))
             .on('end', () => {
-                const iconSrc = path.join(settings.TEMP_DIR, settings.BRAND_TARGET, 'svg')
-                const iconBuildDir = path.join(settings.TEMP_DIR, settings.BRAND_TARGET, 'build')
+                const iconSrc = path.join(settings.TEMP_DIR, 'svg')
+                const iconBuildDir = path.join(settings.TEMP_DIR, 'build')
                 const svgCommand = path.join(settings.NODE_DIR, 'vue-svgicon', 'dist', 'lib', 'index.js')
                 const exec = `${svgCommand} -s ${iconSrc} -t ${iconBuildDir}`
 
@@ -80,25 +80,7 @@ module.exports = function(settings) {
 
 
     tasks.templates = function assetsTemplates() {
-        let sources = ['./src/components/**/*.vue']
-        const builtin = settings.brands[settings.BRAND_TARGET].plugins.builtin
-        const custom = settings.brands[settings.BRAND_TARGET].plugins.custom
-
-        const sectionPlugins = Object.assign(builtin, custom)
-        for (const moduleName of Object.keys(sectionPlugins)) {
-            const sectionPlugin = sectionPlugins[moduleName]
-
-            if (sectionPlugin.addons && sectionPlugin.addons.length) {
-                for (const addon of sectionPlugin.addons) {
-                    logger.info(`[fg] addon templates for ${moduleName} (${addon})`)
-                    sources.push(path.join(settings.NODE_DIR, addon, 'src', 'components', '**', '*.vue'))
-                }
-            } else if (sectionPlugin.parts) {
-                logger.info(`[fg] custom templates for ${moduleName} (${sectionPlugin.name})`)
-                // The module may include a path to the source file.
-                sources.push(path.join(settings.NODE_DIR, sectionPlugin.name, 'src', 'components', '**', '*.vue'))
-            }
-        }
+        let sources = ['./components/**/*.vue']
 
         return gulp.src(sources)
             .pipe(vueCompiler({

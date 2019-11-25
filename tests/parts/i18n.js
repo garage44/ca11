@@ -5,28 +5,12 @@ const glob = util.promisify(require('glob'))
 const _ = require('../test')
 
 const {CA11, options} = require('../../src/js')
-const BRAND = process.env.BRAND ? process.env.BRAND : 'ca11'
 
 
 let translations = []
 
 async function getTranslations() {
-    let globPattern = '{src/js/**/*.js,src/components/**/{*.js,*.vue}'
-    const plugins = _.settings.brands[BRAND].plugins
-
-    if (plugins.builtin.contacts.providers.length) {
-        for (const provider of plugins.builtin.contacts.providers) {
-            globPattern += `,node_modules/${provider}/src/**/{*.js,*.vue}`
-        }
-    }
-
-    if (Object.keys(plugins.custom).length) {
-        for (const name of Object.keys(plugins.custom)) {
-            globPattern += `,node_modules/${plugins.custom[name].name}/src/**/{*.js,*.vue}`
-        }
-    }
-
-    globPattern += '}'
+    let globPattern = '{src/js/**/*.js,src/components/**/{*.js,*.vue}}'
     const files = await glob(globPattern)
     const translationMatch = /\$t\([\s]*'([a-zA-Z0-9_\s{}.,!?%\-:;"]+)'[(\),)?]/g
     const unescape = /\\/g
