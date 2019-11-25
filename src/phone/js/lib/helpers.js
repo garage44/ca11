@@ -212,7 +212,7 @@ function helpers(app) {
                 app.setState({ui: {tabs: {[category]: {active: name}}}}, {encrypt: false, persist: true})
             },
             setupCall: function(description) {
-                app.plugins.caller.call({description, start: true, transfer: false})
+                app.modules.caller.call({description, start: true, transfer: false})
                 // Clean up the number so it is gone when the keypad reappears after the call.
                 description.number = ''
             },

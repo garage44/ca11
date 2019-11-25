@@ -6,7 +6,7 @@ module.exports = (app) => {
         computed: app.helpers.sharedComputed(),
         data: function() {
             return {
-                customPlugins: app.plugins,
+                customPlugins: app.modules,
             }
         },
         methods: Object.assign({

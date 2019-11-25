@@ -42,7 +42,7 @@ module.exports = (app) => {
 
                 app.emit('caller:call-activate', {callId: null})
             },
-            callDescription: function(...args) {app.plugins.caller.call(...args)},
+            callDescription: function(...args) {app.modules.caller.call(...args)},
             callTitle: function(call) {
                 const translations = app.helpers.getTranslations().call
                 let text

@@ -60,7 +60,7 @@ class PluginSIP extends Plugin {
             * @param {String} uaStatus - The new UA status.
             */
             'store.sip.status': (uaStatus) => {
-                this.app.plugins.ui.menubarState()
+                this.app.modules.ui.menubarState()
             },
         }
     }

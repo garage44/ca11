@@ -16,13 +16,13 @@ const format = {
 }
 
 
-module.exports = function config(projectDir, baseDir, {overrides = {}} = {}) {
+module.exports = function config(projectDir, projectName, baseDir, {overrides = {}} = {}) {
     // Define all static or simple condition settings here.
     let settings = {
         BASE_DIR: baseDir,
         BUILD_OPTIMIZED: argv.optimized ? true : (process.env.NODE_ENV === 'production'),
-        BUILD_TARGET: argv.target ? argv.target : 'webview',
-        BUILD_TARGETS: ['electron', 'pwa', 'node', 'webview'],
+        BUILD_TARGET: argv.target ? argv.target : 'pwa',
+        BUILD_TARGETS: ['electron', 'pwa', 'node'],
         BUILD_VERBOSE: argv.verbose ? true : false,
         DEBUG_MODE: process.env.DEBUG === '1' ? true : false,
         ELECTRON_ARCH: argv.arch ? argv.arch : 'x64',
@@ -36,9 +36,6 @@ module.exports = function config(projectDir, baseDir, {overrides = {}} = {}) {
         NODE_ENVS: ['development', 'production'],
         // Safest default deploy target is `alpha`.
         PROJECT_DIR: projectDir,
-        PUBLISH_CHANNEL: argv.channel ? argv.channel : 'alpha',
-        PUBLISH_CHANNELS: ['alpha', 'beta', 'production'],
-        PUBLISH_TARGETS: ['pwa'],
         // Generate screenshots during browser tests?
         SIZE_OPTIONS: {showFiles: true, showTotal: true},
 
@@ -50,21 +47,16 @@ module.exports = function config(projectDir, baseDir, {overrides = {}} = {}) {
     Object.assign(settings, overrides)
 
     settings.BUILD_ROOT_DIR = argv.buildroot ? argv.buildroot : path.join(settings.PROJECT_DIR, 'build')
-
+    settings.BUILD_DIR = path.join(settings.BUILD_ROOT_DIR, projectName)
     settings.PACKAGE = require(`${settings.PROJECT_DIR}/package`)
 
-    Object.defineProperty(settings, 'BUILD_DIR', {
-        get: function() {
-            return path.join(settings.BUILD_ROOT_DIR, settings.BUILD_TARGET)
-        },
-    })
 
     // Override the release name when manually
     // removing a release and artifacts from Sentry.
     Object.defineProperty(settings, 'SENTRY_RELEASE', {
         get: function() {
             if (argv.release) return argv.release
-            else return `${settings.PACKAGE.version}-${settings.PUBLISH_CHANNEL}-${settings.BUILD_TARGET}`
+            else return `${settings.PACKAGE.version}-${settings.BUILD_TARGET}`
         },
     })
 
@@ -88,11 +80,7 @@ module.exports = function config(projectDir, baseDir, {overrides = {}} = {}) {
         console.log(`Invalid BUILD_TARGET: ${settings.BUILD_TARGET} ${format.selected(settings.BUILD_TARGETS)}`)
         process.exit(1)
     }
-    if (!settings.PUBLISH_CHANNELS.includes(settings.PUBLISH_CHANNEL)) {
-        // eslint-disable-next-line no-console
-        console.log(`Invalid PUBLISH_CHANNEL: ${settings.PUBLISH_CHANNEL} ${format.selected(settings.PUBLISH_CHANNELS)}`)
-        process.exit(1)
-    }
+
     if (!settings.NODE_ENVS.includes(settings.NODE_ENV)) {
         // eslint-disable-next-line no-console
         console.log(`Invalid NODE_ENV: ${settings.NODE_ENV} ${format.selected(settings.NODE_ENVS)}`)
@@ -124,7 +112,6 @@ module.exports = function config(projectDir, baseDir, {overrides = {}} = {}) {
                             {label: `BUILD_TARGET         --target ${format.selected(settings.BUILD_TARGETS, settings.BUILD_TARGET)}`},
                             {label: `BUILD_OPTIMIZED      --optimized <${settings.BUILD_OPTIMIZED ? c.bold.red('yes') : c.bold.red('no')}>`},
                             {label: `BUILD_VERBOSE        --verbose <${settings.BUILD_VERBOSE ? c.bold.red('yes') : c.bold.red('no')}`},
-                            {label: `PUBLISH_CHANNEL      --channel ${format.selected(settings.PUBLISH_CHANNELS, settings.PUBLISH_CHANNEL)}`},
                             {label: `ELECTRON_ARCH        --arch ${format.selected(settings.ELECTRON_ARCHES, settings.ELECTRON_ARCH)}`},
                             {label: `ELECTRON_PLATFORM    --platform ${format.selected(settings.ELECTRON_PLATFORMS, settings.ELECTRON_PLATFORM)}`},
                             {label: `SENTRY_RELEASE       --release <${c.bold.green(settings.SENTRY_RELEASE)}>`},

@@ -24,7 +24,7 @@ module.exports = (app) => {
             callAccept: function(call) {
                 app.emit('caller:call-accept', {callId: call.id})
             },
-            callDescription: function(...args) {app.plugins.caller.call(...args)},
+            callDescription: function(...args) {app.modules.caller.call(...args)},
             callTerminate: function(call) {
                 let status = 'bye'
                 if (call.status === 'create') status = 'caller_busy'

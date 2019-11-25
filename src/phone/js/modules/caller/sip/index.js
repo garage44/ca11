@@ -18,7 +18,7 @@ class SIPCaller {
 
 
         this.app.on('sip:dtmf', ({callId, key}) => {
-            this.app.plugins.caller.calls[callId].session.dtmf(key)
+            this.app.modules.caller.calls[callId].session.dtmf(key)
         })
     }
 
@@ -64,7 +64,7 @@ class SIPCaller {
         const call = new SIPCall(this.app, description, {silent: !acceptCall})
         call.start()
         Vue.set(this.app.state.caller.calls, call.id, call.state)
-        this.app.plugins.caller.calls[call.id] = call
+        this.app.modules.caller.calls[call.id] = call
         this.app.logger.info(`${this}incoming call ${call.id} allowed by invite`)
     }
 

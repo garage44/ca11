@@ -4,16 +4,13 @@
         "beta": "CA11-beta",
         "production": "CA11"
     },
-    "sig11": {
-        "endpoint": "sig11.dev.ca11.app",
-        "port": 3001
+    "endpoints": {
+        "sig11": "sig11.dev.ca11.app",
+        "sip": "sip.dev.ca11.app",
+        "stun": [
+            "stun:dev.ca11.app"
+        ]
     },
-    "sip": {
-        "endpoint": "sip.dev.ca11.app"
-    },
-    "stun": [
-        "stun:dev.ca11.app"
-    ],
     "telemetry": {
         "sentry": {
             "apiKey": "",
@@ -23,48 +20,21 @@
             "project": "ca11"
         }
     },
-    "tests": {
-        "alice": {
-            "session": {
-                "username": "alice",
-                "password": "testing"
-            },
-            "sip": {
-                "number": "1000",
-                "password": "unsecurepassword"
-            },
-            "sig11": {
-                "number": "1100000001"
-            }
-        },
-        "bob": {
-            "session": {
-                "username": "bob",
-                "password": "testing"
-            },
-            "sip": {
-                "number": "2000",
-                "password": "unsecurepassword"
-            },
-            "sig11": {
-                "number": "1100000002"
-            }
-        },
-        "charlie": {
-            "session": {
-                "username": "charlie",
-                "password": "testing"
-            },
-            "sip": {
-                "number": "3000",
-                "password": "unsecurepassword"
-            },
-            "sig11": {
-                "number": "1100000003"
-            }
-        },
+    "testing": {
         "headless": false,
         "port": 3000
     },
-    "theme": "@garage11/ca11-theme-default"
+    "theme": "@garage11/ca11-theme-default",
+    "tower": {
+        "port": 3001,
+        "knex": {
+            "client": "mysql2",
+            "connection": {
+                "socketPath": "/var/run/mysqld/mysqld.sock",
+                "user" : "root",
+                "password": "",
+                "database": "asterisk"
+            }
+        }
+    }
 }

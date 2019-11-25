@@ -41,7 +41,7 @@ module.exports = (app) => {
         },
         methods: Object.assign({
             callEndpoint: function(activity) {
-                app.plugins.caller.call({
+                app.modules.caller.call({
                     description: activity.description,
                     start: true,
                 })

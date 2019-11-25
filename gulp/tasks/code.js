@@ -89,7 +89,6 @@ module.exports = function(settings) {
             LANGUAGE: 'en-US',
 
             NODE_ENV: settings.NODE_ENV,
-            PUBLISH_CHANNEL: settings.PUBLISH_CHANNEL,
             SENTRY_DSN: settings.telemetry.sentry.dsn,
             SIG11_ENDPOINT: settings.endpoints.sig11,
             SIP_ENDPOINT: settings.endpoints.sip,
@@ -182,7 +181,7 @@ module.exports = function(settings) {
 
 
     tasks.serviceWorker = async function codeServiceWorker(done) {
-        await helpers.compile({destination: './', entry: './src/js/sw.js', name: 'sw'})
+        await helpers.compile({destination: './', entry: './js/sw.js', name: 'sw'})
         done()
     }
 

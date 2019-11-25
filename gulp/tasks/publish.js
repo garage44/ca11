@@ -24,8 +24,6 @@ module.exports = function(settings) {
     helpers.buildName = function() {
         let distName = `${settings.BUILD_TARGET}-${PACKAGE.version}`
         if (settings.BUILD_TARGET === 'electron') distName += `-${settings.ELECTRON_ARCH}`
-
-        if (settings.PUBLISH_CHANNEL !== 'production') distName += `-${settings.PUBLISH_CHANNEL}`
         distName += '.zip'
         return distName
     }

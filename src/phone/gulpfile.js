@@ -1,11 +1,8 @@
 const path = require('path')
 
-const c = require('ansi-colors')
 const gulp = require('gulp')
-const inquirer = require('inquirer')
-const logger = require('gulplog')
 
-const settings = require('../../gulp/settings')(path.join(__dirname, '../../'), __dirname)
+const settings = require('../../gulp/settings')(path.join(__dirname, '../../'), 'phone', __dirname)
 const helpers = require('../../gulp/helpers')(settings)
 const assets = require('../../gulp/tasks/assets')(settings)
 const code = require('../../gulp/tasks/code')(settings)
@@ -46,48 +43,6 @@ gulp.task('default', helpers.taskDefault)
 gulp.task('develop', misc.tasks.watch)
 gulp.task('manifest', misc.tasks.manifest)
 gulp.task('package', gulp.series(build, publish.tasks.package))
-
-
-/**
- * Publish a linted, tested and optimized build to
- * the appropriate store.
- */
-gulp.task('publish', async(done) => {
-    if (!settings.PUBLISH_TARGETS.includes(settings.BUILD_TARGET)) {
-        logger.error(`Invalid publishing platform: ${settings.BUILD_TARGET} ${helpers.format.selected(settings.PUBLISH_TARGETS)}`)
-        return
-    }
-
-    settings.BUILD_OPTIMIZED = true
-    settings.NODE_ENV = 'production'
-    process.env.NODE_ENV = 'production'
-
-    helpers.showBuildConfig()
-    const storeTarget = c.bold.red(settings.PUBLISH_CHANNEL)
-    const answers = await inquirer.prompt([{
-        default: false,
-        message: `Publish ${storeTarget} version ${c.bold.red(settings.PACKAGE.version)} to ${settings.BUILD_TARGET} store?`,
-        name: 'start',
-        type: 'confirm',
-    }])
-
-    if (!answers.start) {
-        logger.info('Publishing aborted')
-        done(); return
-    }
-
-    gulp.series(
-        gulp.parallel(test.tasks.lint, test.tasks.unit),
-        'test-browser',
-        build,
-        publish.tasks.package,
-        function toStore(finished) {
-            if (settings.BUILD_TARGET === 'chrome') publish.tasks.googleStore(finished)
-            return finished()
-        },
-        publish.tasks.sentryRelease,
-    )(done)
-})
 
 gulp.task('sentry-release', publish.tasks.sentryRelease)
 gulp.task('sentry-remove', publish.tasks.sentryRemove)

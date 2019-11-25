@@ -13,7 +13,7 @@ module.exports = (app) => {
                 return translations[this.call.status]
             },
             sessionTime: function() {
-                return app.plugins.caller.calls[this.call.id].timer().formatted
+                return app.modules.caller.calls[this.call.id].timer().formatted
             },
         }, app.helpers.sharedComputed()),
         methods: app.helpers.sharedMethods(),

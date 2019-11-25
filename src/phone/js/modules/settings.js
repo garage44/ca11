@@ -120,11 +120,11 @@ class PluginSettings extends Plugin {
             return
         }
 
-        const release = process.env.VERSION + '-' + process.env.PUBLISH_CHANNEL + '-' + this.app.env.name
+        const release = process.env.VERSION + '-' + this.app.env.name
         this.app.logger.info(`${this}monitoring exceptions for release ${release}`)
         Raven.config(process.env.SENTRY_DSN, {
             allowSecretKey: true,
-            environment: process.env.PUBLISH_CHANNEL,
+            environment: 'production',
             release,
             tags: {
                 sipjs: SIP.version,
@@ -152,7 +152,7 @@ class PluginSettings extends Plugin {
                     const sentryDsn = this.app.state.settings.telemetry.sentryDsn
                     Raven.config(sentryDsn, {
                         allowSecretKey: true,
-                        environment: process.env.PUBLISH_CHANNEL,
+                        environment: 'production',
                         release: this.app.state.app.version.current,
                     }).install()
                 } else {

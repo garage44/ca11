@@ -110,9 +110,9 @@ class PluginUI extends Plugin {
 
         // Modules can override the generic menubar behaviour using
         // a custom `_menubarState` method.
-        for (let moduleName of Object.keys(this.app.plugins)) {
-            if (this.app.plugins[moduleName]._menubarState) {
-                const moduleMenubarState = this.app.plugins[moduleName]._menubarState()
+        for (let moduleName of Object.keys(this.app.modules)) {
+            if (this.app.modules[moduleName]._menubarState) {
+                const moduleMenubarState = this.app.modules[moduleName]._menubarState()
                 if (moduleMenubarState) base = moduleMenubarState
             }
         }

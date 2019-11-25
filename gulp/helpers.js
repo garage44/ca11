@@ -85,7 +85,6 @@ module.exports = function(settings) {
             '--release': `using version <${c.bold.green(settings.SENTRY_RELEASE)}>`,
         }
 
-        tasks.publish.description = `publish ${helpers.format.context()} version ${c.bold.red(settings.PACKAGE.version)}`
         if (settings.BUILD_TARGET === 'pwa') {
             tasks.manifest.description = `build ${helpers.format.context()} pwa manifest.json`
         } else {

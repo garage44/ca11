@@ -22,9 +22,6 @@ class App extends Skeleton {
         // Copied to the initial state object.
         this._state = {}
 
-        // Contains all registered plugins.
-        this.plugins = {}
-        console.log(settings)
         this.__modules = settings.modules
     }
 
@@ -55,9 +52,9 @@ class App extends Skeleton {
     */
     _initialState() {
         let state = this.utils.copyObject(this._state)
-        for (let name of Object.keys(this.plugins)) {
-            if (this.plugins[name]._initialState) {
-                state[name] = this.plugins[name]._initialState()
+        for (let name of Object.keys(this.modules)) {
+            if (this.modules[name]._initialState) {
+                state[name] = this.modules[name]._initialState()
             }
         }
 
@@ -175,18 +172,18 @@ class App extends Skeleton {
                 const addonModules = builtin.addons[this._appSection].map((addon) => {
                     return require(`${addon}/src/js/${this._appSection}`)
                 })
-                this.plugins[builtin.name] = new builtin.module(this, addonModules)
+                this.modules[builtin.name] = new builtin.module(this, addonModules)
             } else if (builtin.providers) {
                 const providerModules = builtin.providers.map((mod) => {
                     return require(`${mod}/src/js/${this._appSection}`)
                 })
-                this.plugins[builtin.name] = new builtin.module(this, providerModules)
+                this.modules[builtin.name] = new builtin.module(this, providerModules)
             } else if (builtin.adapter) {
                 const adapterModule = require(`${builtin.adapter}/src/js/${this._appSection}`)
-                this.plugins[builtin.name] = new builtin.module(this, adapterModule)
+                this.modules[builtin.name] = new builtin.module(this, adapterModule)
             } else {
                 // Other plugins without any config.
-                this.plugins[builtin.name] = new builtin.module(this, null)
+                this.modules[builtin.name] = new builtin.module(this, null)
             }
         }
     }

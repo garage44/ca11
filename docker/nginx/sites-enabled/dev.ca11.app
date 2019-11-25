@@ -9,11 +9,8 @@ server {
   ssl_certificate_key /etc/nginx/ssl/dev.ca11.app.key;
 
   location / {
-    proxy_pass http://localhost:3000/;
-    proxy_http_version 1.1;
-    proxy_set_header Host $http_host;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection $http_connection;
-    proxy_read_timeout 86400;
+    autoindex on;
+    root /usr/share/nginx/html;
+    index index.html;
   }
 }

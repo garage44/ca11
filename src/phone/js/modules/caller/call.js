@@ -201,7 +201,7 @@ class Call {
             this.app.emit('caller:call-ended', {call: this.state}, true)
         }
 
-        this.app.plugins.ui.notification({message, number: this.state.number, stack: true, title})
+        this.app.modules.ui.notification({message, number: this.state.number, stack: true, title})
 
         // Remove the streams that are associated with this call.
         for (const streamId of Object.keys(this.streams)) {
@@ -215,13 +215,13 @@ class Call {
         // Reset the transfer state of target calls in case the transfer mode
         // of this Call is active and the callee ends the call.
         if (this.state.transfer.active) {
-            this.app.plugins.caller.transferState(this, false)
+            this.app.modules.caller.transferState(this, false)
         }
 
         this.busyTone.stop()
 
         window.setTimeout(() => {
-            this.app.plugins.caller.deleteCall(this)
+            this.app.modules.caller.deleteCall(this)
         }, timeout)
     }
 
@@ -273,7 +273,7 @@ class Call {
             window.open(url.replace('{number}', this.state.number), '_blank', 'alwaysLowered=yes')
         }
 
-        this.app.plugins.caller.activateCall(this, true)
+        this.app.modules.caller.activateCall(this, true)
         this.app.sounds.ringTone.play({loop: true})
     }
 
@@ -292,7 +292,7 @@ class Call {
         }
 
         // Always set this call to be the active call.
-        this.app.plugins.caller.activateCall(this, true)
+        this.app.modules.caller.activateCall(this, true)
         this.setState({name: name, status: 'create'})
         this.app.setState({ui: {layer: 'caller', menubar: {event: 'ringing'}}})
     }

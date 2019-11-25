@@ -86,7 +86,7 @@ class PluginApp extends Plugin {
     _watchers() {
         return {
             'store.app.dnd': (dndEnabled) => {
-                this.app.plugins.ui.menubarState()
+                this.app.modules.ui.menubarState()
             },
             /**
             * Schedule removal of a newly add notification if it

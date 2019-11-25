@@ -23,7 +23,6 @@ class CA11 extends App {
     */
     constructor(opts) {
         super(opts)
-
         // Allow context debugging during development.
         // Avoid leaking this global in production mode.
         if (!(process.env.NODE_ENV === 'production')) global.ca11 = this
@@ -62,6 +61,8 @@ class CA11 extends App {
                 Vue.component(name, this.components[name](this))
             }
         }
+
+        this.modules = {}
 
         this._loadModules(this.__modules)
 
@@ -105,8 +106,8 @@ class CA11 extends App {
         this.devices = new Devices(this)
 
         // Signal all plugins that CA11 is ready to go.
-        for (let module of Object.keys(this.plugins)) {
-            if (this.plugins[module]._ready) this.plugins[module]._ready()
+        for (let module of Object.keys(this.modules)) {
+            if (this.modules[module]._ready) this.modules[module]._ready()
         }
 
         if (this.state.session.authenticated) {
@@ -125,7 +126,7 @@ class CA11 extends App {
         } else {
             notification.message = this.$t('this update requires you to re-login and setup your account again; our apologies.')
             notification.title = this.$t('database schema changed')
-            this.plugins.ui.notification(notification)
+            this.modules.ui.notification(notification)
             this.stateStore.clear()
             this.emit('factory-defaults')
             if (this.env.isBrowser) location.reload()
@@ -232,12 +233,12 @@ class CA11 extends App {
         let state = {}
         this._mergeDeep(state, decryptedState, unencryptedState)
 
-        for (let module of Object.keys(this.plugins)) {
-            if (this.plugins[module]._restoreState) {
+        for (let module of Object.keys(this.modules)) {
+            if (this.modules[module]._restoreState) {
                 // Nothing persistent in this module yet. Assume an empty
                 // object to start with.
                 if (!state[module]) state[module] = {}
-                this.plugins[module]._restoreState(state[module])
+                this.modules[module]._restoreState(state[module])
             }
         }
         this.logger.debug(`${this}load previous state from session "${sessionId}"`)
@@ -249,7 +250,7 @@ class CA11 extends App {
         this.logger.info(`${this}set vue watchers`)
         let watchers = this._watchers()
 
-        for (let plugin of Object.values(this.plugins)) {
+        for (let plugin of Object.values(this.modules)) {
             if (plugin._watchers) Object.assign(watchers, plugin._watchers())
         }
 

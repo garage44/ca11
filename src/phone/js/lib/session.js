@@ -74,14 +74,14 @@ class Session {
             } else {
                 this.app.state.app.vault.unlocked = false
             }
-            this.app.plugins.ui.menubarState()
+            this.app.modules.ui.menubarState()
             Object.assign(this.app.state.session, {authenticated: false, username: sessionId})
         }
 
         // Set the info of the current sessions in the store again.
         await this.app.setState(this.app.state)
 
-        this.app.plugins.ui.menubarState()
+        this.app.modules.ui.menubarState()
         return sessionId
     }
 

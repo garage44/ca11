@@ -24,7 +24,7 @@ module.exports = function(app, module) {
         subscribe: function(contact, endpoint) {
             if (!endpoint.number) return
 
-            const ua = app.plugins.sip.ua
+            const ua = app.modules.sip.ua
             module.subscriptions[endpoint.id] = ua.subscribe(endpoint.number, 'presence',
                 {extraHeaders: ['Accept: application/pidf+xml']})
 

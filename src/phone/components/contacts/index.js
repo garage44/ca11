@@ -83,7 +83,7 @@ module.exports = (app) => {
                 })
             },
             callEndpoint: function(contact, endpoint) {
-                app.plugins.caller.call({
+                app.modules.caller.call({
                     description: {
                         endpoint: endpoint.protocol === 'sip' ? endpoint.number : endpoint.pubkey,
                         protocol: endpoint.protocol,
