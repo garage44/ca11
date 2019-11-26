@@ -1,12 +1,12 @@
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 # About
-CA11 is a privacy-friendly, open solution(FOSS) for WebRTC-based telephony.
-It integrates modern PBX software, so it can be used to make calls
-with over existing telephony(SIP) networks. Call abstraction allows
-other signalling protocols to use the same call flow. CA11 comes with
-its own signalling protocol(*SIG11*), which has some interesting
-characteristics:
+CA11 is a privacy-friendly, open(FOSS) WebRTC softphone and telephony network.
+The CA11 softphone can connect with WebRTC-compatible PBX software like Asterisk, 
+to enable calls over SIP networks. User-interface abstraction for the calling flow 
+makes it easy to integrate other signalling protocols. Besides supporting SIP, 
+CA11 also comes with its own signalling protocol. The *SIG11* signalling solution 
+comes with some interesting characteristics:
 
 * Assymetric encryption & identity
   * Each phone generates its own ECDH(E) identity
