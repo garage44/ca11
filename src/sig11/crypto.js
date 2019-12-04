@@ -33,13 +33,12 @@ class Crypto {
     }
 
 
-
     /**
     * Convert a base-64 encoded string to a DataArray.
     * @param {String} data - The base-64 formatted string.
     * @returns {ArrayBuffer} - A Buffer(Node) or Uint8Array(Browser).
     */
-   __base64ToDataArray(data) {
+    __base64ToDataArray(data) {
         if (this.app.env.isBrowser) {
             let binaryString = atob(data)
             let len = binaryString.length
@@ -113,6 +112,24 @@ class Crypto {
     __dataArrayToString(dataArray) {
         if (this.app.env.isBrowser) return new TextDecoder('utf-8').decode(dataArray)
         else return String.fromCharCode.apply(null, new Uint8Array(dataArray))
+    }
+
+
+    /**
+    * Generate the user's identity, which is a RSA keypair. This keypair is
+    * used to sign transient ECDH keys, in order to attain PFS.
+    * See https://webkit.org/blog/7790/update-on-web-cryptography/
+    * @returns {Object} - Serializable identity.
+    */
+    async createIdentity() {
+        try {
+            return await crypto.subtle.generateKey(
+                this.rsa.params, true, this.rsa.uses
+            )
+        } catch (err) {
+            // eslint-disable-next-line no-console
+            throw err
+        }
     }
 
 
@@ -246,6 +263,26 @@ class Crypto {
 
 
     /**
+    * Import an identity; a base64 stored keypair.
+    * @params {Object} keypair - Public and Private key.
+    * @returns {Object} - Serializable identity.
+    */
+    async importIdentity({publicKey, privateKey}) {
+        if (!publicKey || !privateKey) throw new Error('invalid keypair')
+
+        let [privateCryptoKey, publicCryptoKey] = await Promise.all([
+            crypto.subtle.importKey('jwk', privateKey, this.rsa.params, true, ['sign']),
+            crypto.subtle.importKey('jwk', publicKey, this.rsa.params, true, ['verify']),
+        ])
+        // The crypto.identity property holds both CryptoKeys.
+        return {
+            privateKey: privateCryptoKey,
+            publicKey: publicCryptoKey,
+        }
+    }
+
+
+    /**
     * Import a base64 AES vault key. This key is stored as base64
     * in localStorage when the user enabled it. The user is informed about
     * the security implications.
@@ -260,6 +297,28 @@ class Crypto {
             // eslint-disable-next-line no-console
             console.error(err)
         }
+    }
+
+
+    async serializeIdentity(keypair) {
+        const publicKey = await crypto.subtle.exportKey('jwk', keypair.publicKey)
+        const id = await this.hash(publicKey.n)
+        return {
+            headless: this.app.env.isNode,
+            id,
+            publicKey,
+        }
+    }
+
+
+    async serializeKeypair(keypair) {
+        let [privateKey, publicKey] = await Promise.all([
+            crypto.subtle.exportKey('jwk', keypair.privateKey),
+            crypto.subtle.exportKey('jwk', keypair.publicKey),
+        ])
+
+        const id = await this.hash(publicKey.n)
+        return {id, privateKey, publicKey}
     }
 
 
@@ -302,67 +361,6 @@ class Crypto {
     toString() {
         return `${this.app}[crypto] `
     }
-
-
-    /**
-    * Generate the user's identity, which is a RSA keypair. This keypair is
-    * used to sign transient ECDH keys, in order to attain PFS.
-    * See https://webkit.org/blog/7790/update-on-web-cryptography/
-    * @returns {Object} - Serializable identity.
-    */
-    async createIdentity() {
-        try {
-            return await crypto.subtle.generateKey(
-                this.rsa.params, true, this.rsa.uses
-            )
-        } catch (err) {
-            // eslint-disable-next-line no-console
-            throw err
-        }
-    }
-
-
-    /**
-    * Import an identity; a base64 stored keypair.
-    * @params {Object} keypair - Public and Private key.
-    * @returns {Object} - Serializable identity.
-    */
-    async importIdentity({publicKey, privateKey}) {
-        if (!publicKey || !privateKey) throw new Error('invalid keypair')
-
-        let [privateCryptoKey, publicCryptoKey] = await Promise.all([
-            crypto.subtle.importKey('jwk', privateKey, this.rsa.params, true, ['sign']),
-            crypto.subtle.importKey('jwk', publicKey, this.rsa.params, true, ['verify']),
-        ])
-        // The crypto.identity property holds both CryptoKeys.
-        return {
-            privateKey: privateCryptoKey,
-            publicKey: publicCryptoKey,
-        }
-    }
-
-
-    async serializeIdentity(keypair) {
-        const publicKey = await crypto.subtle.exportKey('jwk', keypair.publicKey)
-        const id = await this.hash(publicKey.n)
-        return {
-            headless: this.app.env.isNode,
-            id,
-            publicKey,
-        }
-    }
-
-
-    async serializeKeypair(keypair) {
-        let [privateKey, publicKey] = await Promise.all([
-            crypto.subtle.exportKey('jwk', keypair.privateKey),
-            crypto.subtle.exportKey('jwk', keypair.publicKey),
-        ])
-
-        const id = await this.hash(publicKey.n)
-        return {id, privateKey, publicKey}
-    }
-
 
     // async signPubKey(privateKey, publicKey) {
     //     const result = await crypto.subtle.exportKey('raw', keypair.publicKey)

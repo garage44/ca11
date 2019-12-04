@@ -2,10 +2,10 @@
 
 # About
 CA11 is a privacy-friendly, open(FOSS) WebRTC softphone and telephony network.
-The CA11 softphone can connect with WebRTC-compatible PBX software like Asterisk, 
-to enable calls over SIP networks. User-interface abstraction for the calling flow 
-makes it easy to integrate other signalling protocols. Besides supporting SIP, 
-CA11 also comes with its own signalling protocol. The *SIG11* signalling solution 
+The CA11 softphone can connect with WebRTC-compatible PBX software like Asterisk,
+to enable calls over SIP networks. User-interface abstraction for the calling flow
+makes it easy to integrate other signalling protocols. Besides supporting SIP,
+CA11 also comes with its own signalling protocol. The *SIG11* signalling solution
 comes with some interesting characteristics:
 
 * Assymetric encryption & identity
@@ -54,8 +54,9 @@ CA11 is web-based:
     # Start supporting services:
     docker-compose up
 
-    # Initialize PBX database
-    docker exec -w /root/asterisk/contrib/ast-db-manage -it asterisk alembic -c config.ini upgrade head
+    # Initialize PBX database and SIG11 pubkey bridge
+    docker exec -w /root/asterisk/contrib/ast-db-manage -it asterisk alembic -c config.ini upgrade headupgrade head
+    mysql -u root -p -h 127.0.0.1 asterisk < mariadb/sig11_asterisk.sql
 
     gulp build develop
 

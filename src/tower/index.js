@@ -52,25 +52,20 @@ class Ca11Tower extends Skeleton {
 
         endpoint.once('sig11:identified', async() => {
             // SIP entity is a hash of the public key.
-            this.knex.from('sig11_asterisk')
-                .select('*')
-                .where({
+            const rows = await this.knex.from('sig11_asterisk').select('*').where({
+                pubkey: endpoint.id,
+            })
+
+            if (!rows.length) {
+                this.knex('sig11_asterisk').insert({
+                    id: uuidv4(),
                     pubkey: endpoint.id,
                 })
+                    .then((res) => {
+                        // console.log('RES', res)
+                    })
+            }
 
-                .then((rows) => {
-                    if (!rows.length) {
-                        this.knex('sig11_asterisk').insert({
-                            id: uuidv4(),
-                            pubkey: endpoint.id,
-                        })
-                            .then((res) => {
-                                console.log('RES', res)
-                            })
-                    } else {
-                        console.log(rows)
-                    }
-                })
 
             this.network.addEndpoint(endpoint, this.network.identity)
             endpoint.send(this.network.protocol.out('network', this.network.export()))
@@ -103,7 +98,6 @@ class Ca11Tower extends Skeleton {
 
         this.wss.on('connection', this.onConnection.bind(this))
         this.server.listen(settings.tower.port)
-        console.log('starting service')
     }
 
 
