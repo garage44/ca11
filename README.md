@@ -4,9 +4,15 @@
 CA11 is a privacy-friendly, open(FOSS) WebRTC softphone and telephony network.
 The CA11 softphone can connect with WebRTC-compatible PBX software like Asterisk,
 to enable calls over SIP networks. User-interface abstraction for the calling flow
-makes it easy to integrate other signalling protocols. Besides supporting SIP,
+makes it easy to integrate other signalling protocols. 
+
+![ca11-dialpad](https://user-images.githubusercontent.com/48799939/70175633-61a1e100-16d7-11ea-9b15-a09d241c5a0b.png)
+
+Besides supporting SIP,
 CA11 also comes with its own signalling protocol. The *SIG11* signalling solution
 comes with some interesting characteristics:
+
+
 
 * Assymetric encryption & identity
   * Each phone generates its own ECDH(E) identity
