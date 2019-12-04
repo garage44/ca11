@@ -54,9 +54,19 @@ CA11 is web-based:
     # Start supporting services:
     docker-compose up
 
-    # Initialize PBX database and SIG11 pubkey bridge
+    # Initialize PBX database and SIG11 pubkey (WIP)
     docker exec -w /root/asterisk/contrib/ast-db-manage -it asterisk alembic -c config.ini upgrade headupgrade head
     mysql -u root -p -h 127.0.0.1 asterisk < mariadb/sig11_asterisk.sql
+
+    # Generate two accounts (is going to be automated, WIP)
+    # mysql -u root -p -D asterisk -h 127.0.0.1;
+    mysql> insert into ps_aors (id, max_contacts) values (1000, 1);
+    mysql> insert into ps_aors (id, max_contacts) values (2000, 1);
+    mysql> insert into ps_auths (id, auth_type, password, username) values (1000, 'userpass', 1000, 1000);
+    mysql> insert into ps_auths (id, auth_type, password, username) values (2000, 'userpass', 2000, 2000);
+    mysql> insert into ps_endpoints (id, transport, aors, auth, context, disallow, allow, direct_media, webrtc) values (1000, 'transport-wss', '1000', '1000', 'default', 'all', 'g722', 'no', 'yes');
+    mysql> insert into ps_endpoints (id, transport, aors, auth, context, disallow, allow, direct_media, webrtc) values (2000, 'transport-wss', '2000', '2000', 'default', 'all', 'g722', 'no', 'yes');
+    mysql> quit;
 
     gulp build develop
 
