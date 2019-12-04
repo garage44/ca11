@@ -37,6 +37,12 @@ CA11 is web-based:
     # Build the WebRTC Phone:
     yarn build
 
+    cd src/phone
+    gulp build
+    cd ../../
+    # Run Tower service (WIP)
+    node src/tower/index.js
+
     # Setup supporting services...
     cd docker
     # Generate developer certificates and CA to use
@@ -45,13 +51,13 @@ CA11 is web-based:
     ./ca_cert.sh dev.ca11.app
     ./ca_cert.sh sip.dev.ca11.app
     ./ca_cert.sh sig11.dev.ca11.app
+
     # Manually import development CA (Archlinux only)
     sudo ./ca_system.sh
     # Local hostname lookup for our domains:
     echo "127.0.0.1 dev.ca11.app" >> /etc/hosts
     echo "127.0.0.1 sip.dev.ca11.app" >> /etc/hosts
     echo "127.0.0.1 sig11.dev.ca11.app" >> /etc/hosts
-    # Start supporting services:
     docker-compose up
 
     # Initialize PBX database and SIG11 pubkey (WIP)
@@ -60,15 +66,16 @@ CA11 is web-based:
 
     # Generate two accounts (is going to be automated, WIP)
     # mysql -u root -p -D asterisk -h 127.0.0.1;
-    mysql> insert into ps_aors (id, max_contacts) values (1000, 1);
-    mysql> insert into ps_aors (id, max_contacts) values (2000, 1);
-    mysql> insert into ps_auths (id, auth_type, password, username) values (1000, 'userpass', 1000, 1000);
-    mysql> insert into ps_auths (id, auth_type, password, username) values (2000, 'userpass', 2000, 2000);
-    mysql> insert into ps_endpoints (id, transport, aors, auth, context, disallow, allow, direct_media, webrtc) values (1000, 'transport-wss', '1000', '1000', 'default', 'all', 'g722', 'no', 'yes');
-    mysql> insert into ps_endpoints (id, transport, aors, auth, context, disallow, allow, direct_media, webrtc) values (2000, 'transport-wss', '2000', '2000', 'default', 'all', 'g722', 'no', 'yes');
-    mysql> quit;
+    insert into ps_aors (id, max_contacts) values (1000, 1);
+    insert into ps_aors (id, max_contacts) values (2000, 1);
+    insert into ps_auths (id, auth_type, password, username) values (1000, 'userpass', 1000, 1000);
+    insert into ps_auths (id, auth_type, password, username) values (2000, 'userpass', 2000, 2000);
+    insert into ps_endpoints (id, transport, aors, auth, context, disallow, allow, direct_media, webrtc) values (1000, 'transport-wss', '1000', '1000', 'default', 'all', 'g722', 'no', 'yes');
+    insert into ps_endpoints (id, transport, aors, auth, context, disallow, allow, direct_media, webrtc) values (2000, 'transport-wss', '2000', '2000', 'default', 'all', 'g722', 'no', 'yes');
+    quit;
 
-    gulp build develop
+Open https://dev.ca11.app and start a phone. SIP credentials (see mysql
+statements above) have to be filled manually in the SIP settings tab for now.
 
 
 # Resources
