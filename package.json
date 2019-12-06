@@ -8,8 +8,8 @@
     "yarn": ">= 1.19.0"
   },
   "scripts": {
+    "bootstrap": "lerna bootstrap",
     "build": "gulp -f packages/webphone/gulpfile.js build",
-    "link": "npm link @garage11/ca11-theme-default;npm link @garage11/vue-compiler-gulp; npm link @garage11/vue-i18n",
     "lint": "npm run eslint;npm run lint:scss",
     "lint:js": "eslint '{packages/**/*.js,gulpfile.js,gulp/**/*.js,tests/**/*.js}'",
     "lint:scss": "stylelint 'packages/**/*.scss'",
