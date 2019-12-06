@@ -1,0 +1,108 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+.buttons {
+    display: flex;
+    padding: var(--spacer) 0;
+    width: 100%;
+
+    &.stretched {
+        button {
+
+        }
+    }
+
+    &.is-centered {
+        justify-content: center;
+    }
+
+    .button {
+        margin: 0 var(--spacer);
+    }
+}
+
+.button {
+    color: var(--grey-300);
+    font-family: 'Rajdhani';
+    font-weight: 600;
+    padding: $spacer;
+    -webkit-tap-highlight-color: transparent;
+    text-transform: uppercase;
+    transition: color ease 0.5s;
+
+    // Typical menu button used in status and menu.
+    &--menu {
+        border-bottom: $border solid transparent;
+        border-top: $border solid transparent;
+        color: var(--grey-100);
+        height: $space-4;
+        width: $space-4;
+
+        &.active,
+        &:hover {
+            color: var(--primary-base);
+        }
+
+        &.active {
+            border-bottom: $border solid var(--primary-base);
+        }
+
+        &[disabled] {
+            color: palette('grey', 50);
+
+            &:hover {
+                // border-left: $border solid var(--grey-200);
+            }
+        }
+    }
+
+    &--widget {
+        background: var(--grey-50);
+        border: 1px solid var(--grey-100);
+
+        &[disabled] {
+            background: var(--grey-100);
+            color: var(--grey-200);
+
+            &:hover {
+                color: var(--grey-200);
+            }
+        }
+
+        &.active,
+        &:hover {
+            border-bottom: 1px solid var(--primary-base);
+            color: var(--primary-base);
+        }
+
+        &.primary {
+            background: palette('grey', 500);
+            border-bottom: 1px solid lighten($primary-color, 5%);
+            border-radius: $spacer / 2;
+            color: palette('primary', 'base');
+
+            &[disabled] {
+                background: var(--grey-100);
+                color: var(--grey-200);
+            }
+
+            &:not([disabled]):hover {
+                background: lighten(palette('grey', 500), 5%);
+                color: var(--grey-50);
+            }
+        }
+    }
+
+    svg {
+        @include icon-size(#{$spacer * 3.5});
+    }
+
+
+    &:not([disabled]) {
+        &.hint {
+            svg {
+                animation: glowing 1250ms cubic-bezier(0.39, 0.58, 0.57, 1) infinite;
+            }
+        }
+    }
+}

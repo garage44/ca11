@@ -92,12 +92,7 @@ module.exports = function(settings) {
         }
 
         tasks.package.description = `package distribution-ready build for ${helpers.format.context()}`
-        if (settings.BUILD_TARGET === 'electron') {
-            tasks.package.flags = {
-                '--arch': `using architecture ${helpers.format.selected(settings.ELECTRON_ARCHES, settings.ELECTRON_ARCH)}`,
-                '--platform': `on platform ${helpers.format.selected(settings.ELECTRON_PLATFORMS, settings.ELECTRON_PLATFORM)}`,
-            }
-        } else if (settings.BUILD_TARGET === 'pwa') {
+        if (settings.BUILD_TARGET === 'pwa') {
             tasks.package.description = 'not available'
         }
 

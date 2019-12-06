@@ -2,7 +2,7 @@ const _ = require('../test')
 
 _.testAsync('[SIP] Alice calls Bob, Bob transfers Alice to Charlie', async(t1) => {
     let [alice, bob, charlie] = await Promise.all(
-        [_.init('alice'), _.init('bob'), _.init('charlie')]
+        [_.init('alice'), _.init('bob'), _.init('charlie')],
     )
 
     await Promise.all([

@@ -21,8 +21,6 @@ module.exports = function(settings) {
     tasks.browser = function testBrowser(done) {
         // Force the build target.
         const misc = require('./misc')(settings)
-        misc.helpers.serveHttp({reload: false})
-        misc.helpers.serveSIG11()
 
         const reporter = through.obj()
         reporter.pipe(tapSpec()).pipe(process.stdout)

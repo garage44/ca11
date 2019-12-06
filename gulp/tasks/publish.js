@@ -1,14 +1,8 @@
-const {promisify} = require('util')
-const childExec = require('child_process').exec
-const fs = require('fs')
 const path = require('path')
 
 const addsrc = require('gulp-add-src')
-const archiver = require('archiver')
 const createReleaseManager = require('gulp-sentry-release-manager')
 const gulp = require('gulp')
-const logger = require('gulplog')
-const mkdirp = promisify(require('mkdirp'))
 
 const PACKAGE = require('../../package')
 
@@ -23,7 +17,6 @@ module.exports = function(settings) {
      */
     helpers.buildName = function() {
         let distName = `${settings.BUILD_TARGET}-${PACKAGE.version}`
-        if (settings.BUILD_TARGET === 'electron') distName += `-${settings.ELECTRON_ARCH}`
         distName += '.zip'
         return distName
     }
@@ -48,49 +41,6 @@ module.exports = function(settings) {
 
 
     /**
-     * Deployment task for the Google webstore.
-     * @returns {Promise} Resolves when zip package is generated.
-     */
-    tasks.package = function publishPackage() {
-        return new Promise(async(resolve, reject) => {
-            const distDir = path.join(settings.BASE_DIR, 'dist')
-            await mkdirp(distDir)
-
-            let distName = helpers.buildName()
-            // Not using Gulp's Vinyl-based zip, because of a symlink issue that
-            // prevents the MacOS build to be zipped properly.
-            // See https://github.com/gulpjs/gulp/issues/1427 for more info.
-            const output = fs.createWriteStream(path.join(distDir, distName))
-            const archive = archiver('zip', {zlib: {level: 6}})
-            archive.pipe(output)
-
-            output.on('close', function() {
-                logger.info(archive.pointer() + ' total bytes archived')
-                resolve()
-            })
-
-            if (settings.BUILD_TARGET === 'electron') {
-                const iconParam = `--icon=${settings.BUILD_DIR}/img/electron-icon.png`
-                let buildParams = `--arch=${settings.ELECTRON_ARCH} --asar --overwrite --platform=${settings.ELECTRON_PLATFORM} --prune=true`
-                // This is broken when used in combination with Wine due to rcedit.
-                // See: https://github.com/electron-userland/electron-packager/issues/769
-                if (settings.ELECTRON_PLATFORM !== 'win32') buildParams += iconParam
-                const distBuildName = `${settings.ELECTRON_PLATFORM}-${settings.ELECTRON_ARCH}`
-                const execCommand = `./node_modules/electron-packager/cli.js ${settings.BUILD_DIR} ca11 ${buildParams} --out=${distDir}`
-                childExec(execCommand, undefined, (err, stdout, stderr) => {
-                    if (stderr) logger.info(stderr)
-                    if (stdout) logger.info(stdout)
-                    setTimeout(() => {
-                        archive.directory(path.join(distDir, distBuildName), distBuildName)
-                        archive.finalize()
-                    }, 500)
-                })
-            }
-        })
-    }
-
-
-    /**
     * Uploading a release and artificats to Sentry
     * requires at least Sentry 8.17.0.
     * See https://github.com/getsentry/sentry/issues/5459
@@ -106,7 +56,7 @@ module.exports = function(settings) {
                 return gulp.src(path.join(base, '{*.js,*.map}'), {base})
                     .pipe(addsrc(path.join(settings.BASE_DIR, 'js', '**', '*.js'), {base: path.join('./')}))
                     .pipe(sentryManager.upload())
-            }
+            },
         )(done)
     }
 

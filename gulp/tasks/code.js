@@ -1,5 +1,4 @@
-const {_extend, promisify} = require('util')
-const fs = require('fs')
+const {_extend} = require('util')
 const path = require('path')
 
 const browserify = require('browserify')
@@ -10,15 +9,13 @@ const envify = require('gulp-envify')
 const gulp = require('gulp')
 const ifElse = require('gulp-if-else')
 const logger = require('gulplog')
-const minifier = composer(require('uglify-es'), console)
+const minifier = composer(require('terser'), console)
 const notify = require('gulp-notify')
 const size = require('gulp-size')
 const source = require('vinyl-source-stream')
 const sourcemaps = require('gulp-sourcemaps')
 const through = require('through2')
 const watchify = require('watchify')
-
-const writeFileAsync = promisify(fs.writeFile)
 
 let bundlers = {}
 let helpers = {}
@@ -161,22 +158,6 @@ module.exports = function(settings) {
             helpers.compile({entry: './js/i18n/index.js', name: 'app_i18n'}),
         ])
         done()
-    }
-
-
-    tasks.electron = function codeElectron(done) {
-        if (settings.BUILD_TARGET !== 'electron') {
-            logger.info(`Electron task doesn\'t make sense for build target ${settings.BUILD_TARGET}`)
-            return
-        }
-
-        // Vendor-specific info for Electron's main.js file.
-        fs.createReadStream('./src/js/main.js').pipe(
-            fs.createWriteStream(`./build/${settings.BUILD_TARGET}/main.js`)
-        )
-
-        const settingsFile = `./build/${settings.BUILD_TARGET}/settings.json`
-        writeFileAsync(settingsFile, JSON.stringify(settings)).then(() => {done()})
     }
 
 

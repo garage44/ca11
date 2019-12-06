@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 22.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1"
+	 id="svg8" inkscape:version="0.92.4 5da689c313, 2019-01-14" sodipodi:docname="logo.svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 90.7 90.7"
+	 style="enable-background:new 0 0 90.7 90.7;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#601111;}
+	.st1{fill:#FFFFFF;}
+	.st2{fill:none;stroke:#FFFFFF;stroke-width:1.5;}
+</style>
+<sodipodi:namedview  bordercolor="#666666" borderopacity="1.0" id="base" inkscape:current-layer="layer1" inkscape:cx="-4.9339271" inkscape:cy="150.47337" inkscape:document-units="mm" inkscape:pagecheckerboard="true" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:window-height="774" inkscape:window-maximized="0" inkscape:window-width="1304" inkscape:window-x="2176" inkscape:window-y="57" inkscape:zoom="1.7906652" pagecolor="#ffffff" showgrid="false">
+	</sodipodi:namedview>
+<polygon class="st0" points="90.8,68.1 90.8,22.8 45.5,0.1 0.1,22.8 0.1,68.1 45.5,90.8 "/>
+<g id="layer1" transform="translate(0,-265)" inkscape:groupmode="layer" inkscape:label="Layer 1">
+	<g id="text1385-5-0-1-8" transform="scale(1.1995273,0.83366173)">
+	</g>
+	
+		<g id="g5773" transform="matrix(1.0046546,0,0,0.99768845,-0.07468966,0.68646985)" inkscape:export-filename="/home/jeroen/projects/ca11-theme-default/src/img/logo.png" inkscape:export-xdpi="152.58939" inkscape:export-ydpi="152.58939">
+		<g id="g5669" transform="matrix(1.1694177,0,0,1.1694177,-77.985139,159.63023)">
+			<path class="st1" d="M126,148.3l-12.8-29.7c-0.3-0.7-1.1-1-2.4-1h-10.7c-1.2,0-2,0.3-2.4,1l-12.8,29.7c-0.3,0.7,0,1,1,1h7.8
+				c0.5,0,0.9-0.1,1.1-0.2c0.3-0.2,0.5-0.4,0.6-0.8l2.3-5.4h15.7l2.3,5.4c0.1,0.4,0.3,0.7,0.5,0.8c0.2,0.1,0.6,0.2,1.2,0.2h7.8
+				C126,149.3,126.3,149,126,148.3z M105.4,138.6c-4.4,0-8-3.6-8-8s3.6-8,8-8c4.4,0,8,3.6,8,8S109.8,138.6,105.4,138.6z"/>
+			<ellipse id="circle5579" class="st2" cx="105.4" cy="130.6" rx="4.6" ry="4.5"/>
+			<ellipse id="circle5596_1_" class="st1" cx="102.8" cy="127.9" rx="2.8" ry="2.7"/>
+		</g>
+	</g>
+</g>
+<path class="st1" d="M67.2,21.3H22c-10,0-9.5,6.3-8.1,9.4l3.2,8.6c0.6,1.3,1.9,1.8,3.2,1.2c2.8-1.2,4.5-2,7.3-2.2
+	c0.8-0.1,1.7-0.6,2.1-1.5l3.3-7.6c0.4-1.1,1.6-1.7,3.5-1.7h17.7c2,0,3.1,0.6,3.5,1.7l3.3,7.6c0.4,0.9,1.3,1.4,2.1,1.5
+	c2.9,0.3,4.8,1,7.6,2.2c1.3,0.5,2.6,0,3.2-1.2l3.2-8.6C78.6,27.6,78.3,21.3,67.2,21.3z"/>
+</svg>

@@ -1,16 +1,11 @@
 const {promisify} = require('util')
-const http = require('http')
 const fs = require('fs')
 const path = require('path')
 
-const connect = require('connect')
 const del = require('del')
 const gulp = require('gulp')
 const mkdirp = promisify(require('mkdirp'))
 const livereload = require('gulp-livereload')
-const logger = require('gulplog')
-const mount = require('connect-mount')
-const serveStatic = require('serve-static')
 
 const PACKAGE = require('../../package')
 const writeFileAsync = promisify(fs.writeFile)
@@ -26,55 +21,6 @@ module.exports = function(settings) {
             livereload.changed(filename)
             done()
         }
-    }
-
-
-    helpers.serveSIG11 = async function serveSIG11(done, reload = true) {
-        if (!helpers.sig11) {
-            helpers.sig11 = require('sig11')
-            await helpers.sig11.start()
-        } else if (reload) {
-            logger.info('Restarting SIG11 service...')
-            await helpers.sig11.stop()
-            // Allows updated code to load.
-            for (const key of Object.keys(require.cache)) {
-                // This module has issues registering properly.
-                if (!key.includes('node-webcrypto-ossl')) {
-                    delete require.cache[key]
-                }
-            }
-
-            helpers.sig11 = require('sig11')
-            await helpers.sig11.start()
-        }
-
-        logger.info(`SIG11 service listening on ws://localhost:${settings.sig11.port}`)
-        if (done) done()
-    }
-
-
-    helpers.serveHttp = function({reload = true, mounts = [], port = 3000} = {}) {
-        const app = connect()
-        // Served so Puppeteer is able to retrieve all necessary
-        // assets to run the functional tests.
-        app.use(serveStatic(settings.BUILD_DIR))
-        app.use((req, res, next) => {
-            return fs.createReadStream(path.join(settings.BUILD_DIR, 'index.html')).pipe(res)
-        })
-
-        if (reload) {
-            livereload.listen({silent: false})
-            // Flag that activates browserify's watchify bundle caching.
-            settings.LIVERELOAD = true
-        }
-
-        for (const mountpoint of mounts) {
-            app.use(mount(mountpoint.mount, serveStatic(mountpoint.dir)))
-            logger.info(`Mounted ${mountpoint.dir} on ${mountpoint.mount} (index: ${mountpoint.index ? 'yes' : 'no'})`)
-        }
-
-        helpers.http = http.createServer(app).listen(port)
-        logger.info(`HTTP service listening on http://localhost:${port}`)
     }
 
 
@@ -118,8 +64,6 @@ module.exports = function(settings) {
         const styles = require('./styles')(settings)
         const test = require('./test')(settings)
 
-        helpers.serveHttp()
-
         if (settings.BUILD_TARGET === 'node') {
             // Node development doesn't have transpilation.
             // No other watchers are needed.
@@ -135,11 +79,7 @@ module.exports = function(settings) {
             ], gulp.series(code.tasks.serviceWorker))
         }
 
-        if (settings.BUILD_TARGET === 'electron') {
-            gulp.watch([
-                path.join(settings.BASE_DIR, 'js', 'main.js'),
-            ], gulp.series(code.tasks.electron))
-        } else if (settings.BUILD_TARGET === 'pwa') {
+        if (settings.BUILD_TARGET === 'pwa') {
             gulp.watch([
                 path.join(settings.BASE_DIR, 'manifest.json'),
             ], gulp.series(misc.tasks.manifest, helpers.reload('app.js')))
@@ -151,7 +91,7 @@ module.exports = function(settings) {
         ], gulp.series(
             assets.tasks.icons,
             code.tasks.vendor,
-            helpers.reload('vendor.js')
+            helpers.reload('vendor.js'),
         ))
 
 

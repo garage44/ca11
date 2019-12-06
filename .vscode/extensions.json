@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "msjsdiag.debugger-for-chrome",
+    "eamodio.gitlens",
+    "hex-ci.stylelint-plus",
+    "octref.vetur"
+  ]
+}

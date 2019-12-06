@@ -8,37 +8,24 @@
         "sourceType": "module"
     },
     "env": {
-        "amd": false,
         "browser": true,
         "node": true,
         "es6": true
     },
     "globals": {
-        "app": true,
-        "axios": true,
-        "browser": true,
-        "chrome": true,
         "d3": true,
-        "translate": true,
-        "webkitNotifications": true,
-        "electron": true,
-        "hljs": true,
-        "$": true,
-        "$$": true,
-        "shortid": true,
-        "templates": true,
-        "Vue": true,
-        "VueRouter": true,
-        "translations": true,
+        "EventEmitter": true,
         "I18nStore": true,
         "I18nTranslations": true,
         "I18nStash": true,
-        "EventEmitter": true,
-        "MarkdownIt": true,
-        "Raven": true,
-        "sdpInterop": true,
         "SIP": true,
-        "Vuelidate": true
+        "sdpInterop": true,
+        "shortid": true,
+        "templates": true,
+        "Vue": true,
+        "Vuelidate": true,
+        "VueRouter": true,
+        "$": true
     },
     "plugins": [
         "sort-class-members"
@@ -49,7 +36,6 @@
         "no-bitwise": 0,
         "no-caller": 2,
         "no-catch-shadow": 2,
-        "no-comma-dangle": 0,
         "no-cond-assign": 2,
         "no-console": 2,
         "no-constant-condition": 2,
@@ -203,18 +189,18 @@
                     "[methods]",
                     "[everything-else]"
             ],
-            groups: {
-                methods: [
+            "groups": {
+                "methods": [
                     {
-                        sort: 'alphabetical',
-                        type: 'method'
+                        "sort": "alphabetical",
+                        "type": "method"
                     }
                 ],
                 "conventional-private-methods": [
                     {
-                        name: '/_.+/',
-                        sort: 'alphabetical',
-                        type: 'method',
+                        "name": "/_.+/",
+                        "sort": "alphabetical",
+                        "type": "method"
                     }
                 ]
             },

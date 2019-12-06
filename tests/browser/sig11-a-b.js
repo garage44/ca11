@@ -2,7 +2,7 @@ const _ = require('../test')
 
 _.testAsync('[SIG11] Alice calls Bob', async(t1) => {
     let [alice, bob] = await Promise.all(
-        [_.init('alice'), _.init('bob')]
+        [_.init('alice'), _.init('bob')],
     )
 
     // Alice first; so she can make screenshots.

@@ -1,0 +1,12 @@
+{
+  "name": "@garage11/tower",
+  "version": "1.0.0",
+  "description": "SIG11 service",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Garage11",
+  "license": "MIT"
+}
+

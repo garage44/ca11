@@ -1,7 +1,13 @@
 {
-    "eslint.autoFixOnSave": true,
+    "eslint.enable": true,
     "eslint.validate": [
-        { "language": "javascript", "autoFix": true }
+        { "language": "javascript", "autoFix": true },
+        { "language": "vue", "autoFix": true }
     ],
-    "eslint.alwaysShowStatus": true
+    "eslint.options": {
+        "extensions": [".js"]
+    },
+    "vetur.validation.template": false,
+    "eslint.autoFixOnSave": true,
+    "stylelint.autoFixOnSave": true
 }

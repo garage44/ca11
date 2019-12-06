@@ -22,17 +22,12 @@ module.exports = function config(projectDir, projectName, baseDir, {overrides = 
         BASE_DIR: baseDir,
         BUILD_OPTIMIZED: argv.optimized ? true : (process.env.NODE_ENV === 'production'),
         BUILD_TARGET: argv.target ? argv.target : 'pwa',
-        BUILD_TARGETS: ['electron', 'pwa', 'node'],
+        BUILD_TARGETS: ['pwa', 'node'],
         BUILD_VERBOSE: argv.verbose ? true : false,
         DEBUG_MODE: process.env.DEBUG === '1' ? true : false,
-        ELECTRON_ARCH: argv.arch ? argv.arch : 'x64',
-        ELECTRON_ARCHES: ['all', 'ia32', 'x64', 'armv7l', 'arm64', 'mips64el'],
-        ELECTRON_PLATFORM: argv.platform ? argv.platform : 'linux',
-        ELECTRON_PLATFORMS: ['all', 'darwin', 'linux', 'mas', 'win32'],
         // Default loglevel is info.
         LOG_LEVEL: (argv.L && argv.L.length <= 4) ? argv.L.length : 3,
         LOG_LEVELS: ['error', 'warning', 'info', 'debug'],
-        NO_SIG11: argv.nosig11 ? true : false,
         NODE_ENVS: ['development', 'production'],
         // Safest default deploy target is `alpha`.
         PROJECT_DIR: projectDir,
@@ -112,8 +107,6 @@ module.exports = function config(projectDir, projectName, baseDir, {overrides = 
                             {label: `BUILD_TARGET         --target ${format.selected(settings.BUILD_TARGETS, settings.BUILD_TARGET)}`},
                             {label: `BUILD_OPTIMIZED      --optimized <${settings.BUILD_OPTIMIZED ? c.bold.red('yes') : c.bold.red('no')}>`},
                             {label: `BUILD_VERBOSE        --verbose <${settings.BUILD_VERBOSE ? c.bold.red('yes') : c.bold.red('no')}`},
-                            {label: `ELECTRON_ARCH        --arch ${format.selected(settings.ELECTRON_ARCHES, settings.ELECTRON_ARCH)}`},
-                            {label: `ELECTRON_PLATFORM    --platform ${format.selected(settings.ELECTRON_PLATFORMS, settings.ELECTRON_PLATFORM)}`},
                             {label: `SENTRY_RELEASE       --release <${c.bold.green(settings.SENTRY_RELEASE)}>`},
                             {label: `LOG_LEVEL            -${c.bold.green('L'.repeat(settings.LOG_LEVEL))} <${c.bold.red(settings.LOG_LEVELS[settings.LOG_LEVEL - 1])}>`},
 

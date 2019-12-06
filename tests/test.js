@@ -17,7 +17,7 @@ const settings = require('../gulp/settings')(
             // Force webview build modus.
             BUILD_TARGET: 'webview',
         },
-    }
+    },
 )
 
 // Force webview.

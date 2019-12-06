@@ -1,0 +1,16 @@
+{
+  "name": "@garage11/sig11",
+  "version": "1.0.0",
+  "description": "SIG11 messaging protocol",
+  "author": "Garage11",
+  "license": "MIT",
+  "homepage": "https://github.com/garage11/ca11#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/garage11/ca11.git"
+  },
+  "bugs": {
+    "url": "https://github.com/garage11/ca11/issues"
+  }
+}
+
