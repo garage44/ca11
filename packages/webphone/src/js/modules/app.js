@@ -3,7 +3,7 @@
 * @memberof AppBackground.plugins
 * @extends Plugin
 */
-class PluginApp extends Plugin {
+class ModuleApp extends Module {
     /**
     * @param {AppBackground} app - The background application.
     */
@@ -167,4 +167,4 @@ class PluginApp extends Plugin {
     }
 }
 
-module.exports = PluginApp
+module.exports = ModuleApp

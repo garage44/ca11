@@ -69,7 +69,7 @@ module.exports = function(settings) {
         return helpers.compile({
             addons: [path.join(settings.BASE_DIR, 'components', '**', '*.scss')],
             debug: !settings.BUILD_OPTIMIZED,
-            entry: './scss/ca11/app.scss',
+            entry: path.join(settings.BASE_DIR, './scss/ca11/app.scss'),
         })
     }
 

@@ -12,6 +12,21 @@
   },
   "_moduleAliases": {
     "ca11": "./src/js"
+  },
+  "dependencies": {
+    "@ca11/boilerplate": "^1.0.0",
+    "@ca11/sig11": "^1.0.0",
+    "@ca11/theme": "^1.3.0",
+    "@garage11/vue-i18n": "^1.1.0",
+    "d3-array": "^2.4.0",
+    "d3-force": "^2.0.1",
+    "sdp-interop-sl": "^1.4.3",
+    "shortid": "^2.2.15",
+    "sip.js": "^0.11.6",
+    "v-click-outside": "^3.0.0",
+    "vue": "^2.6.10",
+    "vue-autosize": "https://git@github.com/garage11/vue-autosize#master",
+    "vue-stash": "^2.0.1-beta",
+    "vuelidate": "^0.7.4"
   }
 }
-

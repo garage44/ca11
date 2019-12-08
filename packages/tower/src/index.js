@@ -3,11 +3,11 @@ const WebCrypto = require('node-webcrypto-ossl')
 
 global.crypto = new WebCrypto()
 
-const Skeleton = require('../base')
+const Skeleton = require('@ca11/boilerplate')
 
-const Crypto = require('../sig11/crypto')
-const Endpoint = require('../sig11/endpoint')
-const Network = require('../sig11/network')
+const Crypto = require('@ca11/sig11/src/crypto')
+const Endpoint = require('@ca11/sig11/src/endpoint')
+const Network = require('@ca11/sig11/src/network')
 
 global.EventEmitter = require('eventemitter3')
 global.btoa = require('btoa')

@@ -3,7 +3,7 @@
 * Contacts, Endpoints and Presence.
 * @memberof AppBackground.plugins
 */
-class PluginContacts extends Plugin {
+class ModuleContacts extends Module {
     /**
     * @param {AppBackground} app - The background application.
     */
@@ -125,4 +125,4 @@ class PluginContacts extends Plugin {
     }
 }
 
-module.exports = PluginContacts
+module.exports = ModuleContacts

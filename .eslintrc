@@ -13,6 +13,7 @@
         "es6": true
     },
     "globals": {
+        "Module": true,
         "d3": true,
         "EventEmitter": true,
         "I18nStore": true,

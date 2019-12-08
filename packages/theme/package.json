@@ -15,5 +15,8 @@
   },
   "bugs": {
     "url": "https://github.com/garage11/ca11-theme-default/issues"
+  },
+  "dependencies": {
+
   }
 }

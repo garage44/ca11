@@ -1,5 +1,5 @@
-const Logger = require('./logger')
-const Utils = require('./utils')
+const Logger = require('./src/logger')
+const Utils = require('./src/utils')
 const EventEmitter = require('eventemitter3')
 
 
@@ -15,7 +15,7 @@ class Skeleton extends EventEmitter {
     constructor(settings) {
         super(settings)
 
-        this.env = require('./env')()
+        this.env = require('./src/env')()
 
         this._listeners = 0
         this.utils = new Utils()

@@ -2,7 +2,7 @@ const path = require('path')
 
 const gulp = require('gulp')
 
-const settings = require('../../gulp/settings')(path.join(__dirname, '../../'), 'phone', __dirname)
+const settings = require('../../gulp/settings')(path.join(__dirname, '../../'), 'phone', path.join(__dirname, 'src'))
 const helpers = require('../../gulp/helpers')(settings)
 const assets = require('../../gulp/tasks/assets')(settings)
 const code = require('../../gulp/tasks/code')(settings)
@@ -12,7 +12,7 @@ const styles = require('../../gulp/tasks/styles')(settings)
 const test = require('../../gulp/tasks/test')(settings)
 
 
-const build = gulp.series(misc.tasks.buildClean, function build(done) {
+const build = gulp.series(function build(done) {
     helpers.showBuildConfig()
     const tasks = ['assets', 'code', 'styles']
     if (settings.BUILD_TARGET === 'pwa') tasks.push(misc.tasks.manifest)
@@ -42,7 +42,6 @@ gulp.task('code', (done) => {
 gulp.task('default', helpers.taskDefault)
 gulp.task('develop', misc.tasks.watch)
 gulp.task('manifest', misc.tasks.manifest)
-gulp.task('package', gulp.series(build, publish.tasks.package))
 
 gulp.task('sentry-release', publish.tasks.sentryRelease)
 gulp.task('sentry-remove', publish.tasks.sentryRemove)

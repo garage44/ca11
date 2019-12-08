@@ -64,6 +64,8 @@ module.exports = function(settings) {
         const styles = require('./styles')(settings)
         const test = require('./test')(settings)
 
+        livereload.listen({silent: false})
+
         if (settings.BUILD_TARGET === 'node') {
             // Node development doesn't have transpilation.
             // No other watchers are needed.
@@ -112,16 +114,6 @@ module.exports = function(settings) {
             path.join(settings.PROJECT_DIR, '../', 'base', '**', '*.js'),
             path.join(settings.PROJECT_DIR, '../', 'sig11', '**', '*.js'),
         ], gulp.series(code.tasks.app, helpers.reload('app.js')))
-
-
-        // gulp.watch([
-        //     path.join(settings.PROJECT_DIR, '../', 'ca11-*', 'src', '**', '*.js'),
-        // ], gulp.series(
-        //     gulp.parallel(code.tasks.appI18n, code.tasks.app),
-        //     code.tasks.plugins,
-        //     helpers.reload('app_plugins.js'),
-        // ))
-
 
         gulp.watch([
             path.join(settings.BASE_DIR, 'scss', '**', '*.scss'),

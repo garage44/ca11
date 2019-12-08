@@ -11,6 +11,8 @@
   },
   "bugs": {
     "url": "https://github.com/garage11/ca11/issues"
+  },
+  "dependencies": {
+    "graphlib": "^2.1.8"
   }
 }
-

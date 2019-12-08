@@ -1,5 +1,4 @@
-require('module-alias/register')
-const Skeleton = require('ca11-skeleton')
+const Skeleton = require('@ca11/boilerplate')
 
 
 /**

@@ -1,4 +1,4 @@
-const Crypto = require('sig11/crypto')
+const Crypto = require('@ca11/sig11/src/crypto')
 
 const App = require('./lib/app')
 const Devices = require('./lib/devices')
@@ -7,7 +7,7 @@ const Media = require('./lib/media')
 const Session = require('./lib/session')
 const Sounds = require('./lib/sounds')
 
-global.Plugin = require('ca11/lib/plugin')
+global.Module = require('./lib/module')
 
 
 /**

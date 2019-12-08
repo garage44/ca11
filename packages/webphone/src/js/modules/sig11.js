@@ -1,12 +1,11 @@
-const Endpoint = require('sig11/endpoint')
-const Network = require('sig11/network')
+const Endpoint = require('@ca11/sig11/src/endpoint')
+const Network = require('@ca11/sig11/src/network')
 
 
 /**
 * SIG11 Network logic for CA11.
-* @module PluginSIG11
 */
-class PluginSIG11 extends Plugin {
+class ModuleSIG11 extends Module {
     constructor(app) {
         super(app)
         app.sig11 = this
@@ -292,4 +291,4 @@ class PluginSIG11 extends Plugin {
 }
 
 
-module.exports = PluginSIG11
+module.exports = ModuleSIG11

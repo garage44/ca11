@@ -1,8 +1,9 @@
 {
-  "name": "ca11",
   "private": true,
-  "version": "0.8.0",
-  "description": "User- and privacy-friendly FOSS communication software",
+  "version": "1.0.0",
+  "workspaces": [
+    "packages/*"
+  ],
   "engines": {
     "node": ">=13.0.0",
     "yarn": ">= 1.19.0"
@@ -28,25 +29,6 @@
   "lint-staged": {
     "**/*.js": "eslint",
     "**/*.scss": "stylelint"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/garage11/ca11"
-  },
-  "keywords": [
-    "communication",
-    "decentralized",
-    "p2p",
-    "sip",
-    "softphone",
-    "vue",
-    "webrtc"
-  ],
-  "author": "Garage 11",
-  "main": "main.js",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/garage11/ca11/issues"
   },
   "devDependencies": {
     "@commitlint/cli": "7.x.x",
@@ -99,6 +81,7 @@
     "tap-spec": "5.x.x",
     "tape": "4.x.x",
     "tape-catch": "1.x.x",
+    "terser": "^4.4.2",
     "through2": "3.x.x",
     "tildify": "2.x.x",
     "vinyl-buffer": "1.x.x",
@@ -106,9 +89,6 @@
     "vue-svgicon": "3.x.x",
     "watchify": "3.x.x",
     "yargs": "15.x.x"
-  },
-  "_moduleAliases": {
-    "ca11": "./src/js"
   },
   "config": {
     "commitizen": {

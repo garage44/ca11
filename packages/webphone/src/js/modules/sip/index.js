@@ -5,7 +5,7 @@ const SessionDescriptionHandler = require('./sdh')
 * SIP Network logic for CA11 clients.
 * @module ModuleUI
 */
-class PluginSIP extends Plugin {
+class ModuleSIP extends Module {
 
     constructor(app) {
         super(app)
@@ -245,4 +245,4 @@ class PluginSIP extends Plugin {
 
 }
 
-module.exports = PluginSIP
+module.exports = ModuleSIP

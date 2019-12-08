@@ -3,7 +3,7 @@
 * settings and responding to changes to it.
 * @module ModuleSettings
 */
-class PluginSettings extends Plugin {
+class ModuleSettings extends Module {
     /**
     * Initializes the module's store.
     * All application runtime settings are defined here. Build-time
@@ -149,4 +149,4 @@ class PluginSettings extends Plugin {
     }
 }
 
-module.exports = PluginSettings
+module.exports = ModuleSettings

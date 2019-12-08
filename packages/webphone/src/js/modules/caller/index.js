@@ -4,7 +4,7 @@ const SIG11Caller = require('./sig11')
 * Main entrypoint for Calls.
 * @memberof AppBackground.plugins
 */
-class PluginCaller extends Plugin {
+class ModuleCaller extends Module {
     /**
     * @param {AppBackground} app - The background application.
     */
@@ -466,4 +466,4 @@ class PluginCaller extends Plugin {
     }
 }
 
-module.exports = PluginCaller
+module.exports = ModuleCaller

@@ -24,7 +24,7 @@
         "headless": false,
         "port": 3000
     },
-    "theme": "@garage11/ca11-theme-default",
+    "theme": "@ca11/theme",
     "tower": {
         "port": 3001,
         "knex": {

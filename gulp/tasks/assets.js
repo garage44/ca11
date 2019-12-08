@@ -77,7 +77,7 @@ module.exports = function(settings) {
 
 
     tasks.templates = function assetsTemplates() {
-        let sources = ['./components/**/*.vue']
+        let sources = [path.join(settings.BASE_DIR, './components/**/*.vue')]
 
         return gulp.src(sources)
             .pipe(vueCompiler({

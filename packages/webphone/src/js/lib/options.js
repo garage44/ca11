@@ -4,7 +4,7 @@
 * Node and Browsers.
 */
 module.exports = (function() {
-    const env = require('ca11-skeleton/env')({})
+    const env = require('@ca11/boilerplate/src/env')({})
 
     let options = {
         env,

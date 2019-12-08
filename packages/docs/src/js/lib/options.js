@@ -1,5 +1,5 @@
 module.exports = (function() {
-    const env = require('ca11-skeleton/env')()
+    const env = require('@ca11/boilerplate/env')()
 
     let options = {
         env,

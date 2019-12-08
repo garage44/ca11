@@ -14,7 +14,6 @@ const notify = require('gulp-notify')
 const size = require('gulp-size')
 const source = require('vinyl-source-stream')
 const sourcemaps = require('gulp-sourcemaps')
-const through = require('through2')
 const watchify = require('watchify')
 
 let bundlers = {}
@@ -58,9 +57,6 @@ module.exports = function(settings) {
             bundlers[name].ignore('buffer')
             bundlers[name].ignore('process')
             bundlers[name].ignore('rc')
-            bundlers[name].ignore('module-alias/register')
-
-            helpers.transform(bundlers[name])
         }
 
         return new Promise((resolve) => {
@@ -123,27 +119,6 @@ module.exports = function(settings) {
         }
 
         await helpers.compile({name: 'app_plugins', requires})
-    }
-
-
-    /**
-     * Allow cleaner imports by rewriting commonjs require.
-     *   From: "ca11/bg/plugins/user/adapter"
-     *   To: "ca11/src/js/bg/plugins/user/adapter"
-     *
-     * Within the node runtime, the same kind of aliasing is applied
-     * using module-alias. See `package.json` for the alias definition.
-     * @param {Browserify} bundler - The Browserify bundler.
-     */
-    helpers.transform = function(bundler) {
-        bundler.transform({global: true}, function(file, opts) {
-            // Include ca11/* requires.
-            const aliasMatch = /(require\('ca11)\//g
-            return through(function(buf, enc, next) {
-                this.push(buf.toString('utf8').replace(aliasMatch, 'require(\'ca11/src/phone/js/'))
-                next()
-            })
-        })
     }
 
 

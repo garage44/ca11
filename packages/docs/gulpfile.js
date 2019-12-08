@@ -7,7 +7,7 @@ const logger = require('gulplog')
 const mkdirp = promisify(require('mkdirp'))
 const {spawn} = require('child_process')
 
-const settings = require('../base/settings')(__dirname, {
+const settings = require('@ca11/boilerplate/src/settings')(__dirname, {
     overrides: {
         BUILD_TARGET: 'docs',
         BUILD_TARGETS: ['docs'],

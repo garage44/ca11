@@ -7,6 +7,11 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Garage11",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "btoa": "^1.2.1",
+    "knex": "^0.20.4",
+    "mysql2": "^2.0.2",
+    "node-webcrypto-ossl": "^1.0.48"
+  }
 }
-

@@ -4,6 +4,8 @@
   "description": "CA11 boilerplate for Vue applications",
   "main": "src/index.js",
   "author": "Garage11",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "vue": "^2.6.10"
+  }
 }
-

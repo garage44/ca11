@@ -91,11 +91,6 @@ module.exports = function(settings) {
             tasks.manifest.description = helpers.desc.naPWAOnly
         }
 
-        tasks.package.description = `package distribution-ready build for ${helpers.format.context()}`
-        if (settings.BUILD_TARGET === 'pwa') {
-            tasks.package.description = 'not available'
-        }
-
         tasks['test-browser'].description = 'run functional tests on a forced webview '
         tasks.styles.description = helpers.desc.styles
         tasks['test-lint'].description = 'lint project consistency and styleguides'

@@ -3,7 +3,7 @@
 * state and respond with UI-specific calls to watchers.
 * @module ModuleUI
 */
-class PluginUI extends Plugin {
+class PluginUI extends Module {
     /**
     * Setup some menubar and click-to-dial icon related properties.
     * @param {AppBackground} app - The background application.

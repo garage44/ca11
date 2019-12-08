@@ -1,5 +1,3 @@
-require('module-alias/register')
-
 const App = require('ca11/lib/app')
 require('./i18n')
 
