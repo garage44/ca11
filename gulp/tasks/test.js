@@ -19,17 +19,12 @@ module.exports = function(settings) {
      * @returns {Stream} A Gulp stream.
      */
     tasks.browser = function testBrowser(done) {
-        // Force the build target.
-        const misc = require('./misc')(settings)
-
         const reporter = through.obj()
         reporter.pipe(tapSpec()).pipe(process.stdout)
         return gulp.src('tests/browser/*.js')
             .pipe(tape({bail: true, outputStream: reporter}))
             .on('error', () => {process.exit(1)})
             .on('end', async() => {
-                misc.helpers.http.close()
-                await misc.helpers.sig11.stop()
                 done()
             })
     }

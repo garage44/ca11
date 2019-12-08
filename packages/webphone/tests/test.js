@@ -11,32 +11,31 @@ const test = require('tape-catch')
 
 
 // Use the project directory as base directory.
-const settings = require('../gulp/settings')(
-    path.join(__dirname, '../../'), {
+const settings = require('../../../gulp/settings')(
+    path.join(__dirname, '../../../'), 'test', path.join(__dirname, '../src'), {
         overrides: {
             // Force webview build modus.
-            BUILD_TARGET: 'webview',
+            BUILD_TARGET: 'pwa',
         },
     },
 )
 
 // Force webview.
-settings.BUILD_TARGET = 'webview'
+settings.BUILD_TARGET = 'pwa'
 // Environment initialization.
 settings.SCREENS = process.env.SCREENS ? true : false
 
 // An environment flag may override the default headless setting.
 if (process.env.HEADLESS) {
     settings.HEADLESS = process.env.HEADLESS === '1' ? true : false
-} else settings.HEADLESS = settings.tests.headless
+} else settings.HEADLESS = settings.testing.headless
+
+Object.assign(settings.testing, require('./accounts.json'))
 
 
-// WARNING: Do NOT log CI variables while committing to Github.
-// This may expose the Circle CI secrets in the build log. Change the
-// account credentials immediately when this happens.
 if (process.env.CI_ALICE_SIP_PASSWORD) {
     for (const actor of ['alice', 'bob', 'charlie']) {
-        settings.tests[actor].sip.password = process.env[`CI_${actor.toUpperCase()}_SIP_PASSWORD`]
+        settings.testing[actor].sip.password = process.env[`CI_${actor.toUpperCase()}_SIP_PASSWORD`]
     }
 }
 
@@ -73,12 +72,12 @@ const lib = {
         let pages = await browser.pages()
         // Default viewport size during tests.
         pages[0].setViewport({height: 600, width: 500})
-        const uri = `http://127.0.0.1:${settings.tests.port}/index.html?mode=test`
+        const uri = 'https://dev.ca11.app/index.html?mode=test'
         await pages[0].goto(uri, {})
 
         const actor = {browser, page: pages[0]}
         // Assign test credentials to actor.
-        Object.assign(actor, settings.tests[name])
+        Object.assign(actor, settings.testing[name])
 
         lib.actors[name] = actor
         return actor

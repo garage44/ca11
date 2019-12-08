@@ -15,10 +15,7 @@
     "lint:js": "eslint '{packages/**/*.js,gulpfile.js,gulp/**/*.js,tests/**/*.js}'",
     "lint:scss": "stylelint 'packages/**/*.scss'",
     "release": "standard-version",
-    "test:e2e": "gulp test-browser",
-    "test:release": "standard-version --dry-run",
-    "test:unit": "gulp test-unit",
-    "test": "npm run test-unit;npm run test-lint"
+    "test": "lerna run test"
   },
   "husky": {
     "hooks": {

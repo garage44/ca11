@@ -10,8 +10,11 @@
   "bugs": {
     "url": "https://github.com/garage11/ca11/issues"
   },
-  "_moduleAliases": {
-    "ca11": "./src/js"
+  "scripts": {
+    "test:e2e": "gulp test-browser",
+    "test:release": "standard-version --dry-run",
+    "test:unit": "gulp test-unit",
+    "test": "npm run test:unit;npm run test-lint"
   },
   "dependencies": {
     "@ca11/boilerplate": "^1.0.0",
