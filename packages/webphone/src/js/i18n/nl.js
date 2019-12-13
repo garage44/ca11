@@ -79,7 +79,6 @@ module.exports = {
     'keypad': 'toetsen',
     'language used throughout the application.': 'de taal die in de applicatie gebruikt wordt.',
     'loading': 'laden',
-    'log anonymized application errors to Sentry in order to improve {name}.': 'log geanonimiseerde applicatie fouten naar Sentry om {name} te verbeteren.',
     'microphone': 'microfoon',
     'microphone access denied': 'geen microfoon toegang',
     'minutes ago': 'minuten geleden',

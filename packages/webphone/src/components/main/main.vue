@@ -12,16 +12,15 @@
     </button>
 
     <transition name="c-status__context-switch" mode="out-in" appear>
-        <CallerBar v-if="(session.authenticated && wizard.completed)" class="c-main__status"/>
+        <CallerBar v-if="session.authenticated" class="c-main__status"/>
     </transition>
 
     <Session v-if="!session.authenticated"/>
-    <Wizard v-else-if="!wizard.completed && session.authenticated"/>
 
-    <Menu v-if="wizard.completed && session.authenticated" class="c-main__menu"/>
+    <Menu v-if="session.authenticated" class="c-main__menu"/>
 
     <!-- Dynamic component from layer name -->
     <AudioBg/>
-    <Main v-if="wizard.completed && session.authenticated" :is="layer" class="c-main__content"/>
-    <TsControls v-if="wizard.completed && session.authenticated" :call="callActive" class="c-main__media-controls"/>
+    <Main v-if="session.authenticated" :is="layer" class="c-main__content"/>
+    <TsControls v-if="session.authenticated" :call="callActive" class="c-main__media-controls"/>
 </component>

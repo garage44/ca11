@@ -34,7 +34,56 @@ class ModuleContacts extends Module {
     */
     _initialState() {
         return {
-            contacts: {},
+            contacts: {
+                a0000001: {
+                    endpoints: {
+                        aa000001: {
+                            id: 'aa000001',
+                            number: '1111',
+                            protocol: 'sip',
+                            pubkey: '',
+                            status: 'not-set',
+                            subscribe: false,
+                        },
+                    },
+                    favorite: false,
+                    id: 'a0000001',
+                    name: 'Welcome tape',
+                    selected: false,
+                },
+                a0000002: {
+                    endpoints: {
+                        aa000001: {
+                            id: 'aa000001',
+                            number: '2222',
+                            protocol: 'sip',
+                            pubkey: '',
+                            status: 'not-set',
+                            subscribe: false,
+                        },
+                    },
+                    favorite: false,
+                    id: 'a0000002',
+                    name: 'Conference (SFU)',
+                    selected: false,
+                },
+                a0000003: {
+                    endpoints: {
+                        aa000001: {
+                            id: 'aa000001',
+                            number: '3333',
+                            protocol: 'sip',
+                            pubkey: '',
+                            status: 'not-set',
+                            subscribe: false,
+                        },
+                    },
+                    favorite: false,
+                    id: 'a0000003',
+                    name: 'DTMF test',
+                    selected: false,
+                },
+            },
             filters: {
                 favorites: false,
                 presence: false,

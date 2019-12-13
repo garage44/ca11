@@ -56,7 +56,6 @@
     "gulp-notify": "3.x.x",
     "gulp-rename": "1.x.x",
     "gulp-sass": "4.x.x",
-    "gulp-sentry-release-manager": "0.x.x",
     "gulp-size": "2.x.x",
     "gulp-sourcemaps": "2.x.x",
     "gulp-stylelint": "10.x.x",

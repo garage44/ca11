@@ -22,13 +22,6 @@ module.exports = (app) => {
 
                 if (block === 'component') {
                     classes[`theme-${this.ui.theme}`] = true
-                } else if (block === 'notifications') {
-                    if (this.session.authenticated) {
-                        if (this.wizard.completed) {
-                            classes.sidebar = true
-                            classes.topbar = true
-                        }
-                    }
                 } else if (block === 'panel') {
                     if (this.session.authenticated) classes.sidebar = true
                     if (this.overlay) classes['no-scroll'] = true
@@ -57,7 +50,6 @@ module.exports = (app) => {
             session: 'session',
             telemetry: 'settings.telemetry',
             ui: 'ui',
-            wizard: 'settings.wizard',
         },
     }
 

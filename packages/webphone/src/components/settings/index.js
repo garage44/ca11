@@ -90,13 +90,11 @@ module.exports = (app) => {
                 },
                 sip: {
                     account: {
-                        selected: {
-                            password: {
-                                requiredIf: v.requiredIf(() => this.sip.toggled),
-                            },
-                            username: {
-                                requiredIf: v.requiredIf(() => this.sip.toggled),
-                            },
+                        password: {
+                            requiredIf: v.requiredIf(() => this.sip.toggled),
+                        },
+                        username: {
+                            requiredIf: v.requiredIf(() => this.sip.toggled),
                         },
                     },
                     endpoint: {

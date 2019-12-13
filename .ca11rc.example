@@ -11,15 +11,6 @@
             "stun:dev.ca11.app"
         ]
     },
-    "telemetry": {
-        "sentry": {
-            "apiKey": "",
-            "dsn": "",
-            "host": "",
-            "org": "",
-            "project": "ca11"
-        }
-    },
     "testing": {
         "headless": false,
         "port": 3000

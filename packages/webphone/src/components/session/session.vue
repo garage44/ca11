@@ -47,13 +47,6 @@
             :validation="$v.password"
         />
 
-        <FieldCheckbox
-            v-model="wizard.completed"
-            name="store_key"
-            :help="$t('use default devices, no telemetrics and no Click-To-Dial.')"
-            :label="$t('skip wizard')"
-        />
-
         <div class="buttons is-centered">
             <button
                 v-if="app.session.available.length"

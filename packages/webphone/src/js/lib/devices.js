@@ -157,7 +157,6 @@ class Devices {
             // Notify about newly connected devices.
             for (const device of sinkDiff.added) {
                 const message = this.app.$t('added: "{name}"', {name: device.name})
-                // Also log this to Sentry.
                 this.app.logger.info(`${this}${message}`)
                 this.app.notify({icon: 'microphone', message, type: 'info'})
             }
@@ -167,7 +166,6 @@ class Devices {
                 // Notify about devices that are *safely* removed from the devices list.
                 for (const device of sinkDiff.removed) {
                     const message = this.app.$t('removed: "{name}"', {name: device.name})
-                    // Also log this to Sentry.
                     this.app.logger.info(`${this}${message}`)
                     this.app.notify({icon: 'microphone', message, type: 'info'})
                 }

@@ -16,18 +16,26 @@ class ModuleSIP extends Module {
             app.logger.info(`${this}sip ${enabled ? 'enabled' : 'disabled'}`)
             if (enabled) this.connect()
         })
+
+        this.app.on('sig11:services', (services) => {
+            this.app.setState({
+                sip: {
+                    account: services.sip.account,
+                    enabled: true,
+                    toggled: true,
+                },
+            }, {persist: true})
+            this.connect()
+        })
+
     }
 
 
     _initialState() {
         return {
             account: {
-                // <Platform> may provide account options.
-                options: [],
-                // Remembers the last selected option.
-                selected: {id: null, name: null, password: null, uri: null, username: null},
-                // Whether user can select <platform> accounts from options.
-                selection: false,
+                password: null,
+                username: null,
             },
             enabled: false,
             endpoint: process.env.SIP_ENDPOINT,
@@ -55,13 +63,6 @@ class ModuleSIP extends Module {
                     this.disconnect(false)
                 }
             },
-            /**
-            * Update menubar status when the SIP status changes.
-            * @param {String} uaStatus - The new UA status.
-            */
-            'store.sip.status': (uaStatus) => {
-                this.app.modules.ui.menubarState()
-            },
         }
     }
 
@@ -77,7 +78,7 @@ class ModuleSIP extends Module {
 
         // The default is to reconnect.
         this.reconnect = true
-        const username = this.app.state.sip.account.selected.username
+        const username = this.app.state.sip.account.username
         // Overwrite the existing instance with a new one every time.
         // SIP.js doesn't handle resetting configuration well.
         let wsServers = this.app.state.sip.endpoint
@@ -95,7 +96,7 @@ class ModuleSIP extends Module {
             },
             // Incoming unanswered calls are terminated after x seconds.
             noanswertimeout: 60,
-            password: this.app.state.sip.account.selected.password,
+            password: this.app.state.sip.account.password,
             register: true,
             sessionDescriptionHandlerFactory: (session, options) => {
                 options.app = this.app

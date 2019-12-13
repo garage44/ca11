@@ -85,9 +85,6 @@ class ModuleApp extends Module {
 
     _watchers() {
         return {
-            'store.app.dnd': (dndEnabled) => {
-                this.app.modules.ui.menubarState()
-            },
             /**
             * Schedule removal of a newly add notification if it
             * has a timeout property.

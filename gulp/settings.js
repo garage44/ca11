@@ -46,15 +46,6 @@ module.exports = function config(projectDir, projectName, baseDir, {overrides = 
     settings.PACKAGE = require(`${settings.PROJECT_DIR}/package`)
 
 
-    // Override the release name when manually
-    // removing a release and artifacts from Sentry.
-    Object.defineProperty(settings, 'SENTRY_RELEASE', {
-        get: function() {
-            if (argv.release) return argv.release
-            else return `${settings.PACKAGE.version}-${settings.BUILD_TARGET}`
-        },
-    })
-
     settings.SCREENS_DIR = path.join(settings.BUILD_ROOT_DIR, 'docs', 'screens')
     settings.DIST_DIR = path.join(settings.PROJECT_DIR, 'dist')
     settings.NODE_DIR = path.join(settings.PROJECT_DIR, 'node_modules') || process.env.NODE_DIR
@@ -107,7 +98,6 @@ module.exports = function config(projectDir, projectName, baseDir, {overrides = 
                             {label: `BUILD_TARGET         --target ${format.selected(settings.BUILD_TARGETS, settings.BUILD_TARGET)}`},
                             {label: `BUILD_OPTIMIZED      --optimized <${settings.BUILD_OPTIMIZED ? c.bold.red('yes') : c.bold.red('no')}>`},
                             {label: `BUILD_VERBOSE        --verbose <${settings.BUILD_VERBOSE ? c.bold.red('yes') : c.bold.red('no')}`},
-                            {label: `SENTRY_RELEASE       --release <${c.bold.green(settings.SENTRY_RELEASE)}>`},
                             {label: `LOG_LEVEL            -${c.bold.green('L'.repeat(settings.LOG_LEVEL))} <${c.bold.red(settings.LOG_LEVELS[settings.LOG_LEVEL - 1])}>`},
 
                         ],

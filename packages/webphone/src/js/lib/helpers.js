@@ -265,24 +265,22 @@ function helpers(app) {
             settings: {
                 webrtc: {
                     account: {
-                        selected: {
-                            id: {
-                                customValid: Vuelidate.withParams({
-                                    message: '',
-                                    type: 'customValid',
-                                }, () => {
-                                    // No validation without WebRTC toggled off.
-                                    if (!this.settings.webrtc.toggle) return true
-                                    else {
-                                        if (this.settings.sip.account.status === 'loading') return false
-                                        else if (this.settings.sip.account.selected.id) return true
-                                    }
-                                    return false
-                                }),
-                                requiredIf: v.requiredIf(() => {
-                                    return this.settings.webrtc.toggle
-                                }),
-                            },
+                        id: {
+                            customValid: Vuelidate.withParams({
+                                message: '',
+                                type: 'customValid',
+                            }, () => {
+                                // No validation without WebRTC toggled off.
+                                if (!this.settings.webrtc.toggle) return true
+                                else {
+                                    if (this.settings.sip.account.status === 'loading') return false
+                                    else if (this.settings.sip.account.id) return true
+                                }
+                                return false
+                            }),
+                            requiredIf: v.requiredIf(() => {
+                                return this.settings.webrtc.toggle
+                            }),
                         },
                     },
                 },

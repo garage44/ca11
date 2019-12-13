@@ -17,9 +17,9 @@ on existing Web technologies(WebRTC, WebCrypto) where feasible, and focusses on
 the user experience and decentralization of the signalling infrastructure.
 
 The initial implementation of the PWA User Interface and signalling service is in JavaScript,
-which makes it easy to iterate on and repivot when necessary. The PWA uses a protocol-agnostic
-call abstraction, which makes it easy to deal with multiple signalling mechanisms. SIP is supported
-through SIP.js and a WebRTC-compatible SIP backend(Asterisk).
+which makes it easy to iterate. The PWA uses a protocol-agnostic call abstraction, which makes
+ it easy to deal with multiple signalling mechanisms. SIP is supported through SIP.js and a
+ WebRTC-compatible SIP backend(Asterisk).
 
 CA11 also has its own signalling service - *SIG11* - which is a straightforward way to establish
 P2P DTLS-SRTP connections over an untrusted overlay network, by using assymetric encryption

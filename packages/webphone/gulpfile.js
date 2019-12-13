@@ -6,7 +6,6 @@ const settings = require('../../gulp/settings')(path.join(__dirname, '../../'), 
 const helpers = require('../../gulp/helpers')(settings)
 const assets = require('../../gulp/tasks/assets')(settings)
 const code = require('../../gulp/tasks/code')(settings)
-const publish = require('../../gulp/tasks/publish')(settings)
 const misc = require('../../gulp/tasks/misc')(settings)
 const styles = require('../../gulp/tasks/styles')(settings)
 const test = require('../../gulp/tasks/test')(settings)
@@ -43,8 +42,6 @@ gulp.task('default', helpers.taskDefault)
 gulp.task('develop', misc.tasks.watch)
 gulp.task('manifest', misc.tasks.manifest)
 
-gulp.task('sentry-release', publish.tasks.sentryRelease)
-gulp.task('sentry-remove', publish.tasks.sentryRemove)
 gulp.task('styles', (done) => {
     let runTasks = [styles.tasks.app]
     return gulp.parallel(runTasks)(done)

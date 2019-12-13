@@ -79,12 +79,6 @@ module.exports = function(settings) {
         tasks.default.description = helpers.desc.default
         tasks.develop.description = helpers.desc.develop
 
-        tasks['sentry-release'].description = `create sentry release for ${helpers.format.context()}`
-        tasks['sentry-remove'].description = `remove sentry release for ${helpers.format.context()}`
-        tasks['sentry-remove'].flags = {
-            '--release': `using version <${c.bold.green(settings.SENTRY_RELEASE)}>`,
-        }
-
         if (settings.BUILD_TARGET === 'pwa') {
             tasks.manifest.description = `build ${helpers.format.context()} pwa manifest.json`
         } else {

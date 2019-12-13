@@ -23,10 +23,6 @@ class ModuleSettings extends Module {
                 ],
                 selected: {id: 'default', name: 'default'},
             },
-            telemetry: {
-                enabled: false,
-                sentryDsn: process.env.SENTRY_DSN,
-            },
             webhooks: {
                 enabled: false,
                 url: '',
@@ -87,18 +83,6 @@ class ModuleSettings extends Module {
                 },
                 stun: process.env.STUN,
                 toggle: true,
-            },
-            wizard: {
-                completed: true,
-                steps: {
-                    options: [
-                        {name: 'WizardSig11'},
-                        {name: 'WizardClickToDial'},
-                        {name: 'WizardDevices'},
-                        {name: 'WizardTelemetry'},
-                    ],
-                    selected: {name: 'WizardSig11'},
-                },
             },
         }
 

@@ -54,7 +54,6 @@ class CA11 extends App {
                 Stream: require('../components/stream'),
                 StreamView: require('../components/stream-view'),
                 TsControls: require('../components/ts-controls'),
-                Wizard: require('../components/wizard'),
             }
 
             for (const name of Object.keys(this.components)) {

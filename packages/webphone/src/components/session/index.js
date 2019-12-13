@@ -98,7 +98,6 @@ module.exports = (app) => {
             session: 'session',
             sig11: 'sig11',
             vendor: 'app.vendor',
-            wizard: 'settings.wizard',
         },
         updated: function() {
             // Validation needs to be reset after an update, so

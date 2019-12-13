@@ -79,13 +79,6 @@
                 :help="$t('automatically unlock your session after restart.')"
                 :label="$t('remember session')"
             />
-
-            <FieldCheckbox
-                v-model="settings.telemetry.enabled"
-                name="store_key"
-                :help="$t('log anonymized application errors to Sentry in order to improve {name}.', {name: app.name})"
-                :label="$t('quality metrics')"
-            />
         </div>
 
 
@@ -161,22 +154,22 @@
 
             <FieldText
                 v-if="sip.toggled"
-                v-model="sip.account.selected.username"
+                v-model="sip.account.username"
                 elementclass="t-txt-sip-username"
                 name="sip_username"
                 :label="`SIP ${$t('extension')}`"
                 placeholder="1000"
-                :validation="$v.sip.account.selected.username"
+                :validation="$v.sip.account.username"
             />
 
             <FieldPassword
                 v-if="sip.toggled"
-                v-model="sip.account.selected.password"
+                v-model="sip.account.password"
                 elementclass="t-txt-sip-password"
                 name="sip_password"
                 :label="`SIP ${$t('password')}`"
                 :placeholder="`SIP ${$t('password')}`"
-                :validation="$v.sip.account.selected.password"
+                :validation="$v.sip.account.password"
             />
         </div>
 

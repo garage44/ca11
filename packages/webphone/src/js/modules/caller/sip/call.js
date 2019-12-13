@@ -32,7 +32,7 @@ class CallSIP extends Call {
             // Passing in no target or a number means an outgoing call.
             app._mergeDeep(this.state, {
                 direction: 'outgoing',
-                number: description.number,
+                number: description.endpoint,
                 status: 'new',
             })
         }

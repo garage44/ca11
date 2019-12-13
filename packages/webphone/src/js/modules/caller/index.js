@@ -131,7 +131,7 @@ class ModuleCaller extends Module {
         return {
             calls: {},
             description: {
-                number: '',
+                endpoint: '',
                 protocol: 'sig11',
             },
         }
@@ -142,7 +142,7 @@ class ModuleCaller extends Module {
     * Create and return a new `Call` object based on a
     * call description.
     * @param {Object} description - New call object.
-    * @param {String} [description.number] - Number to call to.
+    * @param {String} [description.endpoint] - Endpoint to call to.
     * @param {String} [description.protocol] - Protocol to use.
     * @returns {Call} - A new or existing Call with status `new`.
     */
@@ -150,7 +150,7 @@ class ModuleCaller extends Module {
         let call = this.callers[description.protocol].call(description)
 
         this.calls[call.id] = call
-        call.state.number = description.number
+        call.state.endpoint = description.endpoint
         call.setState(call.state)
 
         if (!this.app.state.caller.calls[call.id]) {
@@ -168,7 +168,7 @@ class ModuleCaller extends Module {
 
         if (this.app.env.isTel) {
             state.ui = {layer: 'caller'}
-            state.caller = {description: {number: this.app.env.isTel}}
+            state.caller = {description: {endpoint: this.app.env.isTel}}
             state.sig11 = {network: {view: false}}
         }
 
@@ -190,26 +190,6 @@ class ModuleCaller extends Module {
                 status: 'loading',
             },
         })
-    }
-
-
-    /**
-    * Delegate call-related actions.
-    * @returns {Object} - Properties that need to be watched.
-    */
-    _watchers() {
-        return {
-            /**
-            * Modify the menubar event icon when there is
-            * no more ongoing call.
-            */
-            'store.caller.calls': () => {
-                const ongoingCall = this.findCall({ongoing: true})
-                if (!ongoingCall && ['calling', 'ringing'].includes(this.app.state.ui.menubar.event)) {
-                    this.app.setState({ui: {menubar: {event: null}}})
-                }
-            },
-        }
     }
 
 
@@ -259,12 +239,12 @@ class ModuleCaller extends Module {
     * Create - and optionally start - a new Call. This is the main
     * event used to start a call with.
     * @property {Object} description - Information about the new Call.
-    * @property {String} [description.number] - The endpoint to call.
+    * @property {String} [description.endpoint] - The endpoint to call.
     */
     call({description}) {
         // Sanitize the number.
         if (this.app.state.caller.description.protocol === 'sip') {
-            description.number = this.app.utils.sanitizeNumber(description.number)
+            description.endpoint = this.app.utils.sanitizeNumber(description.endpoint)
         }
 
         description.direction = 'outgoing'
@@ -278,7 +258,7 @@ class ModuleCaller extends Module {
             this.activateCall(call, true, true)
         }
 
-        this.app.setState({caller: {description: {number: null}}})
+        this.app.setState({caller: {description: {endpoint: null}}})
     }
 
 
@@ -430,7 +410,7 @@ class ModuleCaller extends Module {
                 // Always disable the keypad, set the sourceCall on-hold and
                 // switch to the default `attended` mode when activating
                 // transfer mode on a call.
-                sourceCall.setState({keypad: {active: false, number: ''}, transfer: {active: true, type: 'attended'}})
+                sourceCall.setState({keypad: {active: false, endpoint: ''}, transfer: {active: true, type: 'attended'}})
                 sourceCall.hold()
             }
             // Set attended status on other calls.

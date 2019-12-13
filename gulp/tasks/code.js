@@ -82,7 +82,6 @@ module.exports = function(settings) {
             LANGUAGE: 'en-US',
 
             NODE_ENV: settings.NODE_ENV,
-            SENTRY_DSN: settings.telemetry.sentry.dsn,
             SIG11_ENDPOINT: settings.endpoints.sig11,
             SIP_ENDPOINT: settings.endpoints.sip,
             STUN: settings.endpoints.stun,

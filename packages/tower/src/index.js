@@ -1,21 +1,18 @@
 const http = require('http')
-const WebCrypto = require('node-webcrypto-ossl')
 
+global.EventEmitter = require('eventemitter3')
+global.btoa = require('btoa')
+const WebCrypto = require('node-webcrypto-ossl')
 global.crypto = new WebCrypto()
+const rc = require('rc')
+const WebSocket = require('ws')
+const uuidv4 = require('uuid/v4')
 
 const Skeleton = require('@ca11/boilerplate')
-
 const Crypto = require('@ca11/sig11/src/crypto')
 const Endpoint = require('@ca11/sig11/src/endpoint')
 const Network = require('@ca11/sig11/src/network')
 
-global.EventEmitter = require('eventemitter3')
-global.btoa = require('btoa')
-const WebSocket = require('ws')
-
-const uuidv4 = require('uuid/v4')
-
-const rc = require('rc')
 let settings = {}
 rc('ca11', settings)
 
@@ -28,7 +25,6 @@ class Ca11Tower extends Skeleton {
         this.network = new Network(this)
 
         this.knex = require('knex')(settings.tower.knex)
-
         this.setup()
     }
 
@@ -50,33 +46,7 @@ class Ca11Tower extends Skeleton {
             }
         })
 
-        endpoint.once('sig11:identified', async() => {
-            // SIP entity is a hash of the public key.
-            const rows = await this.knex.from('sig11_asterisk').select('*').where({
-                pubkey: endpoint.id,
-            })
-
-            if (!rows.length) {
-                this.knex('sig11_asterisk').insert({
-                    id: uuidv4(),
-                    pubkey: endpoint.id,
-                })
-                    .then((res) => {
-                        // console.log('RES', res)
-                    })
-            }
-
-
-            this.network.addEndpoint(endpoint, this.network.identity)
-            endpoint.send(this.network.protocol.out('network', this.network.export()))
-
-            const msg = this.network.protocol.out('node-added', {
-                node: endpoint.serialize(),
-                parent: this.network.identity,
-            })
-            // Notify others about the new node.
-            this.network.broadcast(msg, {excludes: [endpoint]})
-        })
+        endpoint.once('sig11:identified', this.onIdentify.bind(this, endpoint))
 
         ws.on('close', () => {
             this.network.removeEndpoint(endpoint)
@@ -84,6 +54,66 @@ class Ca11Tower extends Skeleton {
             this.network.broadcast(msg)
         })
     }
+
+
+    async onIdentify(endpoint) {
+        // SIP entity is a hash of the public key.
+        const rows = await this.knex.from('sig11_asterisk').select('*').where({
+            pubkey: endpoint.id,
+        })
+
+        if (!rows.length) {
+            const sipId = uuidv4()
+            await Promise.all([
+                this.knex('sig11_asterisk').insert({
+                    id: sipId,
+                    pubkey: endpoint.id,
+                }),
+                this.knex('ps_aors').insert({
+                    id: sipId,
+                    max_contacts: 1,
+                }),
+                this.knex('ps_auths').insert({
+                    auth_type: 'userpass',
+                    id: sipId,
+                    password: sipId,
+                    username: sipId,
+                }),
+                this.knex('ps_endpoints').insert({
+                    allow: 'g722',
+                    aors: sipId,
+                    auth: sipId,
+                    context: 'default',
+                    direct_media: 'no',
+                    disallow: 'all',
+                    id: sipId,
+                    transport: 'transport-wss',
+                    webrtc: 'yes',
+                }),
+            ])
+
+            endpoint.send(this.network.protocol.out('services', {
+                sip: {
+                    account: {
+                        password: sipId,
+                        username: sipId,
+                    },
+                },
+            }))
+        }
+
+        this.network.addEndpoint(endpoint, this.network.identity)
+        endpoint.send(this.network.protocol.out('network', this.network.export()))
+
+        const msg = this.network.protocol.out('node-added', {
+            node: endpoint.serialize(),
+            parent: this.network.identity,
+        })
+        // Notify others about the new node.
+        this.network.broadcast(msg, {excludes: [endpoint]})
+    }
+
+
     async setup() {
         this.keypair = await this.crypto.createIdentity()
         this.network.setIdentity(this.keypair)
@@ -97,7 +127,9 @@ class Ca11Tower extends Skeleton {
         })
 
         this.wss.on('connection', this.onConnection.bind(this))
-        this.server.listen(settings.tower.port)
+        this.server.listen(settings.tower.port, () => [
+            this.logger.info(`listening on port ${settings.tower.port}`),
+        ])
     }
 
 
