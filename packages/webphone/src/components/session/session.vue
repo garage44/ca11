@@ -33,7 +33,7 @@
             elementclass="t-txt-sig11-number"
             name="sig11_number"
             :help="$t('the number (or name) that people may call you on.')"
-            :label="$t('choose a CA11 number')"
+            :label="$t('choose your CA11 ID')"
             :validation="$v.sig11.identity.number"
         />
 
@@ -42,8 +42,8 @@
             elementclass="t-txt-session-pw"
             name="session-pw"
             :autofocus="true"
-            :help="$t('used to encrypt persistent phone data with.')"
-            :label="$t('password protection')"
+            :help="$t('remember if you want to open your encrypted session again.')"
+            :label="$t('session secret')"
             :validation="$v.password"
         />
 

@@ -81,10 +81,10 @@
 
         #{$item}__icon {
             @include icon-size($icon-large);
-            background: var(--grey-50);
-            border: $spacer / 4 solid $white-color;
+            background: var(--grey-400);
+            border: $spacer / 4 solid var(--grey-200);
             border-radius: 50%;
-            fill: var(--grey-200);
+            fill: var(--grey-100);
             // Force a static width.
             flex: 0 0 $icon-large;
             margin-right: $spacer;
@@ -112,7 +112,7 @@
 
             // Smaller sub-title that adds extra context for the item.
             #{$item}__description {
-                color: var(--grey-200);
+                color: var(--grey-50);
                 font-size: $text-small;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -189,7 +189,7 @@
             width: 100%;
 
             @at-root .context__entry-icon {
-                color: var(--grey-300);
+                color: var(--grey-50);
                 display: flex;
                 // flex: 0 0 $spacer * 6;
                 justify-content: center;

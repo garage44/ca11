@@ -10,7 +10,7 @@
     .context__entry-icon {
         &.available svg {fill: $green-color;}
         &.busy svg {fill: $red-color;}
-        &.not-set svg {fill: var(--grey-300);}
+        &.not-set svg {fill: var(--grey-50);}
 
         &.failed {
             background: $red-color;
