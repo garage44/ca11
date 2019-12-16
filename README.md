@@ -46,18 +46,19 @@ target devices that will be used to test with.
 
 
 # Installation
-This manual uses Docker to get your development environment working without too much hazzle.
-If you need more control, you could use the content of the *docker* directory as a start for
-a manual installation.
+Node.js version 13 or higher is required. This manual uses Docker to get your development 
+environment working without too much hazzle. If you need more control, you could use the 
+content of the *docker* directory as a start for manual installation.
 
-* Clone the project, install dependencies and start the SIG11 signalling service.
+* Clone the project and install dependencies
 
+      npm i -g gulp yarn
       git clone git@github.com:garage11/ca11.git
       cd ca11
       yarn
       cp .ca11rc.example .ca11rc
+      yarn bootstrap
       yarn build
-      node src/tower/index.js
 
 * Generate developer certificates and a Certificate Authority to use SSL on a local domain:
 
@@ -66,34 +67,40 @@ a manual installation.
       ./ca_cert.sh sip.dev.ca11.app
       ./ca_cert.sh sig11.dev.ca11.app
 
-* Manually import the development CA. This shellscript only works on Archlinux(PRs welcome!)
+* Manually import the development CA
+
+  *This shellscript only works on Archlinux(PRs welcome!)*
 
       sudo ./ca_system.sh
 
-* Local hostname lookup for our domains:
+* Add local hostname lookup for the default domains:
 
-      echo "127.0.0.1 dev.ca11.app" >> /etc/hosts
-      echo "127.0.0.1 sip.dev.ca11.app" >> /etc/hosts
-      echo "127.0.0.1 sig11.dev.ca11.app" >> /etc/hosts
+      sudo echo "127.0.0.1 dev.ca11.app" >> /etc/hosts
+      sudo echo "127.0.0.1 sip.dev.ca11.app" >> /etc/hosts
+      sudo echo "127.0.0.1 sig11.dev.ca11.app" >> /etc/hosts
 
-* Initialize PBX database and SIG11 pubkey (WIP)
+* Initialize PBX database
+
+  *(!)Database docker doesn't have a persistent storage volume yet*
 
       cd ca11/docker
       docker-compose up
-      docker exec -w /root/asterisk/contrib/ast-db-manage -it asterisk alembic -c config.ini upgrade headupgrade head
-      mysql -u root -p -h 127.0.0.1 asterisk < mariadb/sig11_asterisk.sql
+      docker exec -w /root/asterisk/contrib/ast-db-manage -it asterisk alembic -c config.ini upgrade head
+      mysql -u root -p -h 127.0.0.1 asterisk < mariadb/sig11_asterisk.sql  # default pw is 'ca11ftw'
+  
+* Start the SIG11 tower service
 
-* Generate two accounts. This still needs to be automated:
+      node packages/tower/src/index.js
 
-      mysql -u root -p -D asterisk -h 127.0.0.1;
-      > insert into ps_aors (id, max_contacts) values (1000, 1);
-      > insert into ps_aors (id, max_contacts) values (2000, 1);
-      > insert into ps_auths (id, auth_type, password, username) values (1000, 'userpass', 1000, 1000);
-      > insert into ps_auths (id, auth_type, password, username) values (2000, 'userpass', 2000, 2000);
-      > insert into ps_endpoints (id, transport, aors, auth, context, disallow, allow, direct_media, webrtc) values (1000, 'transport-wss', '1000', '1000', 'default', 'all', 'g722', 'no', 'yes');
-      > insert into ps_endpoints (id, transport, aors, auth, context, disallow, allow, direct_media, webrtc) values (2000, 'transport-wss', '2000', '2000', 'default', 'all', 'g722', 'no', 'yes');
-      > quit;
+Make sure you restart your browser, in order for the SSL certificate to refresh. 
+Open https://dev.ca11.app and start a phone. Call one of the SIP testnumbers. 
 
-* Make sure you restarted your browser(SSL certificate refresh). Open https://dev.ca11.app and start your phone.
 
-SIP credentials (see mysql statements above) have to be filled manually in the SIP settings tab for now.
+## Troubleshooting
+*  **No audio device found.**
+
+   Sorry, CA11 requires a webcam currently.
+
+* **SIG11 calls don't work**
+
+   At the moment, the SIG11 protocol is not ready for usage yet.

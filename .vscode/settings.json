@@ -9,5 +9,8 @@
     },
     "vetur.validation.template": false,
     "eslint.autoFixOnSave": true,
-    "stylelint.autoFixOnSave": true
+    "stylelint.autoFixOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    }
 }
