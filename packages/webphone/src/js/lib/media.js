@@ -120,6 +120,7 @@ class Media {
         let stream = this.streams[streamId]
 
         if (!stream) {
+            this.app.logger.info(`${this}aqcuiring stream type: ${type}`)
             try {
                 const flags = this._getUserMediaFlags({audio: true, video: type === 'video' ? true : false})
                 const userMedia = await navigator.mediaDevices.getUserMedia(flags)
@@ -150,7 +151,7 @@ class Media {
                 if (err.message === 'Requested device not found') {
                     // eslint-disable-next-line no-console
                     console.error(err)
-                    this.app.notify({icon: 'warning', message: this.app.$t('no audio devices found.'), type: 'warning'})
+                    this.app.notify({icon: 'warning', message: `${this.app.$t('no suitable device found for:')} ${type}`, type: 'warning'})
 
                     throw new Error(err)
                 }

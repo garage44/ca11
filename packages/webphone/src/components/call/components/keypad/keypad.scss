@@ -63,6 +63,8 @@
     .c-stream {
         background: none;
         border-top-left-radius: 15px;
+        width: 100%;
+
 
         &.selected {
             filter: grayscale(0%);

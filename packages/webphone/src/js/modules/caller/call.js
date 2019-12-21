@@ -32,7 +32,7 @@ class Call {
          * @property {Boolean} state.active - Whether the Call shows in the UI or not.
          * @property {String} state.class - Used to identify the Call type with.
          * @property {String} state.name - The name to show when calling.
-         * @property {String} state.number - The Call's number.
+         * @property {String} state.endpoint - The Call's advertised endpoint.
          * @property {Object} state.hangup - Specifies the hangup feature of a Call.
          * @property {Object} state.hold - Specifies the hold feature of a Call.
          * @property {String} state.id - The generated UUID of the Call.
@@ -46,6 +46,7 @@ class Call {
         this.state = {
             active: true,
             direction: null, // incoming or outgoing
+            endpoint: null,
             hangup: {
                 disabled: false,
             },
@@ -57,13 +58,12 @@ class Call {
             keypad: {
                 active: false,
                 disabled: false,
-                number: null,
+                endpoint: null,
             },
             mute: {
                 active: false,
             },
             name: null,
-            number: null,
             protocol: null,
             status: null,
             streams: {},
@@ -173,7 +173,7 @@ class Call {
         this.app.sounds.callEnd.play()
 
         let message = `${new Date().toLocaleTimeString()} [${this.state.protocol.toUpperCase()}] - `
-        let title = `${this.state.number}`
+        let title = `${this.state.endpoint}`
         if (this.state.name) title += ` - ${this.state.name}`
 
         const fromto = {
@@ -187,21 +187,21 @@ class Call {
             title += ` (${this.app.$t(this.translations[this.state.status])})`
             message += this.app.$t('missed call {fromto} {name}', {
                 fromto: fromto[this.state.direction],
-                name: this.state.name ? this.state.name : this.state.number,
+                name: this.state.name ? this.state.name : this.state.endpoint,
             }).ca()
             this.app.emit('caller:call-rejected', {call: this.state}, true)
         } else {
             title += ` (${this.timer().formatted})`
             message = this.app.$t('finished call {fromto} {name} after {time}', {
                 fromto: fromto[this.state.direction],
-                name: this.state.name ? this.state.name : this.state.number,
+                name: this.state.name ? this.state.name : this.state.endpoint,
                 time: this.timer().formatted,
             }).ca()
 
             this.app.emit('caller:call-ended', {call: this.state}, true)
         }
 
-        this.app.modules.ui.notification({message, number: this.state.number, stack: true, title})
+        this.app.modules.ui.notification({message, number: this.state.endpoint, stack: true, title})
 
         // Remove the streams that are associated with this call.
         for (const streamId of Object.keys(this.streams)) {
@@ -270,7 +270,7 @@ class Call {
 
         if (this.app.state.settings.webhooks.enabled) {
             const url = this.app.state.settings.webhooks.url
-            window.open(url.replace('{number}', this.state.number), '_blank', 'alwaysLowered=yes')
+            window.open(url.replace('{endpoint}', this.state.endpoint), '_blank', 'alwaysLowered=yes')
         }
 
         this.app.modules.caller.activateCall(this, true)
@@ -286,7 +286,7 @@ class Call {
         const contacts = this.app.state.contacts.contacts
         let name = ''
         for (const id of Object.keys(contacts)) {
-            if (contacts[id].endpoint === parseInt(this.number)) {
+            if (contacts[id].endpoint === parseInt(this.endpoint)) {
                 name = contacts[id].name
             }
         }

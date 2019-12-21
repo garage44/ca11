@@ -3,8 +3,8 @@
         v-if="call.keypad.active"
         mode="dtmf"
         :call="call"
-        :number="call.keypad.number"
-        :model.sync="call.keypad.number"
+        :endpoint="call.keypad.endpoint"
+        :model.sync="call.keypad.endpoint"
     />
     <!-- the default view -->
     <StreamView v-else :call="call"/>

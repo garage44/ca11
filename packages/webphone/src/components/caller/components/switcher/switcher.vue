@@ -5,8 +5,7 @@
             class="button call tooltip tooltip-left"
             :class="classes(call)"
             :data-tooltip="callTitle(call)"
-            @click="activateCall(call)"
-        >
+            @click="activateCall(call)">
             <icon :name="callIcon(call)"/>
         </button>
 
@@ -17,8 +16,7 @@
                 hint: 'true'
             }"
             :data-tooltip="$t('add new call')"
-            @click="activateCall()"
-        >
+            @click="activateCall()">
             <icon name="phone-add"/>
         </button>
 

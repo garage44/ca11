@@ -63,7 +63,7 @@ class ModuleSettings extends Module {
                             ready: false,
                             selected: true,
                         },
-                        type: 'video', // Switch between audio, display and video stream.
+                        type: 'audio', // Switch between audio, display and video stream.
                         video: {
                             id: null,
                             kind: 'video',
@@ -87,20 +87,6 @@ class ModuleSettings extends Module {
         }
 
         return state
-    }
-
-
-    /**
-    * Refresh the devices list when this plugin is started, but
-    * only if the Vault is unlocked, because the devices list is
-    * stored in the encrypted part of the store, which should be
-    * available at that point. An additional vault unlock watcher
-    * is used to refresh the devices list when auto unlocking is
-    * disabled.
-    */
-    _ready() {
-        const release = process.env.VERSION + '-' + this.app.env.name
-        this.app.logger.info(`${this}monitoring exceptions for release ${release}`)
     }
 
 

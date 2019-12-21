@@ -35,7 +35,7 @@ module.exports = (app) => {
         watch: {
             'description.protocol': function(protocol) {
                 app.setState({caller: {description: {
-                    number: '',
+                    endpoint: '',
                     protocol,
                 }}}, {persist: true})
             },

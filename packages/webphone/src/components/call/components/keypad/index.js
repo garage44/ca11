@@ -34,7 +34,6 @@ module.exports = (app) => {
                 if (!selected) selected = new Date().getTime()
                 else selected = null
 
-
                 app.setState({
                     settings: {webrtc: {media: {stream: {[this.stream.type]: {selected}}}}},
                     ui: {layer: 'caller'},
@@ -42,7 +41,9 @@ module.exports = (app) => {
 
                 app.emit('caller:call-activate', {callId: null})
             },
-            callDescription: function(...args) {app.modules.caller.call(...args)},
+            callDescription: function(...args) {
+                app.modules.caller.call(...args)
+            },
             callTitle: function(call) {
                 const translations = app.helpers.getTranslations().call
                 let text
@@ -61,19 +62,21 @@ module.exports = (app) => {
             },
             press: function(key) {
                 if (!allowedKeys.includes(key)) return
-                let newVal = app.utils.sanitizeNumber(`${this.number}${key}`)
-                if (newVal) this.$emit('update:model', newVal)
+                let newVal = app.utils.sanitizeNumber(`${this.endpoint}${key}`)
+                if (newVal) {
+                    this.$emit('update:model', newVal)
+                }
                 if (this.mode === 'dtmf') {
                     app.emit('sip:dtmf', {callId: this.call.id, key})
                 }
                 navigator.vibrate(100)
                 app.sounds.beep(5, 750, 50)
             },
-            removeLastNumber: function() {
+            removeLastChar: function() {
                 if (this.callingDisabled) return
-                if (this.number) {
+                if (this.endpoint) {
                     navigator.vibrate(100)
-                    this.$emit('update:model', this.number.substring(0, this.number.length - 1))
+                    this.$emit('update:model', this.endpoint.substring(0, this.endpoint.length - 1))
                 }
             },
             toggleNodeView: function() {
@@ -85,8 +88,8 @@ module.exports = (app) => {
         props: {
             call: {default: null},
             dtmf: {default: false, type: Boolean},
+            endpoint: {default: ''},
             mode: {default: 'call', type: String},
-            number: {default: ''},
             search: {default: true, type: Boolean},
         },
         render: templates.call_keypad.r,
@@ -105,10 +108,10 @@ module.exports = (app) => {
             'description.protocol': function(protocol) {
                 app.setState({calls: {description: {protocol}}}, {persist: true})
             },
-            number: function(number) {
+            endpoint: function(endpoint) {
                 if (this.callingDisabled) return
-                let cleanedNumber = number
-                cleanedNumber = app.utils.sanitizeNumber(number)
+                let cleanedNumber = endpoint
+                cleanedNumber = app.utils.sanitizeNumber(endpoint)
                 this.$emit('update:model', cleanedNumber)
             },
         },

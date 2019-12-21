@@ -17,12 +17,12 @@
             </ul>
         </div>
     </div>
-    <!-- starting without any active call -->
+    <!-- Keypad flow without a previous active call -->
     <Keypad
         v-else
         display="touch"
         mode="call"
-        :number="description.number"
-        :model.sync="description.number"
+        :endpoint="description.endpoint"
+        :model.sync="description.endpoint"
     />
 </component>

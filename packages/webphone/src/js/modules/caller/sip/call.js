@@ -173,7 +173,7 @@ class CallSIP extends Call {
     */
     outgoing() {
         super.outgoing()
-        const uri = `sip:${this.state.number}@${this.app.state.sip.endpoint.split('/')[0]}`
+        const uri = `sip:${this.state.endpoint}@${this.app.state.sip.endpoint.split('/')[0]}`
         this.session = this.app.sip.ua.invite(uri, {
             sessionDescriptionHandlerOptions: {
                 constraints: this.app.media._getUserMediaFlags(),

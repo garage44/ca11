@@ -1,37 +1,8 @@
 <component class="c-keypad t-keypad content-wide" tabindex="-1">
 
-<!-- <header class="content__header header">
-</header> -->
-
-    <!-- <header class="content__header header">
-        <div v-if="sip.enabled" class="header__filters">
-            <FieldRadio
-                v-model="description.protocol"
-                elementclass="t-rd-calls-protocol"
-                class="header__filter"
-                name="protocol"
-                :options="protocols"
-            />
-        </div>
-
-        <span class="header__text">{{$t('calling')}}</span>
-        <div class="header__actions">
-            <button v-if="description.protocol === 'sig11'"
-                class="header__action"
-                :class="{'active': sig11.network.view}"
-                @click.stop="toggleNodeView()"
-            >
-                <icon name="nodes"/>
-            </button>
-        </div>
-    </header> -->
-
-
     <Network v-if="description.protocol === 'sig11' && sig11.network.view"/>
 
     <div v-else class="main">
-
-
         <div class="container">
             <Stream
                 :controls="true"
@@ -41,10 +12,9 @@
             />
 
             <div class="keypad-container">
-
                 <div class="c-keypad__input">
                     <input
-                        v-bind:value="number"
+                        v-bind:value="endpoint"
                         v-on:input="inputChange($event.target.value)"
                         autocomplete="off"
                         class="t-keypad__input"
@@ -59,7 +29,7 @@
                     <button
                         v-if="mode === 'call'"
                         class="c-keypad__correct"
-                        @click="removeLastNumber">
+                        @click="removeLastChar">
                         <icon name="backspace"/>
                     </button>
                 </div>
@@ -110,7 +80,7 @@
         </div>
 
         <button
-            :disabled="!description.number"
+            :disabled="!description.endpoint"
             class="button button--menu call-btn t-btn-options-call-start tooltip tooltip-top"
             :data-tooltip="$t('start new call')"
             @click="callDescription({description})"
