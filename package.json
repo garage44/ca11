@@ -14,8 +14,7 @@
     "lint": "yarn lint:js;yarn lint:scss",
     "lint:js": "eslint {packages/**/src/**/*.js,gulp/**/*.js}",
     "lint:scss": "stylelint 'packages/webphone/src/**/*.scss'",
-    "release": "standard-version",
-    "test": "lerna run test"
+    "release": "standard-version"
   },
   "husky": {
     "hooks": {
