@@ -46,8 +46,8 @@ target devices that will be used to test with.
 
 
 # Installation
-Node.js version 13 or higher is required. This manual uses Docker to get your development 
-environment working without too much hazzle. If you need more control, you could use the 
+Node.js version 13 or higher is required. This manual uses Docker to get your development
+environment working without too much hazzle. If you need more control, you could use the
 content of the *docker* directory as a start for manual installation.
 
 * Clone the project and install dependencies
@@ -81,19 +81,17 @@ content of the *docker* directory as a start for manual installation.
 
 * Initialize PBX database
 
-  *(!)Database docker doesn't have a persistent storage volume yet*
-
       cd ca11/docker
       docker-compose up
       docker exec -w /root/asterisk/contrib/ast-db-manage -it asterisk alembic -c config.ini upgrade head
-      mysql -u root -p -h 127.0.0.1 asterisk < mariadb/sig11_asterisk.sql  # default pw is 'ca11ftw'
-  
+      psql -U asterisk -h 127.0.0.1 asterisk < postgres/sig11_asterisk.sql  # default pw is 'ca11ftw'
+
 * Start the SIG11 tower service
 
       node packages/tower/src/index.js
 
-Make sure you restart your browser, in order for the SSL certificate to refresh. 
-Open https://dev.ca11.app and start a phone. Call one of the SIP testnumbers. 
+Make sure you restart your browser, in order for the SSL certificate to refresh.
+Open https://dev.ca11.app and start a phone. Call one of the SIP testnumbers.
 
 
 ## Troubleshooting
