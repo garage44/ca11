@@ -12,15 +12,15 @@ services:
       - ./asterisk/odbcinst.ini:/etc/odbcinst.ini
       - ./asterisk/odbc.ini:/etc/odbc.ini
   db:
-    container_name: mariadb
+    container_name: postgres
     environment:
-      MYSQL_ROOT_PASSWORD: ca11ftw
-      MYSQL_DATABASE: asterisk
-    image: mariadb
+      POSTGRES_USER: asterisk
+      POSTGRES_PASSWORD: ca11ftw
+    image: postgres:latest
     network_mode: host
     restart: always
     volumes:
-      -  ./mariadb/my.cnf:/etc/mysql/my.cnf
+      - ./postgres/database_data:/var/lib/postgresql/data
   nginx:
     container_name: nginx
     image: nginx

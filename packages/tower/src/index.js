@@ -14,6 +14,7 @@ const Endpoint = require('@ca11/sig11/src/endpoint')
 const Network = require('@ca11/sig11/src/network')
 
 let settings = {}
+
 rc('ca11', settings)
 
 class Ca11Tower extends Skeleton {

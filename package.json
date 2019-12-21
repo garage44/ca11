@@ -11,11 +11,10 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "gulp -f packages/webphone/gulpfile.js build",
-    "lint": "npm run eslint;npm run lint:scss",
-    "lint:js": "eslint '{packages/**/*.js,gulpfile.js,gulp/**/*.js,tests/**/*.js}'",
-    "lint:scss": "stylelint 'packages/**/*.scss'",
-    "release": "standard-version",
-    "test": "lerna run test"
+    "lint": "yarn lint:js;yarn lint:scss",
+    "lint:js": "eslint {packages/**/src/**/*.js,gulp/**/*.js}",
+    "lint:scss": "stylelint 'packages/webphone/src/**/*.scss'",
+    "release": "standard-version"
   },
   "husky": {
     "hooks": {
