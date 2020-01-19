@@ -1,0 +1,22 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+
+.c-menu-communicate {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .protocol-switch {
+        margin: 0;
+        white-space: normal;
+
+        label {
+            width: 100%;
+        }
+    }
+
+    .c-call-switcher {
+        margin-top: calc(var(--spacer) * 2);
+    }
+}

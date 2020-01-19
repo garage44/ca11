@@ -2,5 +2,10 @@
 @import 'ca11/lib/variables';
 
 .c-dnd {
-
+    .c-checkbox label.switch input:checked + .slider {
+        .icon-enabled {
+            // Highlight that this setting makes the user unavailable.
+            fill: var(--red-color);
+        }
+    }
 }

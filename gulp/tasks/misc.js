@@ -36,7 +36,7 @@ module.exports = function(settings) {
     * from the build configuration.
     */
     tasks.manifest = async function miscManifest() {
-        let manifest = require(path.join(settings.BASE_DIR, 'manifest.json'))
+        let manifest = require(path.join(settings.SRC_DIR, 'manifest.json'))
         manifest.description = PACKAGE.description
         manifest.name = PACKAGE.productName
         manifest.short_name = PACKAGE.productName
@@ -70,26 +70,26 @@ module.exports = function(settings) {
             // Node development doesn't have transpilation.
             // No other watchers are needed.
             gulp.watch([
-                path.join(settings.BASE_DIR, 'js', '**', '*.js'),
+                path.join(settings.SRC_DIR, 'js', '**', '*.js'),
             ], gulp.series(test.tasks.unit))
             return
         }
 
         if (settings.BUILD_TARGET === 'pwa') {
             gulp.watch([
-                path.join(settings.BASE_DIR, 'js', 'sw.js'),
+                path.join(settings.SRC_DIR, 'js', 'sw.js'),
             ], gulp.series(code.tasks.serviceWorker))
         }
 
         if (settings.BUILD_TARGET === 'pwa') {
             gulp.watch([
-                path.join(settings.BASE_DIR, 'manifest.json'),
+                path.join(settings.SRC_DIR, 'manifest.json'),
             ], gulp.series(misc.tasks.manifest, helpers.reload('app.js')))
         }
 
         gulp.watch([
-            path.join(settings.BASE_DIR, 'js', 'vendor.js'),
-            path.join(settings.BASE_DIR, 'svg', '*.svg'),
+            path.join(settings.SRC_DIR, 'js', 'vendor.js'),
+            path.join(settings.SRC_DIR, 'svg', '*.svg'),
         ], gulp.series(
             assets.tasks.icons,
             code.tasks.vendor,
@@ -98,38 +98,38 @@ module.exports = function(settings) {
 
 
         gulp.watch([
-            path.join(settings.BASE_DIR, 'js', 'i18n', '*.js'),
+            path.join(settings.SRC_DIR, 'js', 'i18n', '*.js'),
         ], gulp.series(code.tasks.appI18n, helpers.reload('app_i18n.js')))
 
 
         gulp.watch([
-            path.join(settings.BASE_DIR, 'index.html'),
+            path.join(settings.SRC_DIR, 'index.html'),
         ], gulp.series(assets.tasks.html, helpers.reload('app.js')))
 
         gulp.watch([
-            path.join(settings.BASE_DIR, 'components', '**', '*.js'),
-            path.join(settings.BASE_DIR, 'js', 'index.js'),
-            path.join(settings.BASE_DIR, 'js', 'lib', '**', '*.js'),
-            path.join(settings.BASE_DIR, 'js', 'modules', '**', '*.js'),
+            path.join(settings.SRC_DIR, 'components', '**', '*.js'),
+            path.join(settings.SRC_DIR, 'js', 'index.js'),
+            path.join(settings.SRC_DIR, 'js', 'lib', '**', '*.js'),
+            path.join(settings.SRC_DIR, 'js', 'modules', '**', '*.js'),
             path.join(settings.PROJECT_DIR, '../', 'base', '**', '*.js'),
             path.join(settings.PROJECT_DIR, '../', 'sig11', '**', '*.js'),
         ], gulp.series(code.tasks.app, helpers.reload('app.js')))
 
         gulp.watch([
-            path.join(settings.BASE_DIR, 'scss', '**', '*.scss'),
-            path.join(settings.BASE_DIR, 'components', '**', '*.scss'),
+            path.join(settings.SRC_DIR, 'scss', '**', '*.scss'),
+            path.join(settings.SRC_DIR, 'components', '**', '*.scss'),
             path.join(settings.PROJECT_DIR, '../', 'ca11-*', 'src', 'components', '**', '*.scss'),
         ], {followSymlinks: true}, gulp.series(styles.tasks.app, helpers.reload('app.css')))
 
 
         gulp.watch([
-            path.join(settings.BASE_DIR, 'components', '**', '*.vue'),
+            path.join(settings.SRC_DIR, 'components', '**', '*.vue'),
             path.join(settings.PROJECT_DIR, '../', 'ca11-*', 'src', 'components', '**', '*.vue'),
         ], gulp.series(assets.tasks.templates, helpers.reload('templates.js')))
 
 
         gulp.watch([
-            path.join(settings.BASE_DIR, 'tests', 'parts', '**', '*.js'),
+            path.join(settings.SRC_DIR, 'tests', 'parts', '**', '*.js'),
         ], gulp.series(test.tasks.unit))
     }
 

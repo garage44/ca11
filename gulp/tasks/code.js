@@ -36,7 +36,7 @@ module.exports = function(settings) {
 
         if (!bundlers[name]) {
             let bundlerOptions = {
-                basedir: settings.BASE_DIR,
+                basedir: settings.SRC_DIR,
                 cache: {},
                 debug: !settings.BUILD_OPTIMIZED,
                 packageCache: {},

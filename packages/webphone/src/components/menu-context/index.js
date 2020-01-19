@@ -2,7 +2,7 @@ module.exports = (app) => {
     /**
     * @memberof fg.components
     */
-    const MainMenu = {
+    const MenuContext = {
         computed: app.helpers.sharedComputed(),
         data: function() {
             return {
@@ -28,13 +28,13 @@ module.exports = (app) => {
                 app.session.close()
             },
         }, app.helpers.sharedMethods()),
-        render: templates.menu.r,
-        staticRenderFns: templates.menu.s,
+        render: templates.menu_context.r,
+        staticRenderFns: templates.menu_context.s,
         store: {
             app: 'app',
             layer: 'ui.layer',
         },
     }
 
-    return MainMenu
+    return MenuContext
 }

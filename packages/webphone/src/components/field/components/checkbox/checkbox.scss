@@ -37,7 +37,7 @@
                 }
 
                 .icon-enabled {
-                    fill: var(--grey-50);
+                    fill: var(--primary-base);
                 }
 
                 &::before {
@@ -48,7 +48,7 @@
         }
 
         .slider {
-            background-color: var(--grey-200);
+            background-color: var(--grey-500);
             border-radius: 10px;
             bottom: 0;
             cursor: pointer;
@@ -96,7 +96,8 @@
 
 
                         &::before {
-                            background: var(--red-color);
+                            // background: var(--red-color);
+                            // fill: var(--red-color);
                             transform: translateX(32px);
                         }
                     }
@@ -108,7 +109,7 @@
                 border-radius: 0;
 
                 &::before {
-                    background: var(--grey-400);
+                    background: var(--grey-500);
                     border-radius: 0;
                     bottom: 0;
                     height: 32px;
@@ -121,7 +122,7 @@
 
     .icon-enabled,
     .icon-disabled {
-        @include icon-size($spacer * 3);
+        @include icon-size(var(--icon-normal));
         fill: var(--grey-50);
         height: 100%;
         position: absolute;

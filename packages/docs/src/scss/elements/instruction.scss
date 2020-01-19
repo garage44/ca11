@@ -45,7 +45,7 @@
 
             img {
                 border: 1px solid var(--grey-50);
-                box-shadow: 0 0 $spacer-05 rgba(palette('grey', 400), 0.8);
+                box-shadow: 0 0 $spacer-05 rgba(var(--grey-400), 0.8);
                 position: relative;
                 transition: all 0.5s ease-in-out;
                 width: 75px;
@@ -64,7 +64,7 @@
             font-family: 'Rajdhani';
             font-weight: 500;
             line-height: 1.4rem;
-            margin: 0 $spacer;
+            margin: 0 var(--spacer);
 
             &::first-letter {
                 font-weight: 600;
@@ -103,7 +103,7 @@
             font-size: var(--text-small);
             font-weight: 600;
             position: relative;
-            top: -$spacer;
+            top: -var(--spacer);
             width: 0;
         }
     }

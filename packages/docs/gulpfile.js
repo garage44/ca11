@@ -104,13 +104,13 @@ tasks.pages = async function pages(done) {
 
 tasks.styles = function() {
     const addons = [
-        path.join(settings.BASE_DIR, 'components', '**', '*.scss'),
+        path.join(settings.SRC_DIR, 'components', '**', '*.scss'),
         path.join(settings.NODE_DIR, 'highlight.js', 'styles', 'atom-one-dark.css'),
     ]
     return styles.helpers.compile({
         addons,
         debug: !settings.BUILD_OPTIMIZED,
-        entry: path.join(settings.BASE_DIR, 'scss', 'app.scss'),
+        entry: path.join(settings.SRC_DIR, 'scss', 'app.scss'),
     })
 }
 
@@ -123,25 +123,25 @@ tasks.templates = function templates() {
 tasks.watch = function watchProject() {
 
     gulp.watch([
-        path.join(settings.BASE_DIR, 'index.html'),
+        path.join(settings.SRC_DIR, 'index.html'),
     ], gulp.series(tasks.html, misc.helpers.reload('app.js')))
 
 
     gulp.watch([
-        path.join(settings.BASE_DIR, 'components', '**', '*.scss'),
-        path.join(settings.BASE_DIR, 'scss', '**', '*.scss'),
+        path.join(settings.SRC_DIR, 'components', '**', '*.scss'),
+        path.join(settings.SRC_DIR, 'scss', '**', '*.scss'),
     ], gulp.series(tasks.styles, misc.helpers.reload('app.css')))
 
     gulp.watch([
         // Watch for changes from App code.
         path.join(settings.PROJECT_DIR, 'src', 'js', '**', '*.js'),
-        path.join(settings.BASE_DIR, 'components', '**', '*.js'),
-        path.join(settings.BASE_DIR, 'js', '**', '*.js'),
-        `!${path.join(settings.BASE_DIR, 'js', 'vendor.js')}`,
+        path.join(settings.SRC_DIR, 'components', '**', '*.js'),
+        path.join(settings.SRC_DIR, 'js', '**', '*.js'),
+        `!${path.join(settings.SRC_DIR, 'js', 'vendor.js')}`,
     ], gulp.series(tasks.codeApp, misc.helpers.reload('app.js')))
 
     gulp.watch([
-        path.join(settings.BASE_DIR, 'js', 'vendor.js'),
+        path.join(settings.SRC_DIR, 'js', 'vendor.js'),
     ], gulp.series(
         assets.tasks.icons,
         tasks.codeVendor,
@@ -149,13 +149,13 @@ tasks.watch = function watchProject() {
     ))
 
     gulp.watch([
-        path.join(settings.BASE_DIR, 'topics', 'topics.json'),
-        path.join(settings.BASE_DIR, 'topics', '**', '*.vue'),
+        path.join(settings.SRC_DIR, 'topics', 'topics.json'),
+        path.join(settings.SRC_DIR, 'topics', '**', '*.vue'),
     ], gulp.series('pages', misc.helpers.reload('topics.json')))
 
 
     gulp.watch([
-        path.join(settings.BASE_DIR, 'components', '**', '*.vue'),
+        path.join(settings.SRC_DIR, 'components', '**', '*.vue'),
     ], gulp.series(tasks.templates, misc.helpers.reload('app.js')))
 }
 

@@ -4,14 +4,14 @@
     max-height: 105px;
 
     &.shadow {
-        box-shadow: 0 0 $spacer-05 rgba(palette('grey', 400), 0.8);
+        box-shadow: 0 0 $spacer-05 rgba(var(--grey-400), 0.8);
     }
 
     @media screen and (min-width: $breakpoint-tablet) {
         display: inline-block;
         margin: $spacer * 2;
         max-height: 200px;
-        padding: $spacer;
+        padding: var(--spacer);
     }
 
     &.right {

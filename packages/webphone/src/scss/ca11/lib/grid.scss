@@ -4,6 +4,7 @@
 
 .c-main {
     display: grid;
+    grid-gap: calc(var(--spacer) / 2);
     grid-template-areas:
         'body-header body-header body-header'
         'body-gutter-left body-content body-gutter-right'

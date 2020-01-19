@@ -7,13 +7,12 @@
     </transition>
 
     <Session v-if="!session.authenticated"/>
-
-    <Menu v-if="session.authenticated" class="c-main__menu"/>
+    <MenuContext v-if="session.authenticated" class="c-main__menu"/>
+    <MenuCommunicate v-if="session.authenticated" :call="callActive" class="c-main__media-controls"/>
 
     <AudioBg/>
 
     <div class="layer">
         <layer v-if="session.authenticated" :is="layer" />
     </div>
-    <TsControls v-if="session.authenticated" :call="callActive" class="c-main__media-controls"/>
 </component>

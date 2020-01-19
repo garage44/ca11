@@ -35,13 +35,13 @@
 
             svg {
                 display: none;
-                fill: $white-color;
+                fill: var(--grey-0);
                 height: 50px;
             }
         }
 
         &__title {
-            color: $white-color;
+            color: var(--grey-0);
             font-size: 1.5rem;
             font-weight: 600;
             letter-spacing: -2px;
@@ -90,8 +90,8 @@
             &__version {
                 bottom: 0;
                 position: absolute;
-                right: $spacer;
-                top: $spacer;
+                right: var(--spacer);
+                top: var(--spacer);
             }
         }
     }
@@ -165,7 +165,7 @@
 
             &.active,
             &:hover {
-                background: $white-color;
+                background: var(--grey-0);
                 border-bottom: var(--border) solid var(--primary-base);
                 color: var(--primary-base);
                 cursor: pointer;
@@ -182,7 +182,7 @@
                 justify-content: flex-start;
 
                 svg {
-                    margin-right: $spacer;
+                    margin-right: var(--spacer);
                 }
             }
 

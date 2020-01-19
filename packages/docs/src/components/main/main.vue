@@ -1,4 +1,4 @@
-<component class="c-main theme-default-light">
+<component class="c-main theme-default-dark">
     <div class="c-main__sidebar"><Sidebar/></div>
     <div class="c-main__content">
         <router-view></router-view>

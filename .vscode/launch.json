@@ -4,10 +4,11 @@
         {
             "type": "chrome",
             "request": "attach",
-            "name": "Attach to Chrome",
+            "name": "WebPhone browser debugger",
             "port": 9222,
-            "url": "http://localhost:8080/*",
-            "webRoot": "${workspaceFolder}"
+            "url": "https://dev.ca11.app/",
+            "webRoot": "${workspaceFolder}/packages/webphone/build",
+            "sourceMaps": true
         }
     ]
 }

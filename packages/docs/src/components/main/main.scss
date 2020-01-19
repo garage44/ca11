@@ -1,29 +1,9 @@
 @import 'ca11/lib/variables';
 
-.c-main {
-    display: grid;
-    grid-template-areas: 'sidebar main';
-    grid-template-columns: var(--sidebar-width) 1fr;
-
-    &__content {
-        background: $white-color;
-        grid-area: main;
-        height: 100vh;
-        max-width: $breakpoint-tablet;
-        padding: calc(var(--spacer) * 3);
-    }
-
-    &__sidebar {
-        background: var(--grey-50);
-        grid-area: sidebar;
-        height: 100vh;
-    }
-}
 
 footer {
     color: var(--grey-200);
     font-family: 'Rajdhani';
-    font-size: 1.1rem;
     font-weight: 500;
     margin-bottom: var(--space-3);
     margin-top: var(--gutter);

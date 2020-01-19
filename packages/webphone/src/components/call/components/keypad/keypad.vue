@@ -2,7 +2,7 @@
 
     <Network v-if="description.protocol === 'sig11' && sig11.network.view"/>
 
-    <div v-else class="main">
+    <content v-else>
         <div class="container">
             <Stream
                 :controls="true"
@@ -86,5 +86,5 @@
             @click="callDescription({description})"
         ><icon name="phone"/></button>
 
-    </div>
+    </content>
 </component>

@@ -33,21 +33,21 @@ module.exports = function(settings) {
         const robotoPath = path.join(settings.NODE_DIR, 'roboto-fontface', 'fonts', 'roboto')
         return gulp.src(path.join(robotoPath, '{Roboto-Light.woff2,Roboto-Regular.woff2,Roboto-Medium.woff2}'))
             .pipe(flatten({newPath: './fonts'}))
-            .pipe(addsrc(path.join(settings.BASE_DIR, 'img', '{*.png,*.jpg}'), {base: settings.BASE_DIR}))
+            .pipe(addsrc(path.join(settings.SRC_DIR, 'img', '{*.png,*.jpg}'), {base: settings.SRC_DIR}))
             .pipe(addsrc(path.join(settings.THEME_DIR, 'fonts', '*.woff2'), {base: settings.THEME_DIR}))
             .pipe(addsrc(path.join(settings.THEME_DIR, 'img', '{*.icns,*.png,*.jpg}'), {base: settings.THEME_DIR}))
             .pipe(addsrc(path.join(settings.THEME_DIR, 'audio', '**', '*'), {base: settings.THEME_DIR}))
             .pipe(ifElse(settings.BUILD_OPTIMIZED, imagemin))
             .pipe(addsrc(path.join(settings.PROJECT_DIR, 'LICENSE')))
             .pipe(addsrc(path.join(settings.PROJECT_DIR, 'README.md')))
-            .pipe(addsrc(path.join(settings.BASE_DIR, '_locales', '**'), {base: './src/'}))
+            .pipe(addsrc(path.join(settings.SRC_DIR, '_locales', '**'), {base: './src/'}))
             .pipe(gulp.dest(path.join(settings.BUILD_DIR)))
             .pipe(size(_extend({title: 'assets'}, settings.SIZE_OPTIONS)))
     }
 
 
     tasks.html = function assetsHtml() {
-        return gulp.src(path.join(settings.BASE_DIR, 'index.html'))
+        return gulp.src(path.join(settings.SRC_DIR, 'index.html'))
             .pipe(template({settings}))
             .pipe(flatten())
             .pipe(gulp.dest(settings.BUILD_DIR))
@@ -56,7 +56,7 @@ module.exports = function(settings) {
 
     tasks.icons = function assetsIcons(done) {
         // Use relative paths or vsvg will choke.
-        gulp.src(path.join(settings.BASE_DIR, 'svg', '*.svg'), {base: path.join(settings.BASE_DIR)})
+        gulp.src(path.join(settings.SRC_DIR, 'svg', '*.svg'), {base: path.join(settings.SRC_DIR)})
             .pipe(addsrc(path.join(settings.THEME_DIR, 'svg', '*.svg'), {base: settings.THEME_DIR}))
             .pipe(svgo())
             .pipe(size(_extend({title: 'icons'}, settings.SIZE_OPTIONS)))
@@ -77,7 +77,7 @@ module.exports = function(settings) {
 
 
     tasks.templates = function assetsTemplates() {
-        let sources = [path.join(settings.BASE_DIR, './components/**/*.vue')]
+        let sources = [path.join(settings.SRC_DIR, './components/**/*.vue')]
 
         return gulp.src(sources)
             .pipe(vueCompiler({

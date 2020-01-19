@@ -1,6 +1,6 @@
 module.exports = (app) => {
 
-    const TsControls = {
+    const MenuCommunicate = {
         computed: {
             protocols: function() {
                 let protocols = [
@@ -48,8 +48,8 @@ module.exports = (app) => {
             },
         }, app.helpers.sharedMethods()),
         props: ['call'],
-        render: templates.ts_controls.r,
-        staticRenderFns: templates.ts_controls.s,
+        render: templates.menu_communicate.r,
+        staticRenderFns: templates.menu_communicate.s,
         store: {
             activities: 'activities',
             calls: 'caller.calls',
@@ -71,5 +71,5 @@ module.exports = (app) => {
         },
     }
 
-    return TsControls
+    return MenuCommunicate
 }

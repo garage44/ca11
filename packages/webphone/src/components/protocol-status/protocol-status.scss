@@ -4,12 +4,12 @@
 .c-protocol-status {
     .protocol-status {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         margin-bottom: 0;
         width: 100%;
 
         label {
-            width: 100%;
+            width: 50%;
         }
 
 

@@ -1,6 +1,9 @@
 @import 'ca11/lib/variables';
+@import 'ca11/lib/mixins';
 
 .c-radio {
+    background: var(--bg-default);
+
     input {
         border: 0;
         height: 0;
@@ -9,8 +12,8 @@
         width: 0;
 
         &[disabled='disabled'] + label {
-            background: var(--grey-300);
-            color: var(--grey-300);
+            background: var(--bg-default);
+            color: var(--grey-200);
 
             &:hover {
                 cursor: not-allowed;
@@ -18,24 +21,28 @@
         }
 
         &:checked + label {
-            background: var(--primary-base);
-            color: var(--grey-0);
+            background: var(--grey-500);
+            color: var(--primary-base);
         }
     }
 
     label {
-        background: var(--grey-300);
-        color: var(--grey-100);
+        // background: var(--grey-300);
+        color: var(--grey-200);
         display: inline-block;
         font-family: 'Rajdhani';
         font-size: 0.9rem;
         font-weight: 600;
-        height: $spacer * 4;
+
         line-height: $spacer * 4;
         text-align: center;
         text-shadow: none;
         transition: all 0.2s ease-in-out;
         width: $spacer * 5;
+
+        svg {
+            @include icon-size(var(--icon-normal));
+        }
 
         &:first-of-type {
             border-right: 0;

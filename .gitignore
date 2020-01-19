@@ -1,5 +1,5 @@
 node_modules
-build
-dist
+./packages/**/node_modules
+./packages/webphone/build
 .ca11rc
 docker/nginx/ssl

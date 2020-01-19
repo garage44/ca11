@@ -7,13 +7,14 @@
             :id="option.value"
             :name="name"
             :value="option.value"
-            @change="updateModel($event)"
-        >
-        <label
-            class="uc"
-            :class="`${elementclass}-${option.value}`"
-            :for="option.value"
-        >{{option.name}}</label>
+            @change="updateModel($event)">
+
+        <label class="uc" :class="`${elementclass}-${option.value}`"
+            :for="option.value">
+            <icon v-if="option.icon" :name="option.icon"/>
+            <span v-else>{{option.name}}</span>
+
+        </label>
     </template>
-    <a></a>
+
 </div>

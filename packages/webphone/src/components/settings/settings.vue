@@ -15,17 +15,17 @@
                 @click="setTab('settings', 'devices', settings.webrtc.enabled)">
                 <icon name="headset_mic"/>
             </li>
-            <li class="tab button button--menu tooltip tooltip-bottom"
-                :class="classes('tabs', 'sig11')"
-                data-tooltip="SIG11"
-                @click="setTab('settings', 'sig11')">
-                <icon name="protocol-sig11"/>
-            </li>
             <li class="tab button button--menu tooltip tooltip-bottom t-tab-sip"
                 :class="classes('tabs', 'sip')"
                 data-tooltip="SIP"
                 @click="setTab('settings', 'sip')">
                 <icon name="protocol-sip"/>
+            </li>
+            <li class="tab button button--menu tooltip tooltip-bottom"
+                :class="classes('tabs', 'sig11')"
+                data-tooltip="SIG11"
+                @click="setTab('settings', 'sig11')">
+                <icon name="protocol-sig11"/>
             </li>
             <li class="tab button button--menu tooltip tooltip-bottom"
                 :class="classes('tabs', 'webhooks')"
@@ -77,44 +77,6 @@
             <Devices :stream="media.stream[media.stream.type]"/>
         </div>
 
-
-        <!-- SIG11 preferences -->
-        <div class="tab" :class="{active: tabs.active === 'sig11'}">
-            <FieldCheckbox
-                v-model="sig11.toggled"
-                name="sig11_enabled"
-                :help="$t('free, privacy-friendly calling on SIG11 network.')"
-                :label="`SIG11 ${$t('network')} (${$t('decentralized')})`"
-            />
-
-            <FieldText
-                v-if="sig11.toggled"
-                v-model="sig11.endpoint"
-                name="sig11_endpoint"
-                placeholder="e.g. sig11.websocket.tld"
-                help="SIG11 WebSocket Service"
-                :label="`SIG11 ${$t('domain')}`"
-                :validation="$v.sig11.endpoint"
-            />
-
-            <FieldText
-                v-if="sig11.toggled"
-                v-model="sig11.identity.name"
-                name="sig11_name"
-                :help="$t('your display name to others.')"
-                :label="$t('display name')"
-            />
-
-            <FieldText
-                v-if="sig11.toggled"
-                v-model="sig11.identity.number"
-                name="sig11_number"
-                :help="$t('the number that people can reach you on.')"
-                :label="`SIG11 ${$t('number')}`"
-            />
-        </div>
-
-
         <!-- SIP preferences -->
         <div class="tab" :class="{active: tabs.active === 'sip'}">
             <FieldCheckbox
@@ -160,6 +122,42 @@
                 :label="`SIP ${$t('password')}`"
                 :placeholder="`SIP ${$t('password')}`"
                 :validation="$v.sip.account.password"
+            />
+        </div>
+
+        <!-- SIG11 preferences -->
+        <div class="tab" :class="{active: tabs.active === 'sig11'}">
+            <FieldCheckbox
+                v-model="sig11.toggled"
+                name="sig11_enabled"
+                :help="$t('free, privacy-friendly calling on SIG11 network.')"
+                :label="`SIG11 ${$t('network')} (${$t('decentralized')})`"
+            />
+
+            <FieldText
+                v-if="sig11.toggled"
+                v-model="sig11.endpoint"
+                name="sig11_endpoint"
+                placeholder="e.g. sig11.websocket.tld"
+                help="SIG11 WebSocket Service"
+                :label="`SIG11 ${$t('domain')}`"
+                :validation="$v.sig11.endpoint"
+            />
+
+            <FieldText
+                v-if="sig11.toggled"
+                v-model="sig11.identity.name"
+                name="sig11_name"
+                :help="$t('your display name to others.')"
+                :label="$t('display name')"
+            />
+
+            <FieldText
+                v-if="sig11.toggled"
+                v-model="sig11.identity.number"
+                name="sig11_number"
+                :help="$t('the number that people can reach you on.')"
+                :label="`SIG11 ${$t('number')}`"
             />
         </div>
 

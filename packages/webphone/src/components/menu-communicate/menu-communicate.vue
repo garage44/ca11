@@ -1,4 +1,4 @@
-<component class="c-ts-controls">
+<component class="c-menu-communicate">
 
     <button class="button button--menu c-menu__option t-btn-menu-activity tooltip tooltip-left"
         :class="classes('activities')"

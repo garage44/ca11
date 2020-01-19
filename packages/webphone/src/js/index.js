@@ -46,7 +46,8 @@ class CA11 extends App {
                 Dnd: require('../components/dnd'),
                 Field: require('../components/field'),
                 Main: require('../components/main'),
-                Menu: require('../components/menu'),
+                MenuCommunicate: require('../components/menu-communicate'),
+                MenuContext: require('../components/menu-context'),
                 Network: require('../components/network'),
                 Notifications: require('../components/notifications'),
                 ProtocolStatus: require('../components/protocol-status'),
@@ -55,7 +56,6 @@ class CA11 extends App {
                 Soundmeter: require('../components/soundmeter'),
                 Stream: require('../components/stream'),
                 StreamView: require('../components/stream-view'),
-                TsControls: require('../components/ts-controls'),
             }
 
             for (const name of Object.keys(this.components)) {

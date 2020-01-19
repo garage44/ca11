@@ -4,8 +4,8 @@ module.exports = (app) => {
         computed: {
             protocols: function() {
                 let protocols = [
-                    {disabled: !this.sip.enabled, name: 'SIP', value: 'sip'},
-                    {disabled: !this.sig11.enabled, name: 'SIG11', value: 'sig11'},
+                    {disabled: !this.sip.enabled, icon: 'protocol-sip', name: 'SIP', value: 'sip'},
+                    {disabled: !this.sig11.enabled, icon: 'protocol-sig11', name: 'SIG11', value: 'sig11'},
                 ]
                 return protocols
             },

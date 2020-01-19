@@ -16,7 +16,7 @@ let tasks = {}
 
 
 module.exports = function(settings) {
-    /**
+/**
     * Generic SCSS parsing helper for one or more entrypoints.
     * @param {Object} options Options to pass.
     * @param {Array} [options.addons] Add extra entrypoints.
@@ -31,7 +31,7 @@ module.exports = function(settings) {
             // Use a directory up to the project directory,
             // because we want to expose ca11 as an import
             // prefix in project-related SCSS files.
-            path.join(settings.BASE_DIR, 'scss'),
+            path.join(settings.SRC_DIR, 'scss'),
         ]
         const name = path.basename(entry, '.scss')
 
@@ -67,9 +67,9 @@ module.exports = function(settings) {
 
     tasks.app = function stylesApp() {
         return helpers.compile({
-            addons: [path.join(settings.BASE_DIR, 'components', '**', '*.scss')],
+            addons: [path.join(settings.SRC_DIR, 'components', '**', '*.scss')],
             debug: !settings.BUILD_OPTIMIZED,
-            entry: path.join(settings.BASE_DIR, './scss/ca11/app.scss'),
+            entry: path.join(settings.SRC_DIR, './scss/ca11/app.scss'),
         })
     }
 
