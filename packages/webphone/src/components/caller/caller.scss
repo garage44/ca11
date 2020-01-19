@@ -62,7 +62,7 @@
             color: var(--grey-300);
             font-style: italic;
             margin-bottom: $spacer * 2;
-            margin-top: $spacer;
+            margin-top: var(--spacer);
             text-align: center;
             width: 100%;
         }

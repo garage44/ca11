@@ -2,9 +2,8 @@
 @import 'ca11/lib/variables';
 
 .c-session {
-    $self: &;
     align-items: stretch;
-    background: rgba(palette('grey', 500), 0.7);
+    background: rgba(var(--grey-500), 0.7);
     border-radius: 22px;
     box-shadow: 0 0 16px var(--grey-400);
     display: flex;
@@ -22,7 +21,7 @@
         color: var(--grey-300);
         margin-top: var(--gutter);
         position: absolute;
-        right: $spacer;
+        right: var(--spacer);
         text-align: center;
         top: 0;
 
@@ -80,7 +79,7 @@
 
         .new-session-text {
             color: var(--grey-300);
-            margin-bottom: $spacer;
+            margin-bottom: var(--spacer);
             margin-top: $spacer * 2;
         }
 
@@ -88,7 +87,7 @@
             margin-top: var(--spacer);
 
             svg {
-                margin-right: $spacer;
+                margin-right: var(--spacer);
             }
 
             &:hover {
@@ -107,7 +106,7 @@
 
             svg {
                 color: var(--grey-300);
-                margin: 0 $spacer;
+                margin: 0 var(--spacer);
                 transition: color 0.2s ease-in;
             }
 

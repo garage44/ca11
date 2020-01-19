@@ -13,7 +13,7 @@
 
             .version-logo {
                 @include icon-size($spacer * 6);
-                margin-bottom: $spacer;
+                margin-bottom: var(--spacer);
             }
 
             .version-name {
@@ -30,11 +30,11 @@
         grid-template-columns: repeat(auto-fill, 100%);
         padding: var(--gutter12);
 
+        width: 100%;
+
         @media screen and (min-width: $breakpoint-mobile) {
             grid-template-columns: repeat(auto-fill, 50%);
         }
-
-        width: 100%;
 
         .support-item {
             border-bottom: var(--border) solid transparent;
@@ -60,7 +60,7 @@
             }
 
             &__title {
-                color: palette('grey', 50);
+                color: var(--grey-50);
                 font-family: 'Rajdhani';
                 font-size: var(--text-large);
                 font-weight: 600;
@@ -68,7 +68,7 @@
             }
 
             &__description {
-                color: palette('grey', 50);
+                color: var(--grey-50);
             }
 
             &:hover {

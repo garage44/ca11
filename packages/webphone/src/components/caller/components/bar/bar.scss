@@ -4,7 +4,7 @@
 
 .c-caller-bar {
     $self: &;
-    background: palette('bg', 'default');
+    background: var(--bg-default);
     bottom: 0;
     color: var(--primary-base);
     display: flex;
@@ -39,15 +39,16 @@
     .call-status {
         align-items: center;
         display: flex;
+        padding-right: var(--spacer);
         text-transform: uppercase;
 
         svg {
             @include icon-size($spacer * 3);
-            margin: 0 $spacer;
+            margin: 0 var(--spacer);
         }
 
         &-timer {
-            padding-right: $spacer;
+            padding-right: var(--spacer);
             text-align: right;
             width: $space-4;
         }

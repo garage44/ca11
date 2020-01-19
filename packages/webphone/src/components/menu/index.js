@@ -31,7 +31,6 @@ module.exports = (app) => {
         render: templates.menu.r,
         staticRenderFns: templates.menu.s,
         store: {
-            activities: 'activities',
             app: 'app',
             layer: 'ui.layer',
         },

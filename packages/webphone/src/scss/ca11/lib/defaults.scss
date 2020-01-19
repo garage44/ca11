@@ -3,7 +3,7 @@
 */
 html,
 body {
-    background: palette('grey', 500);
+    background: var(--grey-500);
     margin: 0;
     padding: 0;
     -webkit-tap-highlight-color: transparent;
@@ -108,7 +108,7 @@ video {
 
 ::selection {
     background: var(--primary-base);
-    color: $white-color;
+    color: var(--grey-0);
 }
 
 .hide {display: none;}
@@ -127,7 +127,7 @@ video {
 }
 
 ::-webkit-scrollbar {
-    width: $spacer;
+    width: var(--spacer);
 }
 
 ::-webkit-scrollbar-track {
@@ -169,18 +169,6 @@ h4 {
     font-family: 'Rajdhani';
 }
 
-.content-wide {
-    margin: 0 auto;
-
-    max-height: 500px;
-    max-width: 700px;
-    width: 100%;
-
-    .main {
-        background: palette('bg', 'default');
-        border-bottom-left-radius: 15px;
-        border-bottom-right-radius: 15px;
-        max-height: 550px;
-        padding: 15px;
-    }
+html body .no-padding {
+    padding: 0;
 }

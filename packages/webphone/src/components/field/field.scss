@@ -2,19 +2,20 @@
 @import 'ca11/lib/variables';
 
 .field {
-    margin-bottom: var(--gutter);
+    margin-bottom: calc(var(--spacer) * 2);
 
+    .field-label,
     &__label {
         align-items: center;
-        color: palette('primary', 'base');
+        color: var(--primary-base);
         display: flex;
         font-family: 'Rajdhani';
-        font-size: $text-base;
+        font-size: var(--text-base);
         font-weight: 600;
         text-transform: capitalize;
     }
 
-    // Default behaviour is to capitalize
+    // Default behavior is to capitalize
     // placeholders, unless the lc class
     // is added to the field.
     &:not(.lc) {
@@ -27,7 +28,7 @@
         background: none;
         border: 0;
         border-bottom: 1px solid var(--grey-100);
-        color: palette('grey', 50);
+        color: var(--grey-50);
         font-size: var(--text-small);
         padding: $spacer 0;
 
@@ -45,7 +46,7 @@
 
 
     &__help {
-        color: palette('grey', 50);
+        color: var(--grey-50);
         font-size: var(--text-small);
         font-style: italic;
         padding-top: var(--spacer-05);

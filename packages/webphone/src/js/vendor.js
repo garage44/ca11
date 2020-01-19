@@ -1,3 +1,5 @@
+global.EventEmitter = require('eventemitter3')
+
 if (global.document) {
     window.global = window
     global.$ = document.querySelector.bind(document)
@@ -5,20 +7,20 @@ if (global.document) {
 }
 
 global.Vue = require('vue/dist/vue.runtime')
-Vue.config.ignoredElements = ['component']
 
-if (process.env.NODE_ENV === 'production') {
-    Vue.config.productionTip = false
-    Vue.config.devtools = false
-}
+Vue.config.ignoredElements = ['component', 'panel', 'content']
+Vue.config.productionTip = false
+Vue.config.devtools = false
 
 Vue.use(require('vue-svgicon'), {tagName: 'icon'})
+
 if (global.document) {
     Vue.use(require('vue-autosize'))
     global.Vuelidate = require('vuelidate')
     global.Vuelidate.validators = require('vuelidate/dist/validators.min')
     Vue.use(global.Vuelidate.default)
 }
+
 Vue.use(require('v-click-outside'))
 Vue.use(require('vue-stash').default)
 
@@ -33,6 +35,6 @@ global.d3 = {}
 Object.assign(global.d3, require('d3-array'))
 Object.assign(global.d3, require('d3-force'))
 
-global.EventEmitter = require('eventemitter3')
+
 if (!global.translations) global.translations = {}
 

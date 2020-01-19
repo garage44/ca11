@@ -16,7 +16,7 @@
             background: $red-color;
 
             svg {
-                fill: $white-color;
+                fill: var(--grey-0);
             }
         }
     }
@@ -55,7 +55,7 @@
             animation: ringing-svg 0.75s ease-in-out infinite;
 
             path[pid='0'] {fill: $red-color;}
-            path[pid='1'] {fill: $white-color;}
+            path[pid='1'] {fill: var(--grey-0);}
         }
     }
 }

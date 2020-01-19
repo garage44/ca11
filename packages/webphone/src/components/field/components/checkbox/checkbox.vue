@@ -1,12 +1,7 @@
-<div class="c-checkbox field">
-    <div class="field__row">
-        <label
-            :for="name"
-            class="c-checkbox__switch"
-            :class="elementclass"
-        >
+<div class="c-checkbox field" :class="componentClass">
+    <div class="row">
+        <label :for="name" class="switch" :class="elementclass">
             <input
-                class="c-checkbox__input"
                 :class="elementclass"
                 type="checkbox"
                 :checked="value"
@@ -15,9 +10,12 @@
                 :name="name"
                 @change="updateModel($event)"
             />
-            <span class="c-checkbox__slider"/>
+            <span class="slider">
+                <slot name="icon-disabled"></slot>
+                <slot name="icon-enabled"></slot>
+            </span>
         </label>
-        <div class="field__label">
+        <div class="field-label">
             {{label}}
         </div>
     </div>

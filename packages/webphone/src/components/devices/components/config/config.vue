@@ -9,7 +9,7 @@
         v-model="devices.sinks.headsetInput"
         elementclass="t-sel-headset-input"
         name="headset_input"
-        :help="$t('does the microphone of your headset respond?')"
+        :help="$t('does the microphone pick up sound?')"
         :label="$t('microphone')"
         :options="devices.input"
         :validation="$v.settings.webrtc.devices.sinks.headsetInput.valid"

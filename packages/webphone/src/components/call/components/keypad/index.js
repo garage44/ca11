@@ -36,7 +36,6 @@ module.exports = (app) => {
 
                 app.setState({
                     settings: {webrtc: {media: {stream: {[this.stream.type]: {selected}}}}},
-                    ui: {layer: 'caller'},
                 }, {persist: true})
 
                 app.emit('caller:call-activate', {callId: null})

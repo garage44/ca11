@@ -1,5 +1,5 @@
-// Entrypoint for all ca11 application SCSS. SCSS files from
-// components are blended in from the Gulp task.
+// Entrypoint for CA11 application SCSS.
+// Components SCSS is blended in with Gulp.
 @import 'lib/variables';
 @import 'lib/variables-responsive';
 @import 'lib/defaults';
@@ -13,7 +13,7 @@
 @import 'lib/grid';
 
 @import 'elements/guides';
-@import 'elements/header';
+@import 'elements/module';
 @import 'elements/items';
 @import 'elements/notification-box';
 @import 'elements/tabs';

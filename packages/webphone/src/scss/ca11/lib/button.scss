@@ -6,12 +6,6 @@
     padding: var(--spacer) 0;
     width: 100%;
 
-    &.stretched {
-        button {
-
-        }
-    }
-
     &.is-centered {
         justify-content: center;
     }
@@ -22,16 +16,31 @@
 }
 
 .button {
-    color: var(--grey-300);
+    color: var(--grey-500);
     font-family: 'Rajdhani';
     font-weight: 600;
-    padding: $spacer;
+    padding: var(--spacer);
     -webkit-tap-highlight-color: transparent;
     text-transform: uppercase;
     transition: color ease 0.5s;
 
+    &.active,
+    &:hover {
+        color: var(--primary-base);
+    }
+
+    &[disabled] {
+        color: var(--primary-base);
+
+        &:hover {
+            color: var(--primary-base);
+            // border-left: $border solid var(--grey-200);
+        }
+    }
+
     // Typical menu button used in status and menu.
     &--menu {
+        background: var(--bg-default);
         border-bottom: $border solid transparent;
         border-top: $border solid transparent;
         color: var(--grey-100);
@@ -48,7 +57,7 @@
         }
 
         &[disabled] {
-            color: palette('grey', 50);
+            color: var(--grey-50);
 
             &:hover {
                 // border-left: $border solid var(--grey-200);
@@ -57,8 +66,9 @@
     }
 
     &--widget {
-        background: var(--grey-50);
+        background: var(--grey-400);
         border: 1px solid var(--grey-100);
+        color: var(--grey-50);
 
         &[disabled] {
             background: var(--grey-100);
@@ -76,10 +86,10 @@
         }
 
         &.primary {
-            background: palette('grey', 500);
-            border-bottom: 1px solid lighten($primary-color, 5%);
+            background: var(--grey-500);
+            border-bottom: 1px solid var(--primary-base);
             border-radius: $spacer / 2;
-            color: palette('primary', 'base');
+            color: var(--primary-base);
 
             &[disabled] {
                 background: var(--grey-100);
@@ -87,7 +97,7 @@
             }
 
             &:not([disabled]):hover {
-                background: lighten(palette('grey', 500), 5%);
+                background: var(--grey-500);
                 color: var(--grey-50);
             }
         }

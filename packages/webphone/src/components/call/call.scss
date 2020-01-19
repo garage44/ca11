@@ -2,6 +2,7 @@
 @import 'ca11/lib/variables';
 
 .c-call {
+    align-items: center;
     display: flex;
     flex: 1;
 
@@ -9,7 +10,7 @@
         background: var(--grey-50);
         height: $spacer / 4;
         margin: 0 auto;
-        margin-top: $spacer;
+        margin-top: var(--spacer);
         max-width: 350px;
     }
 }
@@ -29,25 +30,7 @@
     }
 
     .action {
-        margin: $spacer;
-
-        // &.decline {
-        //     background: $red-color;
-        //     color: $white-color;
-        //     &:hover {background: lighten($red-color, 10%);}
-        // }
-
-        // &.accept {
-        //     background: $green-color;
-        //     color: $white-color;
-        //     &:hover {background: lighten($green-color, 10%);}
-        // }
-
-        // &.dial {
-        //     background: var(--primary-base);
-        //     color: $white-color;
-        //     // &:hover {background: lighten(var(--primary-base), 10%);}
-        // }
+        margin: var(--spacer);
 
         &.disabled {
             background: var(--grey-300);

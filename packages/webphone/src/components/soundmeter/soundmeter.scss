@@ -1,6 +1,6 @@
 @import 'ca11/lib/variables';
 
 canvas {
-    height: $spacer;
+    height: var(--spacer);
     width: 100%;
 }

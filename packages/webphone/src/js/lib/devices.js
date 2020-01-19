@@ -181,13 +181,6 @@ class Devices {
                     const message = this.app.$t('unavailable: "{name}"', {name: device.name})
                     this.app.notify({icon: 'microphone', message, type: 'warning'})
                 }
-
-                // Only steer the user to the settings page when WebRTC is
-                // already enabled; otherwise the whole audio tab should
-                // not be accessible at all.
-                if (this.app.state.settings.webrtc.enabled) {
-                    this.app.setState({ui: {layer: 'settings', tabs: {settings: {active: 'devices'}}}})
-                }
             }
         }
     }

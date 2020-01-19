@@ -1,0 +1,138 @@
+// A module is
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+.module {
+    // background: var(--bg-default);
+    max-height: 500px;
+    max-width: 700px;
+    width: 100%;
+
+
+    panel {
+        background: var(--bg-default);
+        border-bottom-left-radius: var(--spacer);
+        border-top-left-radius: var(--spacer);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+
+        .module-name {
+            // border-bottom: var(--border) solid var(--primary-base);
+            border-top-left-radius: 15px;
+            color: var(--grey-200);
+            font-family: 'Rajdhani';
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: calc(var(--spacer));
+            // padding: calc(var(--spacer));
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .filters {
+            display: flex;
+            flex: 1;
+            flex-direction: column-reverse;
+            margin-top: var(--spacer);
+
+            .filter {
+                align-items: center;
+                color: var(--grey-400);
+                display: flex;
+                justify-content: center;
+                // Override .field's margin-bottom.
+                margin: 0;
+                margin-bottom: var(--spacer);
+                padding: 0;
+                user-select: none;
+
+                &:hover,
+                &.active {
+                    color: var(--grey-200);
+
+                    svg {
+                        border: $spacer / 4 solid var(--primary-base);
+                        fill: var(--primary-base);
+                    }
+                }
+
+                &:hover {
+                    cursor: pointer;
+                }
+
+                svg {
+                    @include icon-size($spacer * 6);
+                    background: var(--grey-400);
+                    border: $spacer / 4 solid var(--grey-200);
+                    border-radius: 50%;
+                    fill: var(--grey-100);
+                    padding: var(--spacer);
+                }
+            }
+        }
+
+        .actions {
+            align-items: center;
+            // Border in the same style as the scroll trackbar.
+            color: var(--primary-base);
+            display: flex;
+            flex-direction: column;
+
+
+            .action {
+                background: none;
+                border-bottom: 0;
+                border-bottom: $spacer-05 solid transparent;
+
+                &.active {
+                    border-bottom: $spacer-05 solid var(--primary-base);
+
+                    svg {
+                        fill: var(--primary-base);
+                    }
+                }
+
+                svg {
+                    @include icon-size($spacer * 3);
+                }
+            }
+        }
+
+
+        .tabs {
+            .tab {
+                align-items: center;
+                background: none;
+                border-left: 0;
+                border-right: 0;
+                color: var(--grey-50);
+                display: flex;
+                justify-content: center;
+                width: $space-4;
+
+                &.active {
+                    border-bottom: $spacer-05 solid var(--primary-base);
+                    color: var(--primary-base);
+                }
+
+                &.disabled {
+                    opacity: 0.3;
+
+                    &:hover {
+                        cursor: not-allowed;
+                    }
+                }
+            }
+        }
+    }
+
+    content {
+        background: var(--bg-dark);
+        border-bottom-right-radius: var(--spacer);
+        border-top-right-radius: var(--spacer);
+        padding: $spacer * 1.5;
+    }
+}
+
+

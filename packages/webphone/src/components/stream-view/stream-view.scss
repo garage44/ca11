@@ -10,13 +10,12 @@
     position: relative;
 
     .slot {
-        flex-grow: 1;
+        // flex-grow: 1;
         height: 50%;
         max-height: 50%;
-        padding-bottom: $spacer;
     }
 
-    @media screen and (min-width: $breakpoint-mobile) {
+    @media screen {
         flex-direction: column;
 
         .slot {
@@ -37,13 +36,13 @@
 
 
     .c-stream {
-        background: palette('bg', 'default');
-        border-radius: $spacer;
+        background: var(--bg-default);
+        border-radius: var(--spacer);
         display: flex;
         flex: 1;
         height: 100%;
-        margin: $spacer;
-        padding: $spacer;
+        margin: var(--spacer);
+        padding: var(--spacer);
         transition: all 0.25s;
 
         &.placeholder {

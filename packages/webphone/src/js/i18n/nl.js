@@ -47,7 +47,7 @@ module.exports = {
     'do not disturb': 'niet storen',
     'do you mind if {name} sends any application exceptions to a service for quality metrics?': 'mag {name} eventuele applicatie fouten doorsturen naar een service voor het meten van kwaliteit?',
     'do you want {name} to be opened and the number filled automatically when clicking on telephony links?': 'wil je dat {name} automatisch geopend wordt en het nummer invult bij het aanklikken van telefonie links?',
-    'does the microphone of your headset respond?': 'reageert de microfoon van je headset?',
+    'does the microphone pick up sound?': 'reageert de microfoon van je headset?',
     'does the sound play on the expected device?': 'is het geluid te horen op het juiste apparaat?',
     'domain': 'domein',
     'enabled': 'ingeschakeld',

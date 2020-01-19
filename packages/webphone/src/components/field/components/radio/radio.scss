@@ -19,7 +19,7 @@
 
         &:checked + label {
             background: var(--primary-base);
-            color: $white-color;
+            color: var(--grey-0);
         }
     }
 

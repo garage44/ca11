@@ -1,52 +1,42 @@
-<section component class="c-settings t-settings content-wide">
+<component class="c-settings module t-settings">
 
-    <header class="content__header header">
-
-        <ul class="header__tabs">
-            <li
-                class="button button--menu tooltip tooltip-bottom"
+    <panel>
+        <div class="module-name">{{$t('settings')}}</div>
+        <ul class="tabs">
+            <li class="tab button button--menu tooltip tooltip-bottom"
                 :class="classes('tabs', 'general')"
                 :data-tooltip="$t('general')"
-                @click="setTab('settings', 'general')"
-            >
+                @click="setTab('settings', 'general')">
                 <icon name="settings-misc"/>
             </li>
-            <li
-                class="button button--menu tooltip tooltip-bottom"
+            <li class="tab button button--menu tooltip tooltip-bottom"
                 :class="classes('tabs', 'devices')"
                 :data-tooltip="$t('devices')"
-                @click="setTab('settings', 'devices', settings.webrtc.enabled)"
-            >
+                @click="setTab('settings', 'devices', settings.webrtc.enabled)">
                 <icon name="headset_mic"/>
             </li>
-            <li
-                class="button button--menu tooltip tooltip-bottom"
+            <li class="tab button button--menu tooltip tooltip-bottom"
                 :class="classes('tabs', 'sig11')"
                 data-tooltip="SIG11"
-                @click="setTab('settings', 'sig11')"
-            >
+                @click="setTab('settings', 'sig11')">
                 <icon name="protocol-sig11"/>
             </li>
-            <li
-                class="button button--menu tooltip tooltip-bottom t-tab-sip"
+            <li class="tab button button--menu tooltip tooltip-bottom t-tab-sip"
                 :class="classes('tabs', 'sip')"
                 data-tooltip="SIP"
-                @click="setTab('settings', 'sip')"
-            >
+                @click="setTab('settings', 'sip')">
                 <icon name="protocol-sip"/>
             </li>
-            <li
-                class="button button--menu tooltip tooltip-bottom"
+            <li class="tab button button--menu tooltip tooltip-bottom"
                 :class="classes('tabs', 'webhooks')"
                 data-tooltip="Webhooks"
-                @click="setTab('settings', 'webhooks')"
-            >
+                @click="setTab('settings', 'webhooks')">
                 <icon name="webhooks"/>
             </li>
         </ul>
-    </header>
+    </panel>
 
-    <main class="main">
+    <content>
         <!-- General settings -->
         <div class="tab" :class="{active: tabs.active === 'general'}">
             <FieldSelect
@@ -204,7 +194,5 @@
                 @click="save"
             >{{$t('save settings')}}</button>
         </div>
-    </main>
-
-
-</section>
+    </content>
+</component>

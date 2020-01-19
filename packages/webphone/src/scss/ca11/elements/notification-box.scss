@@ -44,17 +44,17 @@
         align-items: center;
         display: flex;
         font-weight: bold;
-        margin-bottom: $spacer;
+        margin-bottom: var(--spacer);
         text-transform: uppercase;
 
         svg {
             color: var(--primary-base);
-            margin-right: $spacer;
+            margin-right: var(--spacer);
         }
     }
 
     .description {
-        margin-bottom: $spacer;
+        margin-bottom: var(--spacer);
     }
 
     ul {
