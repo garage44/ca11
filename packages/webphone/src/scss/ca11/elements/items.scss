@@ -4,9 +4,9 @@
 .items {
     align-items: stretch;
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
-    overflow-y: scroll;
-    padding: $spacer;
+    padding: var(--spacer);
 
     &__empty {
         align-items: center;
@@ -24,7 +24,7 @@
             font-family: 'Rajdhani';
             font-size: 2rem;
             font-weight: 500;
-            margin-top: $spacer;
+            margin-top: var(--spacer);
             text-align: center;
         }
     }
@@ -47,8 +47,8 @@
     $item: &;
     display: flex;
     flex-direction: column;
-    margin-top: $spacer;
-    padding: $spacer  $spacer;
+    margin-top: var(--spacer);
+    padding: $spacer  var(--spacer);
     width: 100%;
 
     &:hover {
@@ -61,7 +61,7 @@
         }
 
         #{$item}__icon {
-            background: palette('grey', 300);
+            background: var(--grey-300);
             border: $spacer / 4 solid var(--primary-base);
             fill: var(--primary-base);
         }
@@ -87,14 +87,14 @@
             fill: var(--grey-100);
             // Force a static width.
             flex: 0 0 $icon-large;
-            margin-right: $spacer;
+            margin-right: var(--spacer);
             padding: $spacer-05;
         }
 
         #{$item}__text .editable,
         #{$item}__text {
             background: none;
-            color: palette('primary', 'base');
+            color: var(--primary-base);
             display: inline-block;
             font-family: 'Rajdhani';
             font-size: $text-large;
@@ -126,7 +126,7 @@
 
             #{$item}__option {
                 align-items: center;
-                color: palette('grey', 100);
+                color: var(--grey-100);
                 display: flex;
                 justify-content: center;
 
@@ -163,7 +163,7 @@
             font-family: 'Rajdhani';
             font-weight: 600;
             height: 1rem;
-            padding: $spacer;
+            padding: var(--spacer);
             resize: none;
             text-transform: uppercase;
             width: 100%;
@@ -174,7 +174,7 @@
             color: var(--grey-300);
             font-family: 'Rajdhani';
             font-weight: 600;
-            padding: $spacer;
+            padding: var(--spacer);
             padding-left: 0;
             width: 100%;
         }

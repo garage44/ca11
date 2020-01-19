@@ -1,28 +1,17 @@
 @import 'ca11/lib/mixins';
 @import 'ca11/lib/variables';
 
-
-.c-ts-controls {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-
-    .protocol-switch {
-        margin: 0;
-        white-space: normal;
+.c-protocol-status {
+    .protocol-status {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 0;
+        width: 100%;
 
         label {
             width: 100%;
         }
-    }
 
-    .c-call-switcher {
-        margin: $spacer-05 0;
-    }
-
-    .protocol-status {
-        display: flex;
-        flex-direction: column;
 
         button {
             padding: $spacer 0;

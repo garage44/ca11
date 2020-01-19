@@ -22,7 +22,7 @@
             display: flex;
             height: $spacer * 5;
             justify-content: center;
-            margin-bottom: $spacer;
+            margin-bottom: var(--spacer);
             margin-top: $spacer * 2;
             vertical-align: middle;
             width: $spacer * 8;
@@ -34,8 +34,8 @@
             &.cam-disabled {
                 .cam {
                     fill: $red-color;
-                    path[pid='0'] {fill: palette('grey', 300); }
-                    path[pid='2'] {fill: $white-color; }
+                    path[pid='0'] {fill: var(--grey-300); }
+                    path[pid='2'] {fill: var(--grey-0); }
                 }
             }
 

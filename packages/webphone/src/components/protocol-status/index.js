@@ -1,6 +1,6 @@
 module.exports = (app) => {
 
-    const TsControls = {
+    const ProtocolStatus = {
         computed: {
             protocols: function() {
                 let protocols = [
@@ -34,9 +34,6 @@ module.exports = (app) => {
 
                 return classes
             },
-            logout: function() {
-                app.session.close()
-            },
             toggleSelect: function() {
                 let selected = this.stream[this.stream.type].selected
                 if (!selected) selected = new Date().getTime()
@@ -48,8 +45,8 @@ module.exports = (app) => {
             },
         }, app.helpers.sharedMethods()),
         props: ['call'],
-        render: templates.ts_controls.r,
-        staticRenderFns: templates.ts_controls.s,
+        render: templates.protocol_status.r,
+        staticRenderFns: templates.protocol_status.s,
         store: {
             activities: 'activities',
             calls: 'caller.calls',
@@ -71,5 +68,5 @@ module.exports = (app) => {
         },
     }
 
-    return TsControls
+    return ProtocolStatus
 }

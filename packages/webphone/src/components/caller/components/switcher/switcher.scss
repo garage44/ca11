@@ -5,37 +5,10 @@
 // The most upper box containing account info and
 // icon-links to several locations.
 .c-call-switcher {
-    // Account for 1px box-shadow from the panel below.
-    margin-bottom: 1px;
-
     .container {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
         z-index: 10000000;
-    }
-
-    .call {
-        @include icon-size($spacer * 6.25);
-        align-items: center;
-        background: var(--grey-400);
-        border: 0;
-        color: var(--grey-50);
-        display: flex;
-        height: $space-4;
-        justify-content: center;
-        margin-bottom: $spacer-05;
-        width: 100%;
-
-        &.new-call {
-            width: 100%;
-        }
-
-        &.active,
-        &:hover {
-            background: var(--primary-base);
-            color: var(--grey-50);
-            svg {fill: var(--grey-50);}
-        }
     }
 }

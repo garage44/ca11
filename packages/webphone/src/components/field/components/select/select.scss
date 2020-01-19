@@ -28,7 +28,7 @@
             width: 100%;
 
             &::placeholder {
-                color: palette('grey', 50);
+                color: var(--grey-50);
                 font-style: italic;
             }
 
@@ -47,7 +47,7 @@
         background: var(--grey-400);
 
         border: 1px solid var(--grey-100);
-        box-shadow: 0 0 $border rgba(palette('grey', 500), 0.8);
+        box-shadow: 0 0 $border rgba(var(--grey-500), 0.8);
         // font-weight: 600;
         margin-top: $spacer * 5;
         max-height: 162px;
@@ -60,7 +60,7 @@
 
         .option {
             color: var(--grey-100);
-            padding: $spacer;
+            padding: var(--spacer);
             text-align: left;
             user-select: none;
             width: inherit;

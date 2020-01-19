@@ -15,12 +15,12 @@ module.exports = (app) => {
         },
         methods: Object.assign({
             drawLoop: function(time) {
-                // clear the background
+                // Clear the background.
                 canvasContext.clearRect(0, 0, canvasElement.width, canvasElement.height)
                 if (meter.checkClipping()) {
-                    canvasContext.fillStyle = '#83322b'
+                    canvasContext.fillStyle = '#dc4b4b'
                 } else {
-                    canvasContext.fillStyle = '#22582a'
+                    canvasContext.fillStyle = '#9ddc4b'
                 }
 
                 canvasContext.fillRect(0, 0, meter.volume * canvasElement.width * 2.4, canvasElement.height)

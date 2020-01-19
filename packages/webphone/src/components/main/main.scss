@@ -10,12 +10,6 @@
     transition: background 2s;
     width: 100vw;
 
-    .button-quit {
-        position: fixed;
-        right: 0;
-        top: 0;
-    }
-
     &.splash-0 {
         background-image: url('/img/splash-0.jpg');
     }

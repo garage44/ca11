@@ -153,7 +153,14 @@ class Media {
                     console.error(err)
                     this.app.notify({icon: 'warning', message: `${this.app.$t('no suitable device found for:')} ${type}`, type: 'warning'})
 
-                    throw new Error(err)
+                    this.app.setState({settings: {webrtc: {media: {
+                        permission: true,
+                        stream: {
+                            type,
+                        },
+                    }}}}, {persist: true})
+
+                    return null
                 }
 
                 // This error also may be triggered when there are no devices

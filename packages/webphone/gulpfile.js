@@ -2,7 +2,7 @@ const path = require('path')
 
 const gulp = require('gulp')
 
-const settings = require('../../gulp/settings')(path.join(__dirname, '../../'), 'phone', path.join(__dirname, 'src'))
+const settings = require('../../gulp/settings')(path.join(__dirname, '../../'), 'phone', __dirname)
 const helpers = require('../../gulp/helpers')(settings)
 const assets = require('../../gulp/tasks/assets')(settings)
 const code = require('../../gulp/tasks/code')(settings)

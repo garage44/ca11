@@ -34,7 +34,7 @@ class PluginUI extends Module {
                     active: 'general',
                 },
             },
-            theme: 'default-light',
+            theme: 'default-dark',
             visible: false,
         }
     }

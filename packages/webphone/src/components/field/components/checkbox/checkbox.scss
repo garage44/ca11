@@ -2,27 +2,43 @@
 @import 'ca11/lib/variables';
 
 .c-checkbox {
-    $self: &;
-
-    &__row {
+    .row {
         align-items: center;
         display: flex;
     }
 
-    &__switch {
+    label.switch {
         height: $spacer * 3;
         margin-right: var(--spacer);
         position: relative;
         user-select: none;
         width: $spacer * 5;
 
-        #{$self}__input {
+        input {
             height: 0;
             opacity: 0;
             width: 0;
 
-            &:checked + #{$self}__slider {
+            + .slider {
+                svg {
+                    transition: all 0.5s ease-in-out;
+                }
+
+                .icon-enabled {
+                    fill: var(--grey-200);
+                }
+            }
+
+            &:checked + .slider {
                 background: var(--primary-base);
+
+                .icon-disabled {
+                    fill: var(--grey-200);
+                }
+
+                .icon-enabled {
+                    fill: var(--grey-50);
+                }
 
                 &::before {
                     transform: translateX($spacer * 2);
@@ -31,8 +47,8 @@
 
         }
 
-        #{$self}__slider {
-            background-color: palette('grey', 200);
+        .slider {
+            background-color: var(--grey-200);
             border-radius: 10px;
             bottom: 0;
             cursor: pointer;
@@ -40,10 +56,9 @@
             position: absolute;
             right: 0;
             top: 0;
-            transition: 0.4s;
 
             &::before {
-                background: $white-color;
+                background: var(--grey-0);
                 border-radius: 50%;
                 bottom: $spacer / 2;
                 content: '';
@@ -54,5 +69,69 @@
                 width: $spacer * 2;
             }
         }
+    }
+
+    &.extended {
+        background: var(--bg-default);
+        margin: 0;
+
+        label.switch {
+            height: 32px;
+            margin: 0;
+            width: 100%;
+
+            input {
+                height: 100%;
+                position: absolute;
+                width: 100%;
+                z-index: 100000;
+
+                &:hover {
+                    cursor: pointer;
+                }
+
+                &:checked {
+                    + span {
+                        background: none;
+
+
+                        &::before {
+                            background: var(--red-color);
+                            transform: translateX(32px);
+                        }
+                    }
+                }
+            }
+
+            span {
+                background: none;
+                border-radius: 0;
+
+                &::before {
+                    background: var(--grey-400);
+                    border-radius: 0;
+                    bottom: 0;
+                    height: 32px;
+                    left: 0;
+                    width: 32px;
+                }
+            }
+        }
+    }
+
+    .icon-enabled,
+    .icon-disabled {
+        @include icon-size($spacer * 3);
+        fill: var(--grey-50);
+        height: 100%;
+        position: absolute;
+    }
+
+    .icon-disabled {
+        left: 3px;
+    }
+
+    .icon-enabled {
+        right: 3px;
     }
 }

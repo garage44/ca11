@@ -2,13 +2,7 @@
 @import 'ca11/lib/variables';
 
 .c-menu {
-    background: palette('bg', 'default');
-    z-index: 100;
-
-    button {
-        svg {
-            height: 40px;
-            width: 40px;
-        }
+    .button-quit {
+        margin-top: calc(var(--spacer) * 2);
     }
 }

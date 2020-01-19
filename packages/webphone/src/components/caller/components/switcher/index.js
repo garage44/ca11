@@ -10,6 +10,8 @@ module.exports = (app) => {
                     [this.stream.type]: {selected: false},
                 }}}}, ui: {layer: 'caller'}}, {persist: true})
 
+                this.setLayer('caller')
+
                 if (call) {
                     app.emit('caller:call-activate', {
                         callId: call.id,

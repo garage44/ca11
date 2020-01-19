@@ -70,10 +70,10 @@
 // Base styles for the tooltip's content area.
 .tooltip::after,
 [data-tooltip]::after {
-    background: palette('bg', 'default');
+    background: var(--bg-default);
     border-radius: $spacer / 4;
     box-shadow: 0 0 8px var(--grey-400);
-    color: var(--primary-base);
+    color: var(--grey-50);
     content: attr(data-tooltip);
     font-family: 'Rajdhani';
     font-size: var(--text-small);

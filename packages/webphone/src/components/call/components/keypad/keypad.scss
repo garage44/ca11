@@ -17,14 +17,14 @@
     }
 
     .call-btn {
-        background: palette('bg', 'default');
+        background: var(--bg-default);
         border-bottom-left-radius: 15px;
         border-bottom-right-radius: 15px;
         height: 65px;
         width: 100%;
 
         &:hover {
-            background: palette('bg', 'dark');
+            background: var(--bg-default);
         }
     }
 
@@ -40,15 +40,15 @@
 
     .c-media-type {
         align-items: center;
-        background: palette('grey', 400);
-        color: $white-color;
+        background: var(--grey-400);
+        color: #fff;
         display: flex;
         height: $space-4;
         justify-content: center;
 
         &.selected {
-            background: palette('primary', 'base');
-            color: $white-color;
+            background: var(--primary-base);
+            color: #fff;
         }
 
         &:hover {
@@ -62,6 +62,7 @@
 
     .c-stream {
         background: none;
+        border-right: 2px solid var(--grey-400);
         border-top-left-radius: 15px;
         width: 100%;
 
@@ -110,7 +111,7 @@
         #{$self}__correct {
             color: var(--primary-base);
             position: absolute;
-            right: $spacer;
+            right: var(--spacer);
             top: $spacer * 4;
             user-select: none;
 
@@ -154,7 +155,7 @@
             .key-row {
                 .key {
                     &:hover {
-                        background: $white-color;
+                        background: var(--grey-0);
                         color: var(--primary-base);
                         cursor: not-allowed;
                     }
