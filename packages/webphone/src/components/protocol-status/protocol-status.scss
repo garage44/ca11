@@ -2,6 +2,23 @@
 @import 'ca11/lib/variables';
 
 .c-protocol-status {
+    .sip-disabled .label-sip,
+    .sig11-disabled .label-sig11 {
+        color: var(--grey-400);
+    }
+
+    .sip-disconnected .label-sip,
+    .sig11-disconnected .label-sig11 {
+        color: var(--red-color);
+    }
+
+    .sig11-registered .label-sip,
+    .sip-registered .label-sig11 {
+        label {
+            color: var(--primary-base);
+        }
+    }
+
     .protocol-status {
         display: flex;
         flex-direction: row;

@@ -1,14 +1,19 @@
-<component class="c-caller t-caller" :class="classes('component')">
+<component class="c-caller t-caller module" :class="classes('component')">
 
-    <Call v-if="callActive" :call="callActive"/>
-    <Keypad
-        v-else
-        display="touch"
-        mode="call"
-        :endpoint="description.endpoint"
-        :model.sync="description.endpoint"
-    />
-    <StreamView v-else-if="stream[stream.type].selected" :call="null"/>
+    <StreamView v-if="stream[stream.type].selected" :call="null"/>
+
+    <content v-else>
+        <Call v-if="callActive" :call="callActive"/>
+        <Keypad
+            v-else
+            display="touch"
+            mode="call"
+            :endpoint="description.endpoint"
+            :model.sync="description.endpoint"
+        />
+    </content>
+
+
     <!-- calling disabled -->
     <!-- <div v-else-if="callingDisabled" class="call-disabled">
         <icon class="disabled-icon" name="phone"/>

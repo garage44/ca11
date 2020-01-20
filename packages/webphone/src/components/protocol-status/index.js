@@ -2,6 +2,17 @@ module.exports = (app) => {
 
     const ProtocolStatus = {
         computed: {
+            classes: function() {
+                const classes = {}
+
+                if (this.sip.enabled) classes[`sip-${this.sig11.status}`] = true
+                else classes['sip-disabled'] = true
+
+                if (this.sig11.enabled) classes[`sig11-${this.sig11.status}`] = true
+                else classes['sig11-disabled'] = true
+
+                return classes
+            },
             protocols: function() {
                 let protocols = [
                     {disabled: !this.sip.enabled, icon: 'protocol-sip', name: 'SIP', value: 'sip'},
@@ -9,31 +20,12 @@ module.exports = (app) => {
                 ]
                 return protocols
             },
-        },
-        data: function() {
-            return {
-                tooltip: 'SIG11: enabled\nSIP:Disabled',
-            }
+            tooltip: function() {
+                const sipStatus = this.sip.enabled ? this.sip.status : this.$t('disabled')
+                return `SIP: ${sipStatus}\nSIG11: ${this.sig11.status}`
+            },
         },
         methods: Object.assign({
-            classes: function(block) {
-                const classes = {}
-                if (block === 'media-type') {
-                    classes[this.stream.type] = true
-                }
-
-                // We assume here that a block is always an option. Change
-                // this logic if other kind of blocks are required.
-                classes.active = (this.layer === block)
-
-                if (block === 'activities') {
-                    classes.unread = this.activities.unread
-                } else if (block === 'caller') {
-                    classes.disabled = !this.app.online
-                }
-
-                return classes
-            },
             toggleSelect: function() {
                 let selected = this.stream[this.stream.type].selected
                 if (!selected) selected = new Date().getTime()
