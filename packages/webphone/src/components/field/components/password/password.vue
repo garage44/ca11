@@ -1,4 +1,4 @@
-<div class="c-password field">
+<component class="c-password field">
     <label class="c-password__label field__label" :for="name">{{label}}</label>
     <div class="c-password__container">
         <input
@@ -13,10 +13,10 @@
         />
         <ul class="c-password__invalid field__invalid" v-html="validationMessage"></ul>
         <div
-            class="c-password__eye"
+            class="eye"
             :class="{visible}"
             @click="toggleVisible()"
         ><icon name="eye"/></div>
     </div>
     <div v-if="help" class="c-password__help field__help">{{help}}</div>
-</div>
+</component>

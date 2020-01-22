@@ -3,7 +3,7 @@
 
 .c-session {
     align-items: stretch;
-    background: rgba(var(--grey-500), 0.7);
+    background: var(--bg-default);
     border-radius: 22px;
     box-shadow: 0 0 16px var(--grey-400);
     display: flex;
@@ -14,7 +14,7 @@
     margin: 0 auto;
     max-height: 500px;
     max-width: 400px;
-    padding: $spacer * 3;
+    padding: calc(var(--spacer) * 2);
     width: 100%;
 
     .resources {
@@ -35,14 +35,6 @@
                 cursor: pointer;
             }
         }
-
-    }
-
-    .buttons button {
-        border-radius: 22px;
-        margin: 0;
-        max-width: 150px;
-        width: 100%;
     }
 
     header {
@@ -63,7 +55,7 @@
     &__slogan {
         color: var(--primary-base);
         font-size: var(--text-base);
-        font-weight: 500;
+        font-weight: 600;
         height: $spacer * 4;
         letter-spacing: 0;
         margin-bottom: var(--gutter);
@@ -77,70 +69,9 @@
         justify-content: center;
         padding: var(--gutter) 0;
 
-        .new-session-text {
-            color: var(--grey-300);
-            margin-bottom: var(--spacer);
-            margin-top: $spacer * 2;
-        }
-
-        .new-session {
-            margin-top: var(--spacer);
-
-            svg {
-                margin-right: var(--spacer);
-            }
-
-            &:hover {
-                color: var(--primary-base);
-                cursor: pointer;
-            }
-        }
-
         .session {
-            align-items: center;
-            background: var(--grey-50);
-            border-bottom: 2px solid var(--grey-100);
-            border-top: 2px solid transparent;
-            display: flex;
+            margin-bottom: var(--spacer);
             width: 100%;
-
-            svg {
-                color: var(--grey-300);
-                margin: 0 var(--spacer);
-                transition: color 0.2s ease-in;
-            }
-
-            .icon-session svg {
-                @include icon-size($spacer * 3);
-            }
-
-            .icon-remove svg {
-                @include icon-size($spacer * 2.5);
-
-                &:hover {
-                    color: var(--primary-base);
-                }
-            }
-
-            &:hover {
-                border-bottom: 2px solid var(--primary-base);
-                cursor: pointer;
-
-                .icon-session svg {
-                    color: var(--primary-base);
-                }
-            }
-
-            &__description {
-                color: var(--grey-300);
-                font-weight: 600;
-                height: $spacer * 5;
-                line-height: $spacer * 5;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                width: 100%;
-            }
         }
     }
 

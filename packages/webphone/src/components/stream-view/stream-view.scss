@@ -10,7 +10,6 @@
     position: relative;
 
     .slot {
-        // flex-grow: 1;
         height: 50%;
         max-height: 50%;
     }
@@ -22,7 +21,6 @@
             width: 100%;
         }
     }
-
 
     @media screen and (min-width: $breakpoint-desktop) {
         align-items: center;

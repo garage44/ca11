@@ -40,53 +40,48 @@
     <content class="scrollable no-padding" v-click-outside="toggleSelectItem">
         <div class="items">
 
-            <div v-if="!filteredActivities.length" class="items__empty">
-                <icon class="items__empty-icon" name="activities"/>
-                <div class="items__empty-text cf">{{$t('no {target}', {target: $t('activity')})}}</div>
+            <div v-if="!filteredActivities.length" class="items-empty">
+                <icon class="icon" name="activities"/>
+                <div class="text cf">{{$t('no {target}', {target: $t('activity')})}}</div>
             </div>
 
-            <div class="item activity"
-                :class="{selected: activity.selected}"
-                v-else
+            <div v-else class="item activity" :class="{selected: activity.selected}"
                 v-for="activity of filteredActivities"
                 @click.stop="toggleSelectItem(activity, true)">
 
-                <div class="item__header">
-                    <icon class="item__icon" :name="activity.icon"/>
-                    <div class="item__text">
-                        <div v-if="activity.contact" class="item__title">
+                <div class="header">
+                    <icon class="header-icon" :name="activity.icon"/>
+                    <div class="header-text">
+                        <div v-if="activity.contact" class="header-title">
                             {{activity.contact.name}}
                         </div>
-                        <div v-else class="item__title">
+                        <div v-else class="header-title">
                             {{activity.description.number}}
                         </div>
-                        <div class="item__description">
+                        <div class="header-description">
                             {{activity.description.number}} - {{activity.date | fuzzydate}}
                         </div>
                     </div>
 
-                    <div class="item__options">
-                        <button class="item__option"
+                    <div class="options">
+                        <button v-if="!editMode" class="option"
                             :class="classes('remind-button', activity)"
-                            v-if="!editMode"
                             v-on:click="toggleReminder(activity)">
                             <icon name="idea"/>
                         </button>
-                        <button class="item__option"
-                            v-if="!editMode"
+                        <button v-if="!editMode" class="option"
                             v-on:click="callEndpoint(activity)">
                             <icon name="phone"/>
                         </button>
-                        <button class="item__option"
-                            v-if="editMode"
+                        <button v-if="editMode" class="option"
                             @click.stop="deleteActivity(activity)">
                             <icon name="delete"/>
                         </button>
                     </div>
                 </div>
 
-                <div class="item__context">
-                    <textarea class="item__label editable" type="text"
+                <div class="context">
+                    <textarea class="context-label editable" type="text"
                         v-if="activity.remind"
                         v-autosize="activity.label"
                         v-model="activity.label"

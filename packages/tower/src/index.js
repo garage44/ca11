@@ -6,7 +6,6 @@ const WebCrypto = require('node-webcrypto-ossl')
 global.crypto = new WebCrypto()
 const rc = require('rc')
 const WebSocket = require('ws')
-const uuidv4 = require('uuid/v4')
 
 const Skeleton = require('@ca11/boilerplate')
 const Crypto = require('@ca11/sig11/src/crypto')
@@ -64,7 +63,7 @@ class Ca11Tower extends Skeleton {
         })
 
         if (!rows.length) {
-            const sipId = uuidv4()
+            const sipId = endpoint.number
             await Promise.all([
                 this.knex('sig11_asterisk').insert({
                     id: sipId,

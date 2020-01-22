@@ -95,7 +95,7 @@ module.exports = (app) => {
                 let classes = {}
                 if (block === 'entry-status') {
                     classes[context.status] = true
-                    classes.editable = this.editMode
+                    classes['editable-active'] = this.editMode
                 } else if (block === 'favorite-button') {
                     classes.active = context
                 } else if (block === 'filter-favorites') {

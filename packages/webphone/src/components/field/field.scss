@@ -28,8 +28,8 @@
         background: none;
         border: 0;
         border-bottom: 1px solid var(--grey-100);
-        color: var(--grey-50);
-        font-size: var(--text-small);
+        color: var(--grey-100);
+        font-size: var(--text-normal);
         padding: $spacer 0;
 
         &::placeholder {
@@ -46,10 +46,10 @@
 
 
     &__help {
-        color: var(--grey-50);
+        color: var(--grey-100);
         font-size: var(--text-small);
         font-style: italic;
-        padding-top: var(--spacer-05);
+        padding-top: var(--spacer);
 
         &::first-letter {
             text-transform: uppercase;

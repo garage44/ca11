@@ -8,7 +8,7 @@
     flex-wrap: wrap;
     padding: var(--spacer);
 
-    &__empty {
+    .items-empty {
         align-items: center;
         color: var(--grey-200);
         display: flex;
@@ -16,13 +16,13 @@
         margin-top: $spacer * 5;
         width: 100%;
 
-        &-icon {
-            @include icon-size($spacer * 8);
+        .icon {
+            @include icon-size($spacer * 20);
         }
 
-        &-text {
+        .text {
             font-family: 'Rajdhani';
-            font-size: 2rem;
+            font-size: 4rem;
             font-weight: 500;
             margin-top: var(--spacer);
             text-align: center;
@@ -56,30 +56,30 @@
     }
 
     &.selected {
-        #{$item}__context {
+        .context {
             display: flex;
         }
 
-        #{$item}__icon {
+        .header-icon {
             background: var(--grey-300);
             border: $spacer / 4 solid var(--primary-base);
             fill: var(--primary-base);
         }
 
-        #{$item}__text:hover,
+        .header-title:hover,
         &:hover {
             cursor: default;
         }
     }
 
-    &__header {
+    .header {
         display: flex;
         flex-direction: row;
         // Required to have ellipsis text overflow on .name.
         text-overflow: ellipsis;
         width: 100%;
 
-        #{$item}__icon {
+        .header-icon {
             @include icon-size($icon-large);
             background: var(--grey-400);
             border: $spacer / 4 solid var(--grey-200);
@@ -91,8 +91,8 @@
             padding: $spacer-05;
         }
 
-        #{$item}__text .editable,
-        #{$item}__text {
+        .header-text,
+        .header-text .editable {
             background: none;
             color: var(--primary-base);
             display: inline-block;
@@ -111,7 +111,7 @@
             }
 
             // Smaller sub-title that adds extra context for the item.
-            #{$item}__description {
+            .header-description {
                 color: var(--grey-50);
                 font-size: $text-small;
                 overflow: hidden;
@@ -120,11 +120,12 @@
         }
 
         // Options for this item.
-        #{$item}__options {
+        .options {
             align-items: center;
             display: flex;
+            margin-bottom: $spacer * 1.5;
 
-            #{$item}__option {
+            .option {
                 align-items: center;
                 color: var(--grey-100);
                 display: flex;
@@ -148,7 +149,7 @@
     }
 
     // Extra context to show when item is selected.
-    &__context {
+    .context {
         color: var(--grey-200);
         display: none;
         flex-direction: column;
@@ -156,9 +157,9 @@
         width: 100%;
 
         // Textarea field that 'labels' the item.
-        #{$item}__label {
-            background: var(--grey-50);
-            border: 1px solid var(--grey-100);
+        .context-label {
+            background: var(--bg-dark);
+            border: 1px solid var(--grey-200);
             color: var(--primary-base);
             font-family: 'Rajdhani';
             font-weight: 600;
@@ -169,8 +170,7 @@
             width: 100%;
         }
 
-        // No context items.
-        @at-root .context__empty {
+        .context-empty {
             color: var(--grey-300);
             font-family: 'Rajdhani';
             font-weight: 600;
@@ -179,8 +179,7 @@
             width: 100%;
         }
 
-        // A selected item context entry.
-        @at-root .context__entry {
+        .entry {
             align-items: center;
             display: flex;
             justify-content: center;
@@ -188,10 +187,9 @@
             padding-left: 0;
             width: 100%;
 
-            @at-root .context__entry-icon {
+            button {
                 color: var(--grey-50);
                 display: flex;
-                // flex: 0 0 $spacer * 6;
                 justify-content: center;
                 text-align: center;
                 width: $icon-large;
@@ -201,21 +199,26 @@
                 }
             }
 
-            @at-root .context__entry-input {
+            input {
                 background: none;
-                color: var(--grey-100);
+                color: var(--primary-base);
                 flex: 1 1 auto;
                 font-family: 'Rajdhani';
                 font-size: $text-base;
                 font-weight: 600;
+                margin-left: var(--spacer);
                 width: 0;
             }
 
-            @at-root .context__entry-options {
+            .options {
                 align-items: center;
                 display: flex;
                 flex-direction: row;
                 justify-content: flex-end;
+
+                .option {
+                    width: auto;
+                }
 
                 svg {
                     @include icon-size($icon-small);

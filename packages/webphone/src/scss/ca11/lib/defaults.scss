@@ -56,6 +56,14 @@ button {
     padding: 0;
     user-select: none;
 
+    &.editable {
+        border: 1px solid transparent;
+    }
+
+    &.editable-active {
+        border: 1px dashed var(--grey-200);
+    }
+
     &:hover {
         cursor: pointer;
     }
@@ -79,7 +87,7 @@ ul {
 
 // Editable inputs are styled like regular text nodes,
 // unless they are not read-only.
-.editable {
+input.editable {
     border: 1px solid transparent;
 
     &:not([readonly]) {
