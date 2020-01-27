@@ -3,7 +3,6 @@
 @import 'ca11/lib/variables';
 
 .module {
-    // background: var(--bg-default);
     max-height: 500px;
     max-width: 700px;
     width: 100%;
@@ -77,6 +76,7 @@
             // Border in the same style as the scroll trackbar.
             color: var(--primary-base);
             display: flex;
+            flex: 1;
             flex-direction: column;
 
 

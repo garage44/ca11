@@ -1,4 +1,5 @@
-<div class="c-radio field">
+<component class="c-radio field">
+
     <template v-for="option in options">
         <input
             type="radio"
@@ -6,7 +7,7 @@
             :checked="option.value === value"
             :disabled="option.disabled"
             :id="option.value"
-            :name="name"
+            :name="`${name}-${postfix}`"
             :value="option.value"
             @change="updateModel($event)">
 
@@ -17,5 +18,4 @@
 
         </label>
     </template>
-
-</div>
+</component>

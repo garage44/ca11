@@ -7,13 +7,13 @@
     padding-left: var(--spacer);
 
     &__option {
+        background: none;
         border-left: 0;
         border-right: 0;
         height: $space-4;
         padding: $spacer * 1.5 0;
         text-align: center;
         user-select: none;
-        // width: 100%;
 
         &:not([disabled]):hover {
             color: var(--primary-base);

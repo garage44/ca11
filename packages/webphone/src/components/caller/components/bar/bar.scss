@@ -3,16 +3,14 @@
 
 
 .c-caller-bar {
-    $self: &;
     background: var(--bg-default);
-    bottom: 0;
     color: var(--primary-base);
     display: flex;
     font-family: 'Rajdhani';
     font-weight: 600;
-    height: $space-4;
+    height: var(--space-4);
     justify-content: space-between;
-    position: absolute;
+    top: 0;
     width: 100%;
     z-index: 100;
 
@@ -47,25 +45,10 @@
             margin: 0 var(--spacer);
         }
 
-        &-timer {
+        .timer {
             padding-right: var(--spacer);
             text-align: right;
             width: $space-4;
         }
-    }
-
-    &__context-switch-leave-active,
-    &__context-switch-enter-active {
-        transition: transform 0.3s ease;
-    }
-
-    &__context-switch-enter,
-    &__context-switch-leave-to {
-        transform: translateY(#{-$space-4});
-    }
-
-    &__context-switch-enter-to,
-    &__context-switch-leave {
-        transform: translateY(0);
     }
 }

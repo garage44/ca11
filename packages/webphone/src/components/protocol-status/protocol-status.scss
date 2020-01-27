@@ -12,23 +12,15 @@
         color: var(--red-color);
     }
 
-    .sig11-registered .label-sip,
-    .sip-registered .label-sig11 {
-        label {
-            color: var(--primary-base);
-        }
+    .sig11-registered .radio-sig11:checked + .label-sig11,
+    .sip-registered .radio-sip:checked .label-sip {
+        color: var(--primary-base);
     }
 
     .protocol-status {
         display: flex;
-        flex-direction: row;
         margin-bottom: 0;
         width: 100%;
-
-        label {
-            width: 50%;
-        }
-
 
         button {
             padding: $spacer 0;

@@ -1,6 +1,4 @@
-<component
-    class="c-stream-view"
-    :class="classes('component')"
+<component class="c-stream-view" :class="classes('component')"
 >
     <div :key="slot.id" class="slot" v-for="(slot, index) in slots">
 

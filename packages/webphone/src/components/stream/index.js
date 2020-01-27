@@ -1,8 +1,7 @@
 module.exports = (app) => {
     let recorder, recorderData, types
-    // Android crashes at the moment on getDisplayMedia.
-    if (app.env.isAndroid) types = ['audio', 'video']
-    else types = ['audio', 'video', 'display']
+
+    types = ['audio', 'video', 'display']
 
     /**
     * @memberof fg.components

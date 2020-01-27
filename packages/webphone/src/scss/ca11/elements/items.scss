@@ -1,33 +1,31 @@
-/**
-* Generic layout for an item list.
-*/
+.items-empty {
+    align-items: center;
+    color: var(--bg-light);
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    overflow: hidden;
+    width: 100%;
+
+    .icon {
+        @include icon-size($spacer * 40);
+    }
+
+    .text {
+        font-family: 'Rajdhani';
+        font-size: 4rem;
+        font-weight: 500;
+        margin-top: var(--spacer);
+        text-align: center;
+    }
+}
+
 .items {
     align-items: stretch;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     padding: var(--spacer);
-
-    .items-empty {
-        align-items: center;
-        color: var(--grey-200);
-        display: flex;
-        flex-direction: column;
-        margin-top: $spacer * 5;
-        width: 100%;
-
-        .icon {
-            @include icon-size($spacer * 20);
-        }
-
-        .text {
-            font-family: 'Rajdhani';
-            font-size: 4rem;
-            font-weight: 500;
-            margin-top: var(--spacer);
-            text-align: center;
-        }
-    }
 
     @media screen and (min-width: $breakpoint-mobile) {
         .item {
@@ -60,15 +58,17 @@
             display: flex;
         }
 
-        .header-icon {
-            background: var(--grey-300);
-            border: $spacer / 4 solid var(--primary-base);
-            fill: var(--primary-base);
-        }
+        .header {
+            .header-icon {
+                background: var(--grey-300);
+                border: $spacer / 4 solid var(--primary-base);
+                fill: var(--primary-base);
+            }
 
-        .header-title:hover,
-        &:hover {
-            cursor: default;
+            .header-title:hover,
+            &:hover {
+                cursor: default;
+            }
         }
     }
 
@@ -81,7 +81,7 @@
 
         .header-icon {
             @include icon-size($icon-large);
-            background: var(--grey-400);
+            background: var(--bg-dark);
             border: $spacer / 4 solid var(--grey-200);
             border-radius: 50%;
             fill: var(--grey-100);

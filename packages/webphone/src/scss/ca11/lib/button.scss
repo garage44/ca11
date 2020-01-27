@@ -42,7 +42,11 @@
         }
 
         &[disabled] {
-            color: var(--grey-50);
+            color: var(--grey-200);
+
+            &:hover {
+                color: var(--bg-light);
+            }
         }
     }
 

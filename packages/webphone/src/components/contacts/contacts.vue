@@ -1,8 +1,6 @@
 <component class="c-contacts module">
 
     <panel>
-        <div class="module-name">{{$t('contacts')}}</div>
-
         <div class="actions">
             <button class="action button button--menu"
                 :class="{'active': editMode}"
@@ -41,14 +39,12 @@
     </panel>
 
     <content class="no-padding" v-click-outside="toggleSelectItem">
+        <div v-if="!filteredContacts.length" class="items-empty">
+            <icon class="icon" name="contact"/>
+        </div>
+        <div v-else class="items">
 
-        <div class="items">
-            <div v-if="!filteredContacts.length" class="items-empty">
-                <icon class="icon" name="contact-add"/>
-                <div class="text cf">{{$t('no {target}', {target: $t('contacts')})}}</div>
-            </div>
-
-            <div v-else class="item contact" :class="{selected: contact.selected}"
+            <div class="item contact" :class="{selected: contact.selected}"
                 @click.stop="toggleSelectItem(contact, true)"
                 v-for="contact in filteredContacts">
 

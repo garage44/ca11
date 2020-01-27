@@ -1,6 +1,8 @@
 module.exports = (app) => {
     app.components.CallerSwitcher = Vue.component('CallerSwitcher', require('./components/switcher')(app))
     app.components.CallerBar = Vue.component('CallerBar', require('./components/bar')(app))
+
+    let types = ['audio', 'video', 'display']
     /**
     * @memberof fg.components
     */
@@ -15,6 +17,9 @@ module.exports = (app) => {
             },
         }, app.helpers.sharedComputed()),
         methods: Object.assign({
+            callDescription: function(...args) {
+                app.modules.caller.call(...args)
+            },
             classes: function(block) {
                 let classes = {}
                 if (block === 'component') {
@@ -22,6 +27,12 @@ module.exports = (app) => {
                     else classes['t-st-caller-idle'] = true
                 }
                 return classes
+            },
+            switchStream: function() {
+                // Step through streamTypes.
+                const nextStreamType = types[(types.indexOf(this.stream.type) + 1) % types.length]
+                // Maintain selected state between streams.
+                app.media.query(nextStreamType, {selected: this.stream.selected})
             },
         }, app.helpers.sharedMethods()),
         render: templates.caller.r,

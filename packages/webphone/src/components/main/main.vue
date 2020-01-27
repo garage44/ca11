@@ -2,8 +2,8 @@
     <!-- Force the telemetry window to show up -->
     <Notifications :class="classes('notifications')"/>
 
-    <transition name="c-status__context-switch" mode="out-in" appear>
-        <CallerBar v-if="session.authenticated" class="c-main__status"/>
+    <transition name="tr-caller-bar" mode="out-in" appear>
+        <CallerBar v-if="callsExist" class="c-main__status"/>
     </transition>
 
     <Session v-if="!session.authenticated"/>

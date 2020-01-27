@@ -2,8 +2,6 @@
 @import 'ca11/lib/mixins';
 
 .c-keypad {
-    $self: &;
-
     .content__header {
         flex: $space-4 0 0;
     }
@@ -66,7 +64,6 @@
         border-top-left-radius: 15px;
         width: 100%;
 
-
         &.selected {
             filter: grayscale(0%);
         }
@@ -77,72 +74,7 @@
 
     }
 
-    &__input {
-        align-items: flex-start;
-        color: var(--primary-base);
-        display: flex;
-        position: relative;
-        width: 100%;
-
-        input {
-            background: none;
-            border: 0;
-            color: var(--primary-base);
-            font-size: var(--text-huge);
-            font-weight: 600;
-            height: $space-4 * 1.5;
-            outline: none;
-            overflow: hidden;
-            text-align: center;
-            text-overflow: ellipsis;
-            width: 100%;
-
-            &[disabled='disabled'] {
-                &::placeholder {
-                    color: var(--grey-200);
-                }
-            }
-
-            &::placeholder {
-                color: var(--primary-base);
-            }
-        }
-
-        #{$self}__correct {
-            color: var(--primary-base);
-            position: absolute;
-            right: var(--spacer);
-            top: $spacer * 4;
-            user-select: none;
-
-            &.disabled {
-                opacity: 0.5;
-
-                &:hover {
-                    cursor: not-allowed;
-                }
-            }
-
-            svg {
-                height: 1.8rem;
-                width: 1.8rem;
-            }
-
-            &:hover {
-                cursor: pointer;
-                svg {fill: var(--primary-base);}
-            }
-        }
-
-        + .number-input-match {
-            color: var(--grey-400);
-            height: $spacer * 5;
-            line-height: $spacer * 5;
-        }
-    }
-
-
-    &__keys {
+    .keys-container {
         align-content: center;
         display: flex;
         flex-direction: column;
@@ -163,7 +95,7 @@
             }
         }
 
-        #{$self}__key-row {
+        .key-row {
             display: flex;
             flex: 1;
             justify-content: center;
@@ -172,7 +104,7 @@
             min-height: 80px;
             width: 100%;
 
-            #{$self}__key {
+            .key {
                 border: 0;
                 break-inside: avoid;
                 color: var(--grey-100);

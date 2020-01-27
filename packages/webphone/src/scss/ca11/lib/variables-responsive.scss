@@ -2,13 +2,13 @@
 
 .theme-default-dark {
     --primary-base: #{$primary-color};
-    --primary-dark: mix(#000, #{$primary-color}, 35%);
     --primary-light: mix(#fff, #{$primary-color}, 25%);
 
     --secondary-base: #{var(--secondary-base)};
     --secondary-dark: #{palette('secondary', 'dark')};
     --secondary-light: #{palette('secondary', 'light')};
 
+    --bg-light: #{rgba(#575d63, 0.4)};
     --bg-default: #{rgba(#23282d, 0.8)};
     --bg-dark: #{rgba(#1b2025, 0.8)};
 
@@ -29,7 +29,7 @@
     --text-small: 0.7rem;
     --text-base: 1.1rem;
     --text-large: 1.1rem;
-    --text-huge: 2rem;
+    --text-huge: 1.8rem;
 
     --border: 1px;
     --gutter: 8px;

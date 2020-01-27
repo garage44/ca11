@@ -69,11 +69,8 @@ button {
     }
 
     &[disabled] {
-        svg {fill: var(--grey-200);}
-
         &:hover {
             cursor: not-allowed;
-            svg {fill: var(--grey-100);}
         }
     }
 }

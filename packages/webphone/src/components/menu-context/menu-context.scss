@@ -2,6 +2,10 @@
 @import 'ca11/lib/variables';
 
 .c-menu {
+    .c-protocol-status {
+        background: var(--bg-default);
+    }
+
     .button-quit {
         margin-top: calc(var(--spacer) * 2);
     }

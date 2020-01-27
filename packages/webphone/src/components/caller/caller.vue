@@ -1,17 +1,31 @@
-<component class="c-caller t-caller module" :class="classes('component')">
+<StreamView v-if="callActive && !callActive.keypad.active" :call="callActive"/>
+<component v-else class="c-caller t-caller module" :class="classes('component')">
 
-    <StreamView v-if="stream[stream.type].selected" :call="null"/>
+    <panel>
+        <div class="actions">
+            <button class="action button button--menu t-btn-options-call-start tooltip tooltip-bottom"
+                :data-tooltip="$t('switch media')"
+                @click.stop="switchStream()"
+            ><icon :name="stream.type"/></button>
+            <button class="action button button--menu t-btn-options-call-start tooltip tooltip-bottom"
+                :data-tooltip="$t('start new call')"
+                :disabled="!description.endpoint"
+                @click="callDescription({description})"
+            ><icon name="phone"/></button>
+        </div>
+    </panel>
+    <content class="no-padding">
 
-    <content v-else>
-        <Call v-if="callActive" :call="callActive"/>
+        <CallInputEndpoint/>
+
         <Keypad
-            v-else
             display="touch"
             mode="call"
             :endpoint="description.endpoint"
             :model.sync="description.endpoint"
         />
     </content>
+
 
 
     <!-- calling disabled -->

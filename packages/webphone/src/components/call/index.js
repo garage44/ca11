@@ -1,5 +1,6 @@
 module.exports = (app) => {
     const components = {
+        CallInputEndpoint: require('./components/input-endpoint'),
         CallOptions: require('./components/options'),
         CallTransfer: require('./components/transfer'),
         Keypad: require('./components/keypad'),

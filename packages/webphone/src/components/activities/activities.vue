@@ -1,16 +1,17 @@
 <component class="c-activities module">
 
     <panel>
-        <div class="module-name">{{$t('activity')}}</div>
-
         <div class="actions">
-            <button class="action button button--menu" :class="{'active': editMode}" @click.stop="toggleEditMode()">
-                <icon name="edit"/>
-            </button>
+            <button class="action button button--menu tooltip tooltip-bottom"
+                :class="{'active': editMode}"
+                :data-tooltip="$t('edit mode')"
+                @click.stop="toggleEditMode()"
+            ><icon name="edit"/></button>
 
-            <button class="action button button--menu" :disabled="!editMode" @click.stop="deleteActivities()">
-                <icon name="delete"/>
-            </button>
+            <button class="action button button--menu tooltip tooltip-bottom"
+                :data-tooltip="$t('clear history')"
+                :disabled="!editMode" @click.stop="deleteActivities()"
+            ><icon name="delete"/></button>
         </div>
 
         <div class="filters">
@@ -38,14 +39,11 @@
     </panel>
 
     <content class="scrollable no-padding" v-click-outside="toggleSelectItem">
-        <div class="items">
-
-            <div v-if="!filteredActivities.length" class="items-empty">
-                <icon class="icon" name="activities"/>
-                <div class="text cf">{{$t('no {target}', {target: $t('activity')})}}</div>
-            </div>
-
-            <div v-else class="item activity" :class="{selected: activity.selected}"
+        <div v-if="!filteredActivities.length" class="items-empty">
+            <icon class="icon" name="activities"/>
+        </div>
+        <div v-else class="items">
+            <div class="item activity" :class="{selected: activity.selected}"
                 v-for="activity of filteredActivities"
                 @click.stop="toggleSelectItem(activity, true)">
 

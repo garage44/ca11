@@ -2,18 +2,15 @@
 @import 'ca11/lib/mixins';
 
 .c-radio {
-    background: var(--bg-default);
-
     input {
         border: 0;
         height: 0;
         overflow: hidden;
-        position: absolute !important;
+        position: absolute;
         width: 0;
 
         &[disabled='disabled'] + label {
-            background: var(--bg-default);
-            color: var(--grey-200);
+            color: var(--grey-50);
 
             &:hover {
                 cursor: not-allowed;
@@ -21,24 +18,24 @@
         }
 
         &:checked + label {
-            background: var(--grey-500);
+            background: var(--grey-300);
             color: var(--primary-base);
         }
     }
 
     label {
-        // background: var(--grey-300);
         color: var(--grey-200);
         display: inline-block;
         font-family: 'Rajdhani';
         font-size: 0.9rem;
         font-weight: 600;
+        height: $spacer * 5;
 
-        line-height: $spacer * 4;
+        line-height: calc(var(--spacer) * 5);
         text-align: center;
         text-shadow: none;
         transition: all 0.2s ease-in-out;
-        width: $spacer * 5;
+        width: calc(var(--spacer) * 5);
 
         svg {
             @include icon-size(var(--icon-normal));

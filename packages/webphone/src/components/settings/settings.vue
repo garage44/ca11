@@ -1,7 +1,14 @@
 <component class="c-settings module t-settings">
 
     <panel>
-        <div class="module-name">{{$t('settings')}}</div>
+        <div class="actions">
+            <button class="action button button--menu tooltip tooltip-bottom"
+                :disabled="$v.$invalid"
+                :data-tooltip="$t('save settings')"
+                @click.stop="save">
+                <icon name="database"/>
+            </button>
+        </div>
         <ul class="tabs">
             <li class="tab button button--menu tooltip tooltip-bottom"
                 :class="classes('tabs', 'general')"
@@ -182,15 +189,6 @@
                 :help="$t('the url to open when a call comes in.')"
                 :validation="$v.sip.endpoint"
             />
-        </div>
-
-
-        <div class="tabs-actions">
-            <button
-                class="button button--widget primary t-btn-settings-save"
-                :disabled="$v.$invalid"
-                @click="save"
-            >{{$t('save settings')}}</button>
         </div>
     </content>
 </component>

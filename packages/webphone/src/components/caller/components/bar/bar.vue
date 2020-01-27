@@ -1,4 +1,4 @@
-<component class="c-caller-bar" v-if="callsExist">
+<component class="c-caller-bar">
 
     <div class="call-direction">
         <icon v-if="call" :name="`call-${call.direction}`"/>
@@ -25,7 +25,7 @@
         <span>{{callStatus}}</span>
         <icon name="nodes" v-if="call.protocol === 'sig11'"/>
         <icon name="cloud" v-else-if="call.protocol === 'sip'"/>
-        <span class="c-status-call__status-timer">{{sessionTime}}</span>
+        <span class="timer">{{sessionTime}}</span>
     </div>
     <div v-else class="call-status">
         <span>{{$t('new call')}}</span>

@@ -1,10 +1,5 @@
 module.exports = (app) => {
 
-    const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '#']
-
-    /**
-    * @memberof fg.components
-    */
     const CallKeypad = {
         computed: Object.assign({
             matchedContact: function() {
@@ -20,13 +15,6 @@ module.exports = (app) => {
                 }
                 return null
             },
-            protocols: function() {
-                let protocols = [
-                    {disabled: !this.sip.enabled, name: 'SIP', value: 'sip'},
-                    {disabled: !this.sig11.enabled, name: 'SIG11', value: 'sig11'},
-                ]
-                return protocols
-            },
         }, app.helpers.sharedComputed()),
         methods: Object.assign({
             activateMedia: function() {
@@ -40,43 +28,11 @@ module.exports = (app) => {
 
                 app.emit('caller:call-activate', {callId: null})
             },
-            callDescription: function(...args) {
-                app.modules.caller.call(...args)
-            },
-            callTitle: function(call) {
-                const translations = app.helpers.getTranslations().call
-                let text
-                if (!call) {
-                    text = translations.media
-                } else {
-                    text = `${call.number} - `
-                    if (call.hold.active) text += translations.hold
-                    else text += translations[call.status]
-                }
-
-                return text.ca()
-            },
-            inputChange: function(newVal) {
-                this.$emit('update:model', newVal)
-            },
             press: function(key) {
-                if (!allowedKeys.includes(key)) return
-                let newVal = app.utils.sanitizeNumber(`${this.endpoint}${key}`)
-                if (newVal) {
-                    this.$emit('update:model', newVal)
-                }
                 if (this.mode === 'dtmf') {
                     app.emit('sip:dtmf', {callId: this.call.id, key})
                 }
-                navigator.vibrate(100)
-                app.sounds.beep(5, 750, 50)
-            },
-            removeLastChar: function() {
-                if (this.callingDisabled) return
-                if (this.endpoint) {
-                    navigator.vibrate(100)
-                    this.$emit('update:model', this.endpoint.substring(0, this.endpoint.length - 1))
-                }
+                this.description.endpoint += key
             },
             toggleNodeView: function() {
                 app.setState({sig11: {

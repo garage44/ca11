@@ -51,9 +51,7 @@ module.exports = (app) => {
             classes: function(block) {
                 const classes = {}
                 if (block === 'component') {
-                    if (this.slots.length === 1) classes['slots-preview'] = true
-                    else if (this.slots.length === 2) classes['slots-call'] = true
-                    else classes['slots-conference'] = true
+                    classes[`grid-${this.slots.length}`] = true
                 }
                 return classes
             },
