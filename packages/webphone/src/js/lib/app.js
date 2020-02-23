@@ -1,4 +1,4 @@
-const Skeleton = require('@ca11/boilerplate')
+import Skeleton from '@ca11/boilerplate'
 
 
 /**
@@ -312,4 +312,4 @@ class App extends Skeleton {
     }
 }
 
-module.exports = App
+export default App

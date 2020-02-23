@@ -260,7 +260,7 @@ class RingTone extends Sound {
 }
 
 
-module.exports = class Sounds {
+export default class Sounds {
 
     constructor(app) {
         this.app = app

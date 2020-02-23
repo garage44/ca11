@@ -1,7 +1,7 @@
 /**
 * @module ModuleCalls
 */
-const Call = require('../call')
+import Call from '../call'
 
 /**
 * Call implementation for incoming and outgoing calls

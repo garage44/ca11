@@ -1,7 +1,7 @@
 /**
 * @module ModuleCalls
 */
-const Call = require('../call')
+import Call from '../call'
 
 /**
 * Call implementation for incoming and outgoing calls
@@ -218,4 +218,4 @@ class CallSIG11 extends Call {
     }
 }
 
-module.exports = CallSIG11
+export default CallSIG11

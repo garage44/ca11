@@ -1,5 +1,5 @@
-const SIPCaller = require('./sip')
-const SIG11Caller = require('./sig11')
+import SIPCaller from './sip'
+import SIG11Caller from './sig11'
 /**
 * Main entrypoint for Calls.
 * @memberof AppBackground.plugins
@@ -446,4 +446,4 @@ class ModuleCaller extends Module {
     }
 }
 
-module.exports = ModuleCaller
+export default ModuleCaller

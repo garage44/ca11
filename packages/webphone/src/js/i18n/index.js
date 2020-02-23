@@ -1,4 +1,5 @@
-const I18n = require('../lib/i18n')
+import I18n from '../lib/i18n'
+import {nl} from './nl'
 
 /**
 * Process all translations from Ca11 and its modules.
@@ -11,8 +12,7 @@ class I18nTranslations extends I18n {
 
     constructor(app, plugins) {
         super(app)
-        this.translations.nl = require('./nl')
-        // this.loadPluginsI18n(plugins)
+        this.translations.nl = nl
     }
 }
 

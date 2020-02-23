@@ -1,4 +1,4 @@
-const SIG11Call = require('./call')
+import SIG11Call from './call'
 
 
 /**
@@ -86,4 +86,4 @@ class SIG11Caller {
     }
 }
 
-module.exports = SIG11Caller
+export default SIG11Caller

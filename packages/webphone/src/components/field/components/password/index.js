@@ -1,4 +1,4 @@
-module.exports = (app, base) => {
+export default (app, base) => {
     /**
     * @memberof fg.components
     */

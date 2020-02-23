@@ -1,4 +1,4 @@
-module.exports = (app) => {
+export default (app) => {
     let recorder, recorderData, types
 
     types = ['audio', 'video', 'display']

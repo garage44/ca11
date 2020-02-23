@@ -186,4 +186,4 @@ class Devices {
     }
 }
 
-module.exports = Devices
+export default Devices

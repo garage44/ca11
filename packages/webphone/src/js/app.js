@@ -1,11 +1,11 @@
-const Crypto = require('@ca11/sig11/src/crypto')
+import Crypto from '@ca11/sig11/src/crypto'
 
-const App = require('./lib/app')
-const Devices = require('./lib/devices')
-const StateStore = require('./lib/store')
-const Media = require('./lib/media')
-const Session = require('./lib/session')
-const Sounds = require('./lib/sounds')
+import App from './lib/app'
+import Devices from './lib/devices'
+import StateStore from './lib/store'
+import Media from './lib/media'
+import Session from './lib/session'
+import Sounds from './lib/sounds'
 
 global.Module = require('./lib/module')
 

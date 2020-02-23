@@ -1,6 +1,6 @@
 /**
  * Generic base class for each module. Modules can be used in
- * AppBackground and AppForeground to separate logical blocks
+ * AppBackground and AppForeground to seperate logical blocks
  * of functionality from each other and to keep everything clear.
  */
 class Module extends EventEmitter {
@@ -14,4 +14,4 @@ class Module extends EventEmitter {
     }
 }
 
-module.exports = Module
+export default Module

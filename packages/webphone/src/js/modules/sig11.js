@@ -290,5 +290,4 @@ class ModuleSIG11 extends Module {
     }
 }
 
-
-module.exports = ModuleSIG11
+export default ModuleSIG11

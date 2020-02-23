@@ -1,8 +1,4 @@
 /**
-* @module ModuleCalls
-*/
-
-/**
  * Base Call class that each implementation of a Call must use.
  * Currently used by CallConnectAB and CallSIP.
  */
@@ -366,4 +362,4 @@ class Call {
 }
 
 
-module.exports = Call
+export default Call

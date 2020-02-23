@@ -1,6 +1,6 @@
 /*eslint max-len:0 */
 /*eslint quote-props: 0 */
-module.exports = {
+export default {
     '{name} introduces easy, secure and free P2P Web Telephony that protects your privacy.': '{name} introduceert eenvoudige, veilige en gratis P2P Web Telefonie die je privacy waarborgt.',
     '{name} supports connecting to SIP networks, but {vendor} is not a SIP provider.': '{name} ondersteunt bellen via SIP netwerken, maar {vendor} is geen SIP provider.',
     '{vendor} is a free and open software project. Stargaze {vendor}, make a feature request or report an issue on Github.': '{vendor} is een vrij en open software project. Stargaze {vendor}, maak een feature request of rapporteer een probleem via Github.',

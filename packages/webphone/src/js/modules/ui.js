@@ -90,4 +90,4 @@ class PluginUI extends Module {
 
 }
 
-module.exports = PluginUI
+export default PluginUI

@@ -101,4 +101,4 @@ class ModuleActivity extends Module {
     }
 }
 
-module.exports = ModuleActivity
+export default ModuleActivity

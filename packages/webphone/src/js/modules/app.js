@@ -164,4 +164,4 @@ class ModuleApp extends Module {
     }
 }
 
-module.exports = ModuleApp
+export default ModuleApp

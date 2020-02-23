@@ -1,5 +1,5 @@
 
-const SessionDescriptionHandler = require('./sdh')
+import SessionDescriptionHandler from './sdh'
 
 /**
 * SIP Network logic for CA11 clients.
@@ -246,4 +246,4 @@ class ModuleSIP extends Module {
 
 }
 
-module.exports = ModuleSIP
+export default ModuleSIP

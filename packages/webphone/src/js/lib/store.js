@@ -105,4 +105,4 @@ class StateStore {
     }
 }
 
-module.exports = StateStore
+export default StateStore

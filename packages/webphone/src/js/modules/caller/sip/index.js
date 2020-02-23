@@ -1,4 +1,4 @@
-const SIPCall = require('./call')
+import SIPCall from './call'
 
 
 /**
@@ -79,4 +79,4 @@ class SIPCaller {
 
 }
 
-module.exports = SIPCaller
+export default SIPCaller

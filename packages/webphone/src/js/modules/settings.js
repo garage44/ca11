@@ -119,4 +119,4 @@ class ModuleSettings extends Module {
     }
 }
 
-module.exports = ModuleSettings
+export default ModuleSettings

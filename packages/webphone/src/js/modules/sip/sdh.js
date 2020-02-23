@@ -649,4 +649,4 @@ SessionDescriptionHandler.prototype = Object.create(SIP.SessionDescriptionHandle
     },
 })
 
-module.exports = SessionDescriptionHandler
+export default SessionDescriptionHandler

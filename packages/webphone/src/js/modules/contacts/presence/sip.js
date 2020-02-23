@@ -1,4 +1,4 @@
-module.exports = function(app, module) {
+export default function(app, module) {
     return {
         /**
         * Parse an incoming XML request body and return
