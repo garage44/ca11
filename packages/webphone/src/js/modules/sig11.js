@@ -264,7 +264,7 @@ class ModuleSIG11 extends Module {
         const nodeEcPublicKeyRaw = signedPublicKeyRaw.slice(0, position)
 
         const nodeRsaPubKey = await crypto.subtle.importKey(
-            'jwk', node.publicKey, this.network.crypto.rsa.params, true, ['verify'],
+            'jwk', node.publicKey, this.app.crypto.rsa.params, true, ['verify'],
         )
 
         // Verify that this message came from the public rsa identity.

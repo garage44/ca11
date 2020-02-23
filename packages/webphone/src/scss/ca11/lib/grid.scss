@@ -7,11 +7,11 @@
     grid-gap: calc(var(--spacer) / 2);
     grid-template-areas:
         'body-header body-header body-header'
-        'body-gutter-left body-content body-gutter-right'
-        'body-footer body-footer body-footer';
+        'body-gutter-left body-content body-gutter-right';
+
 
     grid-template-columns: $space-4 1fr $space-4; // menu content menu
-    grid-template-rows: $space-4 1fr $space-4;
+    grid-template-rows: $space-4 1fr;
 
     &__menu {
         grid-area: body-gutter-left;
@@ -54,10 +54,6 @@
 
     &__media-controls {
         grid-area: body-gutter-right;
-    }
-
-    .c-notifications {
-        grid-area: body-footer;
     }
 
     .c-caller-bar {

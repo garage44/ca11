@@ -121,6 +121,7 @@ class CallSIP extends Call {
         })
 
         this.session.on('reinvite', (session, request) => {
+            this.app.logger.debug(`${this}<event:reinvite>`)
             // Seems to be a timing issue in SIP.js. After a transfer,
             // the old name is keps in assertedIdentity, unless a timeout
             // is added.
@@ -138,6 +139,7 @@ class CallSIP extends Call {
     * @param {RTCTrackEvent} e - Contains track information.
     */
     onTrack(e) {
+        this.app.logger.debug(`${this}<event:onTrack>`)
         let stream = e.streams[0]
 
         // The audio track of the stream is always added first.
@@ -186,11 +188,13 @@ class CallSIP extends Call {
 
         // Notify user about the new call being setup.
         this.session.on('accepted', (data) => {
+            this.app.logger.debug(`${this}<event:accepted>`)
             this._start({message: this.translations.accepted})
         })
 
         // Reset call state when the other halve hangs up.
         this.session.on('bye', (e) => {
+            this.app.logger.debug(`${this}<event:bye>`)
             super.terminate('bye')
         })
 
@@ -203,6 +207,7 @@ class CallSIP extends Call {
         * 183: Session in Progress
         */
         this.session.on('progress', (e) => {
+            this.app.logger.debug(`${this}<event:progress>`)
             if ([180, 181, 182, 183].includes(e.status_code)) {
                 this.app.sounds.ringbackTone.play()
             }
@@ -211,12 +216,14 @@ class CallSIP extends Call {
 
         // Blind transfer.
         this.session.on('refer', (target) => {
+            this.app.logger.debug(`${this}<event:refer>`)
             this.session.bye()
         })
 
         // The user is being transferred; update the caller
         // info from the P-Asserted-Identity header.
         this.session.on('reinvite', (session) => {
+            this.app.logger.debug(`${this}<event:reinvite>`)
             // Seems to be a timing issue in SIP.js. After a transfer,
             // the old name is keps in assertedIdentity, unless a timeout
             // is added.

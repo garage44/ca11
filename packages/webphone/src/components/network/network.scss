@@ -15,16 +15,20 @@ html.chrome.android {
 
 
 .c-network {
-    width: 100%;
+
+    // height: calc(100% - var(--spacer) * 11);
+
 
     .svg-container {
-        background: linear-gradient(to right, var(--grey-0), var(--grey-50));
-        height: calc(100vh - #{$space-4 * 2 + $spacer * 1.5});
-        position: relative;
-        width: 100%;
+        background: var(--bg-default);
+        display: flex;
+        // height: 500px;
+        // position: relative;
+        // width: 100%;
 
         svg {
-            height: calc(100vh - #{$space-4 * 2 + $spacer * 1.5});
+            height: calc(100% - (var(--spacer) * 11));
+            // height: calc(100vh - #{$space-4 * 2 + $spacer * 1.5});
             width: 100%;
             z-index: 10000;
 

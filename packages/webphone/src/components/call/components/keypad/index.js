@@ -34,11 +34,6 @@ module.exports = (app) => {
                 }
                 this.description.endpoint += key
             },
-            toggleNodeView: function() {
-                app.setState({sig11: {
-                    network: {view: !this.sig11.network.view}},
-                }, {persist: true})
-            },
         }, app.helpers.sharedMethods()),
         props: {
             call: {default: null},

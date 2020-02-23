@@ -1,8 +1,6 @@
 <component class="c-keypad t-keypad" tabindex="-1">
 
-    <Network v-if="description.protocol === 'sig11' && sig11.network.view"/>
-
-    <div v-else class="container">
+    <div class="container">
         <Stream class="local"
             :controls="true"
             :stream="stream[stream.type]"

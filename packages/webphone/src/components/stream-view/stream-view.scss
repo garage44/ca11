@@ -3,33 +3,34 @@
 
 .c-stream-view {
     align-items: stretch;
-    display: flex;
-    flex: 1;
-    flex-wrap: wrap;
+    display: grid;
     height: 100%;
-    justify-content: space-evenly;
     position: relative;
+    width: 100%;
 
     .slot {
-        height: 50%;
-        max-height: 50%;
+        height: 100%;
+        width: 100%;
     }
 
     @media screen {
-        flex-direction: column;
+        &.grid-2 {
+            grid-gap: calc(var(--spacer) / 2);
+            grid-template-rows: 1fr 1fr;
 
-        .slot {
-            width: 100%;
+            .slot-1 {grid-area: 1 / 1;}
+            .slot-2 {grid-area: 2 / 1;}
         }
     }
 
-    @media screen and (min-width: $breakpoint-desktop) {
-        align-items: center;
-        flex-direction: row;
-        height: 100%;
+    @media screen and (min-width: $breakpoint-tablet) {
+        &.grid-2 {
+            grid-gap: calc(var(--spacer) / 2);
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr;
 
-        .slot {
-            width: 50%;
+            .slot-1 {grid-area: 1 / 1;}
+            .slot-2 {grid-area: 1 / 2;}
         }
     }
 
@@ -40,7 +41,6 @@
         display: flex;
         flex: 1;
         height: 100%;
-        margin: var(--spacer);
         padding: var(--spacer);
         transition: all 0.25s;
 

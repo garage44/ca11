@@ -34,12 +34,18 @@ module.exports = (app) => {
                 // Maintain selected state between streams.
                 app.media.query(nextStreamType, {selected: this.stream.selected})
             },
+            toggleNodeView: function() {
+                app.setState({sig11: {
+                    network: {view: !this.sig11.network.view}},
+                }, {persist: true})
+            },
         }, app.helpers.sharedMethods()),
         render: templates.caller.r,
         staticRenderFns: templates.caller.s,
         store: {
             calls: 'caller.calls',
             description: 'caller.description',
+            sig11: 'sig11',
             stream: 'settings.webrtc.media.stream',
             ui: 'ui',
         },

@@ -12,13 +12,19 @@
                 :disabled="!description.endpoint"
                 @click="callDescription({description})"
             ><icon name="phone"/></button>
+            <button class="action button button--menu t-btn-options-call-network tooltip tooltip-bottom"
+                :data-tooltip="$t('toggle network view')"
+                :disabled="!description.protocol === 'sig11'"
+                @click="toggleNodeView()"
+            ><icon name="share"/></button>
         </div>
     </panel>
     <content class="no-padding">
 
         <CallInputEndpoint/>
 
-        <Keypad
+        <Network v-if="description.protocol === 'sig11' && sig11.network.view"/>
+        <Keypad v-else
             display="touch"
             mode="call"
             :endpoint="description.endpoint"

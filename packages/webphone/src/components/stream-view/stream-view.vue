@@ -1,6 +1,6 @@
 <component class="c-stream-view" :class="classes('component')"
 >
-    <div :key="slot.id" class="slot" v-for="(slot, index) in slots">
+    <div :key="slot.id" class="slot" v-for="(slot, index) in slots" :class="`slot-${index + 1}`">
 
         <div v-if="slot.type === 'placeholder'"  class="c-stream placeholder">
             <icon class="c-stream__icon" name="caller"/>
