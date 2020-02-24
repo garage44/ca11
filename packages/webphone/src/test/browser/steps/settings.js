@@ -1,4 +1,4 @@
-module.exports = function(_) {
+export default function(_) {
     return {
         enableSip: async function(actor) {
             await _.step(actor, 'enable sip')

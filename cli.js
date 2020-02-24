@@ -23,7 +23,10 @@ import tinylr from 'tiny-lr'
 import VuePack from '@garage11/vuepack'
 import yargs from 'yargs'
 
-let settings = rc('vuepack-demo', {host: '127.0.0.1', port: 35729})
+let settings = rc('ca11', {host: '127.0.0.1', port: 35729})
+import themeSettings from '@ca11/theme'
+settings.theme = themeSettings
+
 settings.baseDir = path.resolve(path.join(__dirname, '../'))
 settings.buildDir = path.join(settings.baseDir, 'build')
 settings.srcDir = path.resolve(path.join(settings.baseDir, 'packages', 'webphone', 'src'))
@@ -31,13 +34,13 @@ settings.srcDir = path.resolve(path.join(settings.baseDir, 'packages', 'webphone
 const tasks = {}
 
 const cleanCSS = new CleanCSS({level: 2, returnPromise: true, sourceMap: true})
-const vuePack = new VuePack({pathfilter: ['src', 'components']})
+const vuePack = new VuePack({pathfilter: ['packages', 'webphone', 'src', 'components']})
 
 // Maps tasks to entrypoints.
 const entrypoint = {
     html: 'index.html',
     js: 'js/app.js',
-    scss: 'scss/vue-snowpack/app.scss',
+    scss: 'scss/ca11/app.scss',
     vue: 'components/**/*.vue',
 }
 
@@ -99,12 +102,12 @@ tasks.scss = new Task('scss', async function() {
 
     return new Promise((resolve, reject) => {
         sass.render({
-            file: path.join('src', this.ep.dirname, `${this.ep.filename}.scss`),
+            file: path.join(settings.srcDir, this.ep.dirname, `${this.ep.filename}.scss`),
             importer: globImporter(),
             includePaths: [
                 'node_modules',
-                path.join('src', 'scss'),
-                path.join('src', 'scss', 'vue-snowpack'),
+                path.join(settings.srcDir, 'scss'),
+                path.join(settings.srcDir, 'scss', 'ca11'),
             ],
             outFile: target.css,
             sourceMap: !settings.production,
@@ -132,7 +135,7 @@ tasks.scss = new Task('scss', async function() {
 })
 
 tasks.vue = new Task('vue', async function() {
-    const targets = await globby([path.join('src', this.ep.raw)])
+    const targets = await globby([path.join('packages', 'webphone', 'src', this.ep.raw)])
     const templates = await vuePack.compile(targets)
     // This is an exceptional build target, because it is not
     // a module that is available from Node otherwise.

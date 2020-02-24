@@ -1,5 +1,6 @@
 {
   "name": "@ca11/sig11",
+  "type": "module",
   "version": "1.0.0",
   "description": "SIG11 messaging protocol",
   "author": "Garage11",

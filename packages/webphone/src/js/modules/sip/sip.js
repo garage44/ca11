@@ -1,5 +1,6 @@
 
-import SessionDescriptionHandler from './sdh'
+import SessionDescriptionHandler from './sdh.js'
+import Module from '../../lib/module.js'
 
 /**
 * SIP Network logic for CA11 clients.

@@ -1,4 +1,4 @@
-module.exports = (function() {
+export default (function() {
     const env = require('@ca11/boilerplate/env')()
 
     let options = {

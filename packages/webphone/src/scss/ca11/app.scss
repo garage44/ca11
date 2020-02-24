@@ -17,3 +17,6 @@
 @import 'elements/items';
 @import 'elements/notification-box';
 @import 'elements/tabs';
+
+// Import Vue components using the glob loader.
+@import '../../components/**/*.scss'; /* stylelint-disable-line */

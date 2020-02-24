@@ -1,4 +1,4 @@
-module.exports = (app) => {
+export default (app) => {
 
     const components = {
         DevicesConfig: require('./components/config'),

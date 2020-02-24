@@ -1,4 +1,4 @@
-module.exports = (app) => {
+export default (app) => {
     const components = {
         CallInputEndpoint: require('./components/input-endpoint'),
         CallOptions: require('./components/options'),

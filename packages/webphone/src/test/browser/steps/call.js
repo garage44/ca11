@@ -1,4 +1,4 @@
-module.exports = function(_) {
+export default function(_) {
 
     return {
         answerActor: async function(callee, caller, {protocol}) {

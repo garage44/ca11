@@ -1,3 +1,5 @@
+import Module from '../lib/module.js'
+
 // Cap the maximum amount of stored activities, so the
 // localStorage won't be grinded to a halt.
 const MAX_ACTIVITIES = 50

@@ -1,19 +1,19 @@
-import Crypto from '@ca11/sig11/src/crypto'
 
-import App from './lib/app'
-import Devices from './lib/devices'
-import StateStore from './lib/store'
-import Media from './lib/media'
-import Session from './lib/session'
-import Sounds from './lib/sounds'
+import Module from './lib/module.js'
+globalThis.Module = Module
 
-global.Module = require('./lib/module')
+import templates from './templates.js'
+import i18n from './i18n/i18n.js'
 
+import Crypto from '@ca11/sig11/src/crypto.js'
 
-/**
-* The CA11 namespace is the base of the CA11 application.
-* @namespace CA11
-*/
+import App from './lib/app.js'
+import Devices from './lib/devices.js'
+import StateStore from './lib/store.js'
+import Media from './lib/media.js'
+import Session from './lib/session.js'
+import Sounds from './lib/sounds.js'
+
 class CA11 extends App {
     /**
     * @param {Object} opts - Options to initialize AppBackground with.
@@ -329,11 +329,10 @@ class CA11 extends App {
     }
 }
 
+import options from './lib/options.js'
 
-const options = require('./lib/options')
 if (options.env.isBrowser) {
     this.ca11 = new CA11(options)
-} else {
-    // Help modules find the ca11 module alias from package.json
-    module.exports = {CA11, options}
 }
+
+export default {CA11, options}

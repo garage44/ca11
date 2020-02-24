@@ -1,16 +1,20 @@
-const http = require('http')
+import http from 'http'
 
-global.EventEmitter = require('eventemitter3')
-global.btoa = require('btoa')
-const WebCrypto = require('node-webcrypto-ossl')
+import EventEmitter from 'eventemitter3'
+global.EventEmitter = EventEmitter
+
+import btoa from 'btoa'
+global.btoa = btoa
+import WebCrypto from 'node-webcrypto-ossl'
+
 global.crypto = new WebCrypto()
-const rc = require('rc')
-const WebSocket = require('ws')
+import rc from 'rc'
+import WebSocket from 'ws'
 
-const Skeleton = require('@ca11/boilerplate')
-const Crypto = require('@ca11/sig11/src/crypto')
-const Endpoint = require('@ca11/sig11/src/endpoint')
-const Network = require('@ca11/sig11/src/network')
+import Skeleton from '@ca11/boilerplate'
+import Crypto from '@ca11/sig11/src/crypto'
+import Endpoint from '@ca11/sig11/src/endpoint'
+import Network from '@ca11/sig11/src/network'
 
 let settings = {}
 
@@ -131,8 +135,6 @@ class Ca11Tower extends Skeleton {
             this.logger.info(`listening on port ${settings.tower.port}`),
         ])
     }
-
-
 }
 
 global.ca11tower = new Ca11Tower()

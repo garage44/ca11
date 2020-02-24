@@ -1,5 +1,7 @@
 {
   "name": "@ca11/theme",
+  "main": "ca11-theme.js",
+  "type": "module",
   "version": "1.3.0",
   "description": "The Default CA11 webphone UI theme",
   "files": [

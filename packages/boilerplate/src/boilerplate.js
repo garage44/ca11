@@ -1,6 +1,8 @@
-const Logger = require('./src/logger')
-const Utils = require('./src/utils')
-const EventEmitter = require('eventemitter3')
+import env from './env.js'
+import Logger from './logger.js'
+import Utils from './utils.js'
+
+import EventEmitter from 'eventemitter3'
 
 
 /**
@@ -10,12 +12,12 @@ const EventEmitter = require('eventemitter3')
 * some environmental properties.
 * @memberof app
 */
-class Skeleton extends EventEmitter {
+export class Skeleton extends EventEmitter {
 
     constructor(settings) {
         super(settings)
 
-        this.env = require('./src/env')()
+        this.env = env()
 
         this._listeners = 0
         this.utils = new Utils()
@@ -30,8 +32,7 @@ class Skeleton extends EventEmitter {
         // Increases verbosity beyond the logger's debug level. Not
         // always useful during development, so it has to be switched
         // on manually.
-        if (process.env.BUILD_VERBOSE === true) this.verbose = true
-        else this.verbose = false
+        this.verbose = false
     }
 
 
@@ -44,4 +45,4 @@ class Skeleton extends EventEmitter {
     }
 }
 
-module.exports = Skeleton
+export {env}

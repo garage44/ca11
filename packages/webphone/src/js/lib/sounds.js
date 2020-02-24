@@ -4,10 +4,12 @@
 * @module Sounds
 */
 
+import EventEmitter from 'eventemitter3'
+
 
 let context
 
-if (global.window) context = new AudioContext()
+if (globalThis.window) context = new AudioContext()
 
 
 /**

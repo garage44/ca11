@@ -1,4 +1,4 @@
-import SIPCall from './call'
+import SIPCall from './call.js'
 
 
 /**

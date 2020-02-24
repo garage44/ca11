@@ -15,6 +15,7 @@
     "lint": "yarn lint:js;yarn lint:scss",
     "lint:js": "eslint {packages/**/src/**/*.js,gulp/**/*.js}",
     "lint:scss": "stylelint 'packages/webphone/src/**/*.scss'",
+    "prepare": "snowpack --include \"packages/webphone/src/**/*.js\" --dest build/static/web_modules",
     "release": "standard-version"
   },
   "husky": {

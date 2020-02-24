@@ -1,3 +1,5 @@
+import Module from '../../lib/module.js'
+
 /**
 * Contacts plugin takes care of managing
 * Contacts, Endpoints and Presence.
@@ -174,4 +176,4 @@ class ModuleContacts extends Module {
     }
 }
 
-module.exports = ModuleContacts
+export default ModuleContacts

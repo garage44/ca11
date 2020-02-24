@@ -1,4 +1,5 @@
-import Skeleton from '@ca11/boilerplate'
+import {Skeleton} from '@ca11/boilerplate'
+import I18nTranslations from './i18n/i18n.js'
 
 
 /**

@@ -1,4 +1,4 @@
-module.exports = function(_) {
+export default function(_) {
     return {
         setup: async function(actor) {
             await _.steps.session.new(actor)

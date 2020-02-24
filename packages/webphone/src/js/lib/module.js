@@ -1,3 +1,5 @@
+import EventEmitter from 'eventemitter3'
+
 /**
  * Generic base class for each module. Modules can be used in
  * AppBackground and AppForeground to seperate logical blocks

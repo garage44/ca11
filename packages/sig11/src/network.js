@@ -1,7 +1,7 @@
-const graphlib = require('graphlib')
+import graphlib from 'graphlib'
 
-const Protocol = require('./protocol')
-const D3 = require('./d3')
+import Protocol from './protocol.js'
+import D3 from './d3.js'
 
 
 class Network {
@@ -155,4 +155,4 @@ class Network {
 
 }
 
-module.exports = Network
+export default Network

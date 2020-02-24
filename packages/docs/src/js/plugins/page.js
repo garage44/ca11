@@ -29,4 +29,4 @@ class PluginPage extends Plugin {
 }
 
 
-module.exports = PluginPage
+export default PluginPage

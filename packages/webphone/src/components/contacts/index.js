@@ -1,4 +1,4 @@
-module.exports = (app) => {
+export default (app) => {
     const PRESENCE_STATUS = ['available', 'busy']
 
     /**

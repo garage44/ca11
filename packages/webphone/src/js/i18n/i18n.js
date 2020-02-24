@@ -1,5 +1,5 @@
-import I18n from '../lib/i18n'
-import {nl} from './nl'
+import I18n from '../lib/i18n.js'
+import {nl} from './nl.js'
 
 /**
 * Process all translations from Ca11 and its modules.
@@ -16,4 +16,4 @@ class I18nTranslations extends I18n {
     }
 }
 
-global.I18nTranslations = I18nTranslations
+export default I18nTranslations

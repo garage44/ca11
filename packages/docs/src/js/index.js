@@ -66,4 +66,4 @@ class Docs extends App {
 global.options = require('./lib/options')
 
 global.Docs = Docs
-module.exports = Docs
+export default Docs

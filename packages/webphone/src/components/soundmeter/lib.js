@@ -69,7 +69,7 @@ function createAudioMeter(audioContext, clipLevel, averaging, clipLag) {
     return processor
 }
 
-module.exports = {
+export default {
     createAudioMeter,
     volumeAudioProcess,
 }

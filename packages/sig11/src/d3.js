@@ -95,4 +95,4 @@ class D3 {
     }
 }
 
-module.exports = D3
+export default D3

@@ -1,3 +1,5 @@
+import Module from '../lib/module.js'
+
 /**
 * This module is responsible for handling all UI-related
 * state and respond with UI-specific calls to watchers.

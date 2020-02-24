@@ -177,4 +177,4 @@ lib.steps = {
     wizard: require('./browser/steps/wizard')(lib),
 }
 
-module.exports = lib
+export default lib

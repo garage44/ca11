@@ -1,4 +1,4 @@
-module.exports = (app) => {
+export default (app) => {
 
     const Welcome = {
         render: templates.welcome.r,

@@ -374,5 +374,5 @@ class Crypto {
     // }
 }
 
-module.exports = Crypto
+export default Crypto
 

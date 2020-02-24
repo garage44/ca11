@@ -1,7 +1,7 @@
 /**
 * @module ModuleCalls
 */
-import Call from '../call'
+import Call from '../call.js'
 
 /**
 * Call implementation for incoming and outgoing calls

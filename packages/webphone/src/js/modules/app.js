@@ -1,3 +1,5 @@
+import Module from '../lib/module.js'
+
 /**
 * Main entrypoint for App.
 * @memberof AppBackground.plugins

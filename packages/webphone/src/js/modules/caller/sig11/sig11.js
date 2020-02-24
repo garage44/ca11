@@ -1,4 +1,4 @@
-import SIG11Call from './call'
+import SIG11Call from './call.js'
 
 
 /**

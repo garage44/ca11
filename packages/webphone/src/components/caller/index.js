@@ -1,4 +1,4 @@
-module.exports = (app) => {
+export default (app) => {
     app.components.CallerSwitcher = Vue.component('CallerSwitcher', require('./components/switcher')(app))
     app.components.CallerBar = Vue.component('CallerBar', require('./components/bar')(app))
 
