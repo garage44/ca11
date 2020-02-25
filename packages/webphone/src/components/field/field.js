@@ -45,22 +45,20 @@ export default (app) => {
             validation: Object,
             value: '',
         },
-        render: templates.field.r,
-        staticRenderFns: templates.field.s,
     }
 
-    const components = {
-        FieldCheckbox: require('./components/checkbox'),
-        FieldPassword: require('./components/password'),
-        FieldRadio: require('./components/radio'),
-        FieldSelect: require('./components/select'),
-        FieldText: require('./components/text'),
-        FieldTextarea: require('./components/textarea'),
-    }
+    // const components = {
+    //     FieldCheckbox: require('./components/checkbox'),
+    //     FieldPassword: require('./components/password'),
+    //     FieldRadio: require('./components/radio'),
+    //     FieldSelect: require('./components/select'),
+    //     FieldText: require('./components/text'),
+    //     FieldTextarea: require('./components/textarea'),
+    // }
 
-    for (const [name, component] of Object.entries(components)) {
-        app.components[name] = Vue.component(name, component(app, Field))
-    }
+    // for (const [name, component] of Object.entries(components)) {
+    //     app.components[name] = Vue.component(name, component(app, Field))
+    // }
 
     return Field
 }

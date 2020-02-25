@@ -41,7 +41,7 @@ class ModuleApp extends Module {
             dnd: false,
             editMode: false,
             installed: true,
-            name: process.env.APP_NAME,
+            name: 'CA11', // process.env.APP_NAME,
             notifications: [],
             online: true,
             search: {
@@ -68,8 +68,8 @@ class ModuleApp extends Module {
                 },
             },
             version: {
-                current: process.env.VERSION,
-                previous: process.env.VERSION,
+                current: '', // process.env.VERSION,
+                previous: '' // process.env.VERSION,
             },
         }
     }

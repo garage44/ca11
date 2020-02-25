@@ -193,8 +193,6 @@ export default (app) => {
                 else app.emit('contacts:unsubscribe-all')
             },
         }, app.helpers.sharedMethods()),
-        render: templates.contacts.r,
-        staticRenderFns: templates.contacts.s,
         store: {
             calls: 'caller.calls',
             contacts: 'contacts.contacts',

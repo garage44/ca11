@@ -68,8 +68,6 @@ export default (app) => {
             // Immediatly trigger validation on the fields.
             this.$v.$touch()
         },
-        render: templates.settings.r,
-        staticRenderFns: templates.settings.s,
         store: {
             app: 'app',
             devices: 'settings.webrtc.devices',

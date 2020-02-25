@@ -99,8 +99,6 @@ export default (app) => {
             // Mark activity as read as soon the component is opened.
             app.setState({activities: {unread: false}}, {persist: true})
         },
-        render: templates.activities.r,
-        staticRenderFns: templates.activities.s,
         store: {
             activities: 'activities.activities',
             contacts: 'contacts.contacts',

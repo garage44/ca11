@@ -1,5 +1,8 @@
 import Module from '../../lib/module.js'
 
+import Sig11Presence from './presence/sig11.js'
+import SipPresence from './presence/sig11.js'
+
 /**
 * Contacts plugin takes care of managing
 * Contacts, Endpoints and Presence.
@@ -14,8 +17,8 @@ class ModuleContacts extends Module {
 
         this.subscriptions = {}
         this.presence = {
-            sig11: require('./presence/sig11')(app, this),
-            sip: require('./presence/sip')(app, this),
+            sig11: Sig11Presence(app, this),
+            sip: SipPresence(app, this),
         }
 
         // Start subscribing to presence info after being registered.

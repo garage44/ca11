@@ -1,6 +1,6 @@
 export default (app) => {
-    app.components.CallerSwitcher = Vue.component('CallerSwitcher', require('./components/switcher')(app))
-    app.components.CallerBar = Vue.component('CallerBar', require('./components/bar')(app))
+    // app.components.CallerSwitcher = Vue.component('CallerSwitcher', require('./components/switcher')(app))
+    // app.components.CallerBar = Vue.component('CallerBar', require('./components/bar')(app))
 
     let types = ['audio', 'video', 'display']
     /**
@@ -40,8 +40,6 @@ export default (app) => {
                 }, {persist: true})
             },
         }, app.helpers.sharedMethods()),
-        render: templates.caller.r,
-        staticRenderFns: templates.caller.s,
         store: {
             calls: 'caller.calls',
             description: 'caller.description',

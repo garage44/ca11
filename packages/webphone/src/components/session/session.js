@@ -14,6 +14,7 @@ export default (app) => {
             },
         },
         created: function() {
+            console.log("CREATED!", this.sig11)
             this.sig11.identity.number = this.generatePhonenumber()
             this.password = this.generatePassword()
             // if (this.sig11.identity.name === '') {
@@ -91,8 +92,6 @@ export default (app) => {
                 this.slogans[this.currentSlogan].show = true
             }, 3000)
         },
-        render: templates.session.r,
-        staticRenderFns: templates.session.s,
         store: {
             app: 'app',
             session: 'session',

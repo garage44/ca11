@@ -48,8 +48,6 @@ export default (app) => {
             },
         }, app.helpers.sharedMethods()),
         props: ['call'],
-        render: templates.menu_communicate.r,
-        staticRenderFns: templates.menu_communicate.s,
         store: {
             activities: 'activities',
             calls: 'caller.calls',

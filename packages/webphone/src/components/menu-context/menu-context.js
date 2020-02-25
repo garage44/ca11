@@ -28,8 +28,6 @@ export default (app) => {
                 app.session.close()
             },
         }, app.helpers.sharedMethods()),
-        render: templates.menu_context.r,
-        staticRenderFns: templates.menu_context.s,
         store: {
             app: 'app',
             layer: 'ui.layer',

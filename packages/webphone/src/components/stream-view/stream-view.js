@@ -61,8 +61,6 @@ export default (app) => {
             this.stream.selected = true
         },
         props: ['call'],
-        render: templates.stream_view.r,
-        staticRenderFns: templates.stream_view.s,
         store: {
             stream: 'settings.webrtc.media.stream',
         },

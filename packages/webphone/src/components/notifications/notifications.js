@@ -22,8 +22,6 @@ export default function(app) {
             },
         },
         props: ['notification'],
-        render: templates.notifications.r,
-        staticRenderFns: templates.notifications.s,
         store: {
             notifications: 'app.notifications',
             session: 'session',

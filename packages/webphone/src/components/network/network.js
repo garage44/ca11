@@ -116,8 +116,6 @@ export default (app) => {
             window.addEventListener('resize', this.onResizeHandler)
             this.simulate()
         },
-        render: templates.network.r,
-        staticRenderFns: templates.network.s,
         store: {
             description: 'caller.description',
             edges: 'sig11.network.edges',

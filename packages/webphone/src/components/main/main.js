@@ -1,12 +1,14 @@
 export default (app) => {
 
+    // console.log("APP", app.helpers.sharedComputed())
+
     let splashInterval
 
     /**
     * @memberof fg.components
     */
     const Main = {
-        computed: app.helpers.sharedComputed(),
+        // computed: app.helpers.sharedComputed(),
         data: function() {
             return {
                 currentSplash: 0,
@@ -31,14 +33,12 @@ export default (app) => {
 
                 return classes
             },
-        }, app.helpers.sharedMethods()),
+        }, {}),// app.helpers.sharedMethods()),
         mounted: function() {
             splashInterval = setInterval(() => {
                 this.currentSplash = (this.currentSplash + 1) % 7
             }, 10000)
         },
-        render: templates.main.r,
-        staticRenderFns: templates.main.s,
         store: {
             calls: 'caller.calls',
             description: 'caller.description',

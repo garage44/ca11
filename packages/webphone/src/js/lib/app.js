@@ -1,5 +1,7 @@
 import {Skeleton} from '@ca11/boilerplate'
-import I18nTranslations from './i18n/i18n.js'
+import I18nTranslations from '../i18n/i18n.js'
+import filters from './filters.js'
+import helpers from './helpers.js'
 
 
 /**
@@ -16,8 +18,8 @@ class App extends Skeleton {
         this.i18n = new I18nTranslations(this, settings.plugins)
 
         this.$t = (text) => text
-        this.filters = require('./filters')(this)
-        this.helpers = require('./helpers')(this)
+        this.filters = filters(this)
+        this.helpers = helpers(this)
 
         // Copied to the initial state object.
         this._state = {}
@@ -114,12 +116,17 @@ class App extends Skeleton {
 
         // Add a shortcut to the translation module.
         this.$t = Vue.i18n.translate
+
+        console.log(this.state)
         this.vm = new Vue(Object.assign({
             data: {store: this.state},
             render: h => h(main),
         }, settings))
 
-        if (this.env.isBrowser) this.vm.$mount(document.querySelector('#app'))
+        if (this.env.isBrowser) {
+            this.logger.info(`${this}mounting vdom`)
+            this.vm.$mount(document.querySelector('#app'))
+        }
     }
 
 
@@ -138,7 +145,6 @@ class App extends Skeleton {
     * can't be derived from the application state.
     */
     _languagePresets() {
-
         let language = this.state.language.selected
 
         if (!language.id) {
@@ -146,9 +152,10 @@ class App extends Skeleton {
             // Try to figure out the language from the environment.
             // Check only the first part of en-GB/en-US.
             if (this.env.isBrowser) language = options.find((i) => i.id === navigator.language.split('-')[0])
-            else if (process.env.LANGUAGE) {
-                language = options.find((i) => i.id === process.env.LANGUAGE.split('_')[0])
-            }
+
+            // else if (process.env.LANGUAGE) {
+            //     language = options.find((i) => i.id === process.env.LANGUAGE.split('_')[0])
+            // }
             // Fallback to English language as a last resort.
             if (!language) language = options.find((i) => i.id === 'en')
         }
@@ -226,7 +233,7 @@ class App extends Skeleton {
     * @param {Boolean} [options.encrypt=true] - Whether to persist to the encrypted part of the store.
     * @param {String} [options.path=null] - The path.to.the.store.item to merge.
     * @param {Boolean} [options.persist=false] - Whether to persist this state change.
-    *  @param {String} [options.source=null] - Merge into a custom object instead of the default store.
+    * @param {String} [options.source=null] - Merge into a custom object instead of the default store.
     * @param {Object} state - An object to merge into the store.
     */
     _mergeState({action = 'upsert', encrypt = true, path = null, persist = false, source = null, state}) {

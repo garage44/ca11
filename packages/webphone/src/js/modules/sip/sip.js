@@ -39,7 +39,7 @@ class ModuleSIP extends Module {
                 username: null,
             },
             enabled: false,
-            endpoint: process.env.SIP_ENDPOINT,
+            endpoint: '', // process.env.SIP_ENDPOINT,
             status: 'loading',
             toggled: false,
         }

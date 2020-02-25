@@ -26,8 +26,6 @@ export default (app) => {
                 return `SIP: ${sipStatus}\nSIG11: ${this.sig11.status}`
             },
         },
-        render: templates.protocol_status.r,
-        staticRenderFns: templates.protocol_status.s,
         store: {
             description: 'caller.description',
             sig11: 'sig11',

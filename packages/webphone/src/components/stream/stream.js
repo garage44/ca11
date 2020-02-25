@@ -87,8 +87,6 @@ export default (app) => {
                 type: Object,
             },
         },
-        render: templates.stream.r,
-        staticRenderFns: templates.stream.s,
         watch: {
             'stream.id': function(streamId) {
                 if (!this.$refs[this.stream.kind]) return

@@ -15,8 +15,6 @@ export default (app) => {
                 tooltip: 'SIG11: enabled\nSIP:Disabled',
             }
         },
-        render: templates.dnd.r,
-        staticRenderFns: templates.dnd.s,
         store: {
             dnd: 'app.dnd',
         },

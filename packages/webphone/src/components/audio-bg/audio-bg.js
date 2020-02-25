@@ -9,8 +9,6 @@ export default (app) => {
         methods: {
 
         },
-        render: templates.audio_bg.r,
-        staticRenderFns: templates.audio_bg.s,
         store: {
             calls: 'caller.calls',
         },

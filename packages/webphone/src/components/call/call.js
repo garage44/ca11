@@ -1,14 +1,14 @@
 export default (app) => {
-    const components = {
-        CallInputEndpoint: require('./components/input-endpoint'),
-        CallOptions: require('./components/options'),
-        CallTransfer: require('./components/transfer'),
-        Keypad: require('./components/keypad'),
-    }
+    // const components = {
+    //     CallInputEndpoint: require('./components/input-endpoint'),
+    //     CallOptions: require('./components/options'),
+    //     CallTransfer: require('./components/transfer'),
+    //     Keypad: require('./components/keypad'),
+    // }
 
-    for (const [name, component] of Object.entries(components)) {
-        app.components[name] = Vue.component(name, component(app))
-    }
+    // for (const [name, component] of Object.entries(components)) {
+    //     app.components[name] = Vue.component(name, component(app))
+    // }
 
 
     /**
@@ -26,8 +26,6 @@ export default (app) => {
             clearInterval(this.intervalId)
         },
         props: ['call'],
-        render: templates.call.r,
-        staticRenderFns: templates.call.s,
         store: {
             calls: 'caller.calls',
             description: 'caller.description',

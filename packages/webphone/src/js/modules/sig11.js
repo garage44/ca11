@@ -94,7 +94,7 @@ class ModuleSIG11 extends Module {
     _initialState() {
         return {
             enabled: true,
-            endpoint: process.env.SIG11_ENDPOINT,
+            endpoint: '', // process.env.SIG11_ENDPOINT,
             identity: {
                 id: null,
                 name: '',

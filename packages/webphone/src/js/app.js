@@ -1,8 +1,9 @@
+import './vendor.js'
+
 
 import Module from './lib/module.js'
 globalThis.Module = Module
 
-import templates from './templates.js'
 import i18n from './i18n/i18n.js'
 
 import Crypto from '@ca11/sig11/src/crypto.js'
@@ -13,6 +14,8 @@ import StateStore from './lib/store.js'
 import Media from './lib/media.js'
 import Session from './lib/session.js'
 import Sounds from './lib/sounds.js'
+
+import components from './components.js'
 
 class CA11 extends App {
     /**
@@ -25,7 +28,6 @@ class CA11 extends App {
         super(opts)
         // Allow context debugging during development.
         // Avoid leaking this global in production mode.
-        if (!(process.env.NODE_ENV === 'production')) global.ca11 = this
 
         this.session = new Session(this)
         this.stateStore = new StateStore(this)
@@ -34,35 +36,7 @@ class CA11 extends App {
         this._writeState = []
         this._vueWatchers = []
 
-        if (this.env.isBrowser) {
-            this.components = {
-                About: require('../components/about'),
-                Activities: require('../components/activities'),
-                AudioBg: require('../components/audio-bg'),
-                Call: require('../components/call'),
-                Caller: require('../components/caller'),
-                Contacts: require('../components/contacts'),
-                Devices: require('../components/devices'),
-                Dnd: require('../components/dnd'),
-                Field: require('../components/field'),
-                Main: require('../components/main'),
-                MenuCommunicate: require('../components/menu-communicate'),
-                MenuContext: require('../components/menu-context'),
-                Network: require('../components/network'),
-                Notifications: require('../components/notifications'),
-                ProtocolStatus: require('../components/protocol-status'),
-                Session: require('../components/session'),
-                Settings: require('../components/settings'),
-                Soundmeter: require('../components/soundmeter'),
-                Stream: require('../components/stream'),
-                StreamView: require('../components/stream-view'),
-            }
-
-            for (const name of Object.keys(this.components)) {
-                Vue.component(name, this.components[name](this))
-            }
-        }
-
+        this.components = components(this)
         this.modules = {}
 
         this._loadModules(this.__modules)
@@ -90,17 +64,13 @@ class CA11 extends App {
             ui: {menubar: {base: 'inactive', event: null}},
         })
 
-        let main = null
-        // eslint-disable-next-line new-cap
-        if (this.env.isBrowser) main = this.components.Main(this)
-
         if (!this.state.app.vault.key) {
             // No session yet.
-            this._initViewModel({main})
+            this._initViewModel({main: this.components.Main})
         } else {
             await this.session.open({key: this.state.app.vault.key})
             // (!) State is reactive after initializing the viewmodel.
-            this._initViewModel({main})
+            this._initViewModel({main: this.components.Main})
             this._setVueWatchers()
         }
 
@@ -330,9 +300,9 @@ class CA11 extends App {
 }
 
 import options from './lib/options.js'
-
+// console.log(options.env)
 if (options.env.isBrowser) {
-    this.ca11 = new CA11(options)
+    globalThis.ca11 = new CA11(options)
 }
 
 export default {CA11, options}

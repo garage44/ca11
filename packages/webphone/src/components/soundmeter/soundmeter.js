@@ -1,9 +1,11 @@
+import lib from './lib.js'
+
 export default (app) => {
 
     const audioContext = new AudioContext()
 
     let meter = null
-    let volumeLib = require('./lib')
+    let volumeLib = lib
     let canvasContext, canvasElement
     /**
     * @memberof fg.components
@@ -50,8 +52,6 @@ export default (app) => {
             }
         },
         props: ['stream'],
-        render: templates.soundmeter.r,
-        staticRenderFns: templates.soundmeter.s,
         store: {
             devices: 'settings.webrtc.devices',
             settings: 'settings',
