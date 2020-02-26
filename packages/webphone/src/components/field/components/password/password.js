@@ -19,8 +19,6 @@ export default (app, base) => {
                 this.$nextTick(() => this.$refs.input.focus())
             }
         },
-        render: templates.field_password.r,
-        staticRenderFns: templates.field_password.s,
     }
 
     return FieldPassword

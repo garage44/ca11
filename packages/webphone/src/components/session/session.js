@@ -14,7 +14,6 @@ export default (app) => {
             },
         },
         created: function() {
-            console.log("CREATED!", this.sig11)
             this.sig11.identity.number = this.generatePhonenumber()
             this.password = this.generatePassword()
             // if (this.sig11.identity.name === '') {

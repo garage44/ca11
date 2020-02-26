@@ -11,8 +11,6 @@ export default (app) => {
         props: {
             soundmeter: {default: true},
         },
-        render: templates.devices_permission.r,
-        staticRenderFns: templates.devices_permission.s,
         store: {
             app: 'app',
             devices: 'settings.webrtc.devices',

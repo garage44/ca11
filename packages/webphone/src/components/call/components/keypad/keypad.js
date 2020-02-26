@@ -42,8 +42,6 @@ export default (app) => {
             mode: {default: 'call', type: String},
             search: {default: true, type: Boolean},
         },
-        render: templates.call_keypad.r,
-        staticRenderFns: templates.call_keypad.s,
         store: {
             calls: 'caller.calls',
             contacts: 'contacts.contacts',

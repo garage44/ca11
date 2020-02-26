@@ -72,8 +72,6 @@ export default (app) => {
             },
         }, app.helpers.sharedMethods()),
         props: ['call'],
-        render: templates.call_options.r,
-        staticRenderFns: templates.call_options.s,
         store: {
             calls: 'caller.calls',
             description: 'caller.description',

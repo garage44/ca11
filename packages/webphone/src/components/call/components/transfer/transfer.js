@@ -24,8 +24,6 @@ export default (app) => {
             },
         },
         props: ['call'],
-        render: templates.call_transfer.r,
-        staticRenderFns: templates.call_transfer.s,
         store: {
             description: 'caller.description',
         },

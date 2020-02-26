@@ -9,8 +9,6 @@ export default (app, base) => {
                 this.$emit('input', event.target.value)
             },
         },
-        render: templates.field_textarea.r,
-        staticRenderFns: templates.field_textarea.s,
     }
 
     return FieldTextarea

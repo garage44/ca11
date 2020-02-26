@@ -8,9 +8,6 @@ export default (app) => {
                 this.description.endpoint = this.description.endpoint.substring(0, this.description.endpoint.length - 1)
             },
         },
-
-        render: templates.call_input_endpoint.r,
-        staticRenderFns: templates.call_input_endpoint.s,
         store: {
             description: 'caller.description',
         },

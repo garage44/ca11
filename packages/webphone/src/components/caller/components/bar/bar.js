@@ -17,8 +17,6 @@ export default (app) => {
             },
         }, app.helpers.sharedComputed()),
         methods: app.helpers.sharedMethods(),
-        render: templates.caller_bar.r,
-        staticRenderFns: templates.caller_bar.s,
         store: {
             calls: 'caller.calls',
             description: 'caller.description',

@@ -12,8 +12,6 @@ export default (app, base) => {
         props: {
             value: '',
         },
-        render: templates.field_checkbox.r,
-        staticRenderFns: templates.field_checkbox.s,
     }
 
     return FieldCheckbox

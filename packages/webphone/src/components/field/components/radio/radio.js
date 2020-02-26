@@ -11,8 +11,6 @@ export default (app, base) => {
         },
         extends: base,
         props: ['options'],
-        render: templates.field_radio.r,
-        staticRenderFns: templates.field_radio.s,
     }
 
     return FieldRadio

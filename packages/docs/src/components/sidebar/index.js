@@ -41,8 +41,6 @@ export default (app) => {
                 this.slogans[this.currentSlogan].show = true
             }, 3000)
         },
-        render: templates.sidebar.r,
-        staticRenderFns: templates.sidebar.s,
         store: {
             topics: 'pages.topics',
             vendor: 'vendor',

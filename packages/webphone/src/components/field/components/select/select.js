@@ -126,8 +126,6 @@ export default (app, base) => {
             },
             value: Object,
         },
-        render: templates.field_select.r,
-        staticRenderFns: templates.field_select.s,
         updated() {
             const input = this.$refs.input
             const options = this.$refs.options

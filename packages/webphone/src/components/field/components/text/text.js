@@ -17,8 +17,6 @@ export default (app, base) => {
         props: {
             value: '',
         },
-        render: templates.field_text.r,
-        staticRenderFns: templates.field_text.s,
     }
 
     return FieldText

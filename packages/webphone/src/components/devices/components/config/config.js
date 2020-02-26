@@ -42,8 +42,6 @@ export default (app) => {
         mounted: function() {
             this.$v.$touch()
         },
-        render: templates.devices_config.r,
-        staticRenderFns: templates.devices_config.s,
         store: {
             devices: 'settings.webrtc.devices',
             settings: 'settings',

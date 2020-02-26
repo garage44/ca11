@@ -63,8 +63,6 @@ export default (app) => {
                 return allowed
             },
         }, app.helpers.sharedMethods()),
-        render: templates.caller_switcher.r,
-        staticRenderFns: templates.caller_switcher.s,
         store: {
             calls: 'caller.calls',
             description: 'caller.description',
