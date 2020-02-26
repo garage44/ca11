@@ -1,4 +1,4 @@
-module.exports = function(_) {
+export default function(_) {
     return {
         new: async function(actor) {
             const {page} = actor

@@ -2,23 +2,27 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <title>CA11 - Free Web Telephony</title>
+        <title>CA11 - Free Internet Telephony</title>
         <meta name="theme-color" content="<%=settings.theme.colors['brand-color']%>"/>
         <meta name="viewport" content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'/>
         <%if (settings.BUILD_TARGET === 'pwa') { %>
-        <link rel="manifest" href="manifest.json">
+        <link rel="manifest" href="/static/manifest.json">
         <% } %>
-        <link rel="icon" href="img/logo.png"/>
-        <link href="css/app.css" rel="stylesheet"/>
+        <link rel="icon" href="static/img/logo.png"/>
+        <link href="/static/app.css" rel="stylesheet"/>
+        <%if (settings.imports) { %>
+        <script type="importmap">
+            {
+            "imports": <% - print(JSON.stringify(settings.imports)); %>
+            }
+        </script>
+        <% } %>
     </head>
     <body>
         <div id="app"></div>
     </body>
 
-    <script src="js/vendor.js"></script>
-    <script src="js/templates.js"></script>
-    <script src="js/app_i18n.js"></script>
-    <script src="js/app.js"></script>
+    <script type="module" src="/static/js/app.js"></script>
 
     <script>
     <%if (settings.BUILD_TARGET === 'pwa') { %>

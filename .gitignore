@@ -1,5 +1,7 @@
 node_modules
 ./packages/**/node_modules
-./packages/webphone/build
+build
 .ca11rc
 docker/nginx/ssl
+docker/postgres/database_data/
+packages/webphone/src/js/templates.js

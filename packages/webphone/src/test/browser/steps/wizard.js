@@ -1,4 +1,4 @@
-module.exports = function(_) {
+export default function(_) {
     return {
         complete: async function(actor) {
             await _.step(actor, 'complete wizard')

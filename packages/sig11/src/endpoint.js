@@ -1,4 +1,5 @@
-const EventEmitter = require('eventemitter3')
+import EventEmitter from 'eventemitter3'
+
 /**
  * An Endpoint is an abstraction to decouple
  * transport and node. The Endpoint generates
@@ -65,4 +66,4 @@ class Endpoint extends EventEmitter {
     }
 }
 
-module.exports = Endpoint
+export default Endpoint

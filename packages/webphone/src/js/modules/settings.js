@@ -1,3 +1,5 @@
+import Module from '../lib/module.js'
+
 /**
 * This module takes care of dealing with all
 * settings and responding to changes to it.
@@ -81,7 +83,7 @@ class ModuleSettings extends Module {
                         selected: {id: 'AUDIO_NOPROCESSING', name: this.app.$t('disabled')},
                     },
                 },
-                stun: process.env.STUN,
+                stun: '', // process.env.STUN,
                 toggle: true,
             },
         }
@@ -119,4 +121,4 @@ class ModuleSettings extends Module {
     }
 }
 
-module.exports = ModuleSettings
+export default ModuleSettings

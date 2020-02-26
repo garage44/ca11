@@ -1,5 +1,7 @@
-const Endpoint = require('@ca11/sig11/src/endpoint')
-const Network = require('@ca11/sig11/src/network')
+import Module from '../lib/module.js'
+
+import Endpoint from '@ca11/sig11/src/endpoint.js'
+import Network from '@ca11/sig11/src/network.js'
 
 
 /**
@@ -92,7 +94,7 @@ class ModuleSIG11 extends Module {
     _initialState() {
         return {
             enabled: true,
-            endpoint: process.env.SIG11_ENDPOINT,
+            endpoint: '', // process.env.SIG11_ENDPOINT,
             identity: {
                 id: null,
                 name: '',
@@ -290,5 +292,4 @@ class ModuleSIG11 extends Module {
     }
 }
 
-
-module.exports = ModuleSIG11
+export default ModuleSIG11

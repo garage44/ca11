@@ -1,4 +1,4 @@
-const I18n = require('ca11/lib/i18n')
+const I18n = require('ca11/lib/i18n.js')
 
 /**
 * Process all translations from app and modules.

@@ -27,4 +27,4 @@ function filters(app) {
     })
 }
 
-module.exports = filters
+export default filters

@@ -1,7 +1,7 @@
 /**
 * @module ModuleCalls
 */
-const Call = require('../call')
+import Call from '../call.js'
 
 /**
 * Call implementation for incoming and outgoing calls
@@ -299,4 +299,4 @@ class CallSIP extends Call {
     }
 }
 
-module.exports = CallSIP
+export default CallSIP

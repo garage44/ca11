@@ -22,15 +22,15 @@ class Docs extends App {
 
         this._initStore({
             app: {
-                name: process.env.APP_NAME,
+                name: 'CA11',
             },
             pages: global.pages,
             vendor: {
-                name: process.env.VENDOR_NAME,
-                website: process.env.VENDOR_WEBSITE,
+                name: '', // process.env.VENDOR_NAME,
+                website: '', // process.env.VENDOR_WEBSITE,
             },
             version: {
-                current: process.env.VERSION,
+                current: '' // process.env.VERSION,
             },
         })
 
@@ -66,4 +66,4 @@ class Docs extends App {
 global.options = require('./lib/options')
 
 global.Docs = Docs
-module.exports = Docs
+export default Docs

@@ -4,10 +4,12 @@
 * @module Sounds
 */
 
+import EventEmitter from 'eventemitter3'
+
 
 let context
 
-if (global.window) context = new AudioContext()
+if (globalThis.window) context = new AudioContext()
 
 
 /**
@@ -260,7 +262,7 @@ class RingTone extends Sound {
 }
 
 
-module.exports = class Sounds {
+export default class Sounds {
 
     constructor(app) {
         this.app = app

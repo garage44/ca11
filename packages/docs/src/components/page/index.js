@@ -1,4 +1,4 @@
-module.exports = (app) => {
+export default (app) => {
 
     const Page = {
         computed: {
@@ -25,8 +25,6 @@ module.exports = (app) => {
                 return classes
             },
         },
-        render: templates.page.r,
-        staticRenderFns: templates.page.s,
         store: {
             app: 'app',
             topics: 'pages.topics',

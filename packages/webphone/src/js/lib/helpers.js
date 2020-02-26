@@ -304,4 +304,4 @@ function helpers(app) {
 }
 
 
-module.exports = helpers
+export default helpers

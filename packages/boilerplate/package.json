@@ -1,8 +1,9 @@
 {
   "name": "@ca11/boilerplate",
+  "type": "module",
   "version": "1.0.0",
   "description": "CA11 boilerplate for Vue applications",
-  "main": "src/index.js",
+  "main": "src/boilerplate.js",
   "author": "Garage11",
   "license": "MIT",
   "dependencies": {

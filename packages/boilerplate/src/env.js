@@ -31,7 +31,7 @@ function env() {
 
     let ua
 
-    if (global.document) {
+    if (globalThis.document) {
         ua = navigator.userAgent.toLowerCase()
         _env.isAndroid = ua.includes('android')
 
@@ -50,7 +50,7 @@ function env() {
         _env.name = 'node'
     }
 
-    if (global.navigator) {
+    if (globalThis.navigator) {
         _env.isBrowser = true
 
         if (navigator.platform.match(/(Linux)/i)) _env.isLinux = true
@@ -89,4 +89,4 @@ function env() {
 }
 
 
-module.exports = env
+export default env

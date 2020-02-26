@@ -7,7 +7,7 @@ const appSections = [
     {value: 'sip', name: 'sip:     SIP functionality'},
 ];
 
-module.exports = {
+export default {
     types: [
         {value: 'feat', name: 'feat:     New feature'},
         {value: 'fix', name: 'fix:      Bug fix'},
