@@ -1,11 +1,5 @@
 <component class="c-session t-login" tabindex="-1" v-on:keyup.enter="login">
 
-    <div class="resources">
-    <a target="_blank" href="https://blog.ca11.app">
-    <button class="button button--widget">NEWS</button></a>
-    </div>
-
-
     <header>
         <a target="_blank" href="https://docs.ca11.app">
             <icon name="caller" class="c-session__logo"/>

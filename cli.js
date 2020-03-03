@@ -8,6 +8,9 @@ import connect from 'connect'
 import fs from 'fs-extra'
 import globby from 'globby'
 import globImporter from 'node-sass-glob-importer'
+import imagemin from 'imagemin'
+import imageminJpegtran from 'imagemin-jpegtran'
+import imageminPngquant from 'imagemin-pngquant'
 import mount from 'connect-mount'
 import path from 'path'
 import rc from 'rc'
@@ -30,6 +33,9 @@ settings.theme = themeSettings
 settings.baseDir = path.resolve(path.join(__dirname, '../'))
 settings.buildDir = path.join(settings.baseDir, 'build')
 settings.srcDir = path.resolve(path.join(settings.baseDir, 'packages', 'webphone', 'src'))
+settings.themeDir = path.resolve(path.join(settings.baseDir, 'packages', 'theme'))
+settings.nodeDir = path.resolve(path.join(settings.baseDir, 'node_modules'))
+settings.tmpDir = path.join(settings.buildDir, '.tmp')
 
 const tasks = {}
 
@@ -43,6 +49,35 @@ const entrypoint = {
     scss: 'scss/ca11/app.scss',
     vue: 'components/**/*.vue',
 }
+
+tasks.assets = new Task('assets', async function() {
+    const files = await imagemin([path.join(settings.themeDir, 'src', 'img', '*.{jpg,png}')], {
+        destination: path.join(settings.buildDir, 'static', 'img'),
+        plugins: [
+            imageminJpegtran(),
+            imageminPngquant({
+                quality: [0.6, 0.8]
+            })
+        ]
+    })
+
+    await Promise.all([
+        fs.copy(path.join(settings.themeDir, 'src', 'audio'), path.join(settings.buildDir, 'static', 'audio')),
+        fs.copy(path.join(settings.themeDir, 'src', 'fonts'), path.join(settings.buildDir, 'static', 'fonts')),
+    ])
+
+    // const iconSrc = path.join(settings.tmpDir, 'svg')
+    // const iconBuildDir = path.join(settings.TEMP_DIR, 'build')
+
+    // const exec = `yarn svgo -s ${iconSrc} -t ${iconBuildDir}`
+
+    // childExec(exec, undefined, (_err, stdout, stderr) => {
+    //     if (stderr) logger.warn(stderr)
+    //     if (stdout) logger.warn(stdout)
+    //     done()
+    // })
+
+})
 
 tasks.build = new Task('build', async function() {
     await tasks.vue.start(entrypoint.vue)
@@ -71,6 +106,7 @@ tasks.js = new Task('js', async function() {
 
         return ({})
     } else {
+        // Use rollup to generate an optimized bundle.
         const bundle = await rollup.rollup({
             input: path.join(settings.srcDir, this.ep.raw),
             plugins: [
@@ -208,6 +244,9 @@ const args = yargs
         } else {
             tasks.watch.log(`build optimization: ${chalk.red('disabled')}`)
         }
+    })
+    .command('assets', 'prepare theme files', () => {}, (argv) => {
+        tasks.assets.start()
     })
     .command('build', 'generate project files', () => {}, (argv) => {
         tasks.build.start()

@@ -8,7 +8,7 @@
         <%if (settings.BUILD_TARGET === 'pwa') { %>
         <link rel="manifest" href="/static/manifest.json">
         <% } %>
-        <link rel="icon" href="static/img/logo.png"/>
+        <link rel="icon" href="/static/img/logo.png"/>
         <link href="/static/app.css" rel="stylesheet"/>
         <%if (settings.imports) { %>
         <script type="importmap">
@@ -24,11 +24,11 @@
 
     <script type="module" src="/static/js/app.js"></script>
 
-    <script>
     <%if (settings.BUILD_TARGET === 'pwa') { %>
+    <script>
     navigator.serviceWorker.register('/sw.js').then(function(registration) {
         console.log('Registered events at scope: ', registration.scope);
     })
-    <% } %>
     </script>
+    <% } %>
 </html>

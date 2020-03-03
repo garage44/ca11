@@ -1,7 +1,6 @@
 <component class="c-main t-main" :class="classes('component')">
     <!-- Force the telemetry window to show up -->
     <Notifications :class="classes('notifications')"/>
-
     <transition name="tr-caller-bar" mode="out-in" appear>
         <CallerBar v-if="callsExist" class="c-main__status"/>
     </transition>

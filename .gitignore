@@ -5,3 +5,4 @@ build
 docker/nginx/ssl
 docker/postgres/database_data/
 packages/webphone/src/js/templates.js
+packages/webphone/src/js/icons/

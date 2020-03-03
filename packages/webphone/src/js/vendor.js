@@ -33,6 +33,7 @@ Vue.config.ignoredElements = ['component', 'panel', 'content']
 Vue.config.productionTip = false
 Vue.config.devtools = false
 
+console.log(VueSvgicon)
 Vue.use(VueSvgicon, {tagName: 'icon'})
 
 if (globalThis.document) {

@@ -1,3 +1,10 @@
+import FieldCheckbox from './components/checkbox/checkbox.js'
+import FieldPassword from './components/password/password.js'
+import FieldRadio from './components/radio/radio.js'
+import FieldSelect from './components/select/select.js'
+import FieldText from './components/text/text.js'
+import FieldTextarea from './components/textarea/textarea.js'
+
 export default (app) => {
     /**
     * @memberof fg.components
@@ -47,18 +54,15 @@ export default (app) => {
         },
     }
 
-    // const components = {
-    //     FieldCheckbox: require('./components/checkbox'),
-    //     FieldPassword: require('./components/password'),
-    //     FieldRadio: require('./components/radio'),
-    //     FieldSelect: require('./components/select'),
-    //     FieldText: require('./components/text'),
-    //     FieldTextarea: require('./components/textarea'),
-    // }
-
-    // for (const [name, component] of Object.entries(components)) {
-    //     app.components[name] = Vue.component(name, component(app, Field))
-    // }
-
-    return Field
+    return {
+        component: Field,
+        components: {
+            FieldCheckbox,
+            FieldPassword,
+            FieldRadio,
+            FieldSelect,
+            FieldText,
+            FieldTextarea,
+        }
+    }
 }

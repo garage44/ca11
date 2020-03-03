@@ -17,26 +17,6 @@
     padding: calc(var(--spacer) * 2);
     width: 100%;
 
-    .resources {
-        color: var(--grey-300);
-        margin-top: var(--gutter);
-        position: absolute;
-        right: var(--spacer);
-        text-align: center;
-        top: 0;
-
-        svg {
-            color: var(--primary-base);
-            margin-top: -2px;
-            padding: 0 ($spacer / 6);
-            width: $spacer * 2.5;
-
-            &:hover {
-                cursor: pointer;
-            }
-        }
-    }
-
     header {
         text-align: center;
         width: 100%;

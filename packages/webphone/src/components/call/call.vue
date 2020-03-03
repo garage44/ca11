@@ -1,5 +1,5 @@
 <component class="c-call" :class="`t-st-call-${call.status}`">
-    <Keypad
+    <CallKeypad
         v-if="call.keypad.active"
         mode="dtmf"
         :call="call"

@@ -21,12 +21,6 @@ import DevicesPermission from '../components/devices/components/permission/permi
 
 import Dnd from '../components/dnd/dnd.js'
 import Field from '../components/field/field.js'
-import FieldCheckbox from '../components/field/components/checkbox/checkbox.js'
-import FieldPassword from '../components/field/components/password/password.js'
-import FieldRadio from '../components/field/components/radio/radio.js'
-import FieldSelect from '../components/field/components/select/select.js'
-import FieldText from '../components/field/components/text/text.js'
-import FieldTextarea from '../components/field/components/textarea/textarea.js'
 
 import Main from '../components/main/main.js'
 import MenuCommunicate from '../components/menu-communicate/menu-communicate.js'
@@ -42,6 +36,8 @@ import StreamView from '../components/stream-view/stream-view.js'
 
 
 export default function(app) {
+    app.templates = templates
+
     const components = {
         About,
         Activities,
@@ -59,12 +55,6 @@ export default function(app) {
         DevicesPermission,
         Dnd,
         Field,
-        FieldCheckbox,
-        FieldPassword,
-        FieldRadio,
-        FieldSelect,
-        FieldText,
-        FieldTextarea,
         Main,
         MenuCommunicate,
         MenuContext,
@@ -79,22 +69,41 @@ export default function(app) {
         CallInputEndpoint
     }
 
+
+    for (const name of Object.keys(components)) {
+        const definition = components[name](app)
+        let component
+        if (definition.components) {
+            Object.assign(components, definition.components)
+            component = definition.component
+
+            for (const [name, component] of Object.entries(definition.components)) {
+                let _component = component(app, definition.component)
+                _component = Object.assign(_component, {
+                    render: app.templates[name].r,
+                    staticRenderFns: app.templates[name].s
+                })
+
+                components[name] = Vue.component(name, _component)
+            }
+        } else {
+            component = definition
+        }
+        Object.assign(component, {
+            render: templates[name].r,
+            staticRenderFns: templates[name].s
+        })
+
+        components[name] = Vue.component(name, component)
+
+    }
+
     for (const name of Object.keys(templates)) {
         if (!components[name]) {
             app.logger.warn(`component missing for template: ${name}`)
         }
     }
 
-    for (const name of Object.keys(components)) {
-        const _component = components[name](app)
-        Object.assign(_component, {
-            render: templates[name].r,
-            staticRenderFns: templates[name].s
-        })
-
-        components[name] = Vue.component(name, _component)
-
-    }
 
     return components
 }

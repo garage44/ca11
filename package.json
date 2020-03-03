@@ -16,7 +16,8 @@
     "lint:js": "eslint {packages/**/src/**/*.js,gulp/**/*.js}",
     "lint:scss": "stylelint 'packages/webphone/src/**/*.scss'",
     "prepare": "snowpack --include \"packages/webphone/src/**/*.js\" --dest build/static/web_modules",
-    "release": "standard-version"
+    "release": "standard-version",
+    "icons": "vsvg -s packages/webphone/src/svg/ --es6 -t packages/webphone/src/js/icons"
   },
   "husky": {
     "hooks": {
@@ -46,6 +47,9 @@
     "fs-extra": "^8.1.0",
     "globby": "^11.0.0",
     "husky": "3.x.x",
+    "imagemin": "^7.0.1",
+    "imagemin-jpegtran": "^6.0.0",
+    "imagemin-pngquant": "^8.0.0",
     "lerna": "^3.19.0",
     "lint-staged": "9.x.x",
     "lodash": "^4.17.15",
@@ -65,7 +69,7 @@
     "tape": "4.x.x",
     "tape-catch": "1.x.x",
     "tiny-lr": "^1.1.1",
-    "vue-svgicon": "3.x.x",
+    "vue-svgicon": "^3.2.6",
     "yargs": "15.x.x"
   },
   "config": {

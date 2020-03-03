@@ -24,7 +24,7 @@
         <CallInputEndpoint/>
 
         <Network v-if="description.protocol === 'sig11' && sig11.network.view"/>
-        <Keypad v-else
+        <CallKeypad v-else
             display="touch"
             mode="call"
             :endpoint="description.endpoint"

@@ -1,7 +1,10 @@
+import '@/icons/caller.js'
+import '@/icons/delete.js'
+import '@/icons/phone.js'
+import '@/icons/phone-add.js'
+
 export default (app) => {
-
     const v = Vuelidate.validators
-
     let sloganInterval
 
     /**
