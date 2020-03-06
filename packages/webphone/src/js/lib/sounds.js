@@ -239,24 +239,24 @@ class Sound extends EventEmitter {
 
 class CallEnd extends Sound {
     constructor(app) {
-        super(app, 'audio/call-end.ogg')
+        super(app, 'static/audio/call-end.ogg')
     }
 }
 
 
 class PowerOn extends Sound {
     constructor(app) {
-        super(app, 'audio/power-on.ogg')
+        super(app, 'static/audio/power-on.ogg')
     }
 }
 
 class RingTone extends Sound {
     constructor(app) {
-        super(app, 'audio/ringtones/default.ogg')
+        super(app, 'static/audio/ringtones/default.ogg')
     }
 
     play(...args) {
-        this.audio.src = `audio/ringtones/${this.app.state.settings.ringtones.selected.id}.ogg`
+        this.audio.src = `static/audio/ringtones/${this.app.state.settings.ringtones.selected.id}.ogg`
         super.play(...args)
     }
 }

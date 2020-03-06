@@ -3,6 +3,7 @@ import Vue from 'vue/dist/vue.runtime.js'
 import VueSvgicon from 'vue-svgicon'
 // import VueAutosize from 'vue-autosize'
 import Vuelidate from 'vuelidate'
+
 import VuelidateValidators from 'vuelidate/dist/validators.min.js'
 
 import vClickOutside from 'v-click-outside'
@@ -33,7 +34,6 @@ Vue.config.ignoredElements = ['component', 'panel', 'content']
 Vue.config.productionTip = false
 Vue.config.devtools = false
 
-console.log(VueSvgicon)
 Vue.use(VueSvgicon, {tagName: 'icon'})
 
 if (globalThis.document) {

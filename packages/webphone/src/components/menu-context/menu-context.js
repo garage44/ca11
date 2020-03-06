@@ -1,3 +1,6 @@
+import '@/icons/settings.js'
+import '@/icons/logout.js'
+
 export default (app) => {
     /**
     * @memberof fg.components

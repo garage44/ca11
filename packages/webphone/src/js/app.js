@@ -5,7 +5,7 @@ import Module from './lib/module.js'
 globalThis.Module = Module
 
 import i18n from './i18n/i18n.js'
-
+console.log("BLA")
 import Crypto from '@ca11/sig11/src/crypto.js'
 
 import App from './lib/app.js'

@@ -20,7 +20,7 @@ class Call {
         this.busyTone = app.sounds.busyTone
         this.translations = app.helpers.getTranslations().call
 
-        if (!description.id) this.id = shortid.generate()
+        if (!description.id) this.id = shortid()
         else this.id = description.id
 
         /**

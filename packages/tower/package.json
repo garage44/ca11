@@ -1,5 +1,6 @@
 {
   "name": "@ca11/tower",
+  "type": "module",
   "version": "1.0.0",
   "description": "SIG11 service",
   "main": "src/index.js",

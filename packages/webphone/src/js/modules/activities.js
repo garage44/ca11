@@ -69,7 +69,7 @@ class ModuleActivity extends Module {
     */
     addActivity(activity) {
         activity.date = new Date().getTime()
-        activity.id = shortid.generate()
+        activity.id = shortid()
         activity.remind = false
 
         let activities = this.app.state.activities.activities

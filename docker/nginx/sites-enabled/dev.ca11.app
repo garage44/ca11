@@ -8,6 +8,11 @@ server {
   ssl_certificate /etc/nginx/ssl/dev.ca11.app.crt;
   ssl_certificate_key /etc/nginx/ssl/dev.ca11.app.key;
 
+  location /static {
+    autoindex on;
+    root /usr/share/nginx/html/static;
+  }
+
   location / {
     autoindex on;
     root /usr/share/nginx/html;

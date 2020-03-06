@@ -1,3 +1,5 @@
+import Vuelidate from 'vuelidate'
+
 export default (app) => {
 
     const v = Vuelidate.validators

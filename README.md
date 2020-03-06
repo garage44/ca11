@@ -1,76 +1,68 @@
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
-![ca11-12-06-19](https://user-images.githubusercontent.com/48799939/70350280-b4f66980-1866-11ea-9b43-600a5b9150c7.png)
-
-* [CA11](https://ca11.app/) - Reference CA11 PWA / Tower
-* [News](https://blog.ca11.app) - Project updates
-* [Docs](https://docs.ca11.app) - User & developer docs
-
-
 # About CA11
-CA11 is open-source software for WebRTC-based calling, messaging and file exchange.
-The main purpose of CA11 is to provide an accessible and transparent communication
-infrastructure, without the need for centralized platforms. CA11 tries to unite with
-other efforts that bring transparency and privacy to mobile communication. This means
-that it doesn't try to fit into the existing mobile ecosystem, but instead aspires to
-create synergy with other open mobile projects like [Plasma mobile](https://www.plasma-mobile.org/),
-the [Librem 5](https://puri.sm/products/librem-5/) and the [Pinephone](https://www.pine64.org/pinephone/).
 
-The project pragmatically piggybacks on existing Web technologies(WebRTC, WebCrypto)
-where feasible, and focusses instead on user experience and decentralization of the
-signalling infrastructure. The reference implementation of the User Interface and
-signalling service are webbased and in JavaScript, which keeps it lightweight to
-develop. The PWA uses a protocol-agnostic call abstraction that can deal with multiple
-signalling mechanisms. SIP is supported through SIP.js and a WebRTC-compatible SIP backend(Asterisk).
+* Open and Free [WebRTC Telephony Service](https://ca11.app/)
+* Open-source stack for WebRTC-based telephony
 
-CA11 also comes with its own signalling service(*SIG11*), which uses assymetric encryption
-to establish P2P DTLS-SRTP connections over an untrusted overlay network. While still being
-extremely experimental, this approach has some promising characteristics:
+  * General-purpose JavaScript softphone
+    * Flexible reactive Vue VDOM & state
+    * Modern ESM stack (Snowpack)
+    * PBKDF2-encrypted sessions
+    * Optimized (S)CSS (flexbox/CSS-variables)
+    * Protocol-agnostic (call abstraction)
 
- * Uses standardized cryptography ([WebCrypto](https://www.w3.org/TR/WebCryptoAPI/))
-   * ECDHE - Secure AES key exchange
-   * E2E encrypted signalling & message authenticity
- * Flexible client-side message routing
- * Phonenumber lookup through public keys
- * P2P WebRTC
-   * Media flows directly between peers
-   * High quality audio and video(OPUS/VP9)
-   * Standardized, industry-grade E2E encryption
+  * Serverside WebRTC telephony
+    * Pre-configured Asterisk PBX
+    * SIP-over-Websockets (SIP.js)
+    * Call features
+      * Call transfer
+      * On-hold
+      * DTMF
+      * (Video) conference
 
-CA11 comes with a Docker setup that launches the following supporting services:
-* NGINX to proxy HTTP and Websocket traffic
-* [Asterisk](https://www.asterisk.org/) to make calls over SIP networks
-* [Coturn](https://github.com/coturn/coturn) TURN/STUN service to negotiate P2P connections
-* [PostgreSQL](https://www.postgresql.org/) Database to persist Tower/SIP interaction
+  * P2P WebRTC telephony
+    * SIG11 signalling/routing protocol
+      * Standards-based cryptography ([WebCrypto](https://www.w3.org/TR/WebCryptoAPI/))
+      * Phonenumbers based on Public-keys
+      * Secure AES key exchange (ECDHE)
+      * E2E encrypted signalling
+    * E2E-encrypted WebRTC media (DTLS-SRTP)
+    * High quality audio and video(OPUS/VP9)
 
+# Install
 
-# Installation
-Node.js version 13 or higher is required. This manual uses Docker to setup a development
-environment. Use the content of the *docker* directory as a starting point for a manual
-installation.
+## Requirements
 
-* Clone the project and install dependencies
+* Chrom(e/ium) browser
+* Node.js 13 or higher
+* Docker
 
-      npm i -g gulp yarn
+> Use the content of the *docker* directory in case you want to install manually.
+
+## Procedure
+
+* Clone the project and install dependencies:
+
       git clone git@github.com:garage11/ca11.git
       cd ca11
       yarn
       cp .ca11rc.example .ca11rc
       yarn bootstrap
-      yarn build
+      ./cli.js watch
 
-* Generate developer certificates and a Certificate Authority to use SSL on a local domain:
+* Generate a developer certificate & CA to use SSL without warnings on a local domain:
 
       cd ca11/docker/nginx/ssl
       ./ca_cert.sh dev.ca11.app
       ./ca_cert.sh sip.dev.ca11.app
       ./ca_cert.sh sig11.dev.ca11.app
 
-* Manually import the development CA
+* (!) Manually import the development CA
 
       sudo ./ca_system.sh
 
-  *This shellscript only works on Archlinux at the moment. PRs welcome!*
+  > This shell-script for importing the CA into the system only works on Archlinux at the moment.
 
 * Add local hostname lookup for the default domains:
 
@@ -89,16 +81,7 @@ installation.
 
       node packages/tower/src/index.js
 
-Make sure you restart your browser, in order for the SSL certificate to refresh.
-Open https://dev.ca11.app and start your phone. Call one of the SIP testnumbers
-in contacts to see if the stack works as expected.
+* Restart the browser for the SSL certificate to be picked up
+* Open https://dev.ca11.app and start your phone
 
-
-## Troubleshooting
-*  **No audio device found.**
-
-   Sorry, CA11 requires a webcam currently.
-
-* **SIG11 calls don't work**
-
-   At the moment, the SIG11 protocol is not ready for usage yet.
+* Call one of the SIP testnumbers in contacts to verify that the stack works as expected.

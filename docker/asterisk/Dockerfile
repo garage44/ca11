@@ -1,11 +1,11 @@
 # vim:set ft=dockerfile:
-FROM archlinux
+FROM archlinux:latest
 
-MAINTAINER Jeroen van Veen <jvanveen@protonmail.com>
-
+LABEL maintainer="jvanveen@protonmail.com"
+RUN pacman -Sy --noconfirm archlinux-keyring
 RUN echo Server = http://ftp.nluug.nl/os/Linux/distr/archlinux/\$repo/os/\$arch > /etc/pacman.d/mirrorlist
-RUN pacman -Sy
-RUN pacman -S git vim inetutils awk openssh diffutils python-psycopg2 python-alembic --noconfirm
+RUN pacman -Syu --noconfirm
+RUN pacman -S git inetutils awk openssh diffutils python-psycopg2 python-alembic --noconfirm
 
 RUN cd $HOME &&\
  git clone https://github.com/asterisk/asterisk.git &&\

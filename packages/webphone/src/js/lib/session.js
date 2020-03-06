@@ -218,7 +218,7 @@ class Session {
 
             await this.app.setState({
                 session: {
-                    id: shortid.generate(),
+                    id: shortid(),
                 },
                 sig11: {
                     identity: {

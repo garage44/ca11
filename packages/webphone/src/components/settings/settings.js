@@ -1,3 +1,9 @@
+import '@/icons/database.js'
+import '@/icons/settings-misc.js'
+import '@/icons/headset_mic.js'
+import '@/icons/protocol-sip.js'
+import '@/icons/protocol-sig11.js'
+import '@/icons/webhooks.js'
 export default (app) => {
 
     const v = Vuelidate.validators

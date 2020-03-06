@@ -1,3 +1,6 @@
+import '@/icons/activities.js'
+import '@/icons/contacts.js'
+
 export default (app) => {
 
     const MenuCommunicate = {

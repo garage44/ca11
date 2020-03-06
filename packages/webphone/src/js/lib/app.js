@@ -299,7 +299,7 @@ class App extends Skeleton {
         if (typeof notification.timeout === 'undefined') {
             notification.timeout = 1500
         }
-        notification.id = shortid.generate()
+        notification.id = shortid()
         let notifications = this.state.app.notifications
         notifications.push(notification)
         this.setState({app: {notifications}})
