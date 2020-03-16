@@ -83,7 +83,7 @@ class ModuleSettings extends Module {
                         selected: {id: 'AUDIO_NOPROCESSING', name: this.app.$t('disabled')},
                     },
                 },
-                stun: '', // process.env.STUN,
+                stun: globalThis.env.endpoints.stun,
                 toggle: true,
             },
         }

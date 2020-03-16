@@ -9,12 +9,13 @@ import WebCrypto from 'node-webcrypto-ossl'
 
 global.crypto = new WebCrypto()
 import rc from 'rc'
+import knex from 'knex'
 import WebSocket from 'ws'
 
-import Skeleton from '@ca11/boilerplate'
-import Crypto from '@ca11/sig11/src/crypto'
-import Endpoint from '@ca11/sig11/src/endpoint'
-import Network from '@ca11/sig11/src/network'
+import {Skeleton} from '@ca11/boilerplate'
+import Crypto from '@ca11/sig11/src/crypto.js'
+import Endpoint from '@ca11/sig11/src/endpoint.js'
+import Network from '@ca11/sig11/src/network.js'
 
 let settings = {}
 
@@ -28,7 +29,7 @@ class Ca11Tower extends Skeleton {
         this.crypto = new Crypto(this)
         this.network = new Network(this)
 
-        this.knex = require('knex')(settings.tower.knex)
+        this.knex = knex(settings.tower.knex)
         this.setup()
     }
 

@@ -1,3 +1,5 @@
+import Vue from 'vue/dist/vue.runtime.js'
+
 function filters(app) {
     Vue.filter('fuzzydate', function(value) {
         var delta = Math.round((+new Date() - value) / 1000)

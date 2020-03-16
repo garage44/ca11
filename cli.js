@@ -26,6 +26,8 @@ import tinylr from 'tiny-lr'
 import VuePack from '@garage11/vuepack'
 import yargs from 'yargs'
 
+import build from 'vue-svgicon'
+
 let settings = rc('ca11', {host: '127.0.0.1', port: 35729})
 import themeSettings from '@ca11/theme'
 settings.theme = themeSettings
@@ -51,32 +53,31 @@ const entrypoint = {
 }
 
 tasks.assets = new Task('assets', async function() {
-    const files = await imagemin([path.join(settings.themeDir, 'src', 'img', '*.{jpg,png}')], {
-        destination: path.join(settings.buildDir, 'static', 'img'),
-        plugins: [
-            imageminJpegtran(),
-            imageminPngquant({
-                quality: [0.6, 0.8]
-            })
-        ]
-    })
-
-    await Promise.all([
-        fs.copy(path.join(settings.themeDir, 'src', 'audio'), path.join(settings.buildDir, 'static', 'audio')),
-        fs.copy(path.join(settings.themeDir, 'src', 'fonts'), path.join(settings.buildDir, 'static', 'fonts')),
-    ])
-
-    // const iconSrc = path.join(settings.tmpDir, 'svg')
-    // const iconBuildDir = path.join(settings.TEMP_DIR, 'build')
-
-    // const exec = `yarn svgo -s ${iconSrc} -t ${iconBuildDir}`
-
-    // childExec(exec, undefined, (_err, stdout, stderr) => {
-    //     if (stderr) logger.warn(stderr)
-    //     if (stdout) logger.warn(stdout)
-    //     done()
+    console.log(build)
+    // build({
+    //     sourcePath: path.join(settings.themeDir, 'src','svg'),
+    //     targetPath: path.join(settings.themeDir, 'src','js'),
+    //     ext: 'js',
+    //     es6: true,
+    //     tpl: '',
+    //     idSP: '_',
+    //     // svgo: 'Configuration file path' || {/* svgo config object */}
     // })
 
+    // const files = await imagemin([path.join(settings.themeDir, 'src', 'img', '*.{jpg,png}')], {
+    //     destination: path.join(settings.buildDir, 'static', 'img'),
+    //     plugins: [
+    //         imageminJpegtran(),
+    //         imageminPngquant({
+    //             quality: [0.6, 0.8]
+    //         })
+    //     ]
+    // })
+
+    // await Promise.all([
+    //     fs.copy(path.join(settings.themeDir, 'src', 'audio'), path.join(settings.buildDir, 'static', 'audio')),
+    //     fs.copy(path.join(settings.themeDir, 'src', 'fonts'), path.join(settings.buildDir, 'static', 'fonts')),
+    // ])
 })
 
 tasks.build = new Task('build', async function() {

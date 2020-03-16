@@ -10,7 +10,7 @@ server {
 
   location /static {
     autoindex on;
-    root /usr/share/nginx/html/static;
+    root /usr/share/nginx/html/;
   }
 
   location / {

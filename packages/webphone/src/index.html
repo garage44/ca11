@@ -10,10 +10,11 @@
         <% } %>
         <link rel="icon" href="/static/img/logo.png"/>
         <link href="/static/app.css" rel="stylesheet"/>
-        <%if (settings.imports) { %>
+        <script>globalThis.env = <% print(JSON.stringify(settings.webphone)) %></script>
+        <%if (settings.webphone.imports) { %>
         <script type="importmap">
             {
-            "imports": <% - print(JSON.stringify(settings.imports)); %>
+            "imports": <% - print(JSON.stringify(settings.webphone.imports)); %>
             }
         </script>
         <% } %>
@@ -23,6 +24,8 @@
     </body>
 
     <script type="module" src="/static/js/app.js"></script>
+
+
 
     <!-- <%if (settings.BUILD_TARGET === 'pwa') { %>
     <script>

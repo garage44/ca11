@@ -1,8 +1,6 @@
-import Vuelidate from 'vuelidate'
+import v from 'vuelidate/dist/validators.min.js'
 
 export default (app) => {
-
-    const v = Vuelidate.validators
 
     /**
     * @memberof fg.components
@@ -64,7 +62,7 @@ export default (app) => {
                             sinks: {
                                 headsetInput: {
                                     valid: {
-                                        customValid: Vuelidate.withParams({
+                                        customValid: v.helpers.withParams({
                                             message: sinkErrormessage,
                                             type: 'customValid',
                                         }, (valid, headsetInput) => {
@@ -76,7 +74,7 @@ export default (app) => {
                                 },
                                 headsetOutput: {
                                     valid: {
-                                        customValid: Vuelidate.withParams({
+                                        customValid: v.helpers.withParams({
                                             message: sinkErrormessage,
                                             type: 'customValid',
                                         }, (valid, headsetOutput) => {
@@ -90,7 +88,7 @@ export default (app) => {
                                 },
                                 ringOutput: {
                                     valid: {
-                                        customValid: Vuelidate.withParams({
+                                        customValid: v.helpers.withParams({
                                             message: sinkErrormessage,
                                             type: 'customValid',
                                         }, (valid, ringOutput) => {

@@ -3,6 +3,9 @@ import I18nTranslations from '../i18n/i18n.js'
 import filters from './filters.js'
 import helpers from './helpers.js'
 
+import Vue from 'vue/dist/vue.runtime.js'
+import VueI18nStash from '@garage11/vue-i18n/src/store-stash.js'
+import VueI18n from '@garage11/vue-i18n'
 
 /**
 * The App class extends from the `Skeleton` class and adds
@@ -105,8 +108,8 @@ class App extends Skeleton {
     */
     _initViewModel({main, settings = {}} = {}) {
         this.logger.info(`${this}init viewmodel`)
-        const i18nStore = new I18nStore(this.state)
-        Vue.use(I18nStash, i18nStore)
+        const i18nStore = new VueI18nStash(this.state)
+        Vue.use(VueI18n, i18nStore)
 
         for (const [id, translation] of Object.entries(this.i18n.translations)) {
             Vue.i18n.add(id, translation)
@@ -117,7 +120,6 @@ class App extends Skeleton {
         // Add a shortcut to the translation module.
         this.$t = Vue.i18n.translate
 
-        console.log(this.state)
         this.vm = new Vue(Object.assign({
             data: {store: this.state},
             render: h => h(main),

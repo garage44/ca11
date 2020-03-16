@@ -1,5 +1,9 @@
 // Based on https://raw.githubusercontent.com/onsip/SIP.js/0.11.6/src/Web/SessionDescriptionHandler.js
 // LICENSE: https://github.com/onsip/SIP.js/blob/master/LICENSE
+import SIP from 'sip.js/dist/sip.js'
+import SessionDescriptionHandlerObserver from 'sip.js/src/Web/SessionDescriptionHandlerObserver.js'
+import sdpInterop from 'sdp-interop-sl'
+
 
 const iceStates = {
     checking: 'iceConnectionChecking',
@@ -39,7 +43,7 @@ var SessionDescriptionHandler = function(logger, observer, options) {
         this.modifiers = [this.modifiers]
     }
 
-    var environment = global.window || global
+    var environment = globalThis.window || global
     this.WebRTC = {
         getUserMedia: environment.navigator.mediaDevices.getUserMedia.bind(environment.navigator.mediaDevices),
         MediaStream: environment.MediaStream,
@@ -57,11 +61,11 @@ var SessionDescriptionHandler = function(logger, observer, options) {
 
 SessionDescriptionHandler.defaultFactory = function defaultFactory(session, options) {
     var logger = session.ua.getLogger('sip.invitecontext.sessionDescriptionHandler', session.id)
-    var SessionDescriptionHandlerObserver = require('sip.js/src/Web/SessionDescriptionHandlerObserver')
+
     var observer = new SessionDescriptionHandlerObserver(session, options)
     // Create a new interop object for every new session,
     // otherwise sdp-interop's cache gets corrupted.
-    observer.interop = sdpInterop()
+    observer.interop = sdpInterop.InteropChrome()
     // Pass the app object to the observer and
     // delete it from options, before it is parsed
     // to json.

@@ -1,3 +1,5 @@
+import Vue from 'vue/dist/vue.runtime.js'
+
 import templates from './templates.js'
 
 // Use Vuepack naming convention for templates.

@@ -1,24 +1,21 @@
 {
   "name": "@ca11/theme",
-  "main": "ca11-theme.js",
+  "main": "theme.js",
   "type": "module",
   "version": "1.3.0",
   "description": "The Default CA11 webphone UI theme",
   "files": [
     "src",
-    "ca11-theme.json"
+    "theme.js"
   ],
   "author": "Garage11",
   "license": "MIT",
-  "homepage": "https://github.com/garage11/ca11-theme-default#readme",
+  "homepage": "https://github.com/garage11/ca11#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/garage11/ca11-theme-default.git"
+    "url": "git+https://github.com/garage11/ca11.git"
   },
   "bugs": {
-    "url": "https://github.com/garage11/ca11-theme-default/issues"
-  },
-  "dependencies": {
-
+    "url": "https://github.com/garage11/ca11/issues"
   }
 }

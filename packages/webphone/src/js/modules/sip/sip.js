@@ -2,6 +2,8 @@
 import SessionDescriptionHandler from './sdh.js'
 import Module from '../../lib/module.js'
 
+import SIP from 'sip.js/dist/sip.js'
+
 /**
 * SIP Network logic for CA11 clients.
 * @module ModuleUI
@@ -39,7 +41,7 @@ class ModuleSIP extends Module {
                 username: null,
             },
             enabled: false,
-            endpoint: '', // process.env.SIP_ENDPOINT,
+            endpoint: globalThis.env.endpoints.sip,
             status: 'loading',
             toggled: false,
         }
@@ -232,7 +234,7 @@ class ModuleSIP extends Module {
         const env = this.app.env
         // Don't use template literals, because envify
         // can't deal with string replacement.
-        let userAgent = 'CA11/' + process.env.VERSION + ' '
+        let userAgent = 'CA11/' + globalThis.env.VERSION + ' '
         if (env.isLinux) userAgent += '(Linux/'
         else if (env.isMacOS) userAgent += '(MacOS/'
         else if (env.isWindows) userAgent += '(Windows/'

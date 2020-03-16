@@ -1,10 +1,8 @@
-import '@/icons/settings.js'
-import '@/icons/logout.js'
+// import '@/icons/settings.js'
+// import '@/icons/logout.js'
 
 export default (app) => {
-    /**
-    * @memberof fg.components
-    */
+
     const MenuContext = {
         computed: app.helpers.sharedComputed(),
         data: function() {

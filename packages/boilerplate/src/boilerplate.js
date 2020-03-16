@@ -4,14 +4,18 @@ import Utils from './utils.js'
 
 import EventEmitter from 'eventemitter3'
 
+// FIXME: shortid replacement
+globalThis.shortid = function() {
+    var result           = ''
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length
+    for ( var i = 0; i < 6; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength))
+    }
+    return result
+}
 
-/**
-* This is the minimal class that all runnable parts of the Ca11
-* application inherit from. It sets some basic properties that
-* can be reused, like a logger, an IPC eventemitter and
-* some environmental properties.
-* @memberof app
-*/
+
 export class Skeleton extends EventEmitter {
 
     constructor(settings) {
@@ -35,11 +39,6 @@ export class Skeleton extends EventEmitter {
         this.verbose = false
     }
 
-
-    /**
-    * Generate a representational name for this module. Used for logging.
-    * @returns {String} - An identifier for this module.
-    */
     toString() {
         return `[${this.constructor.name}] `
     }

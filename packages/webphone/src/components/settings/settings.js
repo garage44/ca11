@@ -1,16 +1,7 @@
-import '@/icons/database.js'
-import '@/icons/settings-misc.js'
-import '@/icons/headset_mic.js'
-import '@/icons/protocol-sip.js'
-import '@/icons/protocol-sig11.js'
-import '@/icons/webhooks.js'
+import v from 'vuelidate/dist/validators.min.js'
+
 export default (app) => {
 
-    const v = Vuelidate.validators
-
-    /**
-    * @memberof fg.components
-    */
     const Settings = {
         data: function() {
             return {
@@ -54,7 +45,7 @@ export default (app) => {
                     },
                 }
 
-                // Switch back to SIG11 as default call protocol when SIP is disabled.
+                // Set SIG11 as default call protocol when SIP is disabled.
                 if (!this.sip.enabled && app.state.caller.description.protocol === 'sip') {
                     settingsState.caller = {description: {protocol: 'sig11'}}
                 }

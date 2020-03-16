@@ -1,14 +1,12 @@
 export default (app) => {
 
-    // console.log("APP", app.helpers.sharedComputed())
-
     let splashInterval
 
     /**
     * @memberof fg.components
     */
     const Main = {
-        // computed: app.helpers.sharedComputed(),
+        computed: app.helpers.sharedComputed(),
         data: function() {
             return {
                 currentSplash: 0,

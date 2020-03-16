@@ -1,5 +1,5 @@
-import '@/icons/activities.js'
-import '@/icons/contacts.js'
+// import '@/icons/activities.js'
+// import '@/icons/contacts.js'
 
 export default (app) => {
 

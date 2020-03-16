@@ -86,6 +86,7 @@
 
         <!-- SIP preferences -->
         <div class="tab" :class="{active: tabs.active === 'sip'}">
+
             <FieldCheckbox
                 v-model="sip.toggled"
                 elementclass="t-cb-sip-toggled"

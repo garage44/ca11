@@ -11,13 +11,13 @@
   },
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "build": "gulp -f packages/webphone/gulpfile.js build",
+    "build": "./cli.js build",
     "lint": "yarn lint:js;yarn lint:scss",
     "lint:js": "eslint {packages/**/src/**/*.js,gulp/**/*.js}",
     "lint:scss": "stylelint 'packages/webphone/src/**/*.scss'",
     "prepare": "snowpack --include \"packages/webphone/src/**/*.js\" --dest build/static/web_modules",
     "release": "standard-version",
-    "icons": "vsvg -s packages/webphone/src/svg/ --es6 -t packages/webphone/src/js/icons"
+    "icons": "vsvg -s packages/theme/src/svg/ --es6 -t packages/theme/src/js"
   },
   "husky": {
     "hooks": {
@@ -69,7 +69,6 @@
     "tape": "4.x.x",
     "tape-catch": "1.x.x",
     "tiny-lr": "^1.1.1",
-    "vue-svgicon": "^3.2.6",
     "yargs": "15.x.x"
   },
   "config": {
@@ -77,5 +76,8 @@
       "path": "./node_modules/cz-customizable"
     }
   },
-  "dependencies": {}
+  "dependencies": {
+    "roboto-fontface": "^0.10.0",
+    "vue-svgicon": "^3.2.6"
+  }
 }

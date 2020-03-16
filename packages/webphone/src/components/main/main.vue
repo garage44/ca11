@@ -7,6 +7,7 @@
 
     <Session v-if="!session.authenticated"/>
     <MenuContext v-if="session.authenticated" class="c-main__menu"/>
+
     <MenuCommunicate v-if="session.authenticated" :call="callActive" class="c-main__media-controls"/>
 
     <AudioBg/>

@@ -1,21 +1,34 @@
-import './vendor.js'
-
-
-import Module from './lib/module.js'
-globalThis.Module = Module
-
-import i18n from './i18n/i18n.js'
-console.log("BLA")
-import Crypto from '@ca11/sig11/src/crypto.js'
+// Import all icons at once.
+import '@ca11/theme/src/js/index.js'
 
 import App from './lib/app.js'
+import Crypto from '@ca11/sig11/src/crypto.js'
 import Devices from './lib/devices.js'
 import StateStore from './lib/store.js'
 import Media from './lib/media.js'
 import Session from './lib/session.js'
 import Sounds from './lib/sounds.js'
 
+import vClickOutside from 'v-click-outside'
+import Vue from 'vue/dist/vue.runtime.js'
+import VueStash from 'vue-stash'
+import VueSvgicon from 'vue-svgicon'
+// import VueAutosize from 'vue-autosize'
+import Vuelidate from 'vuelidate'
+
 import components from './components.js'
+
+Vue.config.ignoredElements = ['component', 'panel', 'content']
+Vue.config.productionTip = false
+Vue.config.devtools = false
+
+Vue.use(VueSvgicon, {tagName: 'icon'})
+Vue.use(Vuelidate)
+Vue.use(vClickOutside)
+Vue.use(VueStash)
+
+if (!globalThis.translations) globalThis.translations = {}
+
 
 class CA11 extends App {
     /**
@@ -300,7 +313,7 @@ class CA11 extends App {
 }
 
 import options from './lib/options.js'
-// console.log(options.env)
+
 if (options.env.isBrowser) {
     globalThis.ca11 = new CA11(options)
 }

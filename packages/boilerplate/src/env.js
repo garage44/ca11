@@ -1,17 +1,9 @@
-/** @memberof lib */
-/**
-* Simple environment detection for the DOM and JavaScript.
-* Ca11 tries to be environment-agnostic, but sometimes
-* a condition needs to be made, based on the current environment
-* the code runs in.
-* @module env
-*/
+if (globalThis.document) {
+    window.globalThis = window
+    globalThis.$ = document.querySelector.bind(document)
+    globalThis.$$ = document.querySelectorAll.bind(document)
+}
 
-/**
-* Call this method in the script context to get
-* the context back as an object.
-* @returns {Object} - Environment-specific flags.
-*/
 function env() {
     let _env = {
         isAndroid: false,

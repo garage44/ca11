@@ -2,6 +2,7 @@ import SIPCaller from './sip/sip.js'
 import SIG11Caller from './sig11/sig11.js'
 
 import Module from '../../lib/module.js'
+import Vue from 'vue/dist/vue.runtime.js'
 
 
 /**

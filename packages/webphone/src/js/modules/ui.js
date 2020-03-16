@@ -72,7 +72,7 @@ class PluginUI extends Module {
         options.body = message
 
         // Notification API may be disabled during tests or when running in Node.
-        if (!('Notification' in global)) return
+        if (!('Notification' in globalThis)) return
 
         if (Notification.permission === 'granted') {
             if (!stack && this._notification) this._notification.close()

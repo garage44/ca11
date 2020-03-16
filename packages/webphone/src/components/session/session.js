@@ -1,15 +1,8 @@
-import '@/icons/caller.js'
-import '@/icons/delete.js'
-import '@/icons/phone.js'
-import '@/icons/phone-add.js'
+import v from 'vuelidate/dist/validators.min.js'
 
 export default (app) => {
-    const v = Vuelidate.validators
     let sloganInterval
 
-    /**
-    * @memberof fg.components
-    */
     const Session = {
         computed: {
             slogan: function() {
