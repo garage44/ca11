@@ -1,21 +1,38 @@
 {
-    "name": {
-        "alpha": "CA11-alpha",
-        "beta": "CA11-beta",
-        "production": "CA11"
-    },
-    "endpoints": {
-        "sig11": "sig11.dev.ca11.app",
-        "sip": "sip.dev.ca11.app",
-        "stun": [
-            "stun:dev.ca11.app"
-        ]
+    "webphone": {
+        "endpoints": {
+            "sig11": "sig11.dev.ca11.app",
+            "sip": "sip.dev.ca11.app",
+            "stun": [
+                "stun:dev.ca11.app"
+            ]
+        },
+        "imports": {
+            "@ca11/boilerplate": "./static/web_modules/@ca11/boilerplate.js",
+            "@ca11/sig11/src/crypto.js": "./static/web_modules/@ca11/sig11/src/crypto.js",
+            "@ca11/sig11/src/endpoint.js": "./static/web_modules/@ca11/sig11/src/endpoint.js",
+            "@ca11/sig11/src/network.js": "./static/web_modules/@ca11/sig11/src/network.js",
+            "@ca11/theme/src/js/index.js": "./static/web_modules/@ca11/theme/src/js/index.js",
+            "@garage11/vue-i18n": "./static/web_modules/@garage11/vue-i18n.js",
+            "@garage11/vue-i18n/src/store-stash.js": "./static/web_modules/@garage11/vue-i18n/src/store-stash.js",
+            "eventemitter3": "./static/web_modules/eventemitter3.js",
+            "sdp-interop-sl": "./static/web_modules/sdp-interop-sl.js",
+            "v-click-outside": "./static/web_modules/v-click-outside.js",
+            "vue-stash": "./static/web_modules/vue-stash.js",
+            "vue-svgicon": "./static/web_modules/vue-svgicon.js",
+            "vue/dist/vue.runtime.js": "./static/web_modules/vue/dist/vue.runtime.js",
+            "vuelidate": "./static/web_modules/vuelidate.js",
+            "vuelidate/dist/validators.min.js": "./static/web_modules/vuelidate/dist/validators.min.js",
+            "sip.js/dist/sip.js": "./static/web_modules/sip.js/dist/sip.js",
+            "sip.js/src/Web/SessionDescriptionHandlerObserver.js": "./static/web_modules/sip.js/src/Web/SessionDescriptionHandlerObserver.js",
+            "@/": "./static/"
+        }
     },
     "testing": {
         "headless": false,
         "port": 3000
     },
-    "theme": "@ca11/theme",
+    "theme": "@ca11/webphone-theme",
     "tower": {
         "port": 3001,
         "knex": {

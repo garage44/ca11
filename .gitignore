@@ -1,8 +1,9 @@
 node_modules
 ./packages/**/node_modules
 build
+yarn-error.log
 .ca11rc
 docker/nginx/ssl
 docker/postgres/database_data/
-packages/webphone/src/js/templates.js
-packages/webphone/src/js/icons/
+packages/webphone/templates.js
+packages/webphone-theme/icons

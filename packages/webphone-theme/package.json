@@ -1,8 +1,13 @@
 {
-  "name": "@ca11/sig11",
+  "name": "@ca11/webphone-theme",
+  "main": "theme.js",
   "type": "module",
-  "version": "1.0.0",
-  "description": "SIG11 messaging protocol",
+  "version": "1.3.0",
+  "description": "CA11 webphone theming files",
+  "files": [
+    "src",
+    "theme.js"
+  ],
   "author": "Garage11",
   "license": "MIT",
   "homepage": "https://github.com/garage11/ca11#readme",
@@ -12,12 +17,5 @@
   },
   "bugs": {
     "url": "https://github.com/garage11/ca11/issues"
-  },
-  "dependencies": {
-    "graphlib": "^2.1.8",
-    "btoa": "^1.2.1",
-    "knex": "^0.20.4",
-    "node-webcrypto-ossl": "^1.0.48",
-    "pg": "^7.15.1"
   }
 }

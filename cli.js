@@ -26,16 +26,17 @@ import tinylr from 'tiny-lr'
 import VuePack from '@garage11/vuepack'
 import yargs from 'yargs'
 
-import build from 'vue-svgicon'
+import svgIcon from 'vue-svgicon/dist/lib/build.js'
+
 
 let settings = rc('ca11', {host: '127.0.0.1', port: 35729})
-import themeSettings from '@ca11/theme'
+import themeSettings from '@ca11/webphone-theme'
 settings.theme = themeSettings
 
 settings.baseDir = path.resolve(path.join(__dirname, '../'))
 settings.buildDir = path.join(settings.baseDir, 'build')
-settings.srcDir = path.resolve(path.join(settings.baseDir, 'packages', 'webphone', 'src'))
-settings.themeDir = path.resolve(path.join(settings.baseDir, 'packages', 'theme'))
+settings.srcDir = path.resolve(path.join(settings.baseDir, 'packages', 'webphone'))
+settings.themeDir = path.resolve(path.join(settings.baseDir, 'packages', 'webphone-theme'))
 settings.nodeDir = path.resolve(path.join(settings.baseDir, 'node_modules'))
 settings.tmpDir = path.join(settings.buildDir, '.tmp')
 
@@ -53,31 +54,29 @@ const entrypoint = {
 }
 
 tasks.assets = new Task('assets', async function() {
-    console.log(build)
-    // build({
-    //     sourcePath: path.join(settings.themeDir, 'src','svg'),
-    //     targetPath: path.join(settings.themeDir, 'src','js'),
-    //     ext: 'js',
-    //     es6: true,
-    //     tpl: '',
-    //     idSP: '_',
-    //     // svgo: 'Configuration file path' || {/* svgo config object */}
-    // })
+    svgIcon.default({
+        sourcePath: path.join(settings.themeDir, 'svg'),
+        targetPath: path.join(settings.themeDir, 'icons'),
+        ext: 'js',
+        es6: true,
+        tpl: '',
+        idSP: '_',
+    })
 
-    // const files = await imagemin([path.join(settings.themeDir, 'src', 'img', '*.{jpg,png}')], {
-    //     destination: path.join(settings.buildDir, 'static', 'img'),
-    //     plugins: [
-    //         imageminJpegtran(),
-    //         imageminPngquant({
-    //             quality: [0.6, 0.8]
-    //         })
-    //     ]
-    // })
+    const files = await imagemin([path.join(settings.themeDir, 'img', '*.{jpg,png}')], {
+        destination: path.join(settings.buildDir, 'static', 'img'),
+        plugins: [
+            imageminJpegtran(),
+            imageminPngquant({
+                quality: [0.6, 0.8]
+            })
+        ]
+    })
 
-    // await Promise.all([
-    //     fs.copy(path.join(settings.themeDir, 'src', 'audio'), path.join(settings.buildDir, 'static', 'audio')),
-    //     fs.copy(path.join(settings.themeDir, 'src', 'fonts'), path.join(settings.buildDir, 'static', 'fonts')),
-    // ])
+    await Promise.all([
+        fs.copy(path.join(settings.themeDir, 'audio'), path.join(settings.buildDir, 'static', 'audio')),
+        fs.copy(path.join(settings.themeDir, 'fonts'), path.join(settings.buildDir, 'static', 'fonts')),
+    ])
 })
 
 tasks.build = new Task('build', async function() {
@@ -100,12 +99,10 @@ tasks.html = new Task('html', async function() {
 tasks.js = new Task('js', async function() {
     if (!settings.production) {
         // Snowpack only requires a light-weight copy action to the build dir.
-        await Promise.all([
-            fs.copy(path.join(settings.srcDir, 'js'), path.join(settings.buildDir, 'static', 'js')),
-            fs.copy(path.join(settings.srcDir, 'components'), path.join(settings.buildDir, 'static', 'components')),
-        ])
+        let targets = (await globby([path.join(settings.srcDir, '**', '*.js')]))
+            .map((i) => fs.copy(i, path.join(settings.buildDir, 'static', i.replace(settings.srcDir, ''))))
 
-        return ({})
+        await Promise.all(targets)
     } else {
         // Use rollup to generate an optimized bundle.
         const bundle = await rollup.rollup({
@@ -117,7 +114,7 @@ tasks.js = new Task('js', async function() {
                 })],
         })
 
-        const target = path.join(settings.buildDir, 'static', 'js', `${this.ep.filename}.js`)
+        const target = path.join(settings.buildDir, 'static', `${this.ep.filename}.js`)
 
         await bundle.write({
             file: target,
@@ -172,13 +169,13 @@ tasks.scss = new Task('scss', async function() {
 })
 
 tasks.vue = new Task('vue', async function() {
-    const targets = await globby([path.join('packages', 'webphone', 'src', this.ep.raw)])
+    const targets = await globby([path.join('packages', 'webphone', this.ep.raw)])
     const templates = await vuePack.compile(targets)
     // This is an exceptional build target, because it is not
     // a module that is available from Node otherwise.
     await Promise.all([
-        fs.writeFile(path.join(settings.srcDir, 'js', 'templates.js'), templates),
-        fs.writeFile(path.join(settings.buildDir, 'static', 'js', 'templates.js'), templates),
+        fs.writeFile(path.join(settings.srcDir, 'templates.js'), templates),
+        fs.writeFile(path.join(settings.buildDir, 'static', 'templates.js'), templates),
     ])
 })
 

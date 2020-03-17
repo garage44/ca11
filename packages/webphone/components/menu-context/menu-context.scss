@@ -1,0 +1,12 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+.c-menu-context {
+    .c-protocol-status {
+        background: var(--bg-default);
+    }
+
+    .button-quit {
+        margin-top: calc(var(--spacer) * 2);
+    }
+}

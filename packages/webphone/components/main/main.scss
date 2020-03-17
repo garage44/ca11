@@ -1,0 +1,65 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+.c-main {
+    align-items: center;
+    background-blend-mode: darken;
+    background-size: cover;
+    height: 100vh;
+    overflow: hidden;
+    transition: background 2s;
+    width: 100vw;
+
+    &.splash-0 {
+        background: url('/static/img/splash-0.jpg');
+    }
+
+    &.splash-1 {
+        background-image: url('/static/img/splash-1.jpg');
+    }
+
+    &.splash-2 {
+        background-image: url('/static/img/splash-2.jpg');
+    }
+
+    &.splash-3 {
+        background-image: url('/static/img/splash-3.jpg');
+    }
+
+    &.splash-4 {
+        background-image: url('/static/img/splash-4.jpg');
+    }
+
+    &.splash-5 {
+        background-image: url('/static/img/splash-5.jpg');
+    }
+
+    &.splash-6 {
+        background-image: url('/static/img/splash-6.jpg');
+    }
+
+    &__content {
+        .main {
+            padding-right: 0;
+            width: 100%;
+        }
+    }
+
+
+    .tr-caller-bar-leave-active,
+    .tr-caller-bar-enter-active {
+        transition: transform 0.3s ease;
+    }
+
+    // Animate out of screen.
+    .tr-caller-bar-enter,
+    .tr-caller-bar-leave-to {
+        transform: translateY(#{-$space-4});
+    }
+
+    // Animate in screen.
+    .tr-caller-bar-enter-to,
+    .tr-caller-bar-leave {
+        transform: translateY(0);
+    }
+}

@@ -18,6 +18,7 @@ services:
       POSTGRES_PASSWORD: ca11ftw
     image: postgres:latest
     network_mode: host
+    user: ${CURRENT_UID:-1000:985}
     restart: always
     volumes:
       - ./postgres/database_data:/var/lib/postgresql/data

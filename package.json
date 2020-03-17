@@ -13,9 +13,9 @@
     "bootstrap": "lerna bootstrap",
     "build": "./cli.js build",
     "lint": "yarn lint:js;yarn lint:scss",
-    "lint:js": "eslint {packages/**/src/**/*.js,gulp/**/*.js}",
+    "lint:js": "eslint {packages/**/src/**/*.js}",
     "lint:scss": "stylelint 'packages/webphone/src/**/*.scss'",
-    "prepare": "snowpack --include \"packages/webphone/src/**/*.js\" --dest build/static/web_modules",
+    "prepare": "snowpack --include \"packages/webphone/**/*.js\" --dest build/static/web_modules",
     "release": "standard-version",
     "icons": "vsvg -s packages/theme/src/svg/ --es6 -t packages/theme/src/js"
   },
