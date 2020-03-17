@@ -67,7 +67,7 @@ class PluginUI extends Module {
             title: title,
             type: 'basic',
         }
-        options.iconUrl = 'img/notification.png'
+        options.iconUrl = 'static/img/notification.png'
         options.icon = options.iconUrl
         options.body = message
 

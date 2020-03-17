@@ -2,47 +2,26 @@
 
 # About CA11
 
-* Open and Free [WebRTC Telephony Service](https://ca11.app/)
-* Open-source stack for WebRTC-based telephony
+CA11 is **open** & **free** communication software; a fully open-source WebRTC-based
+communication stack without paid services or any business model. A CA11 instance
+is running [here](https://ca11.app/) as a public service.
 
-  * General-purpose JavaScript softphone
-    * Flexible reactive Vue VDOM & state
-    * Modern ESM stack (Snowpack)
-    * PBKDF2-encrypted sessions
-    * Optimized (S)CSS (flexbox/CSS-variables)
-    * Protocol-agnostic (call abstraction)
-
-  * Serverside WebRTC telephony
-    * Pre-configured Asterisk PBX
-    * SIP-over-Websockets (SIP.js)
-    * Call features
-      * Call transfer
-      * On-hold
-      * DTMF
-      * (Video) conference
-
-  * P2P WebRTC telephony
-    * SIG11 signalling/routing protocol
-      * Standards-based cryptography ([WebCrypto](https://www.w3.org/TR/WebCryptoAPI/))
-      * Phonenumbers based on Public-keys
-      * Secure AES key exchange (ECDHE)
-      * E2E encrypted signalling
-    * E2E-encrypted WebRTC media (DTLS-SRTP)
-    * High quality audio and video(OPUS/VP9)
+CA11 uses a highly optimized JavaScript webphone stack, applies existing
+PBX technology (Asterisk) for optimal reach and comes with an additional
+E2E encrypted signalling service for accountless, federated WebRTC P2P
+communication.
 
 # Install
 
 ## Requirements
 
 * Chrom(e/ium) browser
-* Node.js 13 or higher
-* Docker
-
-> Use the content of the *docker* directory in case you want to install manually.
+* Node.js 13+ (Native ESM)
+* Docker (or install manually using Docker as reference)
 
 ## Procedure
 
-* Clone the project and install dependencies:
+* Clone the project & install dependencies:
 
       git clone git@github.com:garage11/ca11.git
       cd ca11
@@ -77,11 +56,11 @@
       docker exec -w /root/asterisk/contrib/ast-db-manage -it asterisk alembic -c config.ini upgrade head
       psql -U asterisk -h 127.0.0.1 asterisk < postgres/sig11_asterisk.sql  # default pw is 'ca11ftw'
 
-* Start the SIG11 tower service
+* Start the signalling service
 
-      node packages/tower/src/index.js
+      node packages/sig11/service.js
 
 * Restart the browser for the SSL certificate to be picked up
-* Open https://dev.ca11.app and start your phone
+* Open https://dev.ca11.app to start your webphone
 
-* Call one of the SIP testnumbers in contacts to verify that the stack works as expected.
+Call one of the SIP testnumbers in contacts to verify that the SIP stack works.
