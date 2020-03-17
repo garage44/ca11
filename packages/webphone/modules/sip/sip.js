@@ -1,7 +1,6 @@
 
-import SessionDescriptionHandler from './sdh.js'
 import Module from '../../lib/module.js'
-
+import SessionDescriptionHandler from './sdh.js'
 import SIP from 'sip.js/dist/sip.js'
 
 /**

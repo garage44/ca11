@@ -1,23 +1,21 @@
-import http from 'http'
-
-import EventEmitter from 'eventemitter3'
-global.EventEmitter = EventEmitter
-
 import btoa from 'btoa'
-global.btoa = btoa
-import WebCrypto from 'node-webcrypto-ossl'
-
-global.crypto = new WebCrypto()
-import rc from 'rc'
-import knex from 'knex'
-import WebSocket from 'ws'
-
-import {Skeleton} from '@ca11/webphone/lib/skeleton.js'
 import Crypto from './lib/crypto.js'
 import Endpoint from './lib/endpoint.js'
+import EventEmitter from 'eventemitter3'
+import http from 'http'
+import knex from 'knex'
 import Network from './lib/network.js'
+import rc from 'rc'
+import {Skeleton} from '@ca11/webphone/lib/skeleton.js'
+import WebCrypto from 'node-webcrypto-ossl'
+import WebSocket from 'ws'
 
-let settings = {}
+global.EventEmitter = EventEmitter
+global.btoa = btoa
+
+global.crypto = new WebCrypto()
+
+const settings = {}
 
 rc('ca11', settings)
 
@@ -34,7 +32,7 @@ class Ca11Tower extends Skeleton {
     }
 
 
-    async onConnection(ws, req) {
+    async onConnection(ws) {
         const endpoint = new Endpoint(this.network, {}, ws)
 
         // Transport data handler.

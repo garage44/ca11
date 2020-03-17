@@ -53,13 +53,11 @@ class PluginUI extends Module {
     * uses inotify by default. Note that we can't use buttons here, because
     * that would require a service-worker implementation.
     * @param {Object} opts - Notification options.
-    * @param {Boolean} opts.force - Force to show the notification.
     * @param {String} opts.message - Message body for the notification.
-    * @param {String} [opts.number] - Number is used to target specific click-to-dial labels.
     * @param {String} opts.title - Title header for the notification.
     * @param {Boolean} [opts.stack] - Whether to stack the notifications.
     */
-    notification({force = false, message, number = null, title, stack = false, timeout = 3000}) {
+    notification({message, title, stack = false, timeout = 3000}) {
         if (this.app.env.isNode || this.app.env.isAndroid) return
 
         const options = {

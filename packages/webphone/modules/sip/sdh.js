@@ -1,8 +1,8 @@
 // Based on https://raw.githubusercontent.com/onsip/SIP.js/0.11.6/src/Web/SessionDescriptionHandler.js
 // LICENSE: https://github.com/onsip/SIP.js/blob/master/LICENSE
-import SIP from 'sip.js/dist/sip.js'
-import SessionDescriptionHandlerObserver from 'sip.js/src/Web/SessionDescriptionHandlerObserver.js'
 import sdpInterop from 'sdp-interop-sl'
+import SessionDescriptionHandlerObserver from 'sip.js/src/Web/SessionDescriptionHandlerObserver.js'
+import SIP from 'sip.js/dist/sip.js'
 
 
 const iceStates = {
@@ -424,20 +424,20 @@ SessionDescriptionHandler.prototype = Object.create(SIP.SessionDescriptionHandle
             this.peerConnection.onicegatheringstatechange = () => {
                 this.logger.log(`RTCIceGatheringState changed: ${this.iceGatheringState}`)
                 switch (this.iceGatheringState) {
-                    case 'gathering':
-                        this.emit('iceGathering', this)
-                        if (!this.iceGatheringTimer && options.iceCheckingTimeout) {
-                            this.iceGatheringTimeout = false
-                            this.iceGatheringTimer = SIP.Timers.setTimeout(() => {
-                                this.logger.log('RTCIceChecking Timeout Triggered after ' + options.iceCheckingTimeout + ' milliseconds')
-                                this.iceGatheringTimeout = true
-                                this.triggerIceGatheringComplete()
-                            }, options.iceCheckingTimeout)
-                        }
-                        break
-                    case 'complete':
-                        this.triggerIceGatheringComplete()
-                        break
+                case 'gathering':
+                    this.emit('iceGathering', this)
+                    if (!this.iceGatheringTimer && options.iceCheckingTimeout) {
+                        this.iceGatheringTimeout = false
+                        this.iceGatheringTimer = SIP.Timers.setTimeout(() => {
+                            this.logger.log('RTCIceChecking Timeout Triggered after ' + options.iceCheckingTimeout + ' milliseconds')
+                            this.iceGatheringTimeout = true
+                            this.triggerIceGatheringComplete()
+                        }, options.iceCheckingTimeout)
+                    }
+                    break
+                case 'complete':
+                    this.triggerIceGatheringComplete()
+                    break
                 }
             }
 

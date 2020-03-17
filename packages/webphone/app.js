@@ -2,21 +2,22 @@
 import '@ca11/webphone-theme/icons/index.js'
 
 import App from './lib/app.js'
+import components from './components.js'
 import Crypto from '@ca11/sig11/lib/crypto.js'
 import Devices from './lib/devices.js'
-import StateStore from './lib/store.js'
 import Media from './lib/media.js'
+import options from './lib/options.js'
 import Session from './lib/session.js'
 import Sounds from './lib/sounds.js'
 
+import StateStore from './lib/store.js'
 import vClickOutside from 'v-click-outside'
 import Vue from 'vue/dist/vue.runtime.js'
+import Vuelidate from 'vuelidate'
 import VueStash from 'vue-stash'
 import VueSvgicon from 'vue-svgicon'
 // import VueAutosize from 'vue-autosize'
-import Vuelidate from 'vuelidate'
 
-import components from './components.js'
 
 Vue.config.ignoredElements = ['component', 'panel', 'content']
 Vue.config.productionTip = false
@@ -151,11 +152,9 @@ class CA11 extends App {
         // Data is first encrypted async; then written to LocalStorage.
         // First make a snapshot and sent the write action to the queue.
         // All async write actions must be processed in order.
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             this._writeState.push({
-                action: (item) => this._writeEncryptedState({
-                    item, reject, resolve, state: this.utils.copyObject(storeState),
-                }),
+                action: (item) => this._writeEncryptedState({item, resolve}),
                 status: 0,
             })
 
@@ -271,7 +270,7 @@ class CA11 extends App {
     * state.
     * @param {Object} options - The options to pass.
     */
-    async _writeEncryptedState({item, reject, resolve, state}) {
+    async _writeEncryptedState({item, resolve}) {
         item.status = 1
         const storeEndpoint = this.state.app.session.active
         if (!storeEndpoint) return
@@ -311,8 +310,6 @@ class CA11 extends App {
         return '[ca11] '
     }
 }
-
-import options from './lib/options.js'
 
 if (options.env.isBrowser) {
     globalThis.ca11 = new CA11(options)

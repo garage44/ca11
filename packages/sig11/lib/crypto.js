@@ -122,14 +122,9 @@ class Crypto {
     * @returns {Object} - Serializable identity.
     */
     async createIdentity() {
-        try {
-            return await crypto.subtle.generateKey(
-                this.rsa.params, true, this.rsa.uses,
-            )
-        } catch (err) {
-            // eslint-disable-next-line no-console
-            throw err
-        }
+        return await crypto.subtle.generateKey(
+            this.rsa.params, true, this.rsa.uses,
+        )
     }
 
 
@@ -244,7 +239,7 @@ class Crypto {
     async exportAES(aesKey) {
         // Export the AES key, so we can see if they look the same.
         const keydata = await crypto.subtle.exportKey('raw', aesKey)
-        //returns the exported key data
+        // returns the exported key data
         let base64Keydata = this.__dataArrayToBase64(keydata)
         this.app.logger.debug(`${this}exported AES-GCM session key`)
         return base64Keydata

@@ -1,20 +1,18 @@
-import Vue from 'vue/dist/vue.runtime.js'
 
-import templates from './templates.js'
 
 // Use Vuepack naming convention for templates.
 import About from './components/about/about.js'
 import Activities from './components/activities/activities.js'
 import AudioBg from './components/audio-bg/audio-bg.js'
 import Call from './components/call/call.js'
+import Caller from './components/caller/caller.js'
+import CallerBar from './components/caller/components/bar/bar.js'
+import CallerSwitcher from './components/caller/components/switcher/switcher.js'
+
 import CallInputEndpoint from './components/call/components/input-endpoint/input-endpoint.js'
 import CallKeypad from './components/call/components/keypad/keypad.js'
 import CallOptions from './components/call/components/options/options.js'
 import CallTransfer from './components/call/components/transfer/transfer.js'
-
-import Caller from './components/caller/caller.js'
-import CallerBar from './components/caller/components/bar/bar.js'
-import CallerSwitcher from './components/caller/components/switcher/switcher.js'
 
 import Contacts from './components/contacts/contacts.js'
 import Devices from './components/devices/devices.js'
@@ -36,6 +34,9 @@ import Soundmeter from './components/soundmeter/soundmeter.js'
 import Stream from './components/stream/stream.js'
 import StreamView from './components/stream-view/stream-view.js'
 
+import templates from './templates.js'
+import Vue from 'vue/dist/vue.runtime.js'
+
 
 export default function(app) {
     app.templates = templates
@@ -45,12 +46,13 @@ export default function(app) {
         Activities,
         AudioBg,
         Call,
-        CallKeypad,
-        CallOptions,
-        CallTransfer,
         Caller,
         CallerBar,
         CallerSwitcher,
+        CallInputEndpoint,
+        CallKeypad,
+        CallOptions,
+        CallTransfer,
         Contacts,
         Devices,
         DevicesConfig,
@@ -68,7 +70,6 @@ export default function(app) {
         Soundmeter,
         Stream,
         StreamView,
-        CallInputEndpoint
     }
 
 
@@ -83,7 +84,7 @@ export default function(app) {
                 let _component = component(app, definition.component)
                 _component = Object.assign(_component, {
                     render: app.templates[name].r,
-                    staticRenderFns: app.templates[name].s
+                    staticRenderFns: app.templates[name].s,
                 })
 
                 components[name] = Vue.component(name, _component)
@@ -93,7 +94,7 @@ export default function(app) {
         }
         Object.assign(component, {
             render: templates[name].r,
-            staticRenderFns: templates[name].s
+            staticRenderFns: templates[name].s,
         })
 
         components[name] = Vue.component(name, component)
