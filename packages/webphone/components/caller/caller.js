@@ -1,8 +1,6 @@
 export default (app) => {
     const sharedComputed = app.helpers.sharedComputed()
 
-    let types = ['audio', 'video', 'display']
-
     const Caller = {
         computed: Object.assign({
             callActive: sharedComputed.callActive,
@@ -25,12 +23,6 @@ export default (app) => {
                     else classes['t-st-caller-idle'] = true
                 }
                 return classes
-            },
-            switchStream: function() {
-                // Step through streamTypes.
-                const nextStreamType = types[(types.indexOf(this.stream.type) + 1) % types.length]
-                // Maintain selected state between streams.
-                app.media.query(nextStreamType, {selected: this.stream.selected})
             },
         }, app.helpers.sharedMethods()),
         store: {

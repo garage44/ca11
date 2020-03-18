@@ -9,24 +9,22 @@ html.test .c-stream video {
 
 .c-stream {
     align-items: center;
-    background: var(--grey-500);
+    background: var(--bg-dark);
+    border: calc(var(--spacer) / 2) solid var(--bg-dark);
     display: flex;
     font-family: 'Rajdhani';
+    height: 100%;
     justify-content: center;
     overflow: hidden;
     position: relative;
     transition: all 0.5s;
+
 
     &__icon {
         fill: var(--grey-100);
         height: 50%;
         position: absolute;
         width: 50%;
-    }
-
-    video {
-        // The getUserMedia video is flipped; unflip it.
-        // transform: scaleX(-1);
     }
 
     audio,
@@ -39,6 +37,7 @@ html.test .c-stream video {
         font-weight: 600;
         height: 100%;
         justify-content: center;
+        max-width: 100%;
         // object-fit: cover;
         position: relative;
         width: 100%;
@@ -65,13 +64,14 @@ html.test .c-stream video {
     }
 
 
-    &__controls {
+    .controls {
         align-items: center;
         background: var(--bg-dark);
         bottom: 0;
         display: flex;
         justify-content: flex-end;
-        padding-right: var(--spacer);
+        // padding-right: var(--spacer);
+
         position: absolute;
         right: 0;
         width: 100%;

@@ -28,7 +28,7 @@
         ref="display"
     />
 
-    <div v-if="controls" class="c-stream__controls">
+    <div v-if="controls" class="controls">
         <icon v-if="stream.kind !== 'audio'" name="fullscreen" @click.stop="toggleFullscreen()"/>
         <icon v-if="stream.kind !== 'audio'" name="pip" :class="{active: recording}" @click.stop="togglePip()"/>
         <icon name="record-rec" :class="{active: recording}" @click.stop="toggleRecord()"/>

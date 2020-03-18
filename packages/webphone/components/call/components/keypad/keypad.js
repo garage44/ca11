@@ -53,6 +53,9 @@ export default (app) => {
             ui: 'ui',
         },
         watch: {
+            'description.endpoint': () => {
+                app.sounds.beep(5, 750, 50)
+            },
             'description.protocol': function(protocol) {
                 app.setState({calls: {description: {protocol}}}, {persist: true})
             },

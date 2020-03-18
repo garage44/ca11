@@ -1,4 +1,4 @@
-export default (app) => {
+export default () => {
     /**
     * @memberof fg.components
     */
@@ -10,11 +10,6 @@ export default (app) => {
         },
         store: {
             description: 'caller.description',
-        },
-        watch: {
-            'description.endpoint': () => {
-                app.sounds.beep(5, 750, 50)
-            },
         },
     }
 

@@ -29,12 +29,9 @@
 
 
     .c-stream {
-        background: var(--bg-default);
-        border-radius: calc(var(--spacer) * 2);
         display: flex;
         flex: 1;
         height: 100%;
-        // padding: var(--spacer);
         transition: all 0.25s;
 
         &.placeholder {

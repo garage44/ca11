@@ -1,13 +1,13 @@
 @import 'ca11/lib/mixins';
 @import 'ca11/lib/variables';
 
-.c-call-input {
+.c-input-endpoint {
     align-items: flex-start;
     align-items: stretch;
-    border-bottom: var(--border) solid var(--grey-100);
+    background: var(--bg-default);
     color: var(--primary-base);
     display: flex;
-    height: calc(var(--spacer) * 11);
+    height: calc(var(--spacer) * 8);
     position: relative;
     width: 100%;
 

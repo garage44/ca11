@@ -2,84 +2,34 @@
 @import 'ca11/lib/mixins';
 
 .c-keypad {
-    .content__header {
-        flex: $space-4 0 0;
-    }
-
-    .main {
-        border-top-left-radius: 15px;
-        border-top-right-radius: 15px;
-        display: flex;
-        flex-direction: column;
-        padding: 0;
-    }
-
-    .call-btn {
-        background: var(--bg-default);
-        border-bottom-left-radius: 15px;
-        border-bottom-right-radius: 15px;
-        height: 65px;
-        width: 100%;
-
-        &:hover {
-            background: var(--bg-default);
-        }
-    }
-
-    .container {
-        display: flex;
-        padding: 0;
-    }
-
-    .keypad-container {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .c-media-type {
-        align-items: center;
-        background: var(--grey-400);
-        color: #fff;
-        display: flex;
-        height: $space-4;
-        justify-content: center;
-
-        &.selected {
-            background: var(--primary-base);
-            color: #fff;
-        }
-
-        &:hover {
-            cursor: pointer;
-        }
-
-        svg {
-            @include icon-size($icon-normal);
-        }
-    }
+    align-items: stretch;
+    background: var(--bg-dark);
+    display: flex;
+    flex: 1;
 
     .c-stream {
         background: none;
-        border-right: 2px solid var(--grey-400);
-        border-top-left-radius: 15px;
-        width: 100%;
+        border: 0;
+        border-bottom-right-radius: var(--spacer);
+        border-left: 2px solid var(--bg-default);
+        flex: 2;
 
-        &.selected {
-            filter: grayscale(0%);
+        video {
+            height: 100%;
+            width: 100%;
         }
-
-        &:hover {
-            cursor: pointer;
-        }
-
     }
 
     .keys-container {
         align-content: center;
         display: flex;
+
+        display: flex;
+        flex: 2;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: center;
         width: 100%;
+
 
         &.disabled {
             opacity: 0.5;

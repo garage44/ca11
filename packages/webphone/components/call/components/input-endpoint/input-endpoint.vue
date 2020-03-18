@@ -1,6 +1,4 @@
-<component class="c-call-input">
-    <ProtocolStatus/>
-
+<component class="c-input-endpoint">
     <input
         v-model="description.endpoint"
         autocomplete="off"
