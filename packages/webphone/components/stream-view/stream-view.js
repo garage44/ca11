@@ -1,14 +1,11 @@
 export default (app) => {
-    /**
-    * @memberof fg.components
-    */
     let slotSize = 6
     let slots = []
     for (let i = 0; i < slotSize; i++) {
         slots.push({id: shortid(), type: 'placeholder'})
     }
 
-    const StreamView = {
+    return {
         computed: Object.assign({
             /**
              * The selected property is a timestamp when set,
@@ -65,6 +62,4 @@ export default (app) => {
             stream: 'settings.webrtc.media.stream',
         },
     }
-
-    return StreamView
 }

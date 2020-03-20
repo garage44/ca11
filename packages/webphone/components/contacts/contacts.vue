@@ -1,80 +1,100 @@
 <component class="c-contacts module">
-
     <panel>
         <div class="actions">
-            <button class="action button button--menu"
+            <button
                 :class="{'active': editMode}"
-                @click.stop="toggleEditMode()">
-                <icon name="edit"/>
+                @click.stop="toggleEditMode()"
+                class="action button btn-menu"
+            >
+                <icon name="edit" />
             </button>
 
-            <button class="action button button--menu"
+            <button
+                class="action button btn-menu"
+                :disabled="!editMode"
                 @click.stop="addContact()"
-                :disabled="!editMode">
-                <icon name="contact-add"/>
+            >
+                <icon name="contact-add" />
             </button>
 
-            <button class="action button button--menu"
+            <button
+                class="action button btn-menu"
                 :class="{active: subscribeAll}"
+                :disabled="!editMode"
                 @click.stop="toggleSubscribeAll()"
-                :disabled="!editMode">
-                <icon name="eye"/>
+            >
+                <icon name="eye" />
             </button>
         </div>
 
         <div class="filters">
-            <button class="filter tooltip tooltip-right"
+            <button
+                class="filter tooltip tooltip-right"
                 :class="classes('filter-favorites')"
                 :data-tooltip="$t('favorites')"
-                @click="toggleFilterFavorites()">
-                <icon name="star"/>
+                @click="toggleFilterFavorites()"
+            >
+                <icon name="star" />
             </button>
-            <button class="filter tooltip tooltip-right"
+            <button
+                class="filter tooltip tooltip-right"
                 :class="classes('filter-presence')"
                 :data-tooltip="$t('presence')"
-                @click="toggleFilterPresence()">
-                <icon name="presence"/>
+                @click="toggleFilterPresence()"
+            >
+                <icon name="presence" />
             </button>
         </div>
     </panel>
 
-    <content class="no-padding" v-click-outside="toggleSelectItem">
+    <content v-click-outside="toggleSelectItem" class="no-padding">
         <div v-if="!filteredContacts.length" class="items-empty">
-            <icon class="icon" name="contact"/>
+            <icon class="icon" name="contact" />
         </div>
         <div v-else class="items">
-
-            <div class="item contact" :class="{selected: contact.selected}"
+            <div
+                v-for="contact in filteredContacts" :key="contact.id"
+                class="item contact"
+                :class="{selected: contact.selected}"
                 @click.stop="toggleSelectItem(contact, true)"
-                v-for="contact in filteredContacts">
-
+            >
                 <div class="header">
-                    <icon class="header-icon" name="contact"/>
+                    <icon class="header-icon" name="contact" />
 
                     <div class="header-text">
                         <div class="header-title">
-                            <input class="editable" type="text" v-model="contact.name" :readonly="!editMode"/>
+                            <input
+                                v-model="contact.name" class="editable"
+                                :readonly="!editMode"
+                                type="text"
+                            >
                         </div>
                         <div class="header-description endpoint-leds">
                             <!-- Show endpoints and their status as dots -->
-                            <div class="led" :class="endpoint.status"
-                                v-if="editMode || endpointActive(endpoint)"
-                                v-for="endpoint in contact.endpoints"/>
+                            <div
+                                v-for="endpoint in contact.endpoints" v-if="editMode || endpointActive(endpoint)"
+                                class="led"
+                                :class="endpoint.status"
+                            />
                         </div>
                     </div>
 
                     <div class="options">
-                        <button class="option" :class="classes('favorite-button', contact.favorite)"
-                            @click.stop="toggleFavorite(contact)" v-if="!editMode">
-                            <icon name="star" :class="contact.status"/>
+                        <button
+                            v-if="!editMode" class="option"
+                            :class="classes('favorite-button', contact.favorite)" @click.stop="toggleFavorite(contact)"
+                        >
+                            <icon :class="contact.status" name="star" />
                         </button>
 
-                        <button class="option" v-if="editMode && contact.selected"
-                            @click.stop="addEndpoint(contact)">
-                            <icon name="phone-add"/>
+                        <button
+                            v-if="editMode && contact.selected" class="option"
+                            @click.stop="addEndpoint(contact)"
+                        >
+                            <icon name="phone-add" />
                         </button>
-                        <button class="option" v-if="editMode" @click.stop="deleteContact(contact)">
-                            <icon name="delete"/>
+                        <button v-if="editMode" class="option" @click.stop="deleteContact(contact)">
+                            <icon name="delete" />
                         </button>
 
                         <!-- <button class="item-option green" v-show="transferStatus === 'select'" :disabled="!isTransferTarget(contact)" v-on:click.once="callContact(contact)">
@@ -91,47 +111,65 @@
 
 
                 <div v-if="contact.selected" class="context">
-                    <div class="context-empty" v-if="!Object.keys(contact.endpoints).length">
-                        <span class="cf">{{$t('no contact info')}}...</span>
+                    <div v-if="!Object.keys(contact.endpoints).length" class="context-empty">
+                        <span class="cf">{{ $t('no contact info') }}...</span>
                     </div>
 
                     <!-- Contains all collapsed endpoints -->
-                    <div class="entry" v-if="editMode || endpointActive(endpoint)" v-for="endpoint in contact.endpoints">
+                    <div
+                        v-for="endpoint in contact.endpoints" v-if="editMode || endpointActive(endpoint)"
+                        :key="endpoint.id"
+                        class="entry"
+                    >
                         <!-- editMode; toggle protocol -->
-                        <button v-if="editMode" class="icon editable"
+                        <button
+                            v-if="editMode" class="icon editable"
                             :class="classes('entry-status', endpoint)"
-                            @click.stop="toggleEndpointProtocol(contact, endpoint)">
-                            <icon :name="`protocol-${endpoint.protocol}`"/>
+                            @click.stop="toggleEndpointProtocol(contact, endpoint)"
+                        >
+                            <icon :name="`protocol-${endpoint.protocol}`" />
                         </button>
-                        <button v-else class="icon editable"
+                        <button
+                            v-else class="icon editable"
                             :class="endpoint.status"
                             :disabled="!endpoint.number"
-                            @click.stop="callEndpoint(contact, endpoint)">
-                            <icon :name="`protocol-${endpoint.protocol}`"/>
+                            @click.stop="callEndpoint(contact, endpoint)"
+                        >
+                            <icon :name="`protocol-${endpoint.protocol}`" />
                         </button>
 
 
                         <!-- sip/sig11 phonenumber/pubkey text input -->
-                        <input v-if="endpoint.protocol === 'sip'" class="input editable" type="text"
-                            v-model="endpoint.number"
+                        <input
+                            v-if="endpoint.protocol === 'sip'" v-model="endpoint.number"
+                            class="input editable"
                             :placeholder="$t('number')"
-                            :readonly="!editMode"/>
-                        <input v-else-if="endpoint.protocol === 'sig11'" class="input editable" type="text"
-                            v-model="endpoint.pubkey"
                             :readonly="!editMode"
-                            :placeholder="$t('public key')"/>
+                            type="text"
+                        >
+                        <input
+                            v-else-if="endpoint.protocol === 'sig11'" v-model="endpoint.pubkey"
+                            class="input editable"
+                            :placeholder="$t('public key')"
+                            :readonly="!editMode"
+                            type="text"
+                        >
 
                         <!-- entry options at the right -->
                         <div class="options">
-                            <button v-if="editMode" class="option"
+                            <button
+                                v-if="editMode" class="option"
                                 :class="{active: endpoint.subscribe}"
                                 :disabled="!endpoint.number"
-                                @click.stop="toggleSubscribe(contact, endpoint)">
-                                <icon name="eye"/>
+                                @click.stop="toggleSubscribe(contact, endpoint)"
+                            >
+                                <icon name="eye" />
                             </button>
-                            <button v-if="editMode" class="option"
-                                @click.stop="deleteEndpoint(contact, endpoint)">
-                                <icon name="delete"/>
+                            <button
+                                v-if="editMode" class="option"
+                                @click.stop="deleteEndpoint(contact, endpoint)"
+                            >
+                                <icon name="delete" />
                             </button>
                         </div>
                     </div>

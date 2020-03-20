@@ -1,10 +1,11 @@
 <component class="c-protocol-status">
-    <FieldRadio class="protocol-status tooltip tooltip-right"
+    <FieldRadio
         :class="classes"
-        v-model="description.protocol"
+        :data-tooltip="tooltip"
+        :options="protocols"
+        class="protocol-status tooltip tooltip-right"
         elementclass="t-rd-calls-protocol"
         name="protocol"
-        :options="protocols"
-        :data-tooltip="tooltip"
+        v-model="description.protocol"
     />
 </component>

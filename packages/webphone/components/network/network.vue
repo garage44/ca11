@@ -1,29 +1,32 @@
 
 <component class="c-network">
-    <div class="svg-container" ref="container">
-        <svg xmlns="http://www.w3.org/2000/svg"
+    <div ref="container" class="svg-container">
+        <svg
+            :viewBox="`0 0 ${width} ${height}`"
             @mousemove="drag($event)"
             @mouseup="drop()"
-            :viewBox="`0 0 ${width} ${height}`"
+            xmlns="http://www.w3.org/2000/svg"
         >
             <text
-                v-if="node.selected"
-                v-for="(node, i) in nodes"
-                writing-mode="tb"
                 :x="`${width - 12}`"
-                y="8"
                 class="node-id"
+                v-for="(node, i) in nodes"
+                v-if="node.selected"
+                writing-mode="tb"
+                y="8"
             >{{node.id}}</text>
 
-            <line v-for="edge in edges"
+            <line
                 :x1="coords[edge.source.index].x"
-                :y1="coords[edge.source.index].y"
                 :x2="coords[edge.target.index].x"
+                :y1="coords[edge.source.index].y"
                 :y2="coords[edge.target.index].y"
+                v-for="edge in edges"
             />
 
             <circle
                 v-for="(node, i) in nodes"
+                :key="node.id"
                 class="node"
                 :class="{headless: node.headless, own: node.id === identity.id, selected: node.selected}"
                 :cx="coords[i].x"
@@ -34,5 +37,4 @@
             />
         </svg>
     </div>
-
 </component>

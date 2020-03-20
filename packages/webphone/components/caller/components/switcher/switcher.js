@@ -1,8 +1,6 @@
 export default (app) => {
-    /**
-    * @memberof fg.components
-    */
-    const Switcher = {
+
+    return {
         computed: app.helpers.sharedComputed(),
         methods: Object.assign({
             activateCall: function(call) {
@@ -70,6 +68,4 @@ export default (app) => {
             ui: 'ui',
         },
     }
-
-    return Switcher
 }

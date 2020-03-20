@@ -27,7 +27,7 @@
             <section class="accordion">
                 <router-link
                     v-for="(topic, name) in topics.user"
-                    class="button navigation__button"
+                    class="btn  navigation__button"
                     :to="{name: 'users', params: {topic_id: topic.name}}"
                 ><icon :name="topic.icon"/><span>{{topic.title}}</span></router-link>
             </section>
@@ -41,7 +41,7 @@
 
             <section class="accordion">
                 <router-link
-                    class="button navigation__button"
+                    class="btn  navigation__button"
                     :to="{name: 'developers', params: {topic_id: topic.name}}"
                     v-for="(topic, name) in topics.developer"
                 ><icon :name="topic.icon"/><span>{{topic.title}}</span></router-link>

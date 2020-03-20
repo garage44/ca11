@@ -2,7 +2,7 @@
   "name": "@ca11/sig11",
   "type": "module",
   "version": "1.0.0",
-  "description": "SIG11 messaging protocol",
+  "description": "SIG11 signalling protocol",
   "author": "Garage11",
   "license": "MIT",
   "homepage": "https://github.com/garage11/ca11#readme",

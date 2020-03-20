@@ -1,6 +1,6 @@
 export default (app) => {
 
-    const CallKeypad = {
+    return {
         computed: Object.assign({
             matchedContact: function() {
                 let _number = String(this.number)
@@ -67,6 +67,4 @@ export default (app) => {
             },
         },
     }
-
-    return CallKeypad
 }

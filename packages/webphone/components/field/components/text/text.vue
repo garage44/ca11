@@ -1,9 +1,7 @@
-<div class="c-text field">
-    <label class="c-text__label field__label ca" :for="name">{{label}}</label>
+<component class="c-text field">
+    <label :for="name" class="c-text__label field__label ca">{{label}}</label>
     <div class="c-text__container">
         <input
-            class="c-text__element field__element"
-            type="text"
             :autofocus="autofocus"
             :class="elementclass"
             :disabled="disabled"
@@ -12,8 +10,12 @@
             :readonly="readonly"
             :value="value"
             @input="updateModel($event)"
-        />
-        <ul class="c-text__invalid" v-html="validationMessage"></ul>
+            class="c-text__element field__element"
+            type="text"
+        >
+        <ul class="c-text__invalid" v-html="validationMessage" />
     </div>
-    <div v-if="help" class="c-text__help field__help cf">{{help}}</div>
-</div>
+    <div v-if="help" class="c-text__help field__help cf">
+        {{ help }}
+    </div>
+</component>

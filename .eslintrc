@@ -86,19 +86,12 @@
             ]
         },
         {
-            "parser": "vue-eslint-parser",
-            "files": ["src/**/*.vue"],
+            "parser": "@garage11/vue-eslint-parser",
+            "files": ["packages/**/*.vue"],
             "extends": [
                 "plugin:vue/recommended"
             ],
             "rules": {
-                "vue/max-attributes-per-line": ["error", {
-                    "singleline": 3,
-                    "multiline": {
-                      "max": 2,
-                      "allowFirstLine": false
-                    }
-                }],
                 "vue/attributes-order": ["error", {
                     "order": [
                     "DEFINITION",
@@ -114,6 +107,14 @@
                     "CONTENT"
                     ],
                     "alphabetical": true
+                }],
+                "vue/html-indent": ["error", 4],
+                "vue/max-attributes-per-line": ["error", {
+                    "singleline": 3,
+                    "multiline": {
+                      "max": 2,
+                      "allowFirstLine": false
+                    }
                 }],
                 "vue/require-component-is": [0],
                 "vue/valid-template-root": [0]

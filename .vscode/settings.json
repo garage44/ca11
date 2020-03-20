@@ -1,8 +1,6 @@
 {
     "eslint.enable": true,
-    "eslint.options": {
-        "extensions": [".js"]
-    },
+    "eslint.validate": ["javascript", "vue-html"],
     "vetur.validation.template": false,
     "stylelint.autoFixOnSave": true,
     "editor.codeActionsOnSave": {

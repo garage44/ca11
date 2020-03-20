@@ -1,19 +1,15 @@
 export default (app) => {
-    let recorder, recorderData, types
+    let recorder, recorderData
 
-    types = ['audio', 'video', 'display']
-
-    /**
-    * @memberof fg.components
-    */
-    const Stream = {
+    return {
         data: function() {
             return {
                 recording: false,
+                types: ['audio', 'video', 'display'],
             }
         },
         methods: {
-            classes: function(block) {
+            classes: function() {
                 const classes = {
                     [this.stream.kind]: true,
                     selected: this.stream.selected,
@@ -24,7 +20,7 @@ export default (app) => {
             },
             switchStream: function() {
                 // Step through streamTypes.
-                const nextStreamType = types[(types.indexOf(this.stream.kind) + 1) % types.length]
+                const nextStreamType = this.types[(this.types.indexOf(this.stream.kind) + 1) % this.types.length]
                 // Maintain selected state between streams.
                 app.media.query(nextStreamType, {selected: this.stream.selected})
             },
@@ -101,6 +97,4 @@ export default (app) => {
             },
         },
     }
-
-    return Stream
 }

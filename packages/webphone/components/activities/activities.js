@@ -1,8 +1,5 @@
 export default (app) => {
-    /**
-    * @memberof fg.components
-    */
-    const Activities = {
+    return {
         computed: {
             filteredActivities: function() {
                 let activities = this.activities.sort(app.utils.sortByMultipleKey(['date'], -1))
@@ -46,7 +43,7 @@ export default (app) => {
                     start: true,
                 })
             },
-            classes: function(block, modifier, prefix = '') {
+            classes: function(block, modifier) {
                 const classes = {}
 
                 if (block === 'remind-button') {
@@ -118,6 +115,4 @@ export default (app) => {
             },
         },
     }
-
-    return Activities
 }

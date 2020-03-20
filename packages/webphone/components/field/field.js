@@ -5,7 +5,7 @@ import FieldSelect from './components/select/select.js'
 import FieldText from './components/text/text.js'
 import FieldTextarea from './components/textarea/textarea.js'
 
-export default (app) => {
+export default () => {
     /**
     * @memberof fg.components
     */
@@ -26,7 +26,7 @@ export default (app) => {
             },
         },
         methods: {
-            classes: function(block) {
+            classes: function() {
                 const classes = {}
 
                 if (this.validation) {
@@ -34,7 +34,6 @@ export default (app) => {
                         classes.required = true
                     }
                 }
-
                 return classes
             },
             updateModel: function(event) {
@@ -63,6 +62,6 @@ export default (app) => {
             FieldSelect,
             FieldText,
             FieldTextarea,
-        }
+        },
     }
 }

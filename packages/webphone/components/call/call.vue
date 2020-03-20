@@ -1,12 +1,10 @@
-<component class="c-call" :class="`t-st-call-${call.status}`">
-
+<component :class="`t-st-call-${call.status}`" class="c-call">
     <CallKeypad
-        v-if="call.keypad.active"
-        mode="dtmf"
         :call="call"
         :endpoint="call.keypad.endpoint"
         :model.sync="call.keypad.endpoint"
+        mode="dtmf"
+        v-if="call.keypad.active"
     />
-
-    <StreamView v-else :call="call"/>
+    <StreamView v-else :call="call" />
 </component>

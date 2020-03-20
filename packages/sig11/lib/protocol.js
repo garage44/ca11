@@ -1,26 +1,9 @@
-/**
- * The SIG11 protocol is a networked EventEmitter.
- *
- * Direct transports are trusted as super nodes. They control
- * how the network looks, while regular nodes use the
- * network information to establish direct connections
- * to regular nodes.
- *
- * Establishing a connection between regular nodes starts
- * with negotiating an AES key over ECDHE. After the
- * connection is established to the other peer,
- * ALL of their further communication is encrypted, but
- * use the same kind of event messaging, though strictly
- * separated from super node events, which are prefixed
- * with `sig11:super`.
- */
 class Protocol {
     constructor(network) {
         this.network = network
         this.app = this.network.app
         this.msgId = 0
     }
-
 
     /**
      * Deal with an incoming emitter message. Emits either on

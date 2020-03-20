@@ -1,17 +1,17 @@
 <component class="c-input-endpoint">
     <input
-        v-model="description.endpoint"
+        ref="input"
+        :placeholder="`${description.protocol}://`"
         autocomplete="off"
         name="number-input"
-        :placeholder="`${description.protocol}://`"
-        ref="input"
         type="text"
-    />
+        v-model="description.endpoint"
+    >
 
     <button
         class="back-button"
-        @click="removeLastChar">
-        <icon name="backspace"/>
+        @click="removeLastChar"
+    >
+        <icon name="backspace" />
     </button>
-
 </component>

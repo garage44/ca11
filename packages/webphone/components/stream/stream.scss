@@ -19,8 +19,24 @@ html.test .c-stream video {
     position: relative;
     transition: all 0.5s;
 
+    .list-item {
+        // display: inline-block;
+        // margin-right: 10px;
+    }
 
-    &__icon {
+    .list-enter-active,
+    .list-leave-active {
+        transition: all 1s;
+    }
+
+    .list-enter,
+    .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+        opacity: 0;
+        // transform: translateY(30px);
+    }
+
+
+    .stream-icon {
         fill: var(--grey-100);
         height: 50%;
         position: absolute;
@@ -28,26 +44,15 @@ html.test .c-stream video {
     }
 
     audio,
-    video,
-    .content {
+    video {
         align-items: center;
         color: var(--grey-300);
         display: flex;
-        font-family: 'Rajdhani';
-        font-weight: 600;
-        height: 100%;
-        justify-content: center;
-        max-width: 100%;
-        // object-fit: cover;
+        object-fit: cover;
         position: relative;
-        width: 100%;
+        transition: opacity 2s ease-in-out;
     }
 
-
-    &__loading {
-        @include icon-size(50%);
-        margin: 0 auto;
-    }
 
     &__slot {
         @include icon-size($icon-large);
@@ -70,7 +75,6 @@ html.test .c-stream video {
         bottom: 0;
         display: flex;
         justify-content: flex-end;
-        // padding-right: var(--spacer);
 
         position: absolute;
         right: 0;

@@ -13,7 +13,7 @@
     "bootstrap": "lerna bootstrap",
     "build": "./cli.js build",
     "lint": "yarn lint:js;yarn lint:scss",
-    "lint:js": "eslint \"packages/**/*.js\"",
+    "lint:js": "eslint \"packages/**/{*.js,*.vue}\"",
     "lint:scss": "stylelint 'packages/webphone/**/*.scss'",
     "prepare": "snowpack --include \"packages/webphone/**/*.js\" --dest build/static/web_modules",
     "release": "standard-version",
@@ -77,6 +77,7 @@
     }
   },
   "dependencies": {
+    "@garage11/vue-eslint-parser": "^8.0.0",
     "roboto-fontface": "^0.10.0",
     "vue-svgicon": "^3.2.6"
   }

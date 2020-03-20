@@ -11,7 +11,7 @@
     }
 }
 
-.button {
+.btn {
     color: var(--grey-500);
     padding: var(--spacer);
     -webkit-tap-highlight-color: transparent;
@@ -23,14 +23,13 @@
         color: var(--primary-base);
     }
 
-    // Typical menu button used in status and menu.
-    &--menu {
+    &-menu {
         background: var(--bg-default);
         border-bottom: $border solid transparent;
         border-top: $border solid transparent;
         color: var(--grey-100);
-        height: $space-4;
-        width: $space-4;
+        height: var(--space-4);
+        width: var(--space-4);
 
         &.active,
         &:hover {
@@ -38,7 +37,7 @@
         }
 
         &.active {
-            border-bottom: $border solid var(--primary-base);
+            border-bottom: var(--border) solid var(--primary-base);
         }
 
         &[disabled] {
@@ -50,7 +49,7 @@
         }
     }
 
-    &--widget {
+    &-widget {
         align-items: center;
         background: var(--bg-dark);
         border-bottom: 2px solid transparent;
@@ -59,7 +58,7 @@
         font-family: 'Rajdhani';
         font-size: 0.9rem;
         font-weight: 500;
-        height: $space-3;
+        height: var(--space-3);
         justify-content: center;
         padding: 0 $spacer;
         position: relative;
@@ -76,9 +75,8 @@
         }
 
         .btn-description {
-
-            height: $space-3;
-            line-height: $space-3;
+            height: var(--space-3);
+            line-height: var(--space-3);
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -115,7 +113,6 @@
                 color: var(--grey-200);
             }
         }
-
     }
 
     svg {

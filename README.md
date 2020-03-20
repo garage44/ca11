@@ -2,13 +2,12 @@
 
 # About CA11
 
-CA11 is **open** & **free** communication software; a fully open-source WebRTC-based
-communication stack without paid services or any business model. A CA11 instance
-is running [here](https://ca11.app/) as a public service.
+CA11 is free, open-source communication software. An instance of CA11 is running
+[here](https://ca11.app/) as a public service.
 
-CA11 uses a highly optimized JavaScript webphone stack, applies existing
-PBX technology (Asterisk) for optimal reach and comes with an additional
-E2E encrypted signalling service for accountless, federated WebRTC P2P
+CA11 uses an optimized JavaScript webphone stack, applies existing
+PBX technology (Asterisk) for optimal reach and comes with an E2E
+encrypted signalling service for accountless, federated WebRTC P2P
 communication.
 
 # Install

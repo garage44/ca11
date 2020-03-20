@@ -1,8 +1,5 @@
 export default (app) => {
-    /**
-    * @memberof fg.components
-    */
-    const CallOptions = {
+    return {
         computed: {
             // If the current call is in transfer mode.
             callCanTerminate: function() {
@@ -78,6 +75,4 @@ export default (app) => {
             ui: 'ui',
         },
     }
-
-    return CallOptions
 }
