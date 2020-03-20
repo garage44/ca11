@@ -21,24 +21,28 @@ import rollupResolve from '@rollup/plugin-node-resolve'
 import rollupTerser from 'rollup-plugin-terser'
 import sass from 'node-sass'
 import serveStatic from 'serve-static'
+import svgIcon from 'vue-svgicon/dist/lib/build.js'
 import Task from './lib/task.js'
+import themeSettings from '@ca11/webphone-theme'
 import tinylr from 'tiny-lr'
 import VuePack from '@garage11/vuepack'
 import yargs from 'yargs'
 
-import svgIcon from 'vue-svgicon/dist/lib/build.js'
-
 
 let settings = rc('ca11', {host: '127.0.0.1', port: 35729})
-import themeSettings from '@ca11/webphone-theme'
 settings.theme = themeSettings
 
-settings.baseDir = path.resolve(path.join(__dirname, '../'))
-settings.buildDir = path.join(settings.baseDir, 'build')
-settings.srcDir = path.resolve(path.join(settings.baseDir, 'packages', 'webphone'))
-settings.themeDir = path.resolve(path.join(settings.baseDir, 'packages', 'webphone-theme'))
-settings.nodeDir = path.resolve(path.join(settings.baseDir, 'node_modules'))
-settings.tmpDir = path.join(settings.buildDir, '.tmp')
+settings.buildTarget
+
+settings.dir = {base: path.resolve(path.join(__dirname, '../'))}
+
+Object.assign(settings.dir, {
+    build: path.join(settings.dir.base, 'build'),
+    node: path.resolve(path.join(settings.dir.base, 'node_modules')),
+    src: path.resolve(path.join(settings.dir.base, 'packages', 'webphone')),
+    theme: path.resolve(path.join(settings.dir.base, 'packages', 'webphone-theme')),
+    tmp: path.join(settings.dir.base, 'build', '.tmp'),
+})
 
 const tasks = {}
 
@@ -55,27 +59,27 @@ const entrypoint = {
 
 tasks.assets = new Task('assets', async function() {
     svgIcon.default({
-        sourcePath: path.join(settings.themeDir, 'svg'),
-        targetPath: path.join(settings.themeDir, 'icons'),
-        ext: 'js',
         es6: true,
-        tpl: '',
+        ext: 'js',
         idSP: '_',
+        sourcePath: path.join(settings.dir.theme, 'svg'),
+        targetPath: path.join(settings.dir.theme, 'icons'),
+        tpl: '',
     })
 
-    const files = await imagemin([path.join(settings.themeDir, 'img', '*.{jpg,png}')], {
-        destination: path.join(settings.buildDir, 'static', 'img'),
+    await imagemin([path.join(settings.dir.theme, 'img', '*.{jpg,png}')], {
+        destination: path.join(settings.dir.build, 'static', 'img'),
         plugins: [
             imageminJpegtran(),
             imageminPngquant({
-                quality: [0.6, 0.8]
-            })
-        ]
+                quality: [0.6, 0.8],
+            }),
+        ],
     })
 
     await Promise.all([
-        fs.copy(path.join(settings.themeDir, 'audio'), path.join(settings.buildDir, 'static', 'audio')),
-        fs.copy(path.join(settings.themeDir, 'fonts'), path.join(settings.buildDir, 'static', 'fonts')),
+        fs.copy(path.join(settings.dir.theme, 'audio'), path.join(settings.dir.build, 'static', 'audio')),
+        fs.copy(path.join(settings.dir.theme, 'fonts'), path.join(settings.dir.build, 'static', 'fonts')),
     ])
 })
 
@@ -89,24 +93,24 @@ tasks.build = new Task('build', async function() {
 })
 
 tasks.html = new Task('html', async function() {
-    const indexFile = await fs.readFile(path.join(settings.srcDir, 'index.html'))
+    const indexFile = await fs.readFile(path.join(settings.dir.src, 'index.html'))
     const compiled = _.template(indexFile)
     const html = compiled({settings})
 
-    await fs.writeFile(path.join(settings.buildDir, 'index.html'), html)
+    await fs.writeFile(path.join(settings.dir.build, 'index.html'), html)
 })
 
 tasks.js = new Task('js', async function() {
     if (!settings.production) {
         // Snowpack only requires a light-weight copy action to the build dir.
-        let targets = (await globby([path.join(settings.srcDir, '**', '*.js')]))
-            .map((i) => fs.copy(i, path.join(settings.buildDir, 'static', i.replace(settings.srcDir, ''))))
+        let targets = (await globby([path.join(settings.dir.src, '**', '*.js')]))
+            .map((i) => fs.copy(i, path.join(settings.dir.build, 'static', i.replace(settings.dir.src, ''))))
 
         await Promise.all(targets)
     } else {
         // Use rollup to generate an optimized bundle.
         const bundle = await rollup.rollup({
-            input: path.join(settings.srcDir, this.ep.raw),
+            input: path.join(settings.dir.src, this.ep.raw),
             plugins: [
                 rollupResolve(), rollupCommonjs(), rollupTerser.terser(),
                 rollupReplace({
@@ -114,7 +118,7 @@ tasks.js = new Task('js', async function() {
                 })],
         })
 
-        const target = path.join(settings.buildDir, 'static', `${this.ep.filename}.js`)
+        const target = path.join(settings.dir.build, 'static', `${this.ep.filename}.js`)
 
         await bundle.write({
             file: target,
@@ -130,18 +134,18 @@ tasks.js = new Task('js', async function() {
 
 tasks.scss = new Task('scss', async function() {
     let target = {
-        css: path.join(settings.buildDir, 'static', `${this.ep.filename}.css`),
-        map: path.join(settings.buildDir, 'static', `${this.ep.filename}.css.map`),
+        css: path.join(settings.dir.build, 'static', `${this.ep.filename}.css`),
+        map: path.join(settings.dir.build, 'static', `${this.ep.filename}.css.map`),
     }
 
     return new Promise((resolve, reject) => {
         sass.render({
-            file: path.join(settings.srcDir, this.ep.dirname, `${this.ep.filename}.scss`),
+            file: path.join(settings.dir.src, this.ep.dirname, `${this.ep.filename}.scss`),
             importer: globImporter(),
             includePaths: [
                 'node_modules',
-                path.join(settings.srcDir, 'scss'),
-                path.join(settings.srcDir, 'scss', 'ca11'),
+                path.join(settings.dir.src, 'scss'),
+                path.join(settings.dir.src, 'scss', 'ca11'),
             ],
             outFile: target.css,
             sourceMap: !settings.production,
@@ -174,8 +178,8 @@ tasks.vue = new Task('vue', async function() {
     // This is an exceptional build target, because it is not
     // a module that is available from Node otherwise.
     await Promise.all([
-        fs.writeFile(path.join(settings.srcDir, 'templates.js'), templates),
-        fs.writeFile(path.join(settings.buildDir, 'static', 'templates.js'), templates),
+        fs.writeFile(path.join(settings.dir.src, 'templates.js'), templates),
+        fs.writeFile(path.join(settings.dir.build, 'static', 'templates.js'), templates),
     ])
 })
 
@@ -183,12 +187,12 @@ tasks.watch = new Task('watch', async function() {
     await tasks.build.start()
     return new Promise((resolve, reject) => {
         var app = connect()
-        app.use(mount('/static', serveStatic(path.join(settings.buildDir, 'static'))))
+        app.use(mount('/static', serveStatic(path.join(settings.dir.build, 'static'))))
             .use(async(req, res, next) => {
                 if (req.url.includes('livereload.js')) {
                     next()
                 } else {
-                    const html = await fs.readFile(path.join(settings.buildDir, 'index.html'))
+                    const html = await fs.readFile(path.join(settings.dir.build, 'index.html'))
                     res.setHeader('Content-Type', 'text/html; charset=UTF-8')
                     res.end(html)
                 }
@@ -202,32 +206,31 @@ tasks.watch = new Task('watch', async function() {
             })
 
         chokidar.watch([
-            path.join('!', settings.srcDir, 'js', 'templates.js'), // Templates are handled by the Vue task
-            path.join(settings.srcDir, '**', '*.js'),
+            path.join('!', settings.dir.src, 'js', 'templates.js'), // Templates are handled by the Vue task
+            path.join(settings.dir.src, '**', '*.js'),
         ]).on('change', async() => {
             await tasks.js.start(entrypoint.js)
             tinylr.changed('app.js')
         })
 
-        chokidar.watch(path.join(settings.srcDir, '**', '*.vue')).on('change', async() => {
+        chokidar.watch(path.join(settings.dir.src, '**', '*.vue')).on('change', async() => {
             await tasks.vue.start(entrypoint.vue)
             tinylr.changed('templates.js')
         })
 
-        chokidar.watch(path.join(settings.srcDir, '**', '*.scss')).on('change', async() => {
+        chokidar.watch(path.join(settings.dir.src, '**', '*.scss')).on('change', async() => {
             await tasks.scss.start(entrypoint.scss)
             tinylr.changed('app.css')
         })
 
-        chokidar.watch(path.join(settings.srcDir, 'index.html')).on('change', async() => {
+        chokidar.watch(path.join(settings.dir.src, 'index.html')).on('change', async() => {
             await tasks.html.start(entrypoint.html)
             tinylr.changed('index.html')
         })
     })
 })
 
-// eslint-disable-next-line no-unused-vars
-const args = yargs
+yargs
     .usage('Usage: $0 [task]')
     .detectLocale(false)
     .showHelpOnFail(true)
@@ -235,7 +238,7 @@ const args = yargs
     .option('production', {alias: 'p', default: false, description: 'Production mode', type: 'boolean'})
     .middleware(async(argv) => {
         // Make sure the required build directories exist.
-        await fs.mkdirp(path.join(settings.buildDir, 'static', 'js'))
+        await fs.mkdirp(path.join(settings.dir.build, 'static', 'js'))
         settings.production = argv.production
         if (settings.production) {
             tasks.watch.log(`build optimization: ${chalk.green('enabled')}`)
@@ -243,25 +246,25 @@ const args = yargs
             tasks.watch.log(`build optimization: ${chalk.red('disabled')}`)
         }
     })
-    .command('assets', 'prepare theme files', () => {}, (argv) => {
+    .command('assets', 'prepare theme files', () => {}, () => {
         tasks.assets.start()
     })
-    .command('build', 'generate project files', () => {}, (argv) => {
+    .command('build', 'generate project files', () => {}, () => {
         tasks.build.start()
     })
-    .command('html', 'generate index.html', () => {}, (argv) => {
+    .command('html', 'generate index.html', () => {}, () => {
         tasks.html.start(entrypoint.html)
     })
-    .command('js', 'prepare JavaScript for the browser', () => {}, (argv) => {
+    .command('js', 'prepare JavaScript for the browser', () => {}, () => {
         tasks.js.start(entrypoint.js)
     })
-    .command('scss', 'compile SCSS styles to CSS', () => {}, (argv) => {
+    .command('scss', 'compile SCSS styles to CSS', () => {}, () => {
         tasks.scss.start(entrypoint.scss)
     })
-    .command('vue', 'compile Vue templates to ESM', () => {}, (argv) => {
+    .command('vue', 'compile Vue templates to ESM', () => {}, () => {
         tasks.vue.start(entrypoint.vue)
     })
-    .command('watch', 'start development server', () => {}, (argv) => {
+    .command('watch', 'start development server', () => {}, () => {
         tasks.watch.start()
     })
     .demandCommand()

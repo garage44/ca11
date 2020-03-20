@@ -3,12 +3,10 @@
 # About CA11
 
 CA11 is free, open-source communication software. An instance of CA11 is running
-[here](https://ca11.app/) as a public service.
-
-CA11 uses an optimized JavaScript webphone stack, applies existing
-PBX technology (Asterisk) for optimal reach and comes with an E2E
-encrypted signalling service for accountless, federated WebRTC P2P
-communication.
+[here](https://ca11.app/) as a public service. The project implements an
+optimized Vue-based webphone stack, and comes with PBX support (Asterisk).
+Besides PBX-based calling, CA11 also comes with an E2E-encrypted signalling
+protocol/service for accountless, federated WebRTC P2P communication.
 
 # Install
 
@@ -60,6 +58,7 @@ communication.
       node packages/sig11/service.js
 
 * Restart the browser for the SSL certificate to be picked up
-* Open https://dev.ca11.app to start your webphone
+* Open [the webapp](https://dev.ca11.app) to start your webphone
 
-Call one of the SIP testnumbers in contacts to verify that the SIP stack works.
+Call one of the SIP testnumbers in contacts to verify that your SIP stack
+works as expected.

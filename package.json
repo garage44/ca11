@@ -32,6 +32,7 @@
   "devDependencies": {
     "@commitlint/cli": "7.x.x",
     "@commitlint/config-conventional": "7.x.x",
+    "@garage11/vue-eslint-parser": "^8.0.0",
     "@garage11/vuepack": "^2.0.0",
     "@rollup/plugin-commonjs": "^11.0.2",
     "chalk": "^3.0.0",
@@ -69,6 +70,7 @@
     "tape": "4.x.x",
     "tape-catch": "1.x.x",
     "tiny-lr": "^1.1.1",
+    "vue-svgicon": "^3.2.6",
     "yargs": "15.x.x"
   },
   "config": {
@@ -76,9 +78,5 @@
       "path": "./node_modules/cz-customizable"
     }
   },
-  "dependencies": {
-    "@garage11/vue-eslint-parser": "^8.0.0",
-    "roboto-fontface": "^0.10.0",
-    "vue-svgicon": "^3.2.6"
-  }
+  "dependencies": {}
 }

@@ -18,7 +18,7 @@
     "ignorePatterns": ["templates.js", "node_modules/", "build/"],
     "overrides": [
         {
-            "files": ["packages/**/*.js"],
+            "files": ["packages/**/*.js", "cli.js"],
             "parser": "espree",
             "extends": [
                 "eslint:recommended"
