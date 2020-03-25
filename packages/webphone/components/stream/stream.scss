@@ -48,7 +48,11 @@ html.test .c-stream video {
         align-items: center;
         color: var(--grey-300);
         display: flex;
-        object-fit: cover;
+        // Prevent the element from taking up the whole
+        // screen width; e.g. obey the stream flex settings
+        // for width.
+        height: 100%;
+        max-width: 100%;
         position: relative;
         transition: opacity 2s ease-in-out;
     }

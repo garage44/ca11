@@ -15,7 +15,7 @@
     "globals": {
         "globalThis": true
     },
-    "ignorePatterns": ["templates.js", "node_modules/", "build/"],
+    "ignorePatterns": ["templates.js", "node_modules/", "build/", "lib/utils.js"],
     "overrides": [
         {
             "files": ["packages/**/*.js", "cli.js"],

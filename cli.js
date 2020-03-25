@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import _ from 'lodash'
-import {__dirname} from './lib/utils.js'
 import chalk from 'chalk'
 import chokidar from 'chokidar'
 import CleanCSS from 'clean-css'
@@ -28,13 +27,25 @@ import tinylr from 'tiny-lr'
 import VuePack from '@garage11/vuepack'
 import yargs from 'yargs'
 
+import {__dirname, buildInfo} from './lib/utils.js'
 
-let settings = rc('ca11', {host: '127.0.0.1', port: 35729})
-settings.theme = themeSettings
 
-settings.buildTarget
+const cli = {
+    log(...args) {
+        // eslint-disable-next-line no-console
+        console.log(...args)
+    },
+}
+const settings = rc('ca11', {host: '127.0.0.1', port: 35729})
 
-settings.dir = {base: path.resolve(path.join(__dirname, '../'))}
+cli.settings = settings
+cli.settings.theme = themeSettings
+settings.build = {
+    target: 'webphone',
+    targets: ['docs', 'webphone'],
+}
+
+cli.settings.dir = {base: path.resolve(path.join(__dirname, '../'))}
 
 Object.assign(settings.dir, {
     build: path.join(settings.dir.base, 'build'),
@@ -185,7 +196,7 @@ tasks.vue = new Task('vue', async function() {
 
 tasks.watch = new Task('watch', async function() {
     await tasks.build.start()
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         var app = connect()
         app.use(mount('/static', serveStatic(path.join(settings.dir.build, 'static'))))
             .use(async(req, res, next) => {
@@ -230,6 +241,10 @@ tasks.watch = new Task('watch', async function() {
     })
 })
 
+
+
+buildInfo(cli)
+
 yargs
     .usage('Usage: $0 [task]')
     .detectLocale(false)
@@ -246,9 +261,7 @@ yargs
             tasks.watch.log(`build optimization: ${chalk.red('disabled')}`)
         }
     })
-    .command('assets', 'prepare theme files', () => {}, () => {
-        tasks.assets.start()
-    })
+
     .command('build', 'generate project files', () => {}, () => {
         tasks.build.start()
     })
@@ -269,3 +282,4 @@ yargs
     })
     .demandCommand()
     .argv
+

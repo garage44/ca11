@@ -16,6 +16,9 @@
 
         video {
             height: 100%;
+            // Fill the screen for styling purpose; right aspect-ratio
+            // is restored when in a call.
+            object-fit: cover;
             width: 100%;
         }
     }
