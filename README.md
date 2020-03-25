@@ -2,11 +2,24 @@
 
 # About CA11
 
-CA11 is free, open-source communication software. An instance of CA11 is running
-[here](https://ca11.app/) as a public service. The project implements an
-optimized Vue-based webphone stack, and comes with PBX support (Asterisk).
-Besides PBX-based calling, CA11 also comes with an E2E-encrypted signalling
-protocol/service for accountless, federated WebRTC P2P communication.
+CA11 is free, open-source WebRTC communication software. The Vue-powered
+webphone implements two separate VoIP signalling techniques for calling: SIP & SIG11.
+The [dockerized](https://github.com/garage11/ca11/blob/master/docker/docker-compose.yml)
+VoIP stack includes NGINX, Asterisk, coturn and PostgreSQL.
+
+Calling through SIP is centralized, but comes with a rich ecosystem of functionality
+and interconnectivity. SIG11 is a decentralized, E2E-encrypted techniqu to signalling
+that aims to make accountless calling effortless. An instance of CA11 is
+running [here](https://ca11.app/) as a public service.
+
+Some project characteristics:
+
+* Self-contained SPA
+* Optimized Vue.js stack (no SFC)
+* ES-module based (Node 13+)
+* SIG11 identities - ECDHE/AES-GCM (WebCrypto)
+* Encrypted local storage/state (PBKDF2/WebCrypto)
+* SCSS + Flexbox layout
 
 # Install
 
