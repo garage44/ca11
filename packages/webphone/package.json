@@ -1,7 +1,7 @@
 {
   "name": "@ca11/webphone",
   "version": "1.0.0",
-  "author": "Garage 11",
+  "author": "Garage11",
   "type": "module",
   "license": "MIT",
   "repository": {
@@ -30,5 +30,8 @@
     "vue-autosize": "https://git@github.com/garage11/vue-autosize#master",
     "vue-stash": "^2.0.1-beta",
     "vuelidate": "^0.7.4"
+  },
+  "devDependencies": {
+    "chalk": "^3.0.0"
   }
 }

@@ -1,4 +1,4 @@
-const _ = require('../test')
+import _ from '../test.js'
 
 _.testAsync('[SIP] Alice calls Bob, Bob transfers Alice to Charlie', async(t1) => {
     let [alice, bob, charlie] = await Promise.all(

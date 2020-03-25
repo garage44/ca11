@@ -1,27 +1,19 @@
-require('../src/js/vendor')
-require('../src/js/i18n')
+// require('../src/js/vendor')
+// require('../src/js/i18n')
 
-const {promisify} = require('util')
-const path = require('path')
+import _mkdirp from 'mkdirp'
+import c from 'chalk'
+import fs from 'fs-extra'
+import path from 'path'
+import {promisify} from 'util'
+import puppeteer from 'puppeteer'
+import settings from '../../../lib/settings.js'
+import test from 'tape-catch'
 
-const c = require('ansi-colors')
-const mkdirp = promisify(require('mkdirp'))
-const puppeteer = require('puppeteer')
-const test = require('tape-catch')
+const mkdirp = promisify(_mkdirp)
 
+console.log('SETTINGS', settings)
 
-// Use the project directory as base directory.
-const settings = require('../../../gulp/settings')(
-    path.join(__dirname, '../../../'), 'test', path.join(__dirname, '../src'), {
-        overrides: {
-            // Force webview build modus.
-            BUILD_TARGET: 'pwa',
-        },
-    },
-)
-
-// Force webview.
-settings.BUILD_TARGET = 'pwa'
 // Environment initialization.
 settings.SCREENS = process.env.SCREENS ? true : false
 
