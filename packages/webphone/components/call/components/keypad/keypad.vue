@@ -1,7 +1,13 @@
 <component class="c-keypad t-keypad" tabindex="-1">
-    <div class="keys-container">
+    <Stream
+        :controls="true"
+        :stream="stream[stream.type]"
+        @click="activateMedia"
+        v-if="mode === 'call'"
+    />
+    <div v-if="mode === 'dtmf'" class="keys-container">
         <div class="key-row">
-            <button @mousedown="press('1')" class="key t-btn-keypad-1">
+            <button class="key t-btn-keypad-1" @mousedown="press('1')">
                 1<div class="sub">
                     <icon name="voicemail" />
                 </div>
@@ -65,11 +71,4 @@
             </button>
         </div>
     </div>
-
-    <Stream
-        v-if="mode === 'call'"
-        :controls="true"
-        :stream="stream[stream.type]"
-        @click="activateMedia"
-    />
 </component>

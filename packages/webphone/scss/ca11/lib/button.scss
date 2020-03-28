@@ -25,15 +25,35 @@
 
     &-menu {
         background: var(--bg-default);
-        border-bottom: $border solid transparent;
-        border-top: $border solid transparent;
+        border-bottom: var(--border) solid transparent;
+        border-top: var(--border) solid transparent;
         color: var(--grey-100);
         height: var(--space-4);
         width: var(--space-4);
 
+        &::before {
+            background: var(--primary-base);
+            bottom: calc(-1 * var(--border));
+            content: '';
+            height: var(--border);
+            left: 0;
+            position: absolute;
+            right: 0;
+            transform: scaleX(0);
+            transform-origin: 0 0;
+            transition: transform 150ms;
+            will-change: transform;
+        }
+
         &.active,
-        &:hover {
+        &:not([disabled]):hover {
             color: var(--primary-base);
+        }
+
+        &:not([disabled]):hover {
+            &::before {
+                transform: scaleX(1);
+            }
         }
 
         &.active {
@@ -93,7 +113,7 @@
         }
 
         &.active,
-        &:hover {
+        &:not(disabled):hover {
             border-bottom: 2px solid var(--primary-base);
             color: var(--grey-50);
             cursor: pointer;
@@ -117,14 +137,5 @@
 
     svg {
         @include icon-size(#{$spacer * 3.5});
-    }
-
-
-    &:not([disabled]) {
-        &.hint {
-            svg {
-                animation: glowing 1250ms cubic-bezier(0.39, 0.58, 0.57, 1) infinite;
-            }
-        }
     }
 }

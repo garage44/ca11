@@ -1,6 +1,6 @@
 .c-main {
     display: grid;
-    grid-gap: var(--spacer);
+    grid-gap: calc(var(--space-4) / 2);
     grid-template-areas:
         'body-header body-header body-header'
         'body-gutter-left body-content body-gutter-right';
@@ -15,21 +15,6 @@
         height: 100%;
         justify-content: center;
         width: 100%;
-
-        .module {
-            display: grid;
-            grid-template-areas: 'module-panel module-content';
-            grid-template-columns: $space-4 1fr;
-            height: 100%;
-
-            panel {
-                grid-area: module-panel;
-            }
-
-            content {
-                grid-area: module-content;
-            }
-        }
 
         &.c-calls {
             .media-preview {

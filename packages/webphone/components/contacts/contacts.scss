@@ -2,9 +2,6 @@
 @import 'ca11/lib/variables';
 
 .c-contacts {
-    display: flex;
-    flex-direction: column;
-
     .entry button {
         &.available svg {fill: $green-color;}
         &.busy svg {fill: $red-color;}

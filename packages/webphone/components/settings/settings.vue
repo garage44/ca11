@@ -73,7 +73,7 @@
             >
                 <button
                     slot="button"
-                    class="button"
+                    class="btn"
                     :disabled="playing.ringOutput"
                     @click="playSound('ringTone', 'ringOutput')"
                 >

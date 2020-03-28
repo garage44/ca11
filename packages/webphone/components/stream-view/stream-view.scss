@@ -2,13 +2,13 @@
 @import 'ca11/lib/variables';
 
 .c-stream-view {
-    align-items: stretch;
+    // align-items: stretch;
     display: grid;
     position: relative;
 
     @media screen {
         &.grid-2 {
-            grid-gap: calc(var(--spacer) / 2);
+            grid-gap: calc(var(--space-4) / 2);
             grid-template-rows: 1fr 1fr;
 
             .slot-1 {grid-area: 1 / 1;}
@@ -18,7 +18,7 @@
 
     @media screen and (min-width: $breakpoint-tablet) {
         &.grid-2 {
-            grid-gap: calc(var(--spacer) / 2);
+            grid-gap: calc(var(--space-4) / 2);
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 1fr;
 

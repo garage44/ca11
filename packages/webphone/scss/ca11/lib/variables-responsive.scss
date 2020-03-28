@@ -27,15 +27,15 @@
 
 :root {
     --text-small: 0.7rem;
-    --text-base: 1.1rem;
+    --text-base: 1rem;
     --text-large: 1.1rem;
     --text-huge: 1.8rem;
 
-    --border: 1px;
+    --border: 2px;
     --gutter: 8px;
-    --icon-large: #{$spacer * 4.5};
+    --icon-large: #{$spacer * 6};
     --icon-normal: #{$spacer * 3.5};
-    --icon-small: #{$spacer * 2.5};
+    --icon-small: #{$spacer * 3};
     --spacer: #{$spacer};
 
     // Main space with 4/3 aspect ratio.

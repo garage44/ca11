@@ -8,7 +8,7 @@
     width: 100%;
 
     .icon {
-        @include icon-size($spacer * 40);
+        @include icon-size($spacer * 30);
     }
 
     .text {
@@ -45,7 +45,7 @@
     $item: &;
     display: flex;
     flex-direction: column;
-    margin-top: var(--spacer);
+
     padding: $spacer  var(--spacer);
     width: 100%;
 
@@ -65,6 +65,11 @@
                 fill: var(--primary-base);
             }
 
+            .header-text .editable,
+            .header-text {
+                color: var(--primary-base);
+            }
+
             .header-title:hover,
             &:hover {
                 cursor: default;
@@ -81,23 +86,26 @@
 
         .header-icon {
             @include icon-size($icon-large);
-            background: var(--bg-dark);
+            background: var(--grey-400);
             border: $spacer / 4 solid var(--grey-200);
             border-radius: 50%;
             fill: var(--grey-100);
             // Force a static width.
-            flex: 0 0 $icon-large;
-            margin-right: var(--spacer);
-            padding: $spacer-05;
+            flex: 0 0  var(--icon-large);
+            height: var(--icon-large);
+            margin-right: calc(var(--spacer) * 2);
+            padding: calc(var(--spacer) / 2);
+            // padding: $spacer-05;
+            width: var(--icon-large);
         }
 
         .header-text,
         .header-text .editable {
             background: none;
-            color: var(--primary-base);
+            color: var(--grey-50);
             display: inline-block;
             font-family: 'Rajdhani';
-            font-size: $text-large;
+            font-size: var(--text-large);
             font-weight: 600;
             justify-content: space-between;
             overflow: hidden;
@@ -112,8 +120,9 @@
 
             // Smaller sub-title that adds extra context for the item.
             .header-description {
-                color: var(--grey-50);
-                font-size: $text-small;
+                border: var(--border) solid transparent;
+                color: var(--grey-200);
+                font-size: var(--text-small);
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
@@ -123,7 +132,7 @@
         .options {
             align-items: center;
             display: flex;
-            margin-bottom: $spacer * 1.5;
+            margin-bottom: calc(var(--spacer) * 1.5);
 
             .option {
                 align-items: center;
@@ -206,7 +215,7 @@
                 font-family: 'Rajdhani';
                 font-size: $text-base;
                 font-weight: 600;
-                margin-left: var(--spacer);
+                margin-left: calc(var(--spacer) * 2);
                 width: 0;
             }
 

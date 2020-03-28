@@ -8,11 +8,14 @@ import path from 'path'
 import {promisify} from 'util'
 import puppeteer from 'puppeteer'
 import settings from '../../../lib/settings.js'
+import stepCall from './browser/steps/call.js'
+import stepMeta from './browser/steps/meta.js'
+import stepSession from './browser/steps/session.js'
+import stepSettings from './browser/steps/settings.js'
+import stepWizard from './browser/steps/wizard.js'
 import test from 'tape-catch'
 
 const mkdirp = promisify(_mkdirp)
-
-console.log('SETTINGS', settings)
 
 // Environment initialization.
 settings.SCREENS = process.env.SCREENS ? true : false
@@ -22,8 +25,6 @@ if (process.env.HEADLESS) {
     settings.HEADLESS = process.env.HEADLESS === '1' ? true : false
 } else settings.HEADLESS = settings.testing.headless
 
-Object.assign(settings.testing, require('./accounts.json'))
-
 
 if (process.env.CI_ALICE_SIP_PASSWORD) {
     for (const actor of ['alice', 'bob', 'charlie']) {
@@ -32,20 +33,43 @@ if (process.env.CI_ALICE_SIP_PASSWORD) {
 }
 
 
-const lib = {
-    delay: (ms) => {
+/**
+ * Customized tape test class providing boilerplate
+ * code for browser tests and async tests.
+ */
+class DuckTape {
+
+    constructor(settings) {
+        this.steps = {
+            call: stepCall(this),
+            meta: stepMeta(this),
+            session: stepSession(this),
+            settings: stepSettings(this),
+            wizard: stepWizard(this),
+        }
+
+        // Tape-catch
+        this.test =  test
+
+        this.actors = {}
+        this.screenshots = {}
+        this.settings = settings
+    }
+
+    delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms))
-    },
-    getText: async({page}, selector) => {
+    }
+
+    async getText({page}, selector) {
         return await page.$eval(selector, el => el.innerText)
-    },
+    }
+
     /**
     * Each test user has its own browser.
     * @param {String} name - Name of the testrunner.
-    * @param {Object} options - Options to pass to the runner.
     * @returns {Object} - Browser and pages.
     */
-    init: async(name, options) => {
+    async init(name) {
         let browser = await puppeteer.launch({
             args: [
                 '--disable-notifications',
@@ -55,25 +79,29 @@ const lib = {
                 '--no-sandbox',
                 '--use-fake-ui-for-media-stream',
                 '--use-fake-device-for-media-stream',
+                '--enable-experimental-web-platform-features',
             ],
             executablePath: process.env.OVERRIDE_CHROMIUM_PATH,
             headless: settings.HEADLESS,
             pipe: true,
         })
 
+
+        const accounts = await fs.readJSON(path.join(settings.dir.base, 'packages', 'webphone', 'test', './accounts.json'))
         let pages = await browser.pages()
         // Default viewport size during tests.
-        pages[0].setViewport({height: 600, width: 500})
+        pages[0].setViewport({height: 800, width: 600})
         const uri = 'https://dev.ca11.app/index.html?mode=test'
         await pages[0].goto(uri, {})
 
+
         const actor = {browser, page: pages[0]}
         // Assign test credentials to actor.
-        Object.assign(actor, settings.testing[name])
-
-        lib.actors[name] = actor
+        Object.assign(actor, accounts[name])
+        this.actors[name] = actor
         return actor
-    },
+    }
+
     /**
     * Take a screenshot of `browser` and write it to file.
     * @param {Object} actor - A test actor object.
@@ -83,11 +111,11 @@ const lib = {
     * @param {String} options.subject - Subject for in the screenshot name.
     * @param {String} options.unique - Don't make the same named screenshot again.
     */
-    screenshot: async(actor, name, {only = null, scope = null, unique = true} = {}) => {
+    async screenshot(actor, name, {only = null, scope = null, unique = true} = {}) {
         if (only && only !== actor.session.username) return
-        if (unique && lib.screenshots[name]) return
+        if (unique && this.screenshots[name]) return
 
-        lib.screenshots[name] = true
+        this.screenshots[name] = true
 
         // Make a screenshot of the app container without scope.
         if (!scope) scope = actor.page
@@ -99,9 +127,9 @@ const lib = {
             const screenshotPath = path.join(settings.SCREENS_DIR, filename)
             await scope.screenshot({path: screenshotPath})
         }
-    },
+    }
 
-    settings,
+
     /**
     * Report a test step of `actor`.
     * When not in HEADLESS mode, it will also pause for 2 seconds.
@@ -109,7 +137,7 @@ const lib = {
     * @param {String} message - Step message to print.
     * @param {String} context - Step context to print.
     */
-    step: async(actor, message, context = '') => {
+    async step(actor, message, context = '') {
         let prefix
 
         prefix = actor.session.username.padEnd(7)
@@ -119,54 +147,37 @@ const lib = {
         else if (actor.session.username === 'charlie') prefix = c.yellow(prefix)
         // eslint-disable-next-line no-console
         console.log(`${prefix}${context} ${c.grey(message)}`)
-        if (settings.DEBUG_MODE) {
+        if (settings.debugMode) {
             await new Promise(resolve => setTimeout(resolve, 2000))
         }
-    },
-    test,
+    }
+
     /**
      * Perform a async tape test.
-     * This function will automatically call `t.end` when the test body is done.
-     * It also provides an `onExit` hook to register handlers that will be called
-     * when the test is done (irregardless of failure or success).
-     * Finally it will catch exceptions in the async test body and report them and
-     * fail the tape test.
      * @param {String} title - Test title.
      * @param {AsyncFunction} func - Test body.
      * @returns {Tape} - Tape test case
      */
-    testAsync: (title, func) => {
-        const cleanup = []
-        const onExit = (f) => cleanup.push(f)
+    testAsync(title, func) {
         return test(title, async(t) => {
             try {
-                await func(t, onExit)
-                t.end()
-            } catch (e) {
-                throw e
+                await func(t)
+            } catch (err) {
+                console.error(err)
+                throw(err)
             } finally {
-                if (!settings.DEBUG_MODE) {
-                    for (const actor of Object.values(lib.actors)) {
+                if (!this.settings.debugMode) {
+                    for (const actor of Object.values(this.actors)) {
                         await actor.browser.close()
                     }
                 }
-                for (const f of cleanup) {
-                    await f()
-                }
+                t.end()
             }
         })
-    },
+    }
 }
 
-lib.actors = {}
-lib.screenshots = {}
+const duckTape = new DuckTape(settings)
 
-lib.steps = {
-    call: require('./browser/steps/call')(lib),
-    meta: require('./browser/steps/meta')(lib),
-    session: require('./browser/steps/session')(lib),
-    settings: require('./browser/steps/settings')(lib),
-    wizard: require('./browser/steps/wizard')(lib),
-}
 
-export default lib
+export default duckTape

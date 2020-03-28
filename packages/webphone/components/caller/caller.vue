@@ -1,6 +1,5 @@
-<StreamView v-if="callActive && !callActive.keypad.active" :call="callActive"/>
-<component v-else class="c-caller t-caller module" :class="classes('component')">
-    <panel>
+<component :class="classes('component')" class="c-caller t-caller module full-size">
+    <!-- <panel>
         <div v-if="!callActive" class="actions">
             <button
                 class="action button btn-menu t-btn-options-call-start tooltip tooltip-bottom"
@@ -13,15 +12,14 @@
 
             <ProtocolStatus />
         </div>
-    </panel>
+    </panel> -->
 
-    <content class="no-padding">
-        <CallInputEndpoint v-if="!callActive" />
-        <CallKeypad
-            :call="callActive"
-            :endpoint="description.endpoint"
-            :mode="callActive ? 'dtmf' : 'call'"
-            :model.sync="description.endpoint"
-        />
-    </content>
+
+    <CallInputEndpoint v-if="!callActive" />
+    <CallKeypad
+        :call="callActive"
+        :endpoint="description.endpoint"
+        :mode="callActive ? 'dtmf' : 'call'"
+        :model.sync="description.endpoint"
+    />
 </component>

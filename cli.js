@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import _ from 'lodash'
+import {buildInfo} from './lib/utils.js'
 import chalk from 'chalk'
 import chokidar from 'chokidar'
 import CleanCSS from 'clean-css'
@@ -12,7 +13,6 @@ import imageminJpegtran from 'imagemin-jpegtran'
 import imageminPngquant from 'imagemin-pngquant'
 import mount from 'connect-mount'
 import path from 'path'
-import rc from 'rc'
 import rollup from 'rollup'
 import rollupCommonjs from '@rollup/plugin-commonjs'
 import rollupReplace from '@rollup/plugin-replace'
@@ -20,40 +20,21 @@ import rollupResolve from '@rollup/plugin-node-resolve'
 import rollupTerser from 'rollup-plugin-terser'
 import sass from 'node-sass'
 import serveStatic from 'serve-static'
+import settings from './lib/settings.js'
 import svgIcon from 'vue-svgicon/dist/lib/build.js'
 import Task from './lib/task.js'
-import themeSettings from '@ca11/webphone-theme'
+
 import tinylr from 'tiny-lr'
 import VuePack from '@garage11/vuepack'
 import yargs from 'yargs'
-
-import {__dirname, buildInfo} from './lib/utils.js'
-
 
 const cli = {
     log(...args) {
         // eslint-disable-next-line no-console
         console.log(...args)
     },
+    settings,
 }
-const settings = rc('ca11', {host: '127.0.0.1', port: 35729})
-
-cli.settings = settings
-cli.settings.theme = themeSettings
-settings.build = {
-    target: 'webphone',
-    targets: ['docs', 'webphone'],
-}
-
-cli.settings.dir = {base: path.resolve(path.join(__dirname, '../'))}
-
-Object.assign(settings.dir, {
-    build: path.join(settings.dir.base, 'build'),
-    node: path.resolve(path.join(settings.dir.base, 'node_modules')),
-    src: path.resolve(path.join(settings.dir.base, 'packages', 'webphone')),
-    theme: path.resolve(path.join(settings.dir.base, 'packages', 'webphone-theme')),
-    tmp: path.join(settings.dir.base, 'build', '.tmp'),
-})
 
 const tasks = {}
 
@@ -268,7 +249,7 @@ yargs
     .command('html', 'generate index.html', () => {}, () => {
         tasks.html.start(entrypoint.html)
     })
-    .command('js', 'prepare JavaScript for the browser', () => {}, () => {
+    .command('js', 'generate browser JavaScript', () => {}, () => {
         tasks.js.start(entrypoint.js)
     })
     .command('scss', 'compile SCSS styles to CSS', () => {}, () => {
@@ -277,7 +258,7 @@ yargs
     .command('vue', 'compile Vue templates to ESM', () => {}, () => {
         tasks.vue.start(entrypoint.vue)
     })
-    .command('watch', 'start development server', () => {}, () => {
+    .command('watch', 'launch development server', () => {}, () => {
         tasks.watch.start()
     })
     .demandCommand()

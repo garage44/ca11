@@ -10,6 +10,18 @@
     transition: background 2s;
     width: 100vw;
 
+    .layer {
+        .module {
+            content {
+                background-clip: content-box;
+                border: var(--border) solid var(--bg-default);
+                border-left: 0;
+            }
+        }
+
+    }
+
+
     &.splash-0 {
         background: url('/static/img/splash-0.jpg');
     }
