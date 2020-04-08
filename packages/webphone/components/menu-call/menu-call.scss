@@ -1,0 +1,55 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+
+.c-caller-bar {
+    background: var(--bg-default);
+    color: var(--primary-base);
+    display: flex;
+    font-family: 'Rajdhani';
+    font-weight: 600;
+    grid-area: body-header;
+    height: var(--space-4);
+    justify-content: space-between;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+
+
+    .call-direction {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        width: $space-4;
+
+        svg {
+            @include icon-size($spacer * 4);
+        }
+    }
+
+    .call-endpoint {
+        align-items: center;
+        display: flex;
+        padding-left: $spacer-05;
+        text-transform: uppercase;
+    }
+
+    .call-status {
+        align-items: center;
+        display: flex;
+        padding-right: var(--spacer);
+        text-transform: uppercase;
+
+        svg {
+            @include icon-size($spacer * 3);
+            margin: 0 var(--spacer);
+        }
+
+        .timer {
+            padding-right: var(--spacer);
+            text-align: right;
+            width: $space-4;
+        }
+    }
+}

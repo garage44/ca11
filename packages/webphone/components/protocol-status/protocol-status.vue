@@ -3,7 +3,7 @@
         :class="classes"
         :data-tooltip="tooltip"
         :options="protocols"
-        class="protocol-status tooltip tooltip-right"
+        class="protocol-status tooltip tooltip-left"
         elementclass="t-rd-calls-protocol"
         name="protocol"
         v-model="description.protocol"

@@ -5,6 +5,8 @@ services:
     container_name: asterisk
     depends_on:
       - db
+      - coturn
+      - nginx
     network_mode: host
     volumes:
       - ./asterisk/config:/etc/asterisk

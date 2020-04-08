@@ -8,100 +8,57 @@ html.test .c-stream video {
 }
 
 .c-stream {
-    align-items: center;
-    background: var(--bg-dark);
-    border: calc(var(--spacer) / 2) solid var(--bg-dark);
     display: flex;
-    font-family: 'Rajdhani';
-    height: 100%;
-    justify-content: center;
+    flex: 1;
     overflow: hidden;
     position: relative;
-    transition: all 0.5s;
 
-    .list-item {
-        // display: inline-block;
-        // margin-right: 10px;
+
+    .audio {
+        background: #00f;
+        height: 100%;
     }
 
-    .list-enter-active,
-    .list-leave-active {
-        transition: all 1s;
+    .fade-enter-active {
+        transition: opacity 4.5s;
     }
 
-    .list-enter,
-    .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+    .fade-leave-active {
+        transition: opacity 12.5s;
+    }
+
+    .fade-enter,
+    .fade-leave-to {
         opacity: 0;
-        // transform: translateY(30px);
     }
 
 
     .stream-icon {
-        fill: var(--grey-100);
-        height: 50%;
-        position: absolute;
-        width: 50%;
-    }
-
-    audio,
-    video {
-        align-items: center;
-        color: var(--grey-300);
-        display: flex;
-        // Prevent the element from taking up the whole
-        // screen width; e.g. obey the stream flex settings
-        // for width.
+        fill: var(--grey-50);
+        filter: drop-shadow(0 0 var(--spacer) rgba(0, 0, 0, 0.7));
         height: 100%;
-        max-width: 100%;
-        position: relative;
-        transition: opacity 2s ease-in-out;
-    }
-
-
-    &__slot {
-        @include icon-size($icon-large);
-        border: $spacer-05 solid var(--grey-100);
-        border-radius: 50%;
-        bottom: var(--spacer);
-        color: var(--grey-100);
-        font-size: 1.5rem;
-        font-weight: 600;
+        padding: 150px;
         position: absolute;
-        right: var(--spacer);
-        text-align: center;
-        user-select: none;
-    }
-
-
-    .controls {
-        align-items: center;
-        background: var(--bg-dark);
-        bottom: 0;
-        display: flex;
-        justify-content: flex-end;
-
-        position: absolute;
-        right: 0;
+        transition: all 0.5s;
         width: 100%;
 
-        svg {
-            @include icon-size($icon-large);
-            fill: var(--grey-100);
-
-            &.active:hover,
-            &.active {
-                fill: var(--primary-base);
-                filter: drop-shadow(0 0 $spacer / 2 var(--grey-0));
-            }
-
-            &:hover {
-                background: rgba(var(--grey-50), 0.3);
-                cursor: pointer;
-                fill: var(--grey-0);
-            }
+        &.hidden {
+            opacity: 0;
         }
     }
 
+    div.audio,
+    video {
+        display: none;
+        height: 100%;
+        object-fit: cover;
+        width: 100%;
+
+        &.visible {
+            display: flex;
+            flex: 1;
+        }
+    }
 
     &__placeholder {
         background: var(--grey-500);
@@ -113,10 +70,5 @@ html.test .c-stream video {
         svg {
             @include icon-size($spacer * 6);
         }
-    }
-
-    &__stats {
-        color: var(--grey-400);
-        text-align: center;
     }
 }

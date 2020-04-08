@@ -1,19 +1,11 @@
-<component
-    :class="classes('component')" class="c-stream-view"
->
+<component :class="{[`grid-${streams.length}`]: true}" class="c-stream-view grid">
     <div
-        :class="`slot-${index + 1}`" :key="slot.id"
-        class="slot"
-        v-for="(slot, index) in slots"
+        :class="`stre-${index + 1}`"
+        :key="stream.id"
+        class="stream-container"
+        v-for="(stream, index) in streams"
     >
-        <div class="c-stream placeholder" v-if="slot.type === 'placeholder'">
-            <icon class="c-stream__icon" name="caller" />
-            <div class="content">
-                <div class="c-stream__slot">
-                    {{ index + 1 }}
-                </div>
-            </div>
-        </div>
-        <Stream v-else :stream="slot" />
+        <StreamControls :stream="stream" />
+        <Stream :stream="stream" />
     </div>
 </component>

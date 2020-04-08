@@ -1,21 +1,13 @@
 <component class="c-menu-communicate">
     <button
-        :class="classes('activities')"
-        :data-tooltip="$t('activity')"
-        @click="setLayer('activities')"
-        class="btn  btn-menu t-btn-menu-activity tooltip tooltip-left"
+        :data-tooltip="$t('logout')"
+        @click="logout"
+        class="btn  btn-menu btn-logout tooltip tooltip-left"
     >
-        <icon name="activities" />
+        <icon name="logout" />
     </button>
+    <Dnd />
+    <ProtocolStatus />
 
-    <button
-        class="btn  btn-menu t-btn-menu-contacts tooltip tooltip-left"
-        :class="classes('contacts', true)"
-        :data-tooltip="$t('contacts')"
-        @click="setLayer('contacts')"
-    >
-        <icon name="contacts" />
-    </button>
-
-    <CallerSwitcher />
+    <MenuCommunicateSwitcher />
 </component>

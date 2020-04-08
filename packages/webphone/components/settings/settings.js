@@ -2,7 +2,7 @@ import v from 'vuelidate/dist/validators.min.js'
 
 export default (app) => {
 
-    const Settings = {
+    return {
         data: function() {
             return {
                 playing: {
@@ -21,7 +21,7 @@ export default (app) => {
                 }
                 return classes
             },
-            save: function(e) {
+            save: function() {
                 let settings = app.utils.copyObject(this.settings)
                 delete settings.webrtc.media
 
@@ -37,7 +37,8 @@ export default (app) => {
                     },
                     sip: {
                         account: {
-                            selected: app.state.sip.account.selected,
+                            password: app.state.sip.account.password,
+                            username: app.state.sip.account.username,
                         },
                         enabled: app.state.sip.toggled,
                         endpoint: app.state.sip.endpoint,
@@ -101,6 +102,4 @@ export default (app) => {
             return validations
         },
     }
-
-    return Settings
 }

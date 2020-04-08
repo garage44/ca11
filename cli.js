@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import _ from 'lodash'
+import {buildInfo} from './lib/utils.js'
 import chalk from 'chalk'
 import chokidar from 'chokidar'
 import CleanCSS from 'clean-css'
@@ -12,7 +13,6 @@ import imageminJpegtran from 'imagemin-jpegtran'
 import imageminPngquant from 'imagemin-pngquant'
 import mount from 'connect-mount'
 import path from 'path'
-import rc from 'rc'
 import rollup from 'rollup'
 import rollupCommonjs from '@rollup/plugin-commonjs'
 import rollupReplace from '@rollup/plugin-replace'
@@ -20,40 +20,21 @@ import rollupResolve from '@rollup/plugin-node-resolve'
 import rollupTerser from 'rollup-plugin-terser'
 import sass from 'node-sass'
 import serveStatic from 'serve-static'
+import settings from './lib/settings.js'
 import svgIcon from 'vue-svgicon/dist/lib/build.js'
 import Task from './lib/task.js'
-import themeSettings from '@ca11/webphone-theme'
+
 import tinylr from 'tiny-lr'
 import VuePack from '@garage11/vuepack'
 import yargs from 'yargs'
-
-import {__dirname, buildInfo} from './lib/utils.js'
-
 
 const cli = {
     log(...args) {
         // eslint-disable-next-line no-console
         console.log(...args)
     },
+    settings,
 }
-const settings = rc('ca11', {host: '127.0.0.1', port: 35729})
-
-cli.settings = settings
-cli.settings.theme = themeSettings
-settings.build = {
-    target: 'webphone',
-    targets: ['docs', 'webphone'],
-}
-
-cli.settings.dir = {base: path.resolve(path.join(__dirname, '../'))}
-
-Object.assign(settings.dir, {
-    build: path.join(settings.dir.base, 'build'),
-    node: path.resolve(path.join(settings.dir.base, 'node_modules')),
-    src: path.resolve(path.join(settings.dir.base, 'packages', 'webphone')),
-    theme: path.resolve(path.join(settings.dir.base, 'packages', 'webphone-theme')),
-    tmp: path.join(settings.dir.base, 'build', '.tmp'),
-})
 
 const tasks = {}
 
@@ -111,13 +92,19 @@ tasks.html = new Task('html', async function() {
     await fs.writeFile(path.join(settings.dir.build, 'index.html'), html)
 })
 
-tasks.js = new Task('js', async function() {
+tasks.js = new Task('js', async function(file) {
     if (!settings.production) {
         // Snowpack only requires a light-weight copy action to the build dir.
-        let targets = (await globby([path.join(settings.dir.src, '**', '*.js')]))
-            .map((i) => fs.copy(i, path.join(settings.dir.build, 'static', i.replace(settings.dir.src, ''))))
+        let targets
+        if (file) {
+            await fs.copy(file, path.join(settings.dir.build, 'static', file.replace(settings.dir.src, '')))
+        } else {
+            targets = (await globby([path.join(settings.dir.src, '**', '*.js')]))
+                .map((i) => fs.copy(i, path.join(settings.dir.build, 'static', i.replace(settings.dir.src, ''))))
 
-        await Promise.all(targets)
+            await Promise.all(targets)
+        }
+
     } else {
         // Use rollup to generate an optimized bundle.
         const bundle = await rollup.rollup({
@@ -219,8 +206,8 @@ tasks.watch = new Task('watch', async function() {
         chokidar.watch([
             path.join('!', settings.dir.src, 'js', 'templates.js'), // Templates are handled by the Vue task
             path.join(settings.dir.src, '**', '*.js'),
-        ]).on('change', async() => {
-            await tasks.js.start(entrypoint.js)
+        ]).on('change', async(file) => {
+            await tasks.js.start(entrypoint.js, file)
             tinylr.changed('app.js')
         })
 
@@ -268,7 +255,7 @@ yargs
     .command('html', 'generate index.html', () => {}, () => {
         tasks.html.start(entrypoint.html)
     })
-    .command('js', 'prepare JavaScript for the browser', () => {}, () => {
+    .command('js', 'generate browser JavaScript', () => {}, () => {
         tasks.js.start(entrypoint.js)
     })
     .command('scss', 'compile SCSS styles to CSS', () => {}, () => {
@@ -277,7 +264,7 @@ yargs
     .command('vue', 'compile Vue templates to ESM', () => {}, () => {
         tasks.vue.start(entrypoint.vue)
     })
-    .command('watch', 'start development server', () => {}, () => {
+    .command('watch', 'launch development server', () => {}, () => {
         tasks.watch.start()
     })
     .demandCommand()

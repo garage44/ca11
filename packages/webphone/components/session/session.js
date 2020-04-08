@@ -3,7 +3,7 @@ import v from 'vuelidate/dist/validators.min.js'
 export default (app) => {
     let sloganInterval
 
-    const Session = {
+    return {
         computed: {
             slogan: function() {
                 return this.slogans[this.currentSlogan]
@@ -124,7 +124,4 @@ export default (app) => {
             },
         },
     }
-
-
-    return Session
 }

@@ -13,7 +13,8 @@
     },
     "root": true,
     "globals": {
-        "globalThis": true
+        "globalThis": true,
+        "shortid": true
     },
     "ignorePatterns": ["templates.js", "node_modules/", "build/", "lib/utils.js"],
     "overrides": [

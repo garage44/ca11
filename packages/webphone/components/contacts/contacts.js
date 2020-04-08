@@ -1,10 +1,7 @@
 export default (app) => {
     const PRESENCE_STATUS = ['available', 'busy']
 
-    /**
-    * @memberof fg.components
-    */
-    const Contact = {
+    return {
         computed: Object.assign({
             filteredContacts: function() {
                 let contacts = Object.entries(this.contacts).map((i) => i[1])
@@ -210,6 +207,4 @@ export default (app) => {
             },
         },
     }
-
-    return Contact
 }

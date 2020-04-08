@@ -1,6 +1,6 @@
 export default (app) => {
 
-    const Network = {
+    return {
         beforeDestroy() {
             window.removeEventListener('resize', this.onResizeHandler)
         },
@@ -127,6 +127,4 @@ export default (app) => {
             },
         },
     }
-
-    return Network
 }

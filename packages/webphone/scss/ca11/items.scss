@@ -1,0 +1,227 @@
+.items-empty {
+    align-items: center;
+    color: var(--bg-light);
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    overflow: hidden;
+    width: 100%;
+
+    .icon {
+        @include icon-size($spacer * 30);
+    }
+
+    .text {
+        font-family: 'Rajdhani';
+        font-size: 4rem;
+        font-weight: 500;
+        margin-top: var(--spacer);
+        text-align: center;
+    }
+}
+
+.items {
+    align-items: stretch;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: var(--spacer);
+    width: 100%;
+}
+
+
+.item {
+    $item: &;
+    display: flex;
+    flex-direction: column;
+
+    padding: $spacer  var(--spacer);
+    width: 100%;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &.selected {
+        .context {
+            display: flex;
+        }
+
+        .header {
+            .header-icon {
+                background: var(--grey-300);
+                border: $spacer / 4 solid var(--primary-base);
+                fill: var(--primary-base);
+            }
+
+            .header-text .editable,
+            .header-text {
+                color: var(--primary-base);
+            }
+
+            .header-title:hover,
+            &:hover {
+                cursor: default;
+            }
+        }
+    }
+
+    .header {
+        display: flex;
+        flex-direction: row;
+        // Required to have ellipsis text overflow on .name.
+        text-overflow: ellipsis;
+        width: 100%;
+
+        .header-icon {
+            @include icon-size($icon-large);
+            background: var(--grey-400);
+            border: $spacer / 4 solid var(--grey-200);
+            border-radius: 50%;
+            fill: var(--grey-100);
+            // Force a static width.
+            flex: 0 0  var(--icon-large);
+            height: var(--icon-large);
+            margin-right: calc(var(--spacer) * 2);
+            padding: calc(var(--spacer) / 2);
+            // padding: $spacer-05;
+            width: var(--icon-large);
+        }
+
+        .header-text,
+        .header-text .editable {
+            background: none;
+            color: var(--grey-50);
+            display: inline-block;
+            font-family: 'Rajdhani';
+            font-size: var(--text-large);
+            font-weight: 600;
+            justify-content: space-between;
+            overflow: hidden;
+            padding: 0;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 100%;
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            // Smaller sub-title that adds extra context for the item.
+            .header-description {
+                border: var(--border) solid transparent;
+                color: var(--grey-200);
+                font-size: var(--text-small);
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        // Options for this item.
+        .options {
+            align-items: center;
+            display: flex;
+            margin-bottom: calc(var(--spacer) * 1.5);
+
+            .option {
+                align-items: center;
+                color: var(--grey-100);
+                display: flex;
+                justify-content: center;
+
+                transition: color ease-in-out 0.1s;
+                user-select: none;
+
+                &:hover,
+                &.active {
+                    svg {
+                        color: var(--primary-base);
+                    }
+                }
+
+                svg {
+                    @include icon-size($icon-small);
+                }
+            }
+        }
+    }
+
+    // Extra context to show when item is selected.
+    .context {
+        color: var(--grey-200);
+        display: none;
+        flex-direction: column;
+        font-size: text-scale('lg');
+        width: 100%;
+
+        // Textarea field that 'labels' the item.
+        .context-label {
+            background: var(--bg-dark);
+            border: 1px solid var(--grey-200);
+            color: var(--primary-base);
+            font-family: 'Rajdhani';
+            font-weight: 600;
+            height: 1rem;
+            padding: var(--spacer);
+            resize: none;
+            text-transform: uppercase;
+            width: 100%;
+        }
+
+        .context-empty {
+            color: var(--grey-300);
+            font-family: 'Rajdhani';
+            font-weight: 600;
+            padding: var(--spacer);
+            padding-left: 0;
+            width: 100%;
+        }
+
+        .entry {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            margin-top: $spacer / 2;
+            padding-left: 0;
+            width: 100%;
+
+            button {
+                color: var(--grey-50);
+                display: flex;
+                justify-content: center;
+                text-align: center;
+                width: $icon-large;
+
+                svg {
+                    @include icon-size($icon-normal);
+                }
+            }
+
+            input {
+                background: none;
+                color: var(--primary-base);
+                flex: 1 1 auto;
+                font-family: 'Rajdhani';
+                font-size: $text-base;
+                font-weight: 600;
+                margin-left: calc(var(--spacer) * 2);
+                width: 0;
+            }
+
+            .options {
+                align-items: center;
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-end;
+
+                .option {
+                    width: auto;
+                }
+
+                svg {
+                    @include icon-size($icon-small);
+                }
+            }
+        }
+    }
+}

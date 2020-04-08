@@ -1,10 +1,10 @@
 export default (app) => {
-    let recorder, recorderData
 
     return {
         data: function() {
             return {
                 recording: false,
+                showType: true,
                 types: ['audio', 'video', 'display'],
             }
         },
@@ -18,45 +18,18 @@ export default (app) => {
                 if (this.stream.ready) classes[`t-btn-media-stream-${this.stream.kind}`] = true
                 return classes
             },
+            hideStreamTypeIndicator: function() {
+                if (this.stream.kind !== 'audio') {
+                    window.setTimeout(() => {
+                        this.showType = false
+                    }, 1500)
+                }
+            },
             switchStream: function() {
                 // Step through streamTypes.
                 const nextStreamType = this.types[(this.types.indexOf(this.stream.kind) + 1) % this.types.length]
                 // Maintain selected state between streams.
                 app.media.query(nextStreamType, {selected: this.stream.selected})
-            },
-            toggleFullscreen: function() {
-                const mediaElement = this.$refs[this.stream.kind]
-                mediaElement.requestFullscreen({navigationUI: 'hide'})
-            },
-            togglePip: function() {
-                const mediaElement = this.$refs[this.stream.kind]
-                mediaElement.requestPictureInPicture()
-            },
-            toggleRecord: function() {
-                if (!this.recording) {
-                    this.recording = true
-                    recorder = new MediaRecorder(app.media.streams[this.stream.id])
-                    recorderData = []
-                    recorder.ondataavailable = (event) => {
-                        recorderData.push(event.data)
-                    }
-
-                    recorder.onstop = function(e) {
-                        let recordedBlob = new Blob(recorderData)
-                        var audioURL = URL.createObjectURL(recordedBlob)
-                        var link = document.createElement('a')
-                        link.setAttribute('href', audioURL)
-                        link.setAttribute('download', 'recording.webm')
-                        document.body.appendChild(link)
-                        link.click()
-                        document.body.removeChild(link)
-                    }
-                    recorder.start()
-                } else {
-                    recorder.stop()
-                    this.recording = false
-                }
-
             },
         },
         mounted: function() {
@@ -69,6 +42,7 @@ export default (app) => {
                 if (this.stream.muted) mediaElement.muted = true
 
                 mediaElement.addEventListener('loadeddata', () => {
+                    this.hideStreamTypeIndicator()
                     this.stream.ready = true
                 })
             }
@@ -85,14 +59,19 @@ export default (app) => {
         },
         watch: {
             'stream.id': function(streamId) {
+                this.showType = true
+
                 if (!this.$refs[this.stream.kind]) return
                 const mediaElement = this.$refs[this.stream.kind]
 
                 mediaElement.srcObject = app.media.streams[streamId]
                 if (this.stream.muted) mediaElement.muted = true
 
+
+
                 mediaElement.addEventListener('loadeddata', () => {
                     this.stream.ready = true
+                    this.hideStreamTypeIndicator()
                 })
             },
         },

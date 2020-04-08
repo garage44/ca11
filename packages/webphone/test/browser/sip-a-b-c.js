@@ -1,15 +1,18 @@
-const _ = require('../test')
+import _ from '../ducktape.js'
 
-_.testAsync('[SIP] Alice calls Bob, Bob transfers Alice to Charlie', async(t1) => {
+_.testAsync('[SIP] Alice calls Bob, Bob transfers Alice to Charlie', async() => {
     let [alice, bob, charlie] = await Promise.all(
         [_.init('alice'), _.init('bob'), _.init('charlie')],
     )
+
 
     await Promise.all([
         _.steps.meta.setup(alice),
         _.steps.meta.setup(bob),
         _.steps.meta.setup(charlie),
     ])
+
+    console.log("SETUP")
 
     await Promise.all([
         _.steps.settings.enableSip(alice),

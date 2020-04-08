@@ -1,8 +1,6 @@
 export default function(app) {
-    /**
-    * @memberof fg.components
-    */
-    const Notifications = {
+
+    return {
         methods: {
             classes: function(block, notification) {
                 let classes = {}
@@ -27,6 +25,4 @@ export default function(app) {
             session: 'session',
         },
     }
-
-    return Notifications
 }

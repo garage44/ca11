@@ -1,6 +1,6 @@
-const _ = require('../test')
+import _ from '../ducktape.js'
 
-_.testAsync('[SIG11] Alice calls Bob', async(t1) => {
+_.testAsync('[SIG11] Alice calls Bob', async() => {
     let [alice, bob] = await Promise.all(
         [_.init('alice'), _.init('bob')],
     )

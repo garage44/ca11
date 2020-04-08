@@ -17,6 +17,10 @@
         color: var(--primary-base);
     }
 
+    .c-radio input:checked + label {
+        background: none;
+    }
+
     .protocol-status {
         display: flex;
         margin-bottom: 0;
