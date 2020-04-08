@@ -1,4 +1,4 @@
-export default (app) => {
+export default () => {
 
     // const components = {
     //     DevicesConfig: require('./components/config'),
@@ -9,13 +9,10 @@ export default (app) => {
     //     app.components[name] = Vue.component(name, component(app))
     // }
 
-
-    const Devices = {
+    return {
         store: {
             app: 'app',
             media: 'settings.webrtc.media',
         },
     }
-
-    return Devices
 }

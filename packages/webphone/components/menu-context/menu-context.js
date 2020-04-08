@@ -1,9 +1,6 @@
-// import '@/icons/settings.js'
-// import '@/icons/logout.js'
-
 export default (app) => {
 
-    const MenuContext = {
+    return {
         computed: app.helpers.sharedComputed(),
         data: function() {
             return {
@@ -18,15 +15,12 @@ export default (app) => {
                 classes.active = (this.layer === block)
 
                 if (block === 'activities') {
-                    classes.unread = this.activities.unread
+                    // classes.unread = this.activities.unread
                 } else if (block === 'caller') {
                     classes.disabled = !this.app.online
                 }
 
                 return classes
-            },
-            logout: function() {
-                app.session.close()
             },
         }, app.helpers.sharedMethods()),
         store: {
@@ -34,6 +28,4 @@ export default (app) => {
             layer: 'ui.layer',
         },
     }
-
-    return MenuContext
 }

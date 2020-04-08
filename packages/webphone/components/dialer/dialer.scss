@@ -1,17 +1,29 @@
 @import 'ca11/lib/variables';
 @import 'ca11/lib/mixins';
 
-.c-caller {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    justify-content: center;
-
+.c-dialer {
     content {
-        background: none;
         display: flex;
         flex-direction: column;
+        overflow-y: hidden;
+
+        .c-stream {
+            align-items: center;
+            background: #222;
+            display: flex;
+            flex: 1;
+            position: relative;
+
+            // video {
+            //     background: var(--bg-dark);
+            //     display: block;
+            //     height: 100%;
+            //     object-fit: cover;
+            //     width: 100%;
+            // }
+        }
     }
+
 
     .call-type {
         align-items: center;

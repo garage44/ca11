@@ -1,0 +1,15 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+.c-stream-controls {
+    align-items: center;
+    background: var(--bg-default);
+    color: var(--primary-base);
+    display: flex;
+    flex-direction: column;
+    width: var(--space-4);
+
+    svg {
+        @include icon-size($spacer * 3);
+    }
+}

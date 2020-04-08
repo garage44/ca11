@@ -4,26 +4,22 @@
 import About from './components/about/about.js'
 import Activities from './components/activities/activities.js'
 import AudioBg from './components/audio-bg/audio-bg.js'
-import Call from './components/call/call.js'
-import Caller from './components/caller/caller.js'
-import CallerBar from './components/caller/components/bar/bar.js'
-import CallerSwitcher from './components/caller/components/switcher/switcher.js'
-
-import CallInputEndpoint from './components/call/components/input-endpoint/input-endpoint.js'
-import CallKeypad from './components/call/components/keypad/keypad.js'
-import CallOptions from './components/call/components/options/options.js'
-import CallTransfer from './components/call/components/transfer/transfer.js'
 
 import Contacts from './components/contacts/contacts.js'
 import Devices from './components/devices/devices.js'
 import DevicesConfig from './components/devices/components/config/config.js'
 import DevicesPermission from './components/devices/components/permission/permission.js'
-
+import Dialer from './components/dialer/dialer.js'
+import DialerEndpoint from './components/dialer/components/endpoint/endpoint.js'
 import Dnd from './components/dnd/dnd.js'
+import Dtmf from './components/dtmf/dtmf.js'
 import Field from './components/field/field.js'
 
 import Main from './components/main/main.js'
+import MenuCall from './components/menu-call/menu-call.js'
+import MenuCallOptions from './components/menu-call/components/options/options.js'
 import MenuCommunicate from './components/menu-communicate/menu-communicate.js'
+import MenuCommunicateSwitcher from './components/menu-communicate/components/switcher/switcher.js'
 import MenuContext from './components/menu-context/menu-context.js'
 import Network from './components/network/network.js'
 import Notifications from './components/notifications/notifications.js'
@@ -32,9 +28,10 @@ import Session from './components/session/session.js'
 import Settings from './components/settings/settings.js'
 import Soundmeter from './components/soundmeter/soundmeter.js'
 import Stream from './components/stream/stream.js'
+import StreamControls from './components/stream-controls/stream-controls.js'
 import StreamView from './components/stream-view/stream-view.js'
-
 import templates from './templates.js'
+import Transfer from './components/transfer/transfer.js'
 import Vue from 'vue/dist/vue.runtime.js'
 
 
@@ -45,22 +42,20 @@ export default function(app) {
         About,
         Activities,
         AudioBg,
-        Call,
-        Caller,
-        CallerBar,
-        CallerSwitcher,
-        CallInputEndpoint,
-        CallKeypad,
-        CallOptions,
-        CallTransfer,
         Contacts,
         Devices,
         DevicesConfig,
         DevicesPermission,
+        Dialer,
+        DialerEndpoint,
         Dnd,
+        Dtmf,
         Field,
         Main,
+        MenuCall,
+        MenuCallOptions,
         MenuCommunicate,
+        MenuCommunicateSwitcher,
         MenuContext,
         Network,
         Notifications,
@@ -69,7 +64,9 @@ export default function(app) {
         Settings,
         Soundmeter,
         Stream,
+        StreamControls,
         StreamView,
+        Transfer,
     }
 
 

@@ -92,13 +92,19 @@ tasks.html = new Task('html', async function() {
     await fs.writeFile(path.join(settings.dir.build, 'index.html'), html)
 })
 
-tasks.js = new Task('js', async function() {
+tasks.js = new Task('js', async function(file) {
     if (!settings.production) {
         // Snowpack only requires a light-weight copy action to the build dir.
-        let targets = (await globby([path.join(settings.dir.src, '**', '*.js')]))
-            .map((i) => fs.copy(i, path.join(settings.dir.build, 'static', i.replace(settings.dir.src, ''))))
+        let targets
+        if (file) {
+            await fs.copy(file, path.join(settings.dir.build, 'static', file.replace(settings.dir.src, '')))
+        } else {
+            targets = (await globby([path.join(settings.dir.src, '**', '*.js')]))
+                .map((i) => fs.copy(i, path.join(settings.dir.build, 'static', i.replace(settings.dir.src, ''))))
 
-        await Promise.all(targets)
+            await Promise.all(targets)
+        }
+
     } else {
         // Use rollup to generate an optimized bundle.
         const bundle = await rollup.rollup({
@@ -200,8 +206,8 @@ tasks.watch = new Task('watch', async function() {
         chokidar.watch([
             path.join('!', settings.dir.src, 'js', 'templates.js'), // Templates are handled by the Vue task
             path.join(settings.dir.src, '**', '*.js'),
-        ]).on('change', async() => {
-            await tasks.js.start(entrypoint.js)
+        ]).on('change', async(file) => {
+            await tasks.js.start(entrypoint.js, file)
             tinylr.changed('app.js')
         })
 

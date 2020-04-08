@@ -1,8 +1,6 @@
 export default (app) => {
-    /**
-    * @memberof fg.components
-    */
-    const DevicesPermission = {
+
+    return {
         beforeDestroy: function() {
             clearInterval(this.intervalId)
         },
@@ -19,6 +17,4 @@ export default (app) => {
             settings: 'settings',
         },
     }
-
-    return DevicesPermission
 }

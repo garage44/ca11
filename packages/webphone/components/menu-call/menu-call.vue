@@ -13,12 +13,12 @@
         </span>
         <span v-else>
             <span class="c-status-call__number">
-                {{ description.number }}
+                {{ description.endpoint }}
             </span>
         </span>
     </div>
 
-    <CallOptions :call="callActive" />
+    <MenuCallOptions :call="callActive" />
 
     <div v-if="call" class="call-status">
         <span>{{ callStatus }}</span>

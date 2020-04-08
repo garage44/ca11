@@ -1,7 +1,7 @@
 export default (app) => {
     const sharedComputed = app.helpers.sharedComputed()
 
-    const Caller = {
+    return {
         computed: Object.assign({
             callActive: sharedComputed.callActive,
             protocols: function() {
@@ -13,9 +13,6 @@ export default (app) => {
             },
         }, app.helpers.sharedComputed()),
         methods: Object.assign({
-            callDescription: function(...args) {
-                app.modules.caller.call(...args)
-            },
             classes: function(block) {
                 let classes = {}
                 if (block === 'component') {
@@ -41,6 +38,4 @@ export default (app) => {
             },
         },
     }
-
-    return Caller
 }

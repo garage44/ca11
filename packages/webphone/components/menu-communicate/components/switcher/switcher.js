@@ -4,11 +4,7 @@ export default (app) => {
         computed: app.helpers.sharedComputed(),
         methods: Object.assign({
             activateCall: function(call) {
-                app.setState({settings: {webrtc: {media: {stream: {
-                    [this.stream.type]: {selected: false},
-                }}}}, ui: {layer: 'caller'}}, {persist: true})
-
-                this.setLayer('caller')
+                const settings = {webrtc: {media: {stream: {[this.stream.type]: {selected: false}}}}}
 
                 if (call) {
                     app.emit('caller:call-activate', {
@@ -16,7 +12,9 @@ export default (app) => {
                         holdInactive: true,
                         unholdActive: false,
                     })
+                    app.setState({settings, ui: {layer: 'stream-view'}}, {persist: true})
                 } else {
+                    app.setState({settings, ui: {layer: 'dialer'}}, {persist: true})
                     app.emit('caller:call-activate', {callId: null})
                 }
             },

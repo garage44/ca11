@@ -1,9 +1,6 @@
-// import '@/icons/activities.js'
-// import '@/icons/contacts.js'
-
 export default (app) => {
 
-    const MenuCommunicate = {
+    return {
         computed: {
             protocols: function() {
                 let protocols = [
@@ -46,7 +43,7 @@ export default (app) => {
                 else selected = null
                 app.setState({
                     settings: {webrtc: {media: {stream: {[this.stream.type]: {selected}}}}},
-                    ui: {layer: 'caller'},
+                    ui: {layer: 'dialer'},
                 }, {persist: true})
             },
         }, app.helpers.sharedMethods()),
@@ -71,6 +68,4 @@ export default (app) => {
             },
         },
     }
-
-    return MenuCommunicate
 }

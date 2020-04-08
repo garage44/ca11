@@ -2,48 +2,29 @@
 @import 'ca11/lib/variables';
 
 .c-stream-view {
-    // align-items: stretch;
+    background: var(--bg-light);
     display: grid;
-    position: relative;
 
-    @media screen {
-        &.grid-2 {
-            grid-gap: calc(var(--space-4) / 2);
-            grid-template-rows: 1fr 1fr;
-
-            .slot-1 {grid-area: 1 / 1;}
-            .slot-2 {grid-area: 2 / 1;}
-        }
+    &.grid-2,
+    &.grid-3,
+    &.grid-4 {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
     }
 
-    @media screen and (min-width: $breakpoint-tablet) {
-        &.grid-2 {
-            grid-gap: calc(var(--space-4) / 2);
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr;
-
-            .slot-1 {grid-area: 1 / 1;}
-            .slot-2 {grid-area: 1 / 2;}
-        }
+    &.grid-5 {
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
     }
 
-
-    .c-stream {
+    .stream-container {
+        align-self: stretch;
         display: flex;
         flex: 1;
-        height: 100%;
-        transition: all 0.25s;
 
-        &.placeholder {
-            background: none;
-
-            svg {
-                fill: var(--grey-100);
-            }
-        }
-
-        video {
-            background: none;
+        .c-stream {
+            flex: 1;
+            max-height: 600px;
         }
     }
 }

@@ -1,18 +1,11 @@
-import SIPCaller from './sip/sip.js'
-import SIG11Caller from './sig11/sig11.js'
-
 import Module from '../../lib/module.js'
+import SIG11Caller from './sig11/sig11.js'
+import SIPCaller from './sip/sip.js'
 import Vue from 'vue/dist/vue.runtime.js'
 
 
-/**
-* Main entrypoint for Calls.
-* @memberof AppBackground.plugins
-*/
 class ModuleCaller extends Module {
-    /**
-    * @param {AppBackground} app - The background application.
-    */
+
     constructor(app) {
         super(app)
 
@@ -58,6 +51,7 @@ class ModuleCaller extends Module {
         */
         this.app.on('caller:call-terminate', ({callId}) => {
             // Use SIG11 parameters. SIP terminate doesn't have any atm.
+            console.log("TERMINATE")
             this.calls[callId].terminate(null, {remote: true})
         })
 
@@ -79,7 +73,7 @@ class ModuleCaller extends Module {
 
 
         /**
-        * Toggle mute status on the call by manupilating the rtp
+        * Toggle mute status on the call by manipulating the rtp
         * sender track of the Call.
         * @event module:ModuleCalls#caller:call-mute
         * @property {callId} callId - Id of the Call to toggle mute for.
@@ -116,8 +110,8 @@ class ModuleCaller extends Module {
 
 
         /**
-         * Toggle hold for the call that needs to be transferred. Set
-         * transfer mode to active for this call.
+         * Toggle hold for the call that needs to be transferred.
+         * Set transfer mode to active for this call.
          * @event module:ModuleCalls#caller:transfer-initialize
          * @property {callId} callId - Id of the Call to toggle transfer mode for.
          */
@@ -334,13 +328,15 @@ class ModuleCaller extends Module {
             // Select the first closing Call when all Calls are closing.
             if (newcallActive) this.activateCall(newcallActive, true, false)
             else if (fallbackCall) this.activateCall(fallbackCall, true, false)
+            else {
+                // No more calls active; fallback to the dialer.
+                this.app.setState({ui: {layer: 'dialer'}}, {persist: true})
+            }
         }
 
         // Finally delete the call and its references.
         this.app.logger.debug(`${this}delete call ${call.id}`)
-        // Vue.delete(this.app.state.caller.calls, call.id)
-        const path = `caller.calls.${call.id}`
-        this.app.setState(null, {action: 'delete', path})
+        this.app.setState(null, {action: 'delete', path: `caller.calls.${call.id}`})
         delete this.calls[call.id]
     }
 

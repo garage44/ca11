@@ -8,75 +8,57 @@ html.test .c-stream video {
 }
 
 .c-stream {
-    align-items: center;
-    background: var(--bg-dark);
-    border: var(--border) solid var(--bg-light);
     display: flex;
-    flex-direction: row;
-    font-family: 'Rajdhani';
-    height: 100%;
-    justify-content: center;
+    flex: 1;
     overflow: hidden;
     position: relative;
-    transition: all 0.5s;
+
+
+    .audio {
+        background: #00f;
+        height: 100%;
+    }
+
+    .fade-enter-active {
+        transition: opacity 4.5s;
+    }
+
+    .fade-leave-active {
+        transition: opacity 12.5s;
+    }
+
+    .fade-enter,
+    .fade-leave-to {
+        opacity: 0;
+    }
 
 
     .stream-icon {
-        fill: var(--grey-100);
-        height: 50%;
-        position: absolute;
-        width: 50%;
-    }
-
-    audio {
-        background: #f00;
-        display: flex !important;
+        fill: var(--grey-50);
+        filter: drop-shadow(0 0 var(--spacer) rgba(0, 0, 0, 0.7));
         height: 100%;
+        padding: 150px;
+        position: absolute;
+        transition: all 0.5s;
         width: 100%;
+
+        &.hidden {
+            opacity: 0;
+        }
     }
 
-    audio,
+    div.audio,
     video {
-        align-items: center;
-        color: var(--grey-300);
-        display: flex;
-        max-width: 100%;
-        position: relative;
-        // transition: opacity 2s ease-in-out;
+        display: none;
+        height: 100%;
+        object-fit: cover;
+        width: 100%;
+
+        &.visible {
+            display: flex;
+            flex: 1;
+        }
     }
-
-
-    // .controls {
-    //     align-items: center;
-    //     background: var(--bg-default);
-    //     bottom: 0;
-    //     display: flex;
-    //     flex-direction: column;
-    //     // justify-content: flex-end;
-
-    //     // position: absolute;
-    //     width: 50px;
-
-
-    //     svg {
-    //         fill: var(--grey-100);
-    //         height: var(--icon-normal);
-    //         width: var(--icon-normal);
-
-    //         &.active:hover,
-    //         &.active {
-    //             fill: var(--primary-base);
-    //             filter: drop-shadow(0 0 $spacer / 2 var(--grey-0));
-    //         }
-
-    //         &:hover {
-    //             background: rgba(var(--grey-50), 0.3);
-    //             cursor: pointer;
-    //             fill: var(--grey-0);
-    //         }
-    //     }
-    // }
-
 
     &__placeholder {
         background: var(--grey-500);
@@ -88,10 +70,5 @@ html.test .c-stream video {
         svg {
             @include icon-size($spacer * 6);
         }
-    }
-
-    &__stats {
-        color: var(--grey-400);
-        text-align: center;
     }
 }

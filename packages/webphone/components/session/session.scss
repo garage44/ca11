@@ -9,6 +9,10 @@
     display: flex;
     flex-direction: column;
     font-family: 'Rajdhani';
+    grid-column-end: 4;
+    grid-column-start: 1;
+    grid-row-end: body-content;
+    grid-row-start: body-content;
     justify-content: stretch;
     justify-items: stretch;
     margin: 0 auto;

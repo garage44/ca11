@@ -1,8 +1,5 @@
 export default (app) => {
-    /**
-    * @memberof fg.components
-    */
-    const Bar = {
+    return {
         computed: Object.assign({
             call: function() {
                 return this.callActive
@@ -22,6 +19,4 @@ export default (app) => {
             description: 'caller.description',
         },
     }
-
-    return Bar
 }

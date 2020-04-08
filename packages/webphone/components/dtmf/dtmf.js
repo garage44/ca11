@@ -1,7 +1,10 @@
 export default (app) => {
 
+    const sharedComputed = app.helpers.sharedComputed()
+
     return {
         computed: Object.assign({
+            callActive: sharedComputed.callActive,
             matchedContact: function() {
                 let _number = String(this.number)
                 if (_number.length > 1) {
@@ -15,7 +18,7 @@ export default (app) => {
                 }
                 return null
             },
-        }, app.helpers.sharedComputed()),
+        }),
         methods: Object.assign({
             activateMedia: function() {
                 let selected = this.stream[this.stream.type].selected
@@ -29,10 +32,7 @@ export default (app) => {
                 app.emit('caller:call-activate', {callId: null})
             },
             press: function(key) {
-                if (this.mode === 'dtmf') {
-                    app.emit('sip:dtmf', {callId: this.call.id, key})
-                }
-                this.description.endpoint += key
+                app.emit('sip:dtmf', {callId: this.callActive.id, key})
             },
         }, app.helpers.sharedMethods()),
         props: {

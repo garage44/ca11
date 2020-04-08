@@ -16,12 +16,12 @@ class ModuleApp extends Module {
 
         // Start responding to network changes.
         if (!app.env.isNode) {
-            window.addEventListener('offline', (e) => {
+            window.addEventListener('offline', () => {
                 this.app.logger.info(`${this}switched to offline modus`)
                 this.app.setState({app: {online: false}})
             })
 
-            window.addEventListener('online', (e) => {
+            window.addEventListener('online', () => {
                 const pollConnection = async() => {
                     const online = await this.checkConnectivity(1000)
                     if (!online) pollConnection()
@@ -41,7 +41,7 @@ class ModuleApp extends Module {
             dnd: false,
             editMode: false,
             installed: true,
-            name: 'CA11', // process.env.APP_NAME,
+            name: 'CA11',
             notifications: [],
             online: true,
             search: {
@@ -68,8 +68,8 @@ class ModuleApp extends Module {
                 },
             },
             version: {
-                current: '', // process.env.VERSION,
-                previous: '' // process.env.VERSION,
+                current: '',
+                previous: '',
             },
         }
     }
@@ -136,7 +136,7 @@ class ModuleApp extends Module {
                 this.app.logger.info(`${this}verifying online modus`)
 
                 const checkSocket = new WebSocket(`wss://${endpoint}`, 'sip')
-                checkSocket.onopen = (event) => {
+                checkSocket.onopen = () => {
                     this.app.logger.info(`${this}switched to online modus`)
                     this.app.setState({app: {online: true}})
                     checkSocket.close()
@@ -144,7 +144,7 @@ class ModuleApp extends Module {
                     else resolve(true)
                 }
 
-                checkSocket.onerror = (error) => {
+                checkSocket.onerror = () => {
                     this.app.setState({app: {online: false}})
                     if (pause) setTimeout(() => resolve(false), pause)
                     else resolve(false)

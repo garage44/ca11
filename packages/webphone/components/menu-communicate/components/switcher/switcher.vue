@@ -13,7 +13,7 @@
         <button
             class="btn btn-menu call t-btn-switcher-call-new placeholder tooltip tooltip-left"
             :class="{
-                active: !stream[stream.type].selected && !callActive.id && ui.layer === 'caller',
+                active: !stream[stream.type].selected && !callActive.id && ui.layer === 'dialer',
                 hint: 'true'
             }"
             :data-tooltip="$t('add new call')"

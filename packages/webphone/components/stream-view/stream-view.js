@@ -5,6 +5,8 @@ export default (app) => {
         slots.push({id: shortid(), type: 'placeholder'})
     }
 
+    const sharedComputed = app.helpers.sharedComputed()
+
     return {
         computed: Object.assign({
             /**
@@ -13,53 +15,26 @@ export default (app) => {
              * accordingly.
              * @returns {Array} - Selected streams ordered by selection time.
              */
-            slots: function() {
-                let activeSlots = []
-
-                activeSlots.push(this.stream[this.stream.type])
-
-                if (this.call) {
-                    // Replace placeholders with actual streams.
-                    const streams = Object.values(this.call.streams)
-                    activeSlots = activeSlots.concat(streams)
-                    if (activeSlots.length <= 2) return activeSlots
-                } else {
-                    return activeSlots
-                }
-
-                // Use placeholders to indicate capacity for conferencing.
-                activeSlots.sort((a, b) => {
-                    if (a.selected < b.selected) return -1
-                    if (a.selected > b.selected) return 1
-                    return 0
-                })
-
-
-                if (activeSlots.length < slotSize) {
-                    for (let i = activeSlots.length; i < slotSize; i++) {
-                        activeSlots.push(slots[i])
-                    }
-                }
-
-                return activeSlots
+            callActive: sharedComputed.callActive,
+            streams: function() {
+                let streams = [this.stream[this.stream.type]]
+                streams = streams.concat(Object.values(this.callActive.streams))
+                return streams
             },
-        }, app.helpers.sharedComputed()),
-        methods: {
-            classes: function(block) {
-                const classes = {}
-                if (block === 'component') {
-                    classes[`grid-${this.slots.length}`] = true
-                }
-                return classes
-            },
-        },
+
+        }),
         mounted: function() {
             // Start with a selected local stream.
             this.stream.selected = true
         },
-        props: ['call'],
         store: {
+            calls: 'caller.calls',
             stream: 'settings.webrtc.media.stream',
+        },
+        watch: {
+            callActive: function(callActive) {
+                console.log("CALL ACTIVE ", callActive)
+            },
         },
     }
 }

@@ -1,12 +1,10 @@
-<component class="c-keypad t-keypad" tabindex="-1">
-    <Stream
-        :controls="true"
-        :stream="stream[stream.type]"
-        @click="activateMedia"
-        v-if="mode === 'call'"
-    />
-    <div v-if="mode === 'dtmf'" class="keys-container">
-        <div class="key-row">
+<component class="c-dtmf t-dtmf" tabindex="-1">
+    <panel>
+        <div class="actions" />
+    </panel>
+
+    <content>
+        <div class="keys-container">
             <button class="key t-btn-keypad-1" @mousedown="press('1')">
                 1<div class="sub">
                     <icon name="voicemail" />
@@ -22,8 +20,8 @@
                     DEF
                 </div>
             </button>
-        </div>
-        <div class="key-row">
+
+
             <button class="key t-btn-keypad-4" @mousedown="press('4')">
                 4<div class="sub">
                     GHI
@@ -39,8 +37,8 @@
                     MNO
                 </div>
             </button>
-        </div>
-        <div class="key-row">
+
+
             <button class="key t-btn-keypad-7" @mousedown="press('7')">
                 7<div class="sub">
                     PQRS
@@ -56,8 +54,8 @@
                     WXYZ
                 </div>
             </button>
-        </div>
-        <div class="key-row">
+
+
             <button class="key function t-btn-keypad-*" @mousedown="press('*')">
                 *
             </button>
@@ -70,5 +68,5 @@
                 #
             </button>
         </div>
-    </div>
+    </content>
 </component>

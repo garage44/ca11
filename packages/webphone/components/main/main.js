@@ -2,10 +2,7 @@ export default (app) => {
 
     let splashInterval
 
-    /**
-    * @memberof fg.components
-    */
-    const Main = {
+    return {
         computed: app.helpers.sharedComputed(),
         data: function() {
             return {
@@ -31,6 +28,9 @@ export default (app) => {
 
                 return classes
             },
+            logout: function() {
+                app.session.close()
+            },
         }, {}),// app.helpers.sharedMethods()),
         mounted: function() {
             splashInterval = setInterval(() => {
@@ -47,6 +47,4 @@ export default (app) => {
             ui: 'ui',
         },
     }
-
-    return Main
 }

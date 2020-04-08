@@ -2,10 +2,7 @@ import v from 'vuelidate/dist/validators.min.js'
 
 export default (app) => {
 
-    /**
-    * @memberof fg.components
-    */
-    const DevicesConfig = {
+    return {
         data: function() {
             return {
                 playing: {
@@ -110,8 +107,5 @@ export default (app) => {
                 },
             }
         },
-
     }
-
-    return DevicesConfig
 }

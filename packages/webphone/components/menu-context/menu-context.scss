@@ -2,11 +2,10 @@
 @import 'ca11/lib/variables';
 
 .c-menu-context {
-    .c-protocol-status {
-        background: var(--bg-default);
-    }
+    background: var(--bg-default);
+    border-bottom-right-radius: var(--spacer);
+    border-top-right-radius: var(--spacer);
+    grid-area: body-gutter-left;
+    padding: calc(var(--space-4) / 2) 0;
 
-    .button-quit {
-        margin-top: calc(var(--space-4) / 2);
-    }
 }

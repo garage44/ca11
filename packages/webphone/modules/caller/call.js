@@ -32,7 +32,6 @@ class Call {
          * @property {Object} state.hangup - Specifies the hangup feature of a Call.
          * @property {Object} state.hold - Specifies the hold feature of a Call.
          * @property {String} state.id - The generated UUID of the Call.
-         * @property {Object} state.keypad - Whether the type of Call supports a keypad feature.
          * @property {String} state.protocol - Protocol that the Call uses.
          * @property {String} state.status - A Call state identifier as described in `this._statusMap`.
          * @property {Object} state.timer - Keeps track of the Call time.
@@ -51,11 +50,6 @@ class Call {
                 disabled: false,
             },
             id: this.id,
-            keypad: {
-                active: false,
-                disabled: false,
-                endpoint: null,
-            },
             mute: {
                 active: false,
             },
@@ -207,7 +201,6 @@ class Call {
 
         // Stop the Call interval timer.
         clearInterval(this.timerId)
-        this.setState({keypad: {active: false}})
         // Reset the transfer state of target calls in case the transfer mode
         // of this Call is active and the callee ends the call.
         if (this.state.transfer.active) {
@@ -258,10 +251,10 @@ class Call {
         if (this.silent) return
 
         const streamType = this.app.state.settings.webrtc.media.stream.type
-        // Switch to the caller and activate the local stream.
+        // Switch to the stream-view and activate the local stream.
         this.app.setState({
             settings: {webrtc: {media: {stream: {[streamType]: {selected: true}}}}},
-            ui: {layer: 'caller', menubar: {event: 'ringing'}},
+            ui: {layer: 'stream-view', menubar: {event: 'ringing'}},
         })
 
         if (this.app.state.settings.webhooks.enabled) {
@@ -290,7 +283,7 @@ class Call {
         // Always set this call to be the active call.
         this.app.modules.caller.activateCall(this, true)
         this.setState({name: name, status: 'create'})
-        this.app.setState({ui: {layer: 'caller', menubar: {event: 'ringing'}}})
+        this.app.setState({ui: {layer: 'stream-view', menubar: {event: 'ringing'}}})
     }
 
 

@@ -1,5 +1,3 @@
-// Entrypoint for CA11 application SCSS.
-// Components SCSS is blended in with Gulp.
 @import 'lib/variables';
 @import 'lib/variables-responsive';
 @import 'lib/defaults';
@@ -10,13 +8,11 @@
 @import 'lib/tooltip';
 @import 'lib/icons';
 @import 'lib/animations';
-@import 'lib/grid';
 
-@import 'elements/guides';
-@import 'elements/module';
-@import 'elements/items';
-@import 'elements/notification-box';
-@import 'elements/tabs';
+@import 'guides';
+@import 'items';
+@import 'notification-box';
+@import 'tabs';
 
-// Import Vue components using the glob loader.
+// Import Vue component styling using the glob loader.
 @import '../../components/**/*.scss'; /* stylelint-disable-line */

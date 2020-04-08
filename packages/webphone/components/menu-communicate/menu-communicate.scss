@@ -3,20 +3,11 @@
 
 
 .c-menu-communicate {
+    background: var(--bg-default);
+    border-bottom-left-radius: var(--spacer);
+    border-top-left-radius: var(--spacer);
     display: flex;
     flex-direction: column;
-    width: 100%;
-
-    .protocol-switch {
-        margin: 0;
-        white-space: normal;
-
-        label {
-            width: 100%;
-        }
-    }
-
-    .c-call-switcher {
-        margin-top: calc(var(--space-4) / 2);
-    }
+    grid-area: body-gutter-right;
+    padding: calc(var(--space-4) / 2) 0;
 }

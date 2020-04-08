@@ -1,8 +1,6 @@
 export default (app) => {
-    /**
-    * @memberof fg.components
-    */
-    const CallTransfer = {
+
+    return {
         computed: {
             transferStatus: app.helpers.sharedComputed().transferStatus,
         },
@@ -28,6 +26,4 @@ export default (app) => {
             description: 'caller.description',
         },
     }
-
-    return CallTransfer
 }

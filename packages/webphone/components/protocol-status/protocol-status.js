@@ -1,6 +1,6 @@
 export default (app) => {
 
-    const ProtocolStatus = {
+    return {
         computed: {
             classes: function() {
                 const classes = {}
@@ -40,6 +40,4 @@ export default (app) => {
             },
         },
     }
-
-    return ProtocolStatus
 }

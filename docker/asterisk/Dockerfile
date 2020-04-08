@@ -3,14 +3,13 @@ FROM archlinux:latest
 
 LABEL maintainer="jvanveen@protonmail.com"
 RUN pacman -Sy --noconfirm archlinux-keyring
-RUN echo Server = http://ftp.nluug.nl/os/Linux/distr/archlinux/\$repo/os/\$arch > /etc/pacman.d/mirrorlist
 RUN pacman -Syu --noconfirm
 RUN pacman -S git inetutils awk openssh diffutils python-psycopg2 python-alembic --noconfirm
 
 RUN cd $HOME &&\
  git clone https://github.com/asterisk/asterisk.git &&\
  cd asterisk &&\
- git checkout 17.0.0 &&\
+ git checkout 17.3.0 &&\
  contrib/scripts/install_prereq install
 
 RUN cd $HOME/asterisk &&\

@@ -7,16 +7,14 @@ export default (app) => {
     let meter = null
     let volumeLib = lib
     let canvasContext, canvasElement
-    /**
-    * @memberof fg.components
-    */
-    const Soundmeter = {
+
+    return {
         destroyed: function() {
             // Stop the volume meter.
             window.cancelAnimationFrame(this.rafID)
         },
         methods: Object.assign({
-            drawLoop: function(time) {
+            drawLoop: function() {
                 // Clear the background.
                 canvasContext.clearRect(0, 0, canvasElement.width, canvasElement.height)
                 if (meter.checkClipping()) {
@@ -69,6 +67,4 @@ export default (app) => {
             },
         },
     }
-
-    return Soundmeter
 }

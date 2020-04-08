@@ -1,7 +1,7 @@
 <component class="c-dnd">
     <FieldCheckbox
         :data-tooltip="$t('do not disturb')"
-        class="dnd-toggle extended tooltip tooltip-right"
+        class="dnd-toggle extended tooltip tooltip-left"
         component-class
         name="dnd_availability"
         v-model="dnd"

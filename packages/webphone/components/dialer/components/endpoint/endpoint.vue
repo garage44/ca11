@@ -1,4 +1,4 @@
-<component class="c-input-endpoint">
+<component class="c-endpoint">
     <input
         ref="input"
         :placeholder="`${description.protocol}://`"
@@ -7,11 +7,4 @@
         type="text"
         v-model="description.endpoint"
     >
-
-    <button
-        class="back-button"
-        @click="removeLastChar"
-    >
-        <icon name="backspace" />
-    </button>
 </component>

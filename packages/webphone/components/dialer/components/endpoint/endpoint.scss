@@ -1,15 +1,16 @@
 @import 'ca11/lib/mixins';
 @import 'ca11/lib/variables';
 
-.c-input-endpoint {
+.c-endpoint {
     align-items: flex-start;
     align-items: stretch;
-    background: var(--bg-default);
     color: var(--primary-base);
     display: flex;
-    height: calc(var(--spacer) * 8);
-    position: relative;
-    width: 100%;
+    // flex: 1;
+    height: var(--space-4);
+    // position: absolute;
+    // position: relative;
+    // width: 100%;
 
     .c-protocol-status {
         .c-radio {
@@ -32,7 +33,7 @@
         width: 100%;
 
         &::placeholder {
-            color: var(--grey-200);
+            color: var(--grey-100);
         }
     }
 

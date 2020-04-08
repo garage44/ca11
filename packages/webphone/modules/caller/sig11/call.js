@@ -23,7 +23,6 @@ class CallSIG11 extends Call {
         this.state.protocol = 'sig11'
 
         const state = {
-            keypad: {mode: 'call'},
             name: this.node.name,
             number: this.node.number,
         }

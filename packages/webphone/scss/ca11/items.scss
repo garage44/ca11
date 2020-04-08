@@ -26,18 +26,7 @@
     flex-direction: row;
     flex-wrap: wrap;
     padding: var(--spacer);
-
-    @media screen and (min-width: $breakpoint-mobile) {
-        .item {
-            width: 100%;
-        }
-    }
-
-    @media screen and (min-width: $breakpoint-desktop) {
-        .item {
-            width: 50%;
-        }
-    }
+    width: 100%;
 }
 
 

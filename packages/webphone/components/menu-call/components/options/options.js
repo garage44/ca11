@@ -31,8 +31,8 @@ export default (app) => {
                 let classes = {}
 
                 if (block === 'dialpad-button') {
-                    classes.active = this.call.keypad.active && this.call.keypad.mode === 'dtmf'
-                    classes.disabled = this.call.keypad.disabled || this.call.transfer.active
+                    classes.active = (this.ui.layer === 'dtmf')
+                    classes.disabled = this.call.transfer.active
                 } else if (block === 'hold-button') {
                     classes.active = this.call.hold.active
                     classes.disabled = this.call.hold.disabled
@@ -50,12 +50,13 @@ export default (app) => {
             },
             keypadToggle: function() {
                 // Keypad cannot be active during transfer.
-                if (this.call.keypad.disabled || this.call.transfer.active) return
-                const keypadOn = (!this.call.keypad.active || this.call.keypad.mode !== 'dtmf')
-                app.setState(
-                    {keypad: {active: keypadOn, display: 'touch', mode: 'dtmf'}},
-                    {path: `caller.calls.${this.call.id}`},
-                )
+                if (this.call.transfer.active) return
+
+                if (this.ui.layer === 'dtmf') {
+                    app.setState({ui: {layer: 'stream-view'}})
+                } else {
+                    app.setState({ui: {layer: 'dtmf'}})
+                }
             },
             muteToggle: function() {
                 app.emit('caller:call-mute', {callId: this.call.id})
