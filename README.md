@@ -2,19 +2,22 @@
 
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
-> Why do we need accounts and subscriptions for digital communication,
-> when we have the internet and P2P communication technology?
+> Why do we need telephony subscriptions when we have the Web and WebRTC?
 
-The [CA11 project](https://github.com/garage11/ca11) was started in 2019 with the purpose to make telephony more like the internet itself; accessible and without the need for accounts.
+VoIP providers deal with legacy networks, high operation costs, legislations,
+privacy issues and inertia. Newer players like Hangouts, Whatsapp and Skype
+innovate, but are stuffy walled gardens where users are being data-mined.
 
-As of 2020, the communication landscape is largly comprised of VoIP providers and over-the-top communication solutions. VoIP providers tend to offer reliable services, but deal with high operation costs, legislations, privacy issues (no e2e encryption, lawful interception) and fail to innovate. Over-the-top providers (Hangouts, Whatsapp, Skype, ...) are quite innovative, but data-mine and track their users as a business model.
+The [CA11 project](https://github.com/garage11/ca11) started in 2019 with the
+purpose to make telephony more like the Web itself; accessible and without a
+need for accounts. In short, the CA11 project is a P2P webphone that comes
+with an open accountless signalling network. It aims to address the
+following issues:
 
-The CA11 project has a different approach:
-
-- It makes (existing) communication technology cheap to operate
-- It makes communication accessible for users by dropping the need for accounts and by using the web
-
-A thin account-less(public-key crypto), federated signalling network connects WebRTC webphones together. To make use of existing telephony networks, CA11 also supports SIP calling over WebRTC.
+- Privacy; all calls and signalling messages are E2E encrypted
+- Accessibility; open network, all it takes is to open the webphone and start calling
+- Costs; operating a signalling service is extremely cheap; no centralized media pipes required
+- Compatibility; CA11 can use established telephony networks (SIP) when needed
 
 ## Install
 
