@@ -6,7 +6,7 @@
     background-blend-mode: darken;
     background-size: cover;
     display: grid;
-    grid-gap: var(--space-4);
+    grid-gap: calc(var(--space-4) / 4);
     grid-template-areas:
         'body-header body-header body-header'
         'body-gutter-left body-content body-gutter-right'
@@ -19,6 +19,14 @@
     transition: background 2s;
     width: 100vw;
 
+    @media screen and (min-width: $breakpoint-mobile) {
+        grid-gap: calc(var(--space-4) / 2);
+    }
+
+    @media screen and (min-width: $breakpoint-desktop) {
+        grid-gap: var(--space-4);
+    }
+
     .btn-logout {
         grid-area: body-header;
     }
@@ -27,8 +35,12 @@
         align-items: center;
         display: flex;
         grid-area: body-content;
-        height: calc(100vh - (var(--space-4) * 4));
+        height: calc(100vh - (var(--space-4) * 2));
         justify-content: center;
+
+        @media screen and (min-width: $breakpoint-mobile) {
+            height: calc(100vh - (var(--space-4) * 4));
+        }
 
         &.grid {
             display: grid;
@@ -62,17 +74,10 @@
             grid-area: module-panel;
             height: 100%;
 
-            .actions,
-            .filters,
-            .tabs {
-
-            }
-
             .actions {
                 align-items: center;
                 // Border in the same style as the scroll trackbar.
                 color: var(--primary-base);
-                // display: block;
                 flex: 1;
                 flex-direction: column;
                 width: var(--space-4);
@@ -165,12 +170,11 @@
                 }
             }
         }
-
     }
 
 
     &.splash-0 {
-        background: url('/static/img/splash-0.jpg');
+        background-image: url('/static/img/splash-0.jpg');
     }
 
     &.splash-1 {

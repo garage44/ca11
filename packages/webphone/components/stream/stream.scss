@@ -8,36 +8,24 @@ html.test .c-stream video {
 }
 
 .c-stream {
+    background: var(--bg-dark);
     display: flex;
     flex: 1;
     overflow: hidden;
     position: relative;
 
-
-    .audio {
-        background: #00f;
-        height: 100%;
+    &.video {
+        video {
+            transform: scaleX(-1);
+        }
     }
-
-    .fade-enter-active {
-        transition: opacity 4.5s;
-    }
-
-    .fade-leave-active {
-        transition: opacity 12.5s;
-    }
-
-    .fade-enter,
-    .fade-leave-to {
-        opacity: 0;
-    }
-
 
     .stream-icon {
         fill: var(--grey-50);
         filter: drop-shadow(0 0 var(--spacer) rgba(0, 0, 0, 0.7));
         height: 100%;
-        padding: 150px;
+        opacity: 0.8;
+        padding: 20%;
         position: absolute;
         transition: all 0.5s;
         width: 100%;
@@ -53,6 +41,7 @@ html.test .c-stream video {
         height: 100%;
         object-fit: cover;
         width: 100%;
+
 
         &.visible {
             display: flex;

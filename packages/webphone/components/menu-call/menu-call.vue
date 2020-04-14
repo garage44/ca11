@@ -12,8 +12,11 @@
             </span>
         </span>
         <span v-else>
-            <span class="c-status-call__number">
+            <span v-if="description.endpoint" class="c-status-call__number">
                 {{ description.endpoint }}
+            </span>
+            <span v-else class="c-status-call__number">
+                {{ `${$t('number to call')}...` }}
             </span>
         </span>
     </div>

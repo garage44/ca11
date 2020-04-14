@@ -41,7 +41,4 @@
     // Main space with 4/3 aspect ratio.
     --space-4: #{$space-4};
     --space-3: #{$space-3};
-    // 4 on mobile, 3 on larger screens. Used to magnify
-    // the UI height at key points in the UI.
-    --space-433: #{$space-4};
 }

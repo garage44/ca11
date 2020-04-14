@@ -2,6 +2,12 @@
 @import 'ca11/lib/mixins';
 
 .c-dialer {
+    panel {
+        .c-stream-controls {
+            background: none;
+        }
+    }
+
     content {
         display: flex;
         flex-direction: column;
@@ -10,17 +16,10 @@
         .c-stream {
             align-items: center;
             background: #222;
+            border-left: var(--border) solid var(--bg-default);
             display: flex;
             flex: 1;
             position: relative;
-
-            // video {
-            //     background: var(--bg-dark);
-            //     display: block;
-            //     height: 100%;
-            //     object-fit: cover;
-            //     width: 100%;
-            // }
         }
     }
 

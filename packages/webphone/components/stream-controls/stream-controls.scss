@@ -7,7 +7,9 @@
     color: var(--primary-base);
     display: flex;
     flex-direction: column;
+    min-height: calc(var(--space-4) * 4);
     width: var(--space-4);
+
 
     svg {
         @include icon-size($spacer * 3);
