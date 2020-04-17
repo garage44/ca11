@@ -1,15 +1,7 @@
 import Module from '../lib/module.js'
 
-/**
-* This module is responsible for handling all UI-related
-* state and respond with UI-specific calls to watchers.
-* @module ModuleUI
-*/
 class PluginUI extends Module {
-    /**
-    * Setup some menubar and click-to-dial icon related properties.
-    * @param {AppBackground} app - The background application.
-    */
+
     constructor(app) {
         super(app)
         this.animationStep = 0
@@ -19,10 +11,6 @@ class PluginUI extends Module {
     }
 
 
-    /**
-    * Initializes the module's store.
-    * @returns {Object} The module's store properties.
-    */
     _initialState() {
         return {
             layer: 'login',
@@ -48,15 +36,6 @@ class PluginUI extends Module {
     }
 
 
-    /**
-    * Create a system notification. The type used depends on the OS. Linux
-    * uses inotify by default. Note that we can't use buttons here, because
-    * that would require a service-worker implementation.
-    * @param {Object} opts - Notification options.
-    * @param {String} opts.message - Message body for the notification.
-    * @param {String} opts.title - Title header for the notification.
-    * @param {Boolean} [opts.stack] - Whether to stack the notifications.
-    */
     notification({message, title, stack = false, timeout = 3000}) {
         if (this.app.env.isNode || this.app.env.isAndroid) return
 

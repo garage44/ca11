@@ -1,14 +1,9 @@
-/**
-* UserMedia related class that interacts with Ca11
-* and the getUserMedia API.
-*/
 class Media {
 
     constructor(app) {
         this.app = app
 
-        // Plays audio when no video can be shown due to an
-        // absent foreground DOM.
+        // Plays audio when no video can be shown due to an absent foreground DOM.
         this.fallback = {local: null, remote: null}
         this.streams = {}
 
@@ -35,11 +30,7 @@ class Media {
     }
 
 
-    /**
-    * Return the getUserMedia flags based on the user's settings.
-    * @returns {Object} - Supported flags for getUserMedia.
-    */
-    _getUserMediaFlags({audio = true, video = true} = {}) {
+    _getUserMediaFlags({video = true} = {}) {
         const presets = {
             AUDIO_NOPROCESSING: {
                 audio: {
@@ -131,7 +122,7 @@ class Media {
                     let audio = await userMedia.getAudioTracks()[0]
                     stream = await navigator.mediaDevices.getDisplayMedia({audio: false, video: true})
                     for (const track of stream.getTracks()) {
-                        track.onended = (e) => {
+                        track.onended = () => {
                             const stateStream = {display: {id: null}}
                             // Unset the stream id.
                             this.app.setState({settings: {webrtc: {media: {stream: stateStream}}}})
@@ -172,7 +163,6 @@ class Media {
         if (!stream) return null
 
         this.streams[stream.id] = stream
-
         this.app.setState({settings: {webrtc: {media: {
             permission: true,
             stream: {
@@ -198,12 +188,8 @@ class Media {
     }
 
 
-    /**
-    * Representats this Class name in logging.
-    * @returns {String} - The identifier to use.
-    */
     toString() {
-        return '[bg] [media] '
+        return `${this.app}[session] `
     }
 }
 

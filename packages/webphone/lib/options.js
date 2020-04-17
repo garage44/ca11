@@ -2,7 +2,7 @@ import activities from '../modules/activities.js'
 import app from '../modules/app.js'
 import caller from '../modules/caller/caller.js'
 import contacts from '../modules/contacts/contacts.js'
-import {env} from '@ca11/webphone/lib/skeleton.js'
+import env from './env.js'
 
 import settings from '../modules/settings.js'
 import sig11 from '../modules/sig11.js'
@@ -10,11 +10,6 @@ import sip from '../modules/sip.js'
 import ui from '../modules/ui.js'
 
 
-/**
-* Setup options to run a bg instance of Ca11 can be a bit
-* verbose, that's why this is handled from one place for both
-* Node and Browsers.
-*/
 export default (function() {
     let options = {
         env: env({}),

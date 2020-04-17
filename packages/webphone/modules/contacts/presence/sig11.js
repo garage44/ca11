@@ -1,4 +1,4 @@
-export default function(app) {
+export default function() {
     return {
 
     }

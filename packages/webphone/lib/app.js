@@ -1,33 +1,39 @@
-import {Skeleton} from '@ca11/webphone/lib/skeleton.js'
-import I18nTranslations from '../i18n/i18n.js'
+import env from './env.js'
+import EventEmitter from 'eventemitter3'
 import filters from './filters.js'
 import helpers from './helpers.js'
-
+import I18nTranslations from '../i18n/i18n.js'
+import Logger from './logger.js'
+import shortid from 'shortid/lib/index.js'
+import Utils from './utils.js'
 import Vue from 'vue/dist/vue.runtime.js'
-import VueI18nStash from '@garage11/vue-i18n/src/store-stash.js'
 import VueI18n from '@garage11/vue-i18n'
+import VueI18nStash from '@garage11/vue-i18n/src/store-stash.js'
 
-/**
-* The App class extends from the `Skeleton` class and adds
-* optional modules, viewmodel and state handling and
-* translations.
-* @extends Skeleton
-*/
-class App extends Skeleton {
+globalThis.shortid = shortid
+
+
+class App extends EventEmitter {
 
     constructor(settings) {
         super(settings)
+        this.env = env()
 
-        this.i18n = new I18nTranslations(this, settings.plugins)
+        this.utils = new Utils()
+        this.logger = new Logger(this)
+
+        this.logger.setLevel('debug')
+
+        this.i18n = new I18nTranslations(this)
 
         this.$t = (text) => text
         this.filters = filters(this)
         this.helpers = helpers(this)
 
-        // Copied to the initial state object.
         this._state = {}
-
-        this.__modules = settings.modules
+        if (settings.modules) {
+            this.__modules = settings.modules
+        }
     }
 
 
@@ -40,6 +46,7 @@ class App extends Skeleton {
     __getKeyPath(obj, keypath) {
         if (keypath.length === 1) {
             // Arrived at the end of the keypath. Check if the property exists.
+            // eslint-disable-next-line no-prototype-builtins
             if (!obj || !obj.hasOwnProperty(keypath[0])) return undefined
             return obj[keypath[0]]
         } else {
@@ -49,12 +56,6 @@ class App extends Skeleton {
     }
 
 
-    /**
-    * Initializes each module's store and combines the result
-    * in a global state object, which is converted to
-    * reactive getters/setters by Vue-stash.
-    * @returns {Object} The module's store properties.
-    */
     _initialState() {
         let state = this.utils.copyObject(this._state)
         for (let name of Object.keys(this.modules)) {
@@ -67,23 +68,7 @@ class App extends Skeleton {
     }
 
 
-
-    /**
-    * Application parts using this class should provide their own
-    * initStore implementation. The foreground script for instance
-    * gets its state from the background, while the background
-    * gets its state from localstorage or from a
-    * hardcoded default fallback.
-    * @param {Object} initialState - Extra state to begin with.
-    */
     _initStore(initialState = {}) {
-        /**
-        * The state is a reactive store that is used to respond
-        * to changes in data. The UI totally depends on the store
-        * to render the appropriate views, but also data responds
-        * to changes with the use of watchers.
-        * @memberof App
-        */
         this.state = Object.assign({
             env: this.env,
             language: {
@@ -97,15 +82,6 @@ class App extends Skeleton {
     }
 
 
-    /**
-    * Initialize multi-language support. An I18nStore is mounted
-    * to the store. Translations can be dynamically added. Then initialize Vue
-    * with the Vue-stash store, the root rendering component and gathered
-    * watchers from modules.
-    * @param {Object} options - Options to pass to Vue.
-    * @param {Object} options.main - Main component to initialize with.
-    * @param {Object} options.settings - Extra settings passed to Vue.
-    */
     _initViewModel({main, settings = {}} = {}) {
         this.logger.info(`${this}init viewmodel`)
         const i18nStore = new VueI18nStash(this.state)
@@ -132,20 +108,11 @@ class App extends Skeleton {
     }
 
 
-    /**
-    * Check if a variable is an object.
-    * @param {Array|null|Number|Object} item - The object to check. Can be of any type.
-    * @returns {Boolean} Whether the variable is an object or not.
-    */
     _isObject(item) {
         return (item && typeof item === 'object' && !Array.isArray(item))
     }
 
 
-    /**
-    * Set the language from browser presets when it
-    * can't be derived from the application state.
-    */
     _languagePresets() {
         let language = this.state.language.selected
 
@@ -168,12 +135,6 @@ class App extends Skeleton {
     }
 
 
-    /**
-    * Load section plugins from browserified modules. This is basically
-    * the browser-side of the `jsPlugins` browserify handler in
-    * `tools/helpers.js`.
-    * @param {Object} modules - See .ca11rc.example for the format.
-    */
     _loadModules(modules) {
         // Start by initializing builtin plugins.
         for (const builtin of modules) {
@@ -198,14 +159,6 @@ class App extends Skeleton {
     }
 
 
-    /**
-    * A recursive method that merges two or more objects with
-    * nesting together. Existing values from target are
-    * overwritten by sources.
-    * @param {Object} target - The store or a fragment of it.
-    * @param {...*} sources - One or more objects to merge to target.
-    * @returns {Function} - The result of this method.
-    */
     _mergeDeep(target, ...sources) {
         if (!sources.length) return target
         const source = sources.shift()
@@ -227,18 +180,7 @@ class App extends Skeleton {
     }
 
 
-    /**
-    * Vue-friendly object merging. The `path` is used to assist
-    * Vue's reactivity system to catch up with changes.
-    * @param {Object} options - Options to pass.
-    * @param {String} [options.action=upsert] - The merge action: upsert|delete|replace.
-    * @param {Boolean} [options.encrypt=true] - Whether to persist to the encrypted part of the store.
-    * @param {String} [options.path=null] - The path.to.the.store.item to merge.
-    * @param {Boolean} [options.persist=false] - Whether to persist this state change.
-    * @param {String} [options.source=null] - Merge into a custom object instead of the default store.
-    * @param {Object} state - An object to merge into the store.
-    */
-    _mergeState({action = 'upsert', encrypt = true, path = null, persist = false, source = null, state}) {
+    _mergeState({action = 'upsert', path = null, source = null, state}) {
         let stateSource
         if (source) stateSource = source
         else stateSource = this.state
@@ -270,16 +212,6 @@ class App extends Skeleton {
     }
 
 
-    /**
-    * Set a nested property's value from a string pointing
-    * to the reference. To set the value of `foo` in `path.to.foo`,
-    * set the path to `path.to.foo`, give the reference object and
-    * its value.
-    * @param {Object} obj - Reference object to modify.
-    * @param {Array} keypath - The keypath to set.
-    * @param {*} value - The value to assign to the keypath's final key.
-    * @returns {Function|Object} - Recursive until the property is set. Then returns the reference object.
-    */
     _setKeyPath(obj, keypath, value) {
         if (keypath.length === 1) {
             // Arrived at the end of the path. Make the property reactive.
@@ -292,11 +224,6 @@ class App extends Skeleton {
     }
 
 
-    /**
-    * Store a notification in the (memory) store, which lets
-    * the notification component render the notification.
-    * @param {Object} notification - A notification object to add.
-    */
     notify(notification) {
         if (typeof notification.timeout === 'undefined') {
             notification.timeout = 1500
@@ -308,13 +235,6 @@ class App extends Skeleton {
     }
 
 
-    /**
-    * Set the state within the own running script context
-    * and then propagate the state to the other logical
-    * endpoint for syncing.
-    * @param {Object} state - The state to update.
-    * @param {Boolean} options - Whether to persist the changed state to localStorage.
-    */
     setState(state, {action, encrypt, path, persist} = {}) {
         if (!action) action = 'upsert'
         // Merge state in the context of the executing script.

@@ -1,7 +1,3 @@
-/**
-* Generic util methods for the App namespace.
-* @memberof App
-*/
 class Utils {
 
     constructor() {
@@ -22,11 +18,6 @@ class Utils {
     }
 
 
-    /**
-    * Clear a phonenumber from special characters like `+`, `*` and `*`.
-    * @param {String} number - Number to clean.
-    * @returns {String} - The cleaned number.
-    */
     sanitizeNumber(number) {
         number = String(number).replace('+', '00')
         number = number.replace(/[^\d|!*|!#]/g, '')
@@ -34,12 +25,6 @@ class Utils {
     }
 
 
-    /**
-    * Generic sort function on multiple keys.
-    * @param {Array} keys - Order of keys to search in.
-    * @param {Number} order - The order to sort.
-    * @returns {Function} - The sorting function.
-    */
     sortByMultipleKey(keys, order = 1) {
         return (a, b) => {
             if (keys.length === 0) return 0
@@ -51,14 +36,6 @@ class Utils {
     }
 
 
-    /**
-    * Convert a simple key/value object to a querystring.
-    * @param {Object} params - Key/value object to convert.
-    * @returns {String} - The querystring.
-    * @example
-    * stringifySearch({page: "1"})
-    * // page=1
-    */
     stringifySearch(params) {
         return Object
             .keys(params)

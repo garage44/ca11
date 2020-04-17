@@ -12,6 +12,7 @@ class I18nTranslations extends I18n {
     constructor(app, plugins) {
         super(app)
         this.translations.nl = require('./nl')
+        console.log("PLUGINS")
         this.loadPluginsI18n(plugins)
     }
 }

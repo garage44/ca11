@@ -1,13 +1,11 @@
 class Devices {
-    /**
-    * @param {AppBackground} app - The background application.
-    */
+
     constructor(app) {
         this.app = app
 
         // Detect changes in connected devices while running.
         if (this.app.env.isBrowser) {
-            navigator.mediaDevices.ondevicechange = async(event) => {
+            navigator.mediaDevices.ondevicechange = async() => {
                 // While the event handler is only registered once; it is triggered
                 // twice in a row nevertheless. Skip the second call.
                 const vaultUnlocked = this.app.state.app.vault.unlocked
@@ -26,8 +24,8 @@ class Devices {
 
     /**
     * Compare stored sinks with sinks from the browser device list.
-    * Indicates whether a device sink was added or removed, compared to
-    * the stored device sinks.
+    * Indicates whether a device sink was added or removed, compared
+    * to the stored device sinks.
     * @returns {Array} - Difference between browser and stored sink list.
     */
     compareSinks({input, output}) {
@@ -45,14 +43,7 @@ class Devices {
     }
 
 
-    /**
-    * Query for media devices. This must be done only after the
-    * getUserMedia permission has been granted; otherwise the names
-    * of the devices aren't returned, due to browser security restrictions.
-    * @param {Boolean} difference - Difference between stored and queried devices.
-    * @returns {Array} - Input and output devices.
-    */
-    async query(difference = false) {
+    async query() {
         let devices
         let input = []
         let output = []
@@ -79,23 +70,11 @@ class Devices {
     }
 
 
-    /**
-    * Generate a representational name for this module. Used for logging.
-    * @returns {String} - An identifier for this module.
-    */
     toString() {
         return `${this.app}[devices] `
     }
 
 
-    /**
-    * Verify that devices selected as sink are still
-    * available in the browser's device list.
-    * @param {Object} options - Options to pass.
-    * @param {Array} options.input - Input devices that were queried.
-    * @param {Array} options.output - Output devices that were queried.
-    * @returns {Boolean} - Valid or not.
-    */
     validateSinks({input, output}) {
         const browserSinks = {input, output}
         let storedDevices = this.app.utils.copyObject({input: this.cached.input, output: this.cached.output})
@@ -134,10 +113,6 @@ class Devices {
     }
 
 
-    /**
-    * Validate the sinks and steers the user to the audio settings
-    * page when one of the sinks is incorrectly set.
-    */
     async verifySinks() {
         // Cached query; what currently is in store.
         this.cached = this.app.utils.copyObject({

@@ -24,6 +24,7 @@
     "d3-array": "^2.4.0",
     "d3-force": "^2.0.1",
     "sdp-interop-sl": "^1.4.3",
+    "shortid": "^2.2.15",
     "sip.js": "0.15.10",
     "v-click-outside": "^3.0.0",
     "vue": "^2.6.10",

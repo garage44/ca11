@@ -1,9 +1,3 @@
-/**
- * A thin wrapper around the native console that makes it possible to set
- * loglevels. Use source blacklisting and sourcemaps to get to the
- * original error.
- * @memberof lib
- */
 class Logger {
 
     constructor(app) {

@@ -99,17 +99,6 @@ class Call {
     }
 
 
-    /**
-     * Takes care of returning to a state before the call
-     * was created. Make sure to set the final state of a call
-     * before calling cleanup. The timeout is meant to postpone
-     * resetting the state, so the user has a hint of what
-     * happened in between. A silent call is dropped immediately,
-     * because no UI-interaction is involved.
-     * @param {Object} options - Options to pass to _stop.
-     * @param {String} [options.message] - Force a notification message.
-     * @param {Number} options.timeout - Postpone resetting the call state for the duration of 3 busy tones.
-     */
     _stop({timeout = 1000} = {}) {
         this.app.logger.debug(`${this}call is stopping in ${timeout}ms`)
 

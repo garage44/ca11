@@ -32,17 +32,9 @@ if (!globalThis.translations) globalThis.translations = {}
 
 
 class CA11 extends App {
-    /**
-    * @param {Object} opts - Options to initialize AppBackground with.
-    * @param {Object} opts.env - The environment sniffer.
-    * @param {Object} opts.plugins - Plugins to load.
-    * @namespace CA11.plugins
-    */
+
     constructor(opts) {
         super(opts)
-        // Allow context debugging during development.
-        // Avoid leaking this global in production mode.
-
         this.Vue = Vue
 
         this.session = new Session(this)
@@ -181,15 +173,6 @@ class CA11 extends App {
     }
 
 
-    /**
-    * The stored state is separated between two serialized JSON objects
-    * in localStorage. One is for encrypted data, and the other for
-    * unencrypted data. When the application needs to retrieve its state
-    * from storage, this method will restore the combined state
-    * and applies module-specific state changes. See for instance the
-    * _restoreState implementation in the Contacts module for a more
-    * complicated example.
-    */
     async _restoreState() {
         const sessionId = this.state.app.session.active
 
@@ -252,10 +235,6 @@ class CA11 extends App {
     }
 
 
-    /**
-    * Store properties that are being watched.
-    * @returns {Object} - Watched store properties.
-    */
     _watchers() {
         return {
             'store.language.selected.id': (languageId) => {
@@ -266,12 +245,6 @@ class CA11 extends App {
     }
 
 
-    /**
-    * A self-contained state write method that can be
-    * parked in the queue, without affecting the ongoing
-    * state.
-    * @param {Object} options - The options to pass.
-    */
     async _writeEncryptedState({item, resolve}) {
         item.status = 1
         const storeEndpoint = this.state.app.session.active
@@ -290,13 +263,6 @@ class CA11 extends App {
     }
 
 
-    /**
-    * Set the state within the own running script context
-    * and then propagate the state to the other logical
-    * endpoint for syncing.
-    * @param {Object} state - The state to update.
-    * @param {Boolean} options - Whether to persist the changed state to localStorage.
-    */
     async setState(state, {action, encrypt, path, persist = false} = {}) {
         if (!action) action = 'upsert'
         // Merge state in the context of the executing script.
@@ -304,10 +270,6 @@ class CA11 extends App {
     }
 
 
-    /**
-    * Generate a representational name for this module. Used for logging.
-    * @returns {String} - An identifier for this module.
-    */
     toString() {
         return '[ca11] '
     }

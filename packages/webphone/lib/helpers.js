@@ -1,9 +1,3 @@
-/**
-* Common used methods and helpers.
-* @param {App} app - The application object.
-* @returns {Object} - The application's common helpers.
-* @memberof App
-*/
 function helpers(app) {
 
     const closingStatus = ['answered_elsewhere', 'caller_unavailable', 'callee_busy', 'bye']
@@ -50,12 +44,6 @@ function helpers(app) {
     }
 
 
-    /**
-    * Helper function to determine whether calling functionality
-    * should be activated or not. Used both within and outside
-    * of components.
-    * @returns {Boolean} - Whether calling options are disabled.
-    */
     _helpers.callingDisabled = function() {
         let errors = []
 
@@ -76,11 +64,6 @@ function helpers(app) {
     }
 
 
-    /**
-    * Filter and return all ids of Calls that are
-    * in a closing state.
-    * @returns {Array} - Closing Call ids.
-    */
     _helpers.callsClosing = function() {
         const calls = app.state.caller.calls
         return Object.keys(calls).filter((i) => closingStatus.includes(calls[i].status))
@@ -96,13 +79,6 @@ function helpers(app) {
     }
 
 
-    /**
-    * Flag used to check whether some call actions can be shown.
-    * This is done by checking if there are Calls that don't have
-    * state `accepted` or `new`. In that case, the call action should
-    * be disabled.
-    * @returns {Boolean} - Whether
-    */
     _helpers.callsReady = function() {
         let ready = true
         const callIds = Object.keys(app.state.caller.calls)
@@ -141,12 +117,7 @@ function helpers(app) {
         }
     }
 
-    /**
-        * Find the contact related to a calling number.
-        * @param {String} number - The number to look for.
-        * @param {Boolean} partial - Return the first matching number.
-        * @returns {Object|null} - Contact and Endpoint Id or null.
-        */
+
     _helpers.matchContact = function(number, partial = false) {
         const contacts = app.state.contacts.contacts
         for (const contactId of Object.keys(contacts)) {
@@ -171,13 +142,8 @@ function helpers(app) {
     }
 
 
-    // Allow plugins to add their own shared methods. These
-    // must be added before components are setting their
-    // methods.
-    _helpers.sharedMethodsMixin = {}
-
     _helpers.sharedMethods = function() {
-        return Object.assign({
+        return {
             getTranslations: _helpers.getTranslations,
             openTab: _helpers.openTab,
             playSound: function(soundName, sinkTarget) {
@@ -225,17 +191,10 @@ function helpers(app) {
                 if (!this._translations) this._translations = this.getTranslations()
                 return this._translations[category][key]
             },
-        }, _helpers.sharedMethodsMixin)
+        }
     }
 
 
-    /**
-    * Shared computed properties for Vue components.
-    * Be aware that using these properties also require
-    * your Vue components to provide all the expected
-    * properties from the store.
-    * @returns {Object} - Commonly used shared properties.
-    */
     _helpers.sharedComputed = function() {
         return {
             callAccepted: _helpers.callAccepted,
@@ -260,36 +219,6 @@ function helpers(app) {
     }
 
 
-    _helpers.sharedValidations = function() {
-        const v = Vuelidate.validators
-        return {
-            settings: {
-                webrtc: {
-                    account: {
-                        id: {
-                            customValid: Vuelidate.withParams({
-                                message: '',
-                                type: 'customValid',
-                            }, () => {
-                                // No validation without WebRTC toggled off.
-                                if (!this.settings.webrtc.toggle) return true
-                                else {
-                                    if (this.settings.sip.account.status === 'loading') return false
-                                    else if (this.settings.sip.account.id) return true
-                                }
-                                return false
-                            }),
-                            requiredIf: v.requiredIf(() => {
-                                return this.settings.webrtc.toggle
-                            }),
-                        },
-                    },
-                },
-            },
-        }
-    }
-
-
     _helpers.validators = {
         // Regex source: https://github.com/johnotander/domain-regex/blob/master/index.js
         domain: function(e) {
@@ -302,6 +231,5 @@ function helpers(app) {
 
     return _helpers
 }
-
 
 export default helpers

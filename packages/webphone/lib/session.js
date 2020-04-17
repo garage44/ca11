@@ -5,16 +5,13 @@
  * and the global state object.
 */
 class Session {
+
     constructor(app) {
         this.app = app
         Object.assign(app._state, this._initialState())
     }
 
 
-    /**
-    * Initializes the module's store.
-    * @returns {Object} The module's store properties.
-    */
     _initialState() {
         return {
             session: {
@@ -85,10 +82,6 @@ class Session {
     }
 
 
-    /**
-    * Remove any stored session key, but don't delete the salt.
-    * This will render the cached and stored state useless.
-    */
     async close() {
         this.app.logger.info(`${this}logging out and cleaning up state`)
         this.app._unsetVueWatchers()
@@ -99,10 +92,6 @@ class Session {
     }
 
 
-    /**
-    * Remove a session with a clean state.
-    * @param {String} sessionId - The identifier of the session.
-    */
     async destroy(sessionId) {
         this.app.logger.info(`${this}removing session "${sessionId}"`)
         this.app.stateStore.remove(`${sessionId}/state`)
@@ -205,7 +194,6 @@ class Session {
         }
 
         try {
-            // Connect to Ca11 backend by initializing network.
             await this.open({password})
             this.app._setVueWatchers()
 
@@ -227,7 +215,6 @@ class Session {
                     },
                 },
             }, {persist: true})
-            // Update the state with language presets from the browser if applicable.
             this.app._languagePresets()
 
         } catch (err) {
@@ -242,19 +229,11 @@ class Session {
     }
 
 
-    /**
-    * Generate a representational name for this module. Used for logging.
-    * @returns {String} - An identifier for this module.
-    */
     toString() {
         return `${this.app}[session] `
     }
 
 
-    /**
-    * This method is called when the correct session is already
-    * selected. No need to change sessions again.
-    */
     async unlock({username, password}) {
         this.app.sounds.powerOn.play()
         this.app.setState({session: {status: 'unlock'}})

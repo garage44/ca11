@@ -1,10 +1,6 @@
 import Module from '../lib/module.js'
 
-/**
-* This module takes care of dealing with all
-* settings and responding to changes to it.
-* @module ModuleSettings
-*/
+
 class ModuleSettings extends Module {
 
     _initialState() {

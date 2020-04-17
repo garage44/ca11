@@ -4,6 +4,7 @@ import Network from '@ca11/sig11/lib/network.js'
 
 
 class ModuleSIG11 extends Module {
+
     constructor(app) {
         super(app)
         app.sig11 = this
@@ -29,7 +30,6 @@ class ModuleSIG11 extends Module {
             app.logger.info(`${this}sig11 ${enabled ? 'enabled' : 'disabled'}`)
             if (enabled) this.connect()
         })
-
 
         this.app.on('sig11:node-removed', (node) => {
             this.network.removeNode(node.id)
@@ -266,7 +266,6 @@ class ModuleSIG11 extends Module {
         )
 
         if (!res) throw new Error('incorrect session signature')
-
         // We verified that the signature was sent by an entity
         // that is in control of the private RSA key . Proceed
         // with establishing a shared secret between nodeId and

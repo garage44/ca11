@@ -1,20 +1,11 @@
-/**
-* Phone tone generators.
-* based on: http://outputchannel.com/post/recreating-phone-sounds-web-audio/
-* @module Sounds
-*/
 
 import EventEmitter from 'eventemitter3'
-
 
 let context
 
 if (globalThis.window) context = new AudioContext()
 
 
-/**
-* Generate a european Busy tone.
-*/
 class BusyTone {
 
     constructor(app) {
@@ -182,9 +173,6 @@ class RingbackTone {
 }
 
 
-/**
-* Play a pre-delivered ogg-file as ringtone.
-*/
 class Sound extends EventEmitter {
 
     constructor(app, audiofile) {

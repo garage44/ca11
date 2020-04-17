@@ -1,7 +1,3 @@
-/**
-* An in-memory store that can implements (part of) the
-* localStorage interface.
-*/
 class MemoryStore {
     constructor() {
         this.data = {}
@@ -21,11 +17,6 @@ class MemoryStore {
 }
 
 
-/**
-* Simple access to LocalStorage for the browser and
-* in-memory storage for Node.js using the same
-* interface.
-*/
 class StateStore {
 
     constructor(app) {
@@ -45,9 +36,6 @@ class StateStore {
     }
 
 
-    /**
-    * Remove all keys from localStorage, except the schema field.
-    */
     clear() {
         let keys
         if (this.app.env.isNode) keys = Object.keys(this.store.data)
@@ -83,10 +71,6 @@ class StateStore {
     }
 
 
-    /**
-    * Generate a representational name for this module. Used for logging.
-    * @returns {String} - An identifier for this module.
-    */
     toString() {
         return `${this.app}[store] `
     }

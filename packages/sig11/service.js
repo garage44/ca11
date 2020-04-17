@@ -1,3 +1,4 @@
+import App from '@ca11/webphone/lib/app.js'
 import btoa from 'btoa'
 import Crypto from './lib/crypto.js'
 import Endpoint from './lib/endpoint.js'
@@ -6,7 +7,6 @@ import http from 'http'
 import knex from 'knex'
 import Network from './lib/network.js'
 import rc from 'rc'
-import {Skeleton} from '@ca11/webphone/lib/skeleton.js'
 import WebCrypto from 'node-webcrypto-ossl'
 import WebSocket from 'ws'
 
@@ -19,10 +19,10 @@ const settings = {}
 
 rc('ca11', settings)
 
-class Ca11Tower extends Skeleton {
+class Ca11Tower extends App {
 
     constructor() {
-        super()
+        super(settings)
 
         this.crypto = new Crypto(this)
         this.network = new Network(this)
@@ -137,6 +137,11 @@ class Ca11Tower extends Skeleton {
         this.server.listen(settings.tower.port, () => [
             this.logger.info(`listening on port ${settings.tower.port}`),
         ])
+    }
+
+
+    toString() {
+        return '[sig11] '
     }
 }
 

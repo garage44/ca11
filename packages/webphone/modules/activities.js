@@ -4,10 +4,7 @@ import Module from '../lib/module.js'
 // localStorage won't be grinded to a halt.
 const MAX_ACTIVITIES = 50
 
-/**
-* Main entrypoint for Activity.
-* @memberof AppBackground.plugins
-*/
+
 class ModuleActivity extends Module {
 
     constructor(app) {
