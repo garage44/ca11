@@ -43,6 +43,8 @@ class CA11 extends App {
         // Allow context debugging during development.
         // Avoid leaking this global in production mode.
 
+        this.Vue = Vue
+
         this.session = new Session(this)
         this.stateStore = new StateStore(this)
         this.crypto = new Crypto(this)

@@ -1,27 +1,19 @@
 import SIG11Call from './call.js'
 
 
-/**
- * Manage SIG11 calls.
- * @module SIG11Caller
- */
 class SIG11Caller {
 
     constructor(app, plugin) {
         this.app = app
         this.plugin = plugin
 
-        /**
-         * Remote node signalled that the call is accepted.
-         */
-        this.app.on('sig11:call-answer', ({answer, callId, nodeId}) => {
+        // Remote node signalled that the call is accepted.
+        this.app.on('sig11:call-answer', ({answer, callId}) => {
             plugin.calls[callId].setupAnswer(answer)
         })
 
 
-        // Candidates from initiating caller, sent after it got the
-        // confirmation that the call was accepted.
-        this.app.on('sig11:call-candidate', ({callId, candidate, nodeId}) => {
+        this.app.on('sig11:call-candidate', ({callId, candidate}) => {
             // Only accept candidates for a valid call.
             if (!plugin.calls[callId]) return
             if (plugin.calls[callId].state.status === 'bye') return
@@ -37,10 +29,7 @@ class SIG11Caller {
         })
 
 
-        /**
-         * An incoming call, a 'Call offer', is coming in from
-         * a remote node. A new incoming call will show up.
-         */
+        // An incoming call.
         this.app.on('sig11:call-offer', ({callId, nodeId, offer}) => {
             const node = this.app.sig11.network.node(nodeId)
             const description = {direction: 'incoming', id: callId, node, offer}
@@ -53,8 +42,7 @@ class SIG11Caller {
 
             const call = new SIG11Call(this.app, description)
             this.app.logger.info(`${this}incoming call ${callId}:${nodeId}`)
-
-            Vue.set(this.app.state.caller.calls, call.id, call.state)
+            this.app.Vue.set(this.app.state.caller.calls, call.id, call.state)
             plugin.calls[call.id] = call
 
             call.start()
@@ -77,12 +65,8 @@ class SIG11Caller {
     }
 
 
-    /**
-    * Generate a representational name for this module. Used for logging.
-    * @returns {String} - An identifier for this module.
-    */
     toString() {
-        return `${this.app}[caller][sig11] `
+        return `${this.app}[SIG11Caller] `
     }
 }
 

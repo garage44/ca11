@@ -2,13 +2,13 @@ import activities from '../modules/activities.js'
 import app from '../modules/app.js'
 import caller from '../modules/caller/caller.js'
 import contacts from '../modules/contacts/contacts.js'
+import {env} from '@ca11/webphone/lib/skeleton.js'
 
 import settings from '../modules/settings.js'
 import sig11 from '../modules/sig11.js'
-import sip from '../modules/sip/sip.js'
+import sip from '../modules/sip.js'
 import ui from '../modules/ui.js'
 
-import {env} from '@ca11/webphone/lib/skeleton.js'
 
 /**
 * Setup options to run a bg instance of Ca11 can be a bit

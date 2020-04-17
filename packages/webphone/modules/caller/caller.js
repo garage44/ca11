@@ -1,6 +1,6 @@
 import Module from '../../lib/module.js'
-import SIG11Caller from './sig11/sig11.js'
-import SIPCaller from './sip/sip.js'
+import SIG11Caller from './sig11/caller.js'
+import SIPCaller from './sip/caller.js'
 import Vue from 'vue/dist/vue.runtime.js'
 
 
@@ -8,11 +8,7 @@ class ModuleCaller extends Module {
 
     constructor(app) {
         super(app)
-
-        // Keeps track of running calls.
         this.calls = {}
-
-        // Protocol-specific call handlers. Currently supports SIP and SIG11.
         this.callers = {
             sig11: new SIG11Caller(this.app, this),
             sip: new SIPCaller(this.app, this),
@@ -23,35 +19,15 @@ class ModuleCaller extends Module {
         this.retryDefault = {interval: 250, limit: 10000, timeout: 250}
         // Used to store retry state.
         this.retry = Object.assign({}, this.retryDefault)
-
-        /**
-         * Accept an incoming Call.
-         * @event module:ModuleCalls#caller:call-accept
-         * @property {callId} callId - Id of the Call object to accept.
-         */
         this.app.on('caller:call-accept', ({callId}) => this.calls[callId].accept())
-        /**
-         * Set this Call to be the visible Call.
-         * @event caller:call-activate
-         * @property {callId} callId - Id of the Call object to activate.
-         * @property {Boolean} holdInactive - Whether to hold the other Calls.
-         * @property {Boolean} unholdActive - Whether to unhold the activated Call.
-         */
         this.app.on('caller:call-activate', ({callId, holdInactive, unholdActive}) => {
             let call = null
             if (callId) call = this.calls[callId]
             this.activateCall(call, holdInactive, unholdActive)
         })
 
-
-        /**
-        * Terminate/Hangup an active Call.
-        * @event module:ModuleCalls#caller:call-terminate
-        * @property {callId} callId - Id of the Call to delete.
-        */
         this.app.on('caller:call-terminate', ({callId}) => {
             // Use SIG11 parameters. SIP terminate doesn't have any atm.
-            console.log("TERMINATE")
             this.calls[callId].terminate(null, {remote: true})
         })
 
@@ -72,12 +48,6 @@ class ModuleCaller extends Module {
         })
 
 
-        /**
-        * Toggle mute status on the call by manipulating the rtp
-        * sender track of the Call.
-        * @event module:ModuleCalls#caller:call-mute
-        * @property {callId} callId - Id of the Call to toggle mute for.
-        */
         this.app.on('caller:call-mute', ({callId}) => {
             const call = this.calls[callId]
             const rtpSenderTrack = call.pc.getSenders()[0].track
@@ -92,11 +62,6 @@ class ModuleCaller extends Module {
         })
 
 
-        /**
-        * Finalizes an attended transfer.
-        * @event module:ModuleCalls#caller:transfer-finalize
-        * @property {callId} callId - Id of the Call to transfer to.
-        */
         this.app.on('caller:transfer-finalize', ({callId}) => {
             // Find origin.
             let sourceCall
@@ -122,10 +87,6 @@ class ModuleCaller extends Module {
     }
 
 
-    /**
-    * Initializes the module's store.
-    * @returns {Object} The module's store properties.
-    */
     _initialState() {
         return {
             calls: {},
@@ -175,10 +136,6 @@ class ModuleCaller extends Module {
     }
 
 
-    /**
-    * Restore stored state from localStorage.
-    * @param {Object} moduleStore - Root property for this module.
-    */
     _restoreState(moduleStore) {
         this.app._mergeDeep(moduleStore, {
             calls: {},
@@ -261,14 +218,6 @@ class ModuleCaller extends Module {
     }
 
 
-    /**
-    * A loosely coupled Call action handler. Operates on all current Calls.
-    * Supported actions are:
-    *   `accept-new`: Accepts an incoming call or switch to the new call dialog.
-    *   `deline-hangup`: Declines an incoming call or an active call.
-    *   `hold-active`: Toggle hold on the active call.
-    * @param {String} action - The action; `accept-new` or `decline`.
-    */
     callAction(action) {
         let inviteCall = null
 
@@ -289,7 +238,7 @@ class ModuleCaller extends Module {
             else if (callActive) {
                 const call = this._newCall()
                 this.activateCall(call, true)
-                this.app.setState({ui: {layer: 'caller'}})
+                this.app.setState({ui: {layer: 'dialer'}})
             }
         } else if (action === 'action-hold-active') {
             // Make sure the action isn't provoked on a closing call.
@@ -301,10 +250,6 @@ class ModuleCaller extends Module {
     }
 
 
-    /**
-    * Take care of cleaning up an ending call.
-    * @param {Call} call - The call object to remove.
-    */
     deleteCall(call) {
         // This call is being cleaned up; move to a different call
         // when this call was the active call.
@@ -330,7 +275,7 @@ class ModuleCaller extends Module {
             else if (fallbackCall) this.activateCall(fallbackCall, true, false)
             else {
                 // No more calls active; fallback to the dialer.
-                this.app.setState({ui: {layer: 'dialer'}}, {persist: true})
+                this.app.setState({ui: {layer: 'dialer'}}, {encrypt: false, persist: true})
             }
         }
 
@@ -368,12 +313,8 @@ class ModuleCaller extends Module {
     }
 
 
-    /**
-    * Generate a representational name for this module. Used for logging.
-    * @returns {String} - An identifier for this module.
-    */
     toString() {
-        return `${this.app}[caller] `
+        return `${this.app}[mod-caller] `
     }
 
 

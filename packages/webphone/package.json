@@ -24,7 +24,7 @@
     "d3-array": "^2.4.0",
     "d3-force": "^2.0.1",
     "sdp-interop-sl": "^1.4.3",
-    "sip.js": "^0.11.6",
+    "sip.js": "0.15.10",
     "v-click-outside": "^3.0.0",
     "vue": "^2.6.10",
     "vue-autosize": "https://git@github.com/garage11/vue-autosize#master",

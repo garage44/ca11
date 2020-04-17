@@ -9,9 +9,7 @@ const MAX_ACTIVITIES = 50
 * @memberof AppBackground.plugins
 */
 class ModuleActivity extends Module {
-    /**
-    * @param {AppBackground} app - The background application.
-    */
+
     constructor(app) {
         super(app)
 
@@ -45,10 +43,6 @@ class ModuleActivity extends Module {
     }
 
 
-    /**
-    * Initializes the module's store.
-    * @returns {Object} The module's store properties.
-    */
     _initialState() {
         return {
             activities: [],
@@ -62,11 +56,6 @@ class ModuleActivity extends Module {
     }
 
 
-    /**
-    * Adds some default attributes to an activity and
-    * does some additional bookkeeping.
-    * @param {String} [activity] - Endpoint to link to the activity.
-    */
     addActivity(activity) {
         activity.date = new Date().getTime()
         activity.id = shortid()
@@ -94,12 +83,8 @@ class ModuleActivity extends Module {
     }
 
 
-    /**
-    * Generate a representational name for this module. Used for logging.
-    * @returns {String} - An identifier for this module.
-    */
     toString() {
-        return `${this.app}[activity] `
+        return `${this.app}[mod-activity] `
     }
 }
 

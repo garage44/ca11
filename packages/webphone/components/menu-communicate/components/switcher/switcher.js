@@ -6,15 +6,16 @@ export default (app) => {
             activateCall: function(call) {
                 const settings = {webrtc: {media: {stream: {[this.stream.type]: {selected: false}}}}}
 
+                app.setState({settings}, {persist: true})
                 if (call) {
                     app.emit('caller:call-activate', {
                         callId: call.id,
                         holdInactive: true,
                         unholdActive: false,
                     })
-                    app.setState({settings, ui: {layer: 'stream-view'}}, {persist: true})
+                    app.setState({ui: {layer: 'stream-view'}})
                 } else {
-                    app.setState({settings, ui: {layer: 'dialer'}}, {persist: true})
+                    app.setState({ui: {layer: 'dialer'}}, {encrypt: false, persist: true})
                     app.emit('caller:call-activate', {callId: null})
                 }
             },

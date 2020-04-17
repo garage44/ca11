@@ -1,17 +1,14 @@
 
-import Module from '../../lib/module.js'
-import SessionDescriptionHandler from './sdh.js'
+import Module from '../lib/module.js'
 import SIP from 'sip.js/dist/sip.js'
 
-/**
-* SIP Network logic for CA11 clients.
-* @module ModuleUI
-*/
+
 class ModuleSIP extends Module {
 
     constructor(app) {
         super(app)
         app.sip = this
+        this.SIP = SIP
 
         this.app.on('ca11:services', () => {
             const enabled = this.app.state.sip.enabled
@@ -69,9 +66,6 @@ class ModuleSIP extends Module {
     }
 
 
-    /**
-     * Connect to the configured SIP backend; e.g. Asterisk 16.
-     */
     async connect() {
         if (['connected', 'registered'].includes(this.app.state.sip.status)) {
             this.disconnect()
@@ -101,17 +95,57 @@ class ModuleSIP extends Module {
             password: this.app.state.sip.account.password,
             register: true,
             sessionDescriptionHandlerFactory: (session, options) => {
-                options.app = this.app
-                return SessionDescriptionHandler.defaultFactory(session, options)
+                // The default SessionDescriptionHandler, but with some
+                // customizations to deal with existing streams.
+                // See: https://github.com/onsip/SIP.js/blob/master/src/Web/SessionDescriptionHandler.ts
+                const factory = SIP.Web.SessionDescriptionHandler.defaultFactory(session, options)
+                const _this = this
+
+                factory.acquire = async function() {
+                    // Use the local stream from CA11.
+                    const streamState = _this.app.state.settings.webrtc.media.stream
+                    const localStreamId = streamState[streamState.type].id
+                    const stream = _this.app.media.streams[localStreamId]
+
+                    _this.app.logger.info(`${_this}local stream acquired for peer connection: ${stream.id}`)
+
+                    this.observer.trackAdded()
+                    this.emit('userMedia', stream)
+
+                    for (const sender of this.peerConnection.getSenders()) {
+                        _this.app.logger.info(`${_this}remove track from peer connection: ${stream.id}`)
+                        this.peerConnection.removeTrack(sender)
+                    }
+
+                    for (const track of stream.getTracks()) {
+                        this.peerConnection.addTrack(track, stream)
+                        _this.app.logger.debug(`${_this}local ${track.kind} track ${track.id} added to peer connection`)
+                    }
+
+                    return stream
+                }
+
+                // Only close remote tracks; keep the local CA11 stream intact.
+                factory.close = function() {
+                    _this.app.logger.debug(`${_this}closing peerconnection`)
+                    for (const receiver of this.peerConnection.getReceivers()) {
+                        if (receiver.track) {
+                            receiver.track.stop()
+                        }
+                    }
+
+                    this.resetIceGatheringComplete()
+                    this.peerConnection.close()
+                }
+
+                return factory
             },
             sessionDescriptionHandlerFactoryOptions: {
                 constraints: this.app.media._getUserMediaFlags(),
                 peerConnectionOptions: {
                     rtcConfiguration: {
                         iceServers: this.app.state.settings.webrtc.stun.map((i) => ({urls: i})),
-                        // Chrome's unified-plan doesn't work with Asterisk yet;
-                        // instead plan-b with sdp-interop-sl is used.
-                        sdpSemantics: 'plan-b',
+                        sdpSemantics: 'unified-plan',
                     },
                 },
             },
@@ -121,12 +155,11 @@ class ModuleSIP extends Module {
                 maxReconnectionAttempts: 0,
                 wsServers: wsServers,
             },
-            uri: `${username}@${this.app.state.sip.endpoint.split('/')[0]}`,
+            uri: `${username}@${this.app.state.sip.endpoint}`,
             userAgentString: this.userAgent(),
         })
 
         // Bind all events.
-
         this.ua.on('registered', this.onRegistered.bind(this))
         this.ua.on('registrationFailed', this.onRegistrationFailed.bind(this))
         this.ua.on('transportCreated', () => {
@@ -134,6 +167,12 @@ class ModuleSIP extends Module {
             this.ua.transport.on('disconnected', this.onDisconnected.bind(this))
         })
         this.ua.on('unregistered', this.onUnregistered.bind(this))
+
+        console.log("ON MESSAGE")
+        this.ua.on('message', function(message) {
+            console.log("MESSAGE", message.body)
+        })
+
         this.app.emit('sip:ua')
 
         this.ua.start()
@@ -218,7 +257,7 @@ class ModuleSIP extends Module {
     * @returns {String} - An identifier for this module.
     */
     toString() {
-        return `${this.app}[sip] `
+        return `${this.app}[mod-sip] `
     }
 
 

@@ -1,14 +1,7 @@
 import Module from '../lib/module.js'
 
-/**
-* Main entrypoint for App.
-* @memberof AppBackground.plugins
-* @extends Plugin
-*/
 class ModuleApp extends Module {
-    /**
-    * @param {AppBackground} app - The background application.
-    */
+
     constructor(app) {
         super(app)
 
@@ -32,10 +25,6 @@ class ModuleApp extends Module {
     }
 
 
-    /**
-    * Initializes the module's store.
-    * @returns {Object} The module's store properties.
-    */
     _initialState() {
         return {
             dnd: false,
@@ -75,10 +64,6 @@ class ModuleApp extends Module {
     }
 
 
-    /**
-    * Restore stored dumped state from localStorage.
-    * @param {Object} moduleStore - Root property for this module.
-    */
     _restoreState(moduleStore) {
         moduleStore.notifications = []
         moduleStore.online = true
@@ -87,11 +72,7 @@ class ModuleApp extends Module {
 
     _watchers() {
         return {
-            /**
-            * Schedule removal of a newly add notification if it
-            * has a timeout property.
-            * @param {Array} notifications - A reference to the current content of notifications.
-            */
+
             'store.app.notifications': (notifications) => {
                 for (const notification of notifications) {
                     if (notification.timeout && !this._notifications[notification.id]) {
@@ -156,13 +137,8 @@ class ModuleApp extends Module {
         })
     }
 
-
-    /**
-    * Generate a representational name for this module. Used for logging.
-    * @returns {String} - An identifier for this module.
-    */
     toString() {
-        return `${this.app}[app] `
+        return `${this.app}[mod-app] `
     }
 }
 

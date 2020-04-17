@@ -6,12 +6,7 @@ import Module from '../lib/module.js'
 * @module ModuleSettings
 */
 class ModuleSettings extends Module {
-    /**
-    * Initializes the module's store.
-    * All application runtime settings are defined here. Build-time
-    * settings go in the ``~/.ca11rc` file.
-    * @returns {Object} The module's store properties.
-    */
+
     _initialState() {
         let state = {
             ringtones: {
@@ -92,11 +87,6 @@ class ModuleSettings extends Module {
     }
 
 
-    /**
-    * Respond to changes in settings, like storing the Vault key,
-    * toggle the Click-to-dial icon observer, etc..
-    * @returns {Object} The store properties to watch.
-    */
     _watchers() {
         return {
             /**
@@ -112,12 +102,8 @@ class ModuleSettings extends Module {
     }
 
 
-    /**
-    * Generate a representational name for this module. Used for logging.
-    * @returns {String} - An identifier for this module.
-    */
     toString() {
-        return `${this.app}[settings] `
+        return `${this.app}[mod-settings] `
     }
 }
 

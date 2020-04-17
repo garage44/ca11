@@ -1,12 +1,6 @@
-/**
-* @module ModuleCalls
-*/
 import Call from '../call.js'
 
-/**
-* Call implementation for incoming and outgoing calls
-* using WebRTC and SIP.js.
-*/
+
 class CallSIP extends Call {
     /**
     * @param {AppBackground} app - The background application.
@@ -17,24 +11,15 @@ class CallSIP extends Call {
     constructor(app, description) {
         super(app, description)
 
+        this.tracks = {}
         this.state.protocol = 'sip'
 
-        // Created from an invite means that the session is
-        // already there, e.g. this is an incoming call.
+        // Passing in a session in the description makes this an incoming call.
         if (description.session) {
-            // Passing in a session as target means an incoming call.
-            app._mergeDeep(this.state, {
-                direction: 'incoming',
-                status: 'invite',
-            })
+            app._mergeDeep(this.state, {direction: 'incoming', status: 'invite'})
             this.session = description.session
         } else {
-            // Passing in no target or a number means an outgoing call.
-            app._mergeDeep(this.state, {
-                direction: 'outgoing',
-                number: description.endpoint,
-                status: 'new',
-            })
+            app._mergeDeep(this.state, {direction: 'outgoing', number: description.endpoint, status: 'new'})
         }
     }
 
@@ -46,17 +31,13 @@ class CallSIP extends Call {
     * @returns {Map} - A map of key/values of the header.
     */
     _parseHeader(header) {
-        return new Map(header.replace(/\"/g, '').split(';').map((i) => i.split('=')))
+        return new Map(header.replace(/"/g, '').split(';').map((i) => i.split('=')))
     }
 
 
-    /**
-    * Accept an incoming session.
-    */
     accept() {
         super.accept()
-        // Handle connecting streams to the appropriate video element.
-        this.session.on('track', this.onTrack.bind(this))
+        this.session.on('trackAdded', this.onTrack.bind(this))
         this.session.accept({
             sessionDescriptionHandlerOptions: {
                 constraints: this.app.media._getUserMediaFlags(),
@@ -75,22 +56,19 @@ class CallSIP extends Call {
     }
 
 
-    /**
-    * Handle an incoming `invite` call from.
-    */
     incoming() {
+        this.app.logger.debug(`${this}incoming call ${this.id} started`)
+
         this.state.number = this.session.assertedIdentity.uri.user
         this.state.name = this.session.assertedIdentity.displayName
 
-        this.app.logger.debug(`${this}incoming call ${this.id} started`)
         super.incoming()
 
-        // Setup some event handlers for the different stages of a call.
-        this.session.on('accepted', (request) => {
+        this.session.on('accepted', () => {
             this._start({message: this.translations.accepted})
         })
 
-        this.session.on('bye', (e) => {
+        this.session.on('bye', () => {
             this.setState({status: 'bye'})
             this._stop({message: this.translations[this.state.status]})
         })
@@ -100,11 +78,11 @@ class CallSIP extends Call {
         * also when an incoming calls keeps ringing for a certain amount
         * of time (60 seconds), and fails due to a timeout. In that case,
         * no `rejected` event is triggered and we need to kill the
-        * call ASAP, so a new INVITE for the same call will be accepted by the
-        * call module's invite handler.
+        * call ASAP, so a new INVITE for the same call will be accepted by
+        * the call module's invite handler.
         */
         this.session.on('failed', (message) => {
-            if (typeof message === 'string') message = SIP.Parser.parseMessage(message, this.app.sip.ua)
+            if (typeof message === 'string') message = this.app.modules.sip.SIP.Parser.parseMessage(message, this.app.sip.ua)
             let reason = message.getHeader('Reason')
             let status = 'caller_unavailable'
 
@@ -120,7 +98,7 @@ class CallSIP extends Call {
             super.terminate(status)
         })
 
-        this.session.on('reinvite', (session, request) => {
+        this.session.on('reinvite', (session) => {
             this.app.logger.debug(`${this}<event:reinvite>`)
             // Seems to be a timing issue in SIP.js. After a transfer,
             // the old name is keps in assertedIdentity, unless a timeout
@@ -133,71 +111,55 @@ class CallSIP extends Call {
     }
 
 
-    /**
-    * Handle Track event, when a new MediaStreamTrack is
-    * added to an RTCRtpReceiver.
-    * @param {RTCTrackEvent} e - Contains track information.
-    */
-    onTrack(e) {
-        this.app.logger.debug(`${this}<event:onTrack>`)
-        let stream = e.streams[0]
+    onTrack() {
+        const pc = this.session.sessionDescriptionHandler.peerConnection
+        const receivers = pc.getReceivers()
+        if (!receivers.length) return
 
-        // The audio track of the stream is always added first.
-        // There is only one audio track in each call.
-        if (e.track.kind === 'audio') {
-            this.audioTrackEvent = e
-            // The video track from Asterisk sharing the same stream id
-            // as the audio is not an active video stream and is removed
-            // from the scene.
-            stream.getVideoTracks().forEach((t) => {
-                stream.removeTrack(t)
-            })
-            // Add an invisible audio stream.
-            this.addStream(stream, 'audio', false)
-        } else {
-            if (this.audioTrackEvent.streams[0].id !== stream.id) {
-                stream.addTrack(this.audioTrackEvent.track)
-                this.addStream(stream, 'video')
+        const newTracks = []
+        for (const receiver of receivers) {
+            if (!this.tracks[receiver.track.id]) {
+                this.tracks[receiver.track.id] = receiver.track
+                newTracks.push(receiver.track)
             }
         }
+        if (!newTracks.length) return
 
-        const path = `caller.calls.${this.id}.streams.${stream.id}`
-        e.track.onunmute = () => {this.app.setState({muted: false}, {path})}
-        e.track.onmute = () => {this.app.setState({muted: true}, {path})}
-        e.track.onended = () => {
-            this._cleanupStream(stream.id)
+        for (const track of newTracks) {
+            const newStream = new MediaStream()
+            const path = `caller.calls.${this.id}.streams.${newStream.id}`
+
+            track.onunmute = () => {this.app.setState({muted: false}, {path})}
+            track.onmute = () => {this.app.setState({muted: true}, {path})}
+            track.onended = () => {
+                this.app.logger.debug(`${this}remove ${track.kind} track ${track.id}`)
+                delete this.tracks[track.id]
+                this._cleanupStream(newStream.id)
+            }
+
+            newStream.addTrack(track)
+            this.app.logger.info(`${this}${track.kind} track added: ${track.id}`)
+            this.addStream(newStream, track.kind)
+            this.app.logger.debug(`${this}stream added to view: ${newStream.id}`)
         }
     }
 
 
-    /**
-    * Setup an outgoing call.
-    */
     outgoing() {
         super.outgoing()
         const uri = `sip:${this.state.endpoint}@${this.app.state.sip.endpoint.split('/')[0]}`
-        this.session = this.app.sip.ua.invite(uri, {
-            sessionDescriptionHandlerOptions: {
-                constraints: this.app.media._getUserMediaFlags(),
-            },
-        })
+        this.session = this.app.sip.ua.invite(uri)
 
         this.setState({stats: {callId: this.session.request.call_id}})
-        // Handle connecting streams to the appropriate video element.
-        this.session.on('track', this.onTrack.bind(this))
-
-        // Notify user about the new call being setup.
-        this.session.on('accepted', (data) => {
+        this.session.on('trackAdded', this.onTrack.bind(this))
+        this.session.on('accepted', () => {
             this.app.logger.debug(`${this}<event:accepted>`)
             this._start({message: this.translations.accepted})
         })
-
-        // Reset call state when the other halve hangs up.
-        this.session.on('bye', (e) => {
+        this.session.on('bye', () => {
             this.app.logger.debug(`${this}<event:bye>`)
             super.terminate('bye')
         })
-
 
         /**
         * Play a ringback tone on the following status codes:
@@ -213,15 +175,14 @@ class CallSIP extends Call {
             }
         })
 
-
         // Blind transfer.
-        this.session.on('refer', (target) => {
+        this.session.on('refer', () => {
             this.app.logger.debug(`${this}<event:refer>`)
             this.session.bye()
         })
 
-        // The user is being transferred; update the caller
-        // info from the P-Asserted-Identity header.
+        // The user is being transferred; update the caller info
+        // from the P-Asserted-Identity header.
         this.session.on('reinvite', (session) => {
             this.app.logger.debug(`${this}<event:reinvite>`)
             // Seems to be a timing issue in SIP.js. After a transfer,
@@ -253,9 +214,6 @@ class CallSIP extends Call {
     }
 
 
-    /**
-    * Terminate a SIP Call.
-    */
     terminate() {
         const status = this.state.status
         try {
@@ -263,16 +221,11 @@ class CallSIP extends Call {
             else if (status === 'create' && this.session) this.session.terminate()
             else if (status === 'invite') this.session.reject()
         } catch (err) {
-            // eslint-disable-next-line no-console
-            console.error(err)
+            this.app.logger.error(err)
         }
     }
 
 
-    /**
-    * Generate a representational name for this module. Used for logging.
-    * @returns {String} - An identifier for this module.
-    */
     toString() {
         return `${this.app}[CallSIP][${this.id}] `
     }
@@ -280,7 +233,7 @@ class CallSIP extends Call {
 
     transfer(targetCall) {
         if (typeof targetCall === 'string') {
-            this.session.refer(`sip:${targetCall}@ca11.io`)
+            this.session.refer(`sip:${targetCall}@ca11.app`)
         } else {
             this.session.refer(targetCall.session)
         }

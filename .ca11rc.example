@@ -24,7 +24,6 @@
             "vuelidate": "./static/web_modules/vuelidate.js",
             "vuelidate/dist/validators.min.js": "./static/web_modules/vuelidate/dist/validators.min.js",
             "sip.js/dist/sip.js": "./static/web_modules/sip.js/dist/sip.js",
-            "sip.js/src/Web/SessionDescriptionHandlerObserver.js": "./static/web_modules/sip.js/src/Web/SessionDescriptionHandlerObserver.js",
             "@/": "./static/"
         }
     },

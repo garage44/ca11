@@ -1,19 +1,8 @@
-/**
- * Base Call class that each implementation of a Call must use.
- * Currently used by CallConnectAB and CallSIP.
- */
 class Call {
-    /**
-     * Initialize a new Call object by setting up some Call sounds
-     * and set initial state. This state is shared by the UI of
-     * AppForeground and the backend of AppBackground.
-     * @param {AppBackground} app - The background application.
-     * @param {Object} description - Generic Call options.
-     */
+
     constructor(app, description) {
         this.app = app
 
-        // References to MediaStream objects related to this call.
         this.streams = {}
         this._started = false
 
@@ -23,21 +12,6 @@ class Call {
         if (!description.id) this.id = shortid()
         else this.id = description.id
 
-        /**
-         * @property {Object} state - Reactive computed properties from Vue-stash.
-         * @property {Boolean} state.active - Whether the Call shows in the UI or not.
-         * @property {String} state.class - Used to identify the Call type with.
-         * @property {String} state.name - The name to show when calling.
-         * @property {String} state.endpoint - The Call's advertised endpoint.
-         * @property {Object} state.hangup - Specifies the hangup feature of a Call.
-         * @property {Object} state.hold - Specifies the hold feature of a Call.
-         * @property {String} state.id - The generated UUID of the Call.
-         * @property {String} state.protocol - Protocol that the Call uses.
-         * @property {String} state.status - A Call state identifier as described in `this._statusMap`.
-         * @property {Object} state.timer - Keeps track of the Call time.
-         * @property {Object} state.transfer - Specifies the transfer feature of a Call.
-         * @property {String} state.type - Either `incoming` or `outgoing`.
-         */
         this.state = {
             active: true,
             direction: null, // incoming or outgoing
@@ -70,25 +44,15 @@ class Call {
     }
 
 
-    /**
-     * Remove a track that is ended from remote.
-     * @param {MediaStreamTrack} streamId - Id of the stream to clean up.
-     */
     _cleanupStream(streamId) {
+        this.app.logger.debug(`${this}cleanup stream: ${streamId}`)
         const path = `caller.calls.${this.id}.streams.${streamId}`
         this.app.setState(null, {action: 'delete', path})
         delete this.app.media.streams[streamId]
     }
 
 
-    /**
-     * Add two video elements to the DOM of AppBackground and get the
-     * permission to the microphone. This permission is already granted
-     * from the fg script. Addding the video elements to the bg DOM
-     * allows us to keep the Call stream active after the popup is closed.
-     */
     async _initSinks() {
-        // Set the output device from settings.
         let outputSink
         const devices = this.app.state.settings.webrtc.devices
         if (devices.speaker.enabled) outputSink = devices.sinks.speakerOutput.id
@@ -109,9 +73,6 @@ class Call {
     }
 
 
-    /**
-     * Handle UI and state for new incoming and outgoing calls.
-     */
     _start() {
         this._started = true
         this.app.sounds.ringbackTone.stop()
@@ -140,11 +101,11 @@ class Call {
 
     /**
      * Takes care of returning to a state before the call
-     * was created. Make sure you set the final state of a call
+     * was created. Make sure to set the final state of a call
      * before calling cleanup. The timeout is meant to postpone
      * resetting the state, so the user has a hint of what
-     * happened in between. A silent call is dropped immediatly
-     * however; since no UI-interaction is involved.
+     * happened in between. A silent call is dropped immediately,
+     * because no UI-interaction is involved.
      * @param {Object} options - Options to pass to _stop.
      * @param {String} [options.message] - Force a notification message.
      * @param {Number} options.timeout - Postpone resetting the call state for the duration of 3 busy tones.
@@ -166,12 +127,7 @@ class Call {
         let title = `${this.state.endpoint}`
         if (this.state.name) title += ` - ${this.state.name}`
 
-        const fromto = {
-            incoming: this.app.$t('from'),
-            outgoing: this.app.$t('to'),
-        }
-
-        // Make a Notification with relevant call information.
+        const fromto = {incoming: this.app.$t('from'), outgoing: this.app.$t('to')}
         const failCodes = ['callee_busy', 'callee_unavailable', 'caller_unavailable']
         if (failCodes.includes(this.state.status)) {
             title += ` (${this.app.$t(this.translations[this.state.status])})`
@@ -199,7 +155,6 @@ class Call {
             this._cleanupStream(streamId)
         }
 
-        // Stop the Call interval timer.
         clearInterval(this.timerId)
         // Reset the transfer state of target calls in case the transfer mode
         // of this Call is active and the callee ends the call.
@@ -208,20 +163,7 @@ class Call {
         }
 
         this.busyTone.stop()
-
-        window.setTimeout(() => {
-            this.app.modules.caller.deleteCall(this)
-        }, timeout)
-    }
-
-
-    /**
-     * Shared accept Call logic.
-     */
-    accept() {
-        if (this.state.direction !== 'incoming') {
-            throw 'session must be incoming type'
-        }
+        window.setTimeout(() => this.app.modules.caller.deleteCall(this), timeout)
     }
 
 
@@ -241,11 +183,6 @@ class Call {
     }
 
 
-    /**
-     * Generic UI and state-related logic for an outgoing call.
-     * Note: first set the endpoint and name in the parent,
-     * before calling this super.
-     */
     incoming() {
         this.setState(this.state)
         if (this.silent) return
@@ -267,9 +204,6 @@ class Call {
     }
 
 
-    /**
-     * Some UI state plumbing to setup an outgoing Call.
-     */
     outgoing() {
         // Try to fill in the name from contacts.
         const contacts = this.app.state.contacts.contacts
@@ -287,21 +221,12 @@ class Call {
     }
 
 
-    /**
-     * Call-specific setState that operates within the scope
-     * of the Call's state.
-     * @param {Object} state - The state to update.
-     */
     setState(state) {
         // This merges to the call's local state; not the app's state!
         this.app._mergeDeep(this.state, state)
     }
 
 
-    /**
-     * Kick off the Call and get access to media
-     * devices when it's not silent.
-     */
     async start() {
         await this._initSinks()
 

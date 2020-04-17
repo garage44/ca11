@@ -3,15 +3,9 @@ import Module from '../../lib/module.js'
 import Sig11Presence from './presence/sig11.js'
 import SipPresence from './presence/sig11.js'
 
-/**
-* Contacts plugin takes care of managing
-* Contacts, Endpoints and Presence.
-* @memberof AppBackground.plugins
-*/
+
 class ModuleContacts extends Module {
-    /**
-    * @param {AppBackground} app - The background application.
-    */
+
     constructor(app) {
         super(app)
 
@@ -33,10 +27,6 @@ class ModuleContacts extends Module {
     }
 
 
-    /**
-    * Initializes the module's store.
-    * @returns {Object} The module's store properties.
-    */
     _initialState() {
         return {
             contacts: {
@@ -103,10 +93,6 @@ class ModuleContacts extends Module {
     }
 
 
-    /**
-    * Reset the state of a contact endpoint before
-    * updating it.
-    */
     resetEndpointsStatus() {
         for (const contact of Object.values(this.state.contacts)) {
             for (const endpoint of Object.values(contact.endpoints)) {
@@ -128,11 +114,6 @@ class ModuleContacts extends Module {
     }
 
 
-    /**
-    * Subscribe all endpoints with subscription indication
-    * or to all endpoints when using override.
-    * @param {Boolean} override - Override endpoint subscription indication.
-    */
     subscribeAll(override = false) {
         this.resetEndpointsStatus()
         this.app.logger.info(`${this}updating contact endpoint presence status`)
@@ -146,12 +127,8 @@ class ModuleContacts extends Module {
     }
 
 
-    /**
-    * Generate a representational name for this module. Used for logging.
-    * @returns {String} - An identifier for this module.
-    */
     toString() {
-        return `${this.app}[contacts] `
+        return `${this.app}[mod-contacts] `
     }
 
 
@@ -163,11 +140,6 @@ class ModuleContacts extends Module {
     }
 
 
-    /**
-    * Unsubscribe all endpoints with subscription indication
-    * or from all endpoints when using override.
-    * @param {Boolean} override - Override endpoint subscription indication.
-    */
     unsubscribeAll(override = false) {
         for (const contact of Object.values(this.state.contacts)) {
             for (const endpoint of Object.values(contact.endpoints)) {

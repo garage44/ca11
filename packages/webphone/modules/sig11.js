@@ -1,12 +1,8 @@
-import Module from '../lib/module.js'
-
 import Endpoint from '@ca11/sig11/lib/endpoint.js'
+import Module from '../lib/module.js'
 import Network from '@ca11/sig11/lib/network.js'
 
 
-/**
-* SIG11 Network logic for CA11.
-*/
 class ModuleSIG11 extends Module {
     constructor(app) {
         super(app)
@@ -22,7 +18,6 @@ class ModuleSIG11 extends Module {
                     keypair = await app.crypto.importIdentity(this.app.state.sig11.identity)
                 } else {
                     keypair = await app.crypto.createIdentity()
-                    // Save the serialized keypair to the store.
                     const identity = await app.crypto.serializeKeypair(keypair)
                     this.app.setState({sig11: {identity}}, {persist: true})
                 }
@@ -186,6 +181,7 @@ class ModuleSIG11 extends Module {
      */
     async negotiateSession(node) {
         node._negotiating = true
+        // eslint-disable-next-line no-async-promise-executor
         return new Promise(async(resolve, reject) => {
             node._sessionPromise = {reject, resolve}
             // Generate a transient ECDH keypair.
@@ -199,7 +195,7 @@ class ModuleSIG11 extends Module {
     }
 
 
-    onClose(event) {
+    onClose() {
         this.app.setState({sig11: {status: 'disconnected'}})
         if (this.reconnect) {
             this.app.logger.debug(`${this}transport closed (reconnect)`)
@@ -218,7 +214,7 @@ class ModuleSIG11 extends Module {
     }
 
 
-    onOpen(event) {
+    onOpen() {
         this.app.logger.debug(`${this}transport open`)
         this.app.setState({sig11: {status: 'connected'}})
 
@@ -248,13 +244,8 @@ class ModuleSIG11 extends Module {
     }
 
 
-
-    /**
-    * A representational name for this module for logging.
-    * @returns {String} - An identifier for this module.
-    */
     toString() {
-        return `${this.app}[sig11] `
+        return `${this.app}[mod-sig11] `
     }
 
 

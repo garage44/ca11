@@ -1,20 +1,8 @@
-/**
-* @module ModuleCalls
-*/
 import Call from '../call.js'
 
-/**
-* Call implementation for incoming and outgoing calls
-* using WebRTC and SIP.js.
-*/
+
 class CallSIG11 extends Call {
-    /**
-    * @param {CA11} app - The background application.
-    * @param {Node} description - Call description for SIG11.
-    * @param {Object} [options] - An endpoint identifier to call to.
-    * @param {Boolean} [options.active] - Activates this Call in the UI.
-    * @param {Boolean} [options.silent] - Setup a Call without interfering with the UI.
-    */
+
     constructor(app, description) {
         super(app, description)
 
@@ -75,7 +63,6 @@ class CallSIG11 extends Call {
         delete this.candidates
         // Triggers ICE negotiation.
         await this.pc.setLocalDescription(answer)
-
         // Ask the endpoint about the number.
         await this.app.sig11.emit(this.node.id, 'call-answer', {
             answer: answer.sdp,
@@ -91,19 +78,11 @@ class CallSIG11 extends Call {
     }
 
 
-    /**
-    * Handle an incoming `invite` call from.
-    */
     incoming() {
         super.incoming()
     }
 
 
-    /**
-    * Handle Track event, when a new MediaStreamTrack is
-    * added to an RTCRtpReceiver.
-    * @param {RTCTrackEvent} e - Contains track information.
-    */
     onTrack(e) {
         const stream = e.streams[0]
         if (!this.app.media.streams[stream.id]) this.addStream(stream, 'video')
@@ -173,11 +152,6 @@ class CallSIG11 extends Call {
     }
 
 
-    /**
-    * Terminate a SIG11 Call.
-    * @param {String} status - Force a status while terminating.
-    * @param {Boolean} remote - Terminate remote node's call endpoint.
-    */
     async terminate(status, {remote = true} = {}) {
         // Close connected streams when the call is already
         // flowing. Skip when the call is terminated before
@@ -196,10 +170,6 @@ class CallSIG11 extends Call {
     }
 
 
-    /**
-    * Generate a representational name for this module. Used for logging.
-    * @returns {String} - An identifier for this module.
-    */
     toString() {
         return `${this.app}[CallSIG11][${this.id}] `
     }

@@ -86,6 +86,7 @@ class Ca11Tower extends Skeleton {
                     allow: 'opus,h264,vp8',
                     aors: sipId,
                     auth: sipId,
+                    bundle: 'yes',
                     context: 'default',
                     direct_media: 'no',
                     disallow: 'all',

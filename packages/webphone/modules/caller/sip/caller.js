@@ -1,10 +1,6 @@
 import SIPCall from './call.js'
 
 
-/**
- * Manage SIG11 calls.
- * @module SIPCaller
- */
 class SIPCaller {
 
     constructor(app, plugin) {
@@ -28,10 +24,6 @@ class SIPCaller {
     }
 
 
-    /**
-     * Event handler for an incoming SIP call, known as an 'invite'.
-     * @param {Session} session - The SIP.js session.
-     */
     onInvite(session) {
         this.app.logger.debug(`${this}<event:invite>`)
 
@@ -63,18 +55,14 @@ class SIPCaller {
 
         const call = new SIPCall(this.app, description, {silent: !acceptCall})
         call.start()
-        Vue.set(this.app.state.caller.calls, call.id, call.state)
+        this.app.Vue.set(this.app.state.caller.calls, call.id, call.state)
         this.app.modules.caller.calls[call.id] = call
         this.app.logger.info(`${this}incoming call ${call.id} allowed by invite`)
     }
 
 
-    /**
-     * Generate a representational name for this module. Used for logging.
-     * @returns {String} - An identifier for this module.
-     */
     toString() {
-        return `${this.app}[caller][sip] `
+        return `${this.app}[SIPCaller] `
     }
 
 }
