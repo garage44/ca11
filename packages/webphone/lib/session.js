@@ -1,9 +1,3 @@
-/**
- * Multiple people can use CA11 with their own data. To prevent
- * state collisioning, all users need to have their own state management.
- * A Session is just that; namespaced state handling between LocalStorage
- * and the global state object.
-*/
 class Session {
 
     constructor(app) {

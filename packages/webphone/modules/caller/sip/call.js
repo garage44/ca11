@@ -36,7 +36,6 @@ class CallSIP extends Call {
 
 
     accept() {
-        super.accept()
         this.session.on('trackAdded', this.onTrack.bind(this))
         this.session.accept({
             sessionDescriptionHandlerOptions: {

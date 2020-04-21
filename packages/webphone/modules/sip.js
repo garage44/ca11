@@ -168,7 +168,6 @@ class ModuleSIP extends Module {
         })
         this.ua.on('unregistered', this.onUnregistered.bind(this))
 
-        console.log("ON MESSAGE")
         this.ua.on('message', function(message) {
             console.log("MESSAGE", message.body)
         })
