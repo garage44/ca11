@@ -1,14 +1,12 @@
 
 import Module from '../lib/module.js'
-import SIP from 'sip.js/dist/sip.js'
+import Sip from '@ca11/sip'
 
 
 class ModuleSIP extends Module {
 
     constructor(app) {
         super(app)
-        app.sip = this
-        this.SIP = SIP
 
         this.app.on('ca11:services', () => {
             const enabled = this.app.state.sip.enabled
@@ -75,89 +73,91 @@ class ModuleSIP extends Module {
         // The default is to reconnect.
         this.reconnect = true
         const username = this.app.state.sip.account.username
-        // Overwrite the existing instance with a new one every time.
-        // SIP.js doesn't handle resetting configuration well.
-        let wsServers = this.app.state.sip.endpoint
-        if (!wsServers.includes('ws://') && !wsServers.includes('wss://')) {
-            wsServers = `wss://${wsServers}`
-        }
 
-        this.ua = new SIP.UA({
-            authorizationUser: username,
-            autostart: false,
-            autostop: false,
-            log: {
-                builtinEnabled: true,
-                level: 'error',
-            },
-            // Incoming unanswered calls are terminated after x seconds.
-            noanswertimeout: 60,
+
+        this.sip = new Sip({
+            logger: this.app.logger,
             password: this.app.state.sip.account.password,
-            register: true,
-            sessionDescriptionHandlerFactory: (session, options) => {
-                // The default SessionDescriptionHandler, but with some
-                // customizations to deal with existing streams.
-                // See: https://github.com/onsip/SIP.js/blob/master/src/Web/SessionDescriptionHandler.ts
-                const factory = SIP.Web.SessionDescriptionHandler.defaultFactory(session, options)
-                const _this = this
-
-                factory.acquire = async function() {
-                    // Use the local stream from CA11.
-                    const streamState = _this.app.state.settings.webrtc.media.stream
-                    const localStreamId = streamState[streamState.type].id
-                    const stream = _this.app.media.streams[localStreamId]
-
-                    _this.app.logger.info(`${_this}local stream acquired for peer connection: ${stream.id}`)
-
-                    this.observer.trackAdded()
-                    this.emit('userMedia', stream)
-
-                    for (const sender of this.peerConnection.getSenders()) {
-                        _this.app.logger.info(`${_this}remove track from peer connection: ${stream.id}`)
-                        this.peerConnection.removeTrack(sender)
-                    }
-
-                    for (const track of stream.getTracks()) {
-                        this.peerConnection.addTrack(track, stream)
-                        _this.app.logger.debug(`${_this}local ${track.kind} track ${track.id} added to peer connection`)
-                    }
-
-                    return stream
-                }
-
-                // Only close remote tracks; keep the local CA11 stream intact.
-                factory.close = function() {
-                    _this.app.logger.debug(`${_this}closing peerconnection`)
-                    for (const receiver of this.peerConnection.getReceivers()) {
-                        if (receiver.track) {
-                            receiver.track.stop()
-                        }
-                    }
-
-                    this.resetIceGatheringComplete()
-                    this.peerConnection.close()
-                }
-
-                return factory
-            },
-            sessionDescriptionHandlerFactoryOptions: {
-                constraints: this.app.media._getUserMediaFlags(),
-                peerConnectionOptions: {
-                    rtcConfiguration: {
-                        iceServers: this.app.state.settings.webrtc.stun.map((i) => ({urls: i})),
-                        sdpSemantics: 'unified-plan',
-                    },
-                },
-            },
-            traceSip: false,
-            transportOptions: {
-                // Reconnects are handled manually.
-                maxReconnectionAttempts: 0,
-                wsServers: wsServers,
-            },
-            uri: `${username}@${this.app.state.sip.endpoint}`,
-            userAgentString: this.userAgent(),
+            server: this.app.state.sip.endpoint,
+            user: username,
         })
+
+        // this.ua = new SIP.UA({
+        //     authorizationUser: username,
+        //     autostart: false,
+        //     autostop: false,
+        //     log: {
+        //         builtinEnabled: true,
+        //         level: 'error',
+        //     },
+        //     // Incoming unanswered calls are terminated after x seconds.
+        //     noanswertimeout: 60,
+        //     password: this.app.state.sip.account.password,
+        //     register: true,
+        //     sessionDescriptionHandlerFactory: (session, options) => {
+        //         // The default SessionDescriptionHandler, but with some
+        //         // customizations to deal with existing streams.
+        //         // See: https://github.com/onsip/SIP.js/blob/master/src/Web/SessionDescriptionHandler.ts
+        //         const factory = SIP.Web.SessionDescriptionHandler.defaultFactory(session, options)
+        //         const _this = this
+
+        //         factory.acquire = async function() {
+        //             // Use the local stream from CA11.
+        //             const streamState = _this.app.state.settings.webrtc.media.stream
+        //             const localStreamId = streamState[streamState.type].id
+        //             const stream = _this.app.media.streams[localStreamId]
+
+        //             _this.app.logger.info(`${_this}local stream acquired for peer connection: ${stream.id}`)
+
+        //             this.observer.trackAdded()
+        //             this.emit('userMedia', stream)
+
+        //             for (const sender of this.peerConnection.getSenders()) {
+        //                 _this.app.logger.info(`${_this}remove track from peer connection: ${stream.id}`)
+        //                 this.peerConnection.removeTrack(sender)
+        //             }
+
+        //             for (const track of stream.getTracks()) {
+        //                 this.peerConnection.addTrack(track, stream)
+        //                 _this.app.logger.debug(`${_this}local ${track.kind} track ${track.id} added to peer connection`)
+        //             }
+
+        //             return stream
+        //         }
+
+        //         // Only close remote tracks; keep the local CA11 stream intact.
+        //         factory.close = function() {
+        //             _this.app.logger.debug(`${_this}closing peerconnection`)
+        //             for (const receiver of this.peerConnection.getReceivers()) {
+        //                 if (receiver.track) {
+        //                     receiver.track.stop()
+        //                 }
+        //             }
+
+        //             this.resetIceGatheringComplete()
+        //             this.peerConnection.close()
+        //         }
+
+        //         return factory
+        //     },
+        //     sessionDescriptionHandlerFactoryOptions: {
+        //         constraints: this.app.media._getUserMediaFlags(),
+        //         peerConnectionOptions: {
+        //             rtcConfiguration: {
+        //                 iceServers: this.app.state.settings.webrtc.stun.map((i) => ({urls: i})),
+        //                 sdpSemantics: 'unified-plan',
+        //             },
+        //         },
+        //     },
+        //     traceSip: false,
+        //     transportOptions: {
+        //         // Reconnects are handled manually.
+        //         maxReconnectionAttempts: 0,
+        //         wsServers: wsServers,
+        //     },
+        //     uri: `${username}@${this.app.state.sip.endpoint}`,
+        //     userAgentString: this.userAgent(),
+        // })
 
         // Bind all events.
         this.ua.on('registered', this.onRegistered.bind(this))

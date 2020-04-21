@@ -1,0 +1,11 @@
+{
+  "name": "@ca11/sip",
+  "version": "1.0.0",
+  "description": "SIP signalling protocol",
+  "main": "sip.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Garage11",
+  "license": "MIT"
+}
