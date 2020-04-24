@@ -15,7 +15,7 @@
     "lint": "yarn lint:js;yarn lint:scss",
     "lint:js": "eslint \"packages/**/{*.js,*.vue}\"",
     "lint:scss": "stylelint 'packages/webphone/**/*.scss'",
-    "prepare": "snowpack --exclude \"packages/webphone/test/**\" --include \"packages/webphone/**/*.js\" --dest build/static/web_modules",
+    "prepare": "snowpack --exclude \"packages/webphone/test/**\" --include \"{packages/webphone/**/*.js,packages/sip/*.js}\" --dest build/static/web_modules",
     "release": "standard-version",
     "icons": "vsvg -s packages/theme/src/svg/ --es6 -t packages/theme/src/js"
   },
