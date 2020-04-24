@@ -1,8 +1,8 @@
 version: "3.0"
 services:
   asterisk:
-    build: ./asterisk
     container_name: asterisk
+    image: garage11/asterisk:latest
     depends_on:
       - db
       - coturn
