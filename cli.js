@@ -206,6 +206,7 @@ tasks.watch = new Task('watch', async function() {
         chokidar.watch([
             path.join('!', settings.dir.src, 'js', 'templates.js'), // Templates are handled by the Vue task
             path.join(settings.dir.packages, 'webphone', '**', '*.js'),
+            path.join(settings.dir.packages, 'sig11', '**', '*.js'),
             path.join(settings.dir.packages, 'sip', '**', '*.js'),
         ]).on('change', async(file) => {
             await tasks.js.start(entrypoint.js, file)

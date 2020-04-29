@@ -1,16 +1,62 @@
-import Endpoint from '@ca11/sig11/lib/endpoint.js'
+// import Endpoint from '@ca11/sig11/lib/endpoint.js'
 import Module from '../lib/module.js'
-import Network from '@ca11/sig11/lib/network.js'
 
+import SIG11Call from '@ca11/sig11/lib/call.js'
+import SIG11Client from '@ca11/sig11/client.js'
 
 class ModuleSIG11 extends Module {
 
     constructor(app) {
         super(app)
-        app.sig11 = this
 
-        this.network = new Network(this.app)
+        // this.network = new Network(this.app)
         this.reconnect = true
+
+        // Remote node signalled that the call is accepted.
+        this.app.on('sig11:call-answer', ({answer, callId}) => {
+            this.calls[callId].setupAnswer(answer)
+        })
+
+
+        this.app.on('sig11:call-candidate', ({callId, candidate}) => {
+            // Only accept candidates for a valid call.
+            if (!this.calls[callId]) return
+            if (this.calls[callId].state.status === 'bye') return
+
+            const pc = this.calls[callId].pc
+            // The RTCPeerConnection is not available in the early
+            // state of a call. Candidates are temporarily stored to
+            // be processed when the RTCPeerConnection is made.
+            if (pc && candidate) pc.addIceCandidate(new RTCIceCandidate(candidate))
+            else {
+                this.calls[callId].candidates.push(candidate)
+            }
+        })
+
+
+        // An incoming call.
+        this.app.on('sig11:call-offer', ({callId, nodeId, offer}) => {
+            // const node = this.app.sig11.network.node(nodeId)
+            const description = {direction: 'incoming', id: callId, node, offer}
+            // For now, don't support call waiting and abandon the incoming
+            // call when there is already a call going on.
+            if (Object.keys(this.calls).length) {
+                this.app.sig11.emit(nodeId, 'call-terminate', {callId, status: 'callee_busy'})
+                return
+            }
+
+            const call = new SIG11Call(this.app, description)
+            this.app.logger.info(`${this}incoming call ${callId}:${nodeId}`)
+            this.app.Vue.set(this.app.state.caller.calls, call.id, call.state)
+            this.calls[call.id] = call
+
+            call.start()
+        })
+
+
+        this.app.on('sig11:call-terminate', ({callId, status}) => {
+            this.calls[callId].terminate(status, {remote: false})
+        })
 
         this.app.on('ca11:services', async() => {
             if (!this.keypair) {
@@ -23,27 +69,20 @@ class ModuleSIG11 extends Module {
                     this.app.setState({sig11: {identity}}, {persist: true})
                 }
 
-                await this.network.setIdentity(keypair)
+                // await this.network.setIdentity(keypair)
             }
 
             const enabled = this.app.state.sig11.enabled
-            app.logger.info(`${this}sig11 ${enabled ? 'enabled' : 'disabled'}`)
-            if (enabled) this.connect()
+            app.logger.debug(`${this}sig11 ${enabled ? 'enabled' : 'disabled'}`)
+            if (enabled) {
+                this.connect()
+            }
         })
-
-        this.app.on('sig11:node-removed', (node) => {
-            this.network.removeNode(node.id)
-        })
-
-        this.app.on('sig11:node-added', ({node, parent}) => {
-            this.network.addNode(node, parent)
-        })
-
 
         // Request comes in to open a new secured session between two nodes.
         this.app.on('sig11:session', async({nodeId, signedPublicKey}) => {
             // Generate rsa public key for advertised nodeId.
-            const node = this.network.node(nodeId)
+            // const node = this.network.node(nodeId)
             if (!node) throw new Error('handshake from unknown node')
 
             const ecdh = await crypto.subtle.generateKey({name: 'ECDH', namedCurve: 'P-256'}, true, ['deriveKey'])
@@ -53,9 +92,9 @@ class ModuleSIG11 extends Module {
             const signedPublicKeyRaw = await this.signEcPublicKey(ecdh)
 
             // Send this side's signed ec public key back.
-            const data = await this.network.protocol.outRelay(node.id, 'session-ack', {
-                signedPublicKey: this.app.crypto.__dataArrayToBase64(signedPublicKeyRaw),
-            })
+            // const data = await this.network.protocol.outRelay(node.id, 'session-ack', {
+            //     signedPublicKey: this.app.crypto.__dataArrayToBase64(signedPublicKeyRaw),
+            // })
             this.ws.send(data)
         })
 
@@ -77,10 +116,10 @@ class ModuleSIG11 extends Module {
         this.app.on('sig11:network', ({edges, identity, nodes}) => {
             // Add the provider of this network as an endpoint,
             // because it has a transport.
-            const endpoint = new Endpoint(this.network, identity, this.ws)
-            this.network.addEndpoint(endpoint)
+            // const endpoint = new Endpoint(this.network, identity, this.ws)
+            // this.network.addEndpoint(endpoint)
             // Import the remove network layout.
-            this.network.import({edges, nodes})
+            // this.network.import({edges, nodes})
             this.app.setState({sig11: {status: 'registered'}})
         })
     }
@@ -108,177 +147,35 @@ class ModuleSIG11 extends Module {
     }
 
 
-    connect() {
-        // Close the connection and let the onClose event
-        // do a new connection attempt.
-        if (['connected', 'registered'].includes(this.app.state.sig11.status)) {
-            this.disconnect()
-            return
-        }
+    call(description) {
+        // Search node that has the appropriate number.
+        let node = this.app.sig11.network.filterNode({number: description.number})
+        if (!node.length) return null
+        description.node = node[0]
 
+        return new SIG11Call(this.app, description)
+    }
+
+
+    async connect() {
         const endpoint = this.app.state.sig11.endpoint
-        this.app.logger.info(`${this}connect to sig11 endpoint: ${endpoint}`)
 
-        if (!endpoint.includes('ws://') && !endpoint.includes('wss://')) {
-            this.ws = new WebSocket(`wss://${endpoint}`, 'sig11')
-        } else {
-            this.ws = new WebSocket(endpoint, 'sig11')
-        }
+        this.client = new SIG11Client({endpoint})
 
-        this.ws.onopen = this.onOpen.bind(this)
-        this.ws.onclose = this.onClose.bind(this)
-    }
-
-
-    disconnect(reconnect = true) {
-        this.reconnect = reconnect
-        this.ws.close()
-        delete this.ws
-    }
-
-
-    /**
-     * Send an encrypted message across the SIG11
-     * network to a node.
-     * @param {String} nodeId - ID of the node to emit the message on.
-     * @param {String} event - The event to emit.
-     * @param {Object} payload - Payload to send.
-     */
-    async emit(nodeId, event, payload) {
-        if (event.includes('sig11:')) throw new Error('invalid `sig11:` prefix')
-
-        const node = this.network.node(nodeId)
-        if (!node.sessionQ) node.sessionQ = []
-
-        // A sessionKey must be negotiated before sending
-        // any data over the network. Messages trying to be
-        // send are queud and sent after negotiation.
-        if (!node.sessionKey) {
-            if (node._negotiating) {
-                node.sessionQ.push(async() => {
-                    const message = await this.network.protocol.outRelay(node.id, event, payload, node.sessionKey)
-                    return message
-                })
-                return
-            } else {
-                await this.negotiateSession(node)
-            }
-        }
-
-        const message = await this.network.protocol.outRelay(node.id, event, payload, node.sessionKey)
-        this.ws.send(message)
-        // Send queued messages.
-        const messages = await Promise.all(node.sessionQ.map((x) => x()))
-        messages.forEach((msg) => this.ws.send(msg))
-    }
-
-
-    /**
-     * Create a public key handshake to negotiate
-     * a secure connection with.
-     * @param {String} node - The Node to start the session with.
-     * @returns {Promise} - Resolves when the AES secret is known.
-     */
-    async negotiateSession(node) {
-        node._negotiating = true
-        // eslint-disable-next-line no-async-promise-executor
-        return new Promise(async(resolve, reject) => {
-            node._sessionPromise = {reject, resolve}
-            // Generate a transient ECDH keypair.
-            node.ecdh = await crypto.subtle.generateKey({name: 'ECDH', namedCurve: 'P-256'}, true, ['deriveKey'])
-            const signedPublicKeyRaw = await this.signEcPublicKey(node.ecdh)
-            const signedPublicKey = this.app.crypto.__dataArrayToBase64(signedPublicKeyRaw)
-
-            const data = await this.network.protocol.outRelay(node.id, 'session', {signedPublicKey})
-            this.ws.send(data)
+        this.client.on('connected', () => {
+            this.app.logger.info(`${this}connected with ${endpoint}`)
+            this.app.setState({sig11: {status: 'connected'}})
+            const identity = this.app.state.sig11.identity
+            this.client.register(identity)
         })
-    }
 
+        this.client.connect()
 
-    onClose() {
-        this.app.setState({sig11: {status: 'disconnected'}})
-        if (this.reconnect) {
-            this.app.logger.debug(`${this}transport closed (reconnect)`)
-            setTimeout(() => {
-                this.connect()
-            }, 500)
-        } else {
-            this.app.logger.debug(`${this}transport closed`)
-        }
-    }
-
-
-    onMessage(e) {
-        const msg = JSON.parse(e.data)
-        this.network.protocol.in(msg)
-    }
-
-
-    onOpen() {
-        this.app.logger.debug(`${this}transport open`)
-        this.app.setState({sig11: {status: 'connected'}})
-
-        const identity = this.app.state.sig11.identity
-
-        this.ws.send(this.network.protocol.out('identify', {
-            headless: this.app.env.isNode,
-            name: identity.name,
-            number: identity.number,
-            publicKey: identity.publicKey,
-        }))
-
-        this.ws.onmessage = this.onMessage.bind(this)
-    }
-
-
-    async signEcPublicKey(ecdh) {
-        const publicKeyRaw = await crypto.subtle.exportKey('raw', ecdh.publicKey)
-        const signatureRaw = await crypto.subtle.sign(
-            {name: 'RSA-PSS', saltLength: 16}, this.network.keypair.privateKey, publicKeyRaw,
-        )
-
-        const signedPublicKeyRaw = new Uint8Array(publicKeyRaw.byteLength + signatureRaw.byteLength)
-        signedPublicKeyRaw.set(new Uint8Array(publicKeyRaw))
-        signedPublicKeyRaw.set(new Uint8Array(signatureRaw), publicKeyRaw.byteLength)
-        return signedPublicKeyRaw
     }
 
 
     toString() {
         return `${this.app}[mod-sig11] `
-    }
-
-
-    async verifyEcPublicKey(ecdh, node, signedPublicKey) {
-        const signedPublicKeyRaw = this.app.crypto.__base64ToDataArray(signedPublicKey)
-
-        let position = signedPublicKeyRaw.byteLength - 256
-        const signature = signedPublicKeyRaw.slice(position)
-        const nodeEcPublicKeyRaw = signedPublicKeyRaw.slice(0, position)
-
-        const nodeRsaPubKey = await crypto.subtle.importKey(
-            'jwk', node.publicKey, this.app.crypto.rsa.params, true, ['verify'],
-        )
-
-        // Verify that this message came from the public rsa identity.
-        const res = await crypto.subtle.verify(
-            {name: 'RSA-PSS', saltLength: 16 }, nodeRsaPubKey, signature, nodeEcPublicKeyRaw,
-        )
-
-        if (!res) throw new Error('incorrect session signature')
-        // We verified that the signature was sent by an entity
-        // that is in control of the private RSA key . Proceed
-        // with establishing a shared secret between nodeId and
-        // this peer.
-        const nodeEcPublicKey = await crypto.subtle.importKey(
-            'raw', nodeEcPublicKeyRaw, {name: 'ECDH', namedCurve: 'P-256'}, true, [ ],
-        )
-
-        return await crypto.subtle.deriveKey(
-            {name: 'ECDH', public: nodeEcPublicKey},
-            ecdh.privateKey,
-            {length: 256, name: 'aes-gcm'}, false, ['decrypt', 'encrypt'],
-        )
     }
 }
 

@@ -1,4 +1,4 @@
-class Protocol {
+class Message {
     constructor(network) {
         this.network = network
         this.app = this.network.app

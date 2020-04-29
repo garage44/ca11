@@ -224,12 +224,6 @@ class Call {
         else throw new Error(`invalid call direction: ${this.state.direction}`)
     }
 
-
-    /**
-    * Set the final call status on termination and
-    * fire off the call closing ritual.
-    * @param {String} status - Terminate with a set status.
-    */
     terminate(status = null) {
         if (!status) {
             if (this.state.status === 'accepted') status = 'bye'
@@ -256,12 +250,6 @@ class Call {
         }
     }
 
-
-    /**
-     * Generate a representational name for this module.
-     * Used for logging.
-     * @returns {String} - An identifier for this module.
-     */
     toString() {
         return `${this.app}[call] [${this.id}] `
     }

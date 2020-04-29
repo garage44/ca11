@@ -1,7 +1,4 @@
-import Call from '../call.js'
-
-
-class CallSIP extends Call {
+class Call {
     /**
     * @param {AppBackground} app - The background application.
     * @param {Object} [description] - SIP call description.
@@ -9,7 +6,7 @@ class CallSIP extends Call {
     * @param {Boolean} [options.silent] - Setup a Call without interfering with the UI.
     */
     constructor(app, description) {
-        super(app, description)
+        // super(app, description)
 
         this.tracks = {}
         this.state.protocol = 'sip'
@@ -147,6 +144,15 @@ class CallSIP extends Call {
     outgoing() {
         super.outgoing()
         const uri = `sip:${this.state.endpoint}@${this.app.state.sip.endpoint.split('/')[0]}`
+
+
+        const stream = this.app.state.settings.webrtc.media.stream
+        const localStream = this.app.media.streams[stream[stream.type].id]
+
+        console.log("CALL INVITE", localStream)
+        this.ua.invite('1000', localStream)
+
+
         this.session = this.app.sip.ua.invite(uri)
 
         this.setState({stats: {callId: this.session.request.call_id}})
@@ -251,4 +257,4 @@ class CallSIP extends Call {
     }
 }
 
-export default CallSIP
+export default Call

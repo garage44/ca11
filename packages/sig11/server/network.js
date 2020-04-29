@@ -1,19 +1,11 @@
 import graphlib from 'graphlib'
-
-import Protocol from './protocol.js'
-import D3 from './d3.js'
-
+import Message from '../lib/message.js'
 
 class Network {
 
     constructor(app) {
         this.app = app
-        this.protocol = new Protocol(this)
-
-        // Reactive d3'ified graphlib.
-        if (app.env.isBrowser) {
-            this.d3 = new D3(this.app)
-        }
+        this.protocol = new Message(this)
 
         this.graph = new graphlib.Graph({directed: false})
         // Nodes with a transport.
@@ -32,7 +24,6 @@ class Network {
         this.graph.setNode(node.id, node)
         if (parent) this.graph.setEdge(parent.id, node.id)
         this.app.logger.debug(`${this}node added ${node.id.sid()} (${this.graph.nodes().length})`)
-        if (this.d3) this.d3.addNode(node, parent)
     }
 
 
@@ -86,10 +77,6 @@ class Network {
                 this.graph.setEdge(edge.v, edge.w)
             }
         }
-
-        if (this.d3) {
-            this.app.setState({sig11: {network: this.d3.graph(this.graph)}})
-        }
     }
 
 
@@ -117,8 +104,6 @@ class Network {
 
 
     removeNode(nodeId) {
-        if (this.d3) this.d3.removeNode(nodeId)
-
         for (const edge of this.graph.edges()) {
             if (edge.v === nodeId || edge.w === nodeId) {
                 this.graph.removeEdge(edge)
@@ -144,11 +129,6 @@ class Network {
         return this.identity
     }
 
-
-    /**
-    * Generate a representational name for this module.
-    * @returns {String} - An identifier for this module.
-    */
     toString() {
         return `${this.app}[net] `
     }

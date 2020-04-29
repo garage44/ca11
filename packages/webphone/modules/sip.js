@@ -1,6 +1,7 @@
 
 import Module from '../lib/module.js'
-import Sip from '@ca11/sip'
+// import SIPCall from './call/sip.js'
+import SipClient from '@ca11/sip/client.js'
 
 
 class ModuleSIP extends Module {
@@ -10,7 +11,7 @@ class ModuleSIP extends Module {
 
         this.app.on('ca11:services', () => {
             const enabled = this.app.state.sip.enabled
-            app.logger.info(`${this}sip ${enabled ? 'enabled' : 'disabled'}`)
+            app.logger.debug(`${this}sip ${enabled ? 'enabled' : 'disabled'}`)
             if (enabled) this.connect()
         })
 
@@ -64,6 +65,11 @@ class ModuleSIP extends Module {
     }
 
 
+    call(description) {
+        return new SIPCall(this.app, description)
+    }
+
+
     async connect() {
         if (['connected', 'registered'].includes(this.app.state.sip.status)) {
             this.disconnect()
@@ -75,106 +81,35 @@ class ModuleSIP extends Module {
         const username = this.app.state.sip.account.username
 
 
-        this.sip = new Sip({
+        this.client = new SipClient({
+            endpoint: this.app.state.sip.endpoint,
             logger: this.app.logger,
             password: this.app.state.sip.account.password,
-            server: this.app.state.sip.endpoint,
+            stun: this.app.state.settings.webrtc.stun,
             user: username,
         })
 
-        // this.ua = new SIP.UA({
-        //     authorizationUser: username,
-        //     autostart: false,
-        //     autostop: false,
-        //     log: {
-        //         builtinEnabled: true,
-        //         level: 'error',
-        //     },
-        //     // Incoming unanswered calls are terminated after x seconds.
-        //     noanswertimeout: 60,
-        //     password: this.app.state.sip.account.password,
-        //     register: true,
-        //     sessionDescriptionHandlerFactory: (session, options) => {
-        //         // The default SessionDescriptionHandler, but with some
-        //         // customizations to deal with existing streams.
-        //         // See: https://github.com/onsip/SIP.js/blob/master/src/Web/SessionDescriptionHandler.ts
-        //         const factory = SIP.Web.SessionDescriptionHandler.defaultFactory(session, options)
-        //         const _this = this
-
-        //         factory.acquire = async function() {
-        //             // Use the local stream from CA11.
-        //             const streamState = _this.app.state.settings.webrtc.media.stream
-        //             const localStreamId = streamState[streamState.type].id
-        //             const stream = _this.app.media.streams[localStreamId]
-
-        //             _this.app.logger.info(`${_this}local stream acquired for peer connection: ${stream.id}`)
-
-        //             this.observer.trackAdded()
-        //             this.emit('userMedia', stream)
-
-        //             for (const sender of this.peerConnection.getSenders()) {
-        //                 _this.app.logger.info(`${_this}remove track from peer connection: ${stream.id}`)
-        //                 this.peerConnection.removeTrack(sender)
-        //             }
-
-        //             for (const track of stream.getTracks()) {
-        //                 this.peerConnection.addTrack(track, stream)
-        //                 _this.app.logger.debug(`${_this}local ${track.kind} track ${track.id} added to peer connection`)
-        //             }
-
-        //             return stream
-        //         }
-
-        //         // Only close remote tracks; keep the local CA11 stream intact.
-        //         factory.close = function() {
-        //             _this.app.logger.debug(`${_this}closing peerconnection`)
-        //             for (const receiver of this.peerConnection.getReceivers()) {
-        //                 if (receiver.track) {
-        //                     receiver.track.stop()
-        //                 }
-        //             }
-
-        //             this.resetIceGatheringComplete()
-        //             this.peerConnection.close()
-        //         }
-
-        //         return factory
-        //     },
-        //     sessionDescriptionHandlerFactoryOptions: {
-        //         constraints: this.app.media._getUserMediaFlags(),
-        //         peerConnectionOptions: {
-        //             rtcConfiguration: {
-        //                 iceServers: this.app.state.settings.webrtc.stun.map((i) => ({urls: i})),
-        //                 sdpSemantics: 'unified-plan',
-        //             },
-        //         },
-        //     },
-        //     traceSip: false,
-        //     transportOptions: {
-        //         // Reconnects are handled manually.
-        //         maxReconnectionAttempts: 0,
-        //         wsServers: wsServers,
-        //     },
-        //     uri: `${username}@${this.app.state.sip.endpoint}`,
-        //     userAgentString: this.userAgent(),
-        // })
-
-        // Bind all events.
-        this.ua.on('registered', this.onRegistered.bind(this))
-        this.ua.on('registrationFailed', this.onRegistrationFailed.bind(this))
-        this.ua.on('transportCreated', () => {
+        this.client.on('registered', this.onRegistered.bind(this))
+        this.client.on('registrationFailed', this.onRegistrationFailed.bind(this))
+        this.client.on('transportCreated', () => {
             this.ua.transport.on('connected', this.onConnected.bind(this))
             this.ua.transport.on('disconnected', this.onDisconnected.bind(this))
         })
-        this.ua.on('unregistered', this.onUnregistered.bind(this))
+        this.client.on('unregistered', this.onUnregistered.bind(this))
 
-        this.ua.on('message', function(message) {
+        this.client.on('message', function(message) {
             console.log("MESSAGE", message.body)
         })
 
-        this.app.emit('sip:ua')
+        this.client.on('invite', this.onInvite.bind(this))
 
-        this.ua.start()
+        this.client.on('sip:dtmf', ({callId, key}) => {
+            this.app.modules.caller.calls[callId].session.dtmf(key)
+        })
+
+        this.client.emit('sip:ua')
+
+        this.client.connect()
     }
 
 
@@ -223,8 +158,45 @@ class ModuleSIP extends Module {
     }
 
 
+    onInvite(session) {
+        this.app.logger.debug(`${this}<event:invite>`)
+
+        const deviceReady = this.app.state.settings.webrtc.devices.ready
+        const dnd = this.app.state.app.dnd
+        const microphoneAccess = this.app.state.settings.webrtc.media.permission
+
+        let acceptCall = true
+
+        if (dnd || !microphoneAccess || !deviceReady) {
+            acceptCall = false
+            session.terminate()
+        }
+
+        if (Object.keys(this.plugin.calls).length) {
+            acceptCall = false
+            session.terminate({
+                reasonPhrase: 'call waiting is not supported',
+                statusCode: 486,
+            })
+        }
+
+        if (!acceptCall) return
+
+        const description = {
+            protocol: 'sip',
+            session,
+        }
+
+        const call = new SIPCall(this.app, description, {silent: !acceptCall})
+        call.start()
+        this.app.Vue.set(this.app.state.caller.calls, call.id, call.state)
+        this.app.modules.caller.calls[call.id] = call
+        this.app.logger.info(`${this}incoming call ${call.id} allowed by invite`)
+    }
+
+
     onRegistered() {
-        this.app.logger.debug(`${this}ua registered`)
+        this.app.logger.info(`${this}registered at ${this.client.endpoint}`)
         if (this.__registerPromise) {
             this.__registerPromise.resolve()
             delete this.__registerPromise
@@ -265,8 +237,6 @@ class ModuleSIP extends Module {
      */
     userAgent() {
         const env = this.app.env
-        // Don't use template literals, because envify
-        // can't deal with string replacement.
         let userAgent = 'CA11/' + globalThis.env.VERSION + ' '
         if (env.isLinux) userAgent += '(Linux/'
         else if (env.isMacOS) userAgent += '(MacOS/'

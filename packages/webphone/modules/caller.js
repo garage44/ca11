@@ -1,6 +1,4 @@
 import Module from '../../lib/module.js'
-import SIG11Caller from './sig11/caller.js'
-import SIPCaller from './sip/caller.js'
 import Vue from 'vue/dist/vue.runtime.js'
 
 
@@ -9,16 +7,13 @@ class ModuleCaller extends Module {
     constructor(app) {
         super(app)
         this.calls = {}
-        this.callers = {
-            sig11: new SIG11Caller(this.app, this),
-            sip: new SIPCaller(this.app, this),
-        }
 
         this.reconnect = true
         // The default connection timeout to start with.
         this.retryDefault = {interval: 250, limit: 10000, timeout: 250}
         // Used to store retry state.
         this.retry = Object.assign({}, this.retryDefault)
+
         this.app.on('caller:call-accept', ({callId}) => this.calls[callId].accept())
         this.app.on('caller:call-activate', ({callId, holdInactive, unholdActive}) => {
             let call = null

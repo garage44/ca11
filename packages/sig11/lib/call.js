@@ -1,10 +1,7 @@
-import Call from '../call.js'
-
-
-class CallSIG11 extends Call {
+class Call {
 
     constructor(app, description) {
-        super(app, description)
+        // super(app, description)
 
         this.candidates = []
         this.node = description.node
@@ -38,7 +35,7 @@ class CallSIG11 extends Call {
     * is executed on the initiating side.
     */
     async accept() {
-        super.accept()
+        // super.accept()
 
         this.pc = new RTCPeerConnection({
             iceServers: this.app.state.settings.webrtc.stun.map((i) => ({urls: i})),
@@ -79,7 +76,7 @@ class CallSIG11 extends Call {
 
 
     incoming() {
-        super.incoming()
+        // super.incoming()
     }
 
 
@@ -93,12 +90,8 @@ class CallSIG11 extends Call {
         e.track.onended = () => {this._cleanupStream(stream.id)}
     }
 
-    /**
-    * Setup an outgoing call to a destination node.
-    * @param {(Number|String)} number - The number to call.
-    */
     async outgoing() {
-        super.outgoing()
+        // super.outgoing()
 
         this.pc = new RTCPeerConnection({
             iceServers: this.app.state.settings.webrtc.stun.map((i) => ({urls: i})),
@@ -169,12 +162,6 @@ class CallSIG11 extends Call {
         }
     }
 
-
-    toString() {
-        return `${this.app}[CallSIG11][${this.id}] `
-    }
-
-
     unhold() {
         if (this.session) {
             this.session.unhold({
@@ -187,4 +174,4 @@ class CallSIG11 extends Call {
     }
 }
 
-export default CallSIG11
+export default Call
