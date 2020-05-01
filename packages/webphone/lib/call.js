@@ -1,3 +1,6 @@
+import CallSig11 from '@ca11/sig11/call.js'
+import CallSip from '@ca11/sip/call.js'
+
 class Call {
 
     constructor(app, description) {
@@ -6,11 +9,15 @@ class Call {
         this.streams = {}
         this._started = false
 
+        this.callHandlers = {
+            sig11: CallSig11,
+            sip: CallSip,
+        }
+
         this.busyTone = app.sounds.busyTone
         this.translations = app.helpers.getTranslations().call
 
-        if (!description.id) this.id = shortid()
-        else this.id = description.id
+        this.id = shortid()
 
         this.state = {
             active: true,
@@ -41,6 +48,34 @@ class Call {
                 type: 'attended',
             },
         }
+
+        app._mergeDeep(this.state, {
+            direction: description.direction,
+            protocol: description.protocol,
+            status: description.direction === 'incoming' ? 'invite' : 'new',
+        })
+
+        this.app.logger.info(`${this}new ${description.protocol} call`)
+
+        const client = this.app.clients[description.protocol]
+        this.handler = new this.callHandlers[description.protocol](client, {description, id: this.id})
+        this.handler.on('track', (newStream, track) => {
+            this.addStream(newStream, track.kind)
+
+            const path = `caller.calls.${this.id}.streams.${newStream.id}`
+
+            track.onunmute = () => {this.app.setState({muted: false}, {path})}
+            track.onmute = () => {this.app.setState({muted: true}, {path})}
+            track.onended = () => {
+                this.app.logger.debug(`${this}remove ${track.kind} track ${track.id}`)
+                delete this.tracks[track.id]
+                this._cleanupStream(newStream.id)
+            }
+        })
+
+        this.handler.on('call:message', (message) => {
+            console.log(message)
+        })
     }
 
 
@@ -194,6 +229,11 @@ class Call {
 
 
     outgoing() {
+        const stream = this.app.state.settings.webrtc.media.stream
+        const localStream = this.app.media.streams[stream[stream.type].id]
+
+        this.handler.outgoing(localStream)
+
         // Try to fill in the name from contacts.
         const contacts = this.app.state.contacts.contacts
         let name = ''
@@ -225,6 +265,8 @@ class Call {
     }
 
     terminate(status = null) {
+        this.handler.terminate()
+
         if (!status) {
             if (this.state.status === 'accepted') status = 'bye'
             else if (this.state.status === 'create') status = 'caller_unavailable'

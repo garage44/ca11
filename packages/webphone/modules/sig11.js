@@ -1,8 +1,7 @@
-// import Endpoint from '@ca11/sig11/lib/endpoint.js'
+import CallSIG11 from '@ca11/sig11/call.js'
+import ClientSIG11 from '@ca11/sig11/client.js'
 import Module from '../lib/module.js'
 
-import SIG11Call from '@ca11/sig11/lib/call.js'
-import SIG11Client from '@ca11/sig11/client.js'
 
 class ModuleSIG11 extends Module {
 
@@ -45,7 +44,7 @@ class ModuleSIG11 extends Module {
                 return
             }
 
-            const call = new SIG11Call(this.app, description)
+            const call = new CallSIG11(this.app, description)
             this.app.logger.info(`${this}incoming call ${callId}:${nodeId}`)
             this.app.Vue.set(this.app.state.caller.calls, call.id, call.state)
             this.calls[call.id] = call
@@ -153,20 +152,27 @@ class ModuleSIG11 extends Module {
         if (!node.length) return null
         description.node = node[0]
 
-        return new SIG11Call(this.app, description)
+        return new CallSIG11(this.app, description)
     }
 
 
     async connect() {
         const endpoint = this.app.state.sig11.endpoint
 
-        this.client = new SIG11Client({endpoint})
+        this.client = new ClientSIG11({endpoint})
+        this.app.clients.sig11 = this.client
 
         this.client.on('connected', () => {
             this.app.logger.info(`${this}connected with ${endpoint}`)
             this.app.setState({sig11: {status: 'connected'}})
             const identity = this.app.state.sig11.identity
             this.client.register(identity)
+        })
+
+        this.client.on('disconnected', (reconnect) => {
+            this.app.setState({sig11: {status: 'disconnected'}})
+            this.app.logger.debug(`${this}transport closed (reconnect: ${reconnect})`)
+
         })
 
         this.client.connect()

@@ -22,8 +22,7 @@
     </div>
 
     <MenuCallOptions :call="callActive" />
-
-    <div v-if="call" class="call-status">
+    <div v-if="callActive" class="call-status">
         <span>{{ callStatus }}</span>
         <icon v-if="call.protocol === 'sig11'" name="nodes" />
         <icon v-else-if="call.protocol === 'sip'" name="cloud" />

@@ -78,10 +78,13 @@ tasks.assets = new Task('assets', async function() {
 tasks.build = new Task('build', async function() {
     await tasks.vue.start(entrypoint.vue)
     await Promise.all([
+        tasks.assets.start(),
         tasks.scss.start(entrypoint.scss),
         tasks.js.start(entrypoint.js),
         tasks.html.start(entrypoint.html),
     ])
+
+
 })
 
 tasks.html = new Task('html', async function() {

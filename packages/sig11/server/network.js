@@ -1,11 +1,11 @@
 import graphlib from 'graphlib'
-import Message from '../lib/message.js'
+import Protocol from '../lib/protocol.js'
 
 class Network {
 
     constructor(app) {
         this.app = app
-        this.protocol = new Message(this)
+        this.protocol = new Protocol(this)
 
         this.graph = new graphlib.Graph({directed: false})
         // Nodes with a transport.

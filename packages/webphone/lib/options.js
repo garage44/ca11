@@ -1,6 +1,6 @@
 import activities from '../modules/activities.js'
 import app from '../modules/app.js'
-import caller from '../modules/caller/caller.js'
+import caller from '../modules/caller.js'
 import contacts from '../modules/contacts/contacts.js'
 import env from './env.js'
 

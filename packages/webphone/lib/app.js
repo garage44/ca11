@@ -18,6 +18,7 @@ class App extends EventEmitter {
     constructor(settings) {
         super(settings)
         this.env = env()
+        this.Vue = Vue
 
         this.utils = new Utils()
         this.logger = new Logger(this)

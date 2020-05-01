@@ -1,7 +1,7 @@
 
+import CallSIP from '@ca11/sip/call.js'
+import ClientSip from '@ca11/sip/client.js'
 import Module from '../lib/module.js'
-// import SIPCall from './call/sip.js'
-import SipClient from '@ca11/sip/client.js'
 
 
 class ModuleSIP extends Module {
@@ -66,7 +66,8 @@ class ModuleSIP extends Module {
 
 
     call(description) {
-        return new SIPCall(this.app, description)
+        console.log('NEW CALL')
+        return new CallSIP(this.app, description)
     }
 
 
@@ -81,13 +82,15 @@ class ModuleSIP extends Module {
         const username = this.app.state.sip.account.username
 
 
-        this.client = new SipClient({
+        this.client = new ClientSip({
             endpoint: this.app.state.sip.endpoint,
             logger: this.app.logger,
             password: this.app.state.sip.account.password,
             stun: this.app.state.settings.webrtc.stun,
             user: username,
         })
+
+        this.app.clients.sip = this.client
 
         this.client.on('registered', this.onRegistered.bind(this))
         this.client.on('registrationFailed', this.onRegistrationFailed.bind(this))
@@ -145,8 +148,7 @@ class ModuleSIP extends Module {
 
         this.retry = Object.assign({}, this.retryDefault)
         this.reconnect = false
-        // Don't use SIPJS reconnect logic, because it doesn't deal
-        // with offline detection and incremental retry timeouts.
+
         if (this.reconnect) {
             // Reconnection timer logic is performed only here.
             this.app.logger.debug(`${this}reconnect in ${this.retry.timeout} ms`)
@@ -187,7 +189,9 @@ class ModuleSIP extends Module {
             session,
         }
 
-        const call = new SIPCall(this.app, description, {silent: !acceptCall})
+        console.log("NEW CALL(INVITE)")
+
+        const call = new CallSIP(this.app, description, {silent: !acceptCall})
         call.start()
         this.app.Vue.set(this.app.state.caller.calls, call.id, call.state)
         this.app.modules.caller.calls[call.id] = call

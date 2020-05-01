@@ -18,13 +18,6 @@ class Utils {
     }
 
 
-    sanitizeNumber(number) {
-        number = String(number).replace('+', '00')
-        number = number.replace(/[^\d|!*|!#]/g, '')
-        return number
-    }
-
-
     sortByMultipleKey(keys, order = 1) {
         return (a, b) => {
             if (keys.length === 0) return 0

@@ -1,5 +1,5 @@
-import Module from '../../lib/module.js'
-import Vue from 'vue/dist/vue.runtime.js'
+import Call from '../lib/call.js'
+import Module from '../lib/module.js'
 
 
 class ModuleCaller extends Module {
@@ -18,6 +18,7 @@ class ModuleCaller extends Module {
         this.app.on('caller:call-activate', ({callId, holdInactive, unholdActive}) => {
             let call = null
             if (callId) call = this.calls[callId]
+
             this.activateCall(call, holdInactive, unholdActive)
         })
 
@@ -93,30 +94,6 @@ class ModuleCaller extends Module {
     }
 
 
-    /**
-    * Create and return a new `Call` object based on a
-    * call description.
-    * @param {Object} description - New call object.
-    * @param {String} [description.endpoint] - Endpoint to call to.
-    * @param {String} [description.protocol] - Protocol to use.
-    * @returns {Call} - A new or existing Call with status `new`.
-    */
-    _newCall(description) {
-        let call = this.callers[description.protocol].call(description)
-
-        this.calls[call.id] = call
-        call.state.endpoint = description.endpoint
-        call.setState(call.state)
-
-        if (!this.app.state.caller.calls[call.id]) {
-            Vue.set(this.app.state.caller.calls, call.id, call.state)
-        }
-
-        this.app.logger.info(`${this}created new ${call.state.protocol} call`)
-        return call
-    }
-
-
     _ready() {
         let state = {}
         if (!this.app.state.app.online) state.caller = {status: null}
@@ -144,14 +121,6 @@ class ModuleCaller extends Module {
     }
 
 
-    /**
-    * Set the active state on the target call, un-hold the call and
-    * put all other calls on-hold.
-    * @param {Call} [call] - A Call to activate.
-    * @param {Boolean} [holdOthers] - Unhold the call on activation.
-    * @param {Boolean} [unholdOwn] - Unhold the call on activation.
-    * @returns {Call|Boolean} - The Call or false.
-    */
     activateCall(call, holdOthers = true, unholdOwn = false) {
         const callIds = Object.keys(this.calls)
 
@@ -186,22 +155,12 @@ class ModuleCaller extends Module {
     }
 
 
-    /**
-    * Create - and optionally start - a new Call. This is the main
-    * event used to start a call with.
-    * @property {Object} description - Information about the new Call.
-    * @property {String} [description.endpoint] - The endpoint to call.
-    */
     call({description}) {
-        // Sanitize the number.
-        if (this.app.state.caller.description.protocol === 'sip') {
-            description.endpoint = this.app.utils.sanitizeNumber(description.endpoint)
-        }
-
         description.direction = 'outgoing'
-        let call = this._newCall(description)
+
+        const call = this.spawnCall(description)
         call.start()
-        // Sync the others transfer state of other calls to the new situation.
+        // Sync the transfer state of other calls to the new situation.
         this.transferState()
 
         // A newly created call is always activated unless another call is already ringing.
@@ -213,40 +172,8 @@ class ModuleCaller extends Module {
     }
 
 
-    callAction(action) {
-        let inviteCall = null
-
-        for (const callId of Object.keys(this.calls)) {
-            // Don't select a call that is already closing
-            if (this.calls[callId].state.status === 'invite') {
-                inviteCall = this.calls[callId]
-            }
-        }
-
-        const callActive = this.findCall({active: true, ongoing: true})
-
-        if (action === 'action-accept-hangup') {
-            if (inviteCall) inviteCall.accept()
-            else if (callActive) callActive.terminate()
-        } else if (action === 'action-decline-new') {
-            if (inviteCall) inviteCall.terminate()
-            else if (callActive) {
-                const call = this._newCall()
-                this.activateCall(call, true)
-                this.app.setState({ui: {layer: 'dialer'}})
-            }
-        } else if (action === 'action-hold-active') {
-            // Make sure the action isn't provoked on a closing call.
-            if (callActive) {
-                if (callActive.state.hold.active) callActive.unhold()
-                else callActive.hold()
-            }
-        }
-    }
-
-
     deleteCall(call) {
-        // This call is being cleaned up; move to a different call
+        // This call is getting cleaned up; move to a different call
         // when this call was the active call.
         if (call.state.active) {
             let newcallActive = null
@@ -281,11 +208,6 @@ class ModuleCaller extends Module {
     }
 
 
-    /**
-    * @param {Object} options - Options to pass.
-    * @param {Boolean} [options.ongoing] - Find the first Call that is going on.
-    * @returns {Call|null} - the current active ongoing call or null.
-    */
     findCall({active = false, ongoing = false} = {}) {
         let matchedCall = null
         for (const callId of Object.keys(this.calls)) {
@@ -308,19 +230,27 @@ class ModuleCaller extends Module {
     }
 
 
+    spawnCall(description) {
+        const desc = this.app.utils.copyObject(description)
+        this.app.logger.debug(`${this}spawn new ${description.protocol} call`)
+        const call = new Call(this.app, desc)
+
+        this.calls[call.state.id] = call
+
+        call.state.endpoint = desc.endpoint
+        call.setState(call.state)
+
+        this.app.Vue.set(this.app.state.caller.calls, call.state.id, call.state)
+
+        return call
+    }
+
+
     toString() {
         return `${this.app}[mod-caller] `
     }
 
 
-    /**
-    * Set the transfer state of a source call and update the transfer state of
-    * other calls. This method doesn't change the intended transfer status
-    * when no source Call is passed along. It just update outdated call state
-    * in that case.
-    * @param {Call} [sourceCall] - The call to update the calls status for.
-    * @param {Boolean} active - The transfer status to switch or update to.
-    */
     transferState(sourceCall = {id: null}, active) {
         const callIds = Object.keys(this.calls)
         // Look for an active transfer call when the source call isn't

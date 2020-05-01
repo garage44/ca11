@@ -46,6 +46,7 @@ class CA11 extends App {
 
         this.components = components(this)
         this.modules = {}
+        this.clients = {}
 
         this._loadModules(this.__modules)
 

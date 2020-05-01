@@ -63,9 +63,9 @@ the following themes:
       docker exec -w /root/asterisk/contrib/ast-db-manage -it asterisk alembic -c config.ini upgrade head
       psql -U asterisk -h 127.0.0.1 asterisk < postgres/sig11_asterisk.sql  # default pw is 'ca11ftw'
 
-- Start the signalling service
+- Start the sig11 service
 
-      node packages/sig11/service.js
+      node packages/sig11/server.js
 
 Restart the browser for the SSL certificate to be picked up and start the [softphone](https://dev.ca11.app).
 

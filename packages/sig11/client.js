@@ -53,14 +53,11 @@ class Sig11Client extends EventEmitter {
         })
     }
     onClose() {
-        this.app.setState({sig11: {status: 'disconnected'}})
+        this.emit('disconnected', this.reconnect)
         if (this.reconnect) {
-            this.app.logger.debug(`${this}transport closed (reconnect)`)
             setTimeout(() => {
                 this.connect()
             }, 500)
-        } else {
-            this.app.logger.debug(`${this}transport closed`)
         }
     }
     onMessage(e) {
@@ -74,12 +71,12 @@ class Sig11Client extends EventEmitter {
         this.emit('connected')
     }
     register(identity) {
-        this.ws.send(this.network.protocol.out('identify', {
-            headless: this.app.env.isNode,
-            name: identity.name,
-            number: identity.number,
-            publicKey: identity.publicKey,
-        }))
+        // this.ws.send(this.network.protocol.out('identify', {
+        //     headless: this.app.env.isNode,
+        //     name: identity.name,
+        //     number: identity.number,
+        //     publicKey: identity.publicKey,
+        // }))
     }
     async signEcPublicKey(ecdh) {
         const publicKeyRaw = await crypto.subtle.exportKey('raw', ecdh.publicKey)

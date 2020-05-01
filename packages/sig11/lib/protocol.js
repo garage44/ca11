@@ -1,7 +1,7 @@
-class Message {
+class Protocol {
     constructor(network) {
         this.network = network
-        this.app = this.network.app
+        // this.app = this.network.app
         this.msgId = 0
     }
 

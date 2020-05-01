@@ -21,7 +21,6 @@ import MenuCallOptions from './components/menu-call/components/options/options.j
 import MenuCommunicate from './components/menu-communicate/menu-communicate.js'
 import MenuCommunicateSwitcher from './components/menu-communicate/components/switcher/switcher.js'
 import MenuContext from './components/menu-context/menu-context.js'
-import Network from './components/network/network.js'
 import Notifications from './components/notifications/notifications.js'
 import ProtocolStatus from './components/protocol-status/protocol-status.js'
 import Session from './components/session/session.js'
@@ -57,7 +56,6 @@ export default function(app) {
         MenuCommunicate,
         MenuCommunicateSwitcher,
         MenuContext,
-        Network,
         Notifications,
         ProtocolStatus,
         Session,
