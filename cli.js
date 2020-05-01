@@ -39,7 +39,7 @@ const cli = {
 const tasks = {}
 
 const cleanCSS = new CleanCSS({level: 2, returnPromise: true, sourceMap: true})
-const vuePack = new VuePack({pathfilter: ['packages', 'webphone', 'src', 'components']})
+const vuePack = new VuePack({pathfilter: ['packages', 'webphone', 'components']})
 
 // Maps tasks to entrypoints.
 const entrypoint = {
@@ -247,6 +247,10 @@ yargs
         } else {
             tasks.watch.log(`build optimization: ${chalk.red('disabled')}`)
         }
+    })
+
+    .command('assets', 'generate build assets', () => {}, () => {
+        tasks.assets.start()
     })
 
     .command('build', 'generate project files', () => {}, () => {
