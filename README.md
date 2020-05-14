@@ -1,30 +1,34 @@
-# CA11 - Free WebRTC Telephony
+# CA11
+
+## WebRTC Telephony
+
+<https://ca11.app>
 
 [![Build status](https://github.com/garage11/ca11/workflows/test/badge.svg)](https://github.com/garage11/ca11/actions?query=workflow%3Atest)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
-The [CA11 project](https://github.com/garage11/ca11) started in 2019 with the
-purpose to make telephony more like the Web itself; accessible and without a
-need for accounts. In short, the CA11 project is a P2P webphone that comes
-with an open accountless signalling network. It aims to address the
-following issues:
+**[CA11](https://github.com/garage11/ca11)** was started in 2019 with the
+purpose to make telephony more like the Web; accessible and without a
+need for accounts. CA11 is a WebRTC softphone with flexible support for
+multiple signalling protocols. It implements the existing **SIP** protocol
+and a customized **SIG11** signalling. SIP is oriented towards centralized
+calling using a PBX; SIG11 focusses on P2P calling. CA11 aims to focus on
+the following themes:
 
-- Privacy; all calls and signalling messages are E2E encrypted
-- Accessibility; open network, all it takes is to open the webphone and start calling
-- Costs; operating a signalling service is extremely cheap; no centralized media pipes required
-- Compatibility; CA11 can use existing telephony signalling (SIP)
+- Privacy - Calls and Signalling messages must be E2E encrypted where possible
+- Accessibility - SIG11 features an open signalling network as a service
+- Costs - Bringing down hosting costs by decentralizing media flows
+- Compatibility - Calling over existing telephony networks (SIP)
 
-## Install
-
-### Requirements
+## Requirements
 
 - Chrom(e/ium) browser
 - Node.js 13+ (Native ESM)
 - Docker (or install manually using Docker as reference)
 
-### Steps
+## Installation
 
-- Clone the project & install dependencies:
+- Checkout the project & install dependencies:
 
       git clone git@github.com:garage11/ca11.git
       cd ca11
@@ -44,7 +48,7 @@ following issues:
 
       sudo ./ca_system.sh
 
-  > This shell-script for importing the CA into the system only works on Archlinux at the moment.
+> This shell-script for importing the CA into the system only works on Archlinux at the moment.
 
 - Add local hostname lookup for the default domains:
 
@@ -63,6 +67,8 @@ following issues:
 
       node packages/sig11/service.js
 
-Restart the browser for the SSL certificate to be picked up and open
-[the webphone](https://dev.ca11.app). Call one of the SIP testnumbers
-in contacts to verify that the SIP stack works as expected.
+Restart the browser for the SSL certificate to be picked up and start the [softphone](https://dev.ca11.app).
+
+## Verification
+
+- Call one of the SIP testnumbers in Contacts to verify the SIP stack functionality.
