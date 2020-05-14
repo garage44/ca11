@@ -3,12 +3,6 @@
 [![Build status](https://github.com/garage11/ca11/workflows/test/badge.svg)](https://github.com/garage11/ca11/actions?query=workflow%3Atest)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
-> Why do we need telephony subscriptions when we have the Web and WebRTC?
-
-VoIP providers deal with legacy networks, high operation costs, legislations,
-privacy issues and inertia. Newer players like Hangouts, Whatsapp and Skype
-innovate, but are stuffy walled gardens where users are being data-mined.
-
 The [CA11 project](https://github.com/garage11/ca11) started in 2019 with the
 purpose to make telephony more like the Web itself; accessible and without a
 need for accounts. In short, the CA11 project is a P2P webphone that comes
@@ -18,7 +12,7 @@ following issues:
 - Privacy; all calls and signalling messages are E2E encrypted
 - Accessibility; open network, all it takes is to open the webphone and start calling
 - Costs; operating a signalling service is extremely cheap; no centralized media pipes required
-- Compatibility; CA11 can use established telephony networks (SIP) when needed
+- Compatibility; CA11 can use existing telephony signalling (SIP)
 
 ## Install
 
