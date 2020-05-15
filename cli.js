@@ -83,8 +83,6 @@ tasks.build = new Task('build', async function() {
         tasks.js.start(entrypoint.js),
         tasks.html.start(entrypoint.html),
     ])
-
-
 })
 
 tasks.html = new Task('html', async function() {
@@ -244,6 +242,10 @@ yargs
     .help('help')
     .option('production', {alias: 'p', default: false, description: 'Production mode', type: 'boolean'})
     .middleware(async(argv) => {
+        if (!settings.version) {
+            settings.webphone.version = JSON.parse((await fs.readFile(path.join(settings.dir.src, 'package.json')))).version
+        }
+
         // Make sure the required build directories exist.
         await fs.mkdirp(path.join(settings.dir.build, 'static', 'js'))
         settings.production = argv.production

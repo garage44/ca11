@@ -1,27 +1,29 @@
 import CallSig11 from '@ca11/sig11/call.js'
 import CallSip from '@ca11/sip/call.js'
 
+const callHandlers = {
+    sig11: CallSig11,
+    sip: CallSip,
+}
+
+
 class Call {
 
     constructor(app, description) {
+        app.logger.info(`${this}new ${description.protocol} call`)
         this.app = app
+        this.id = shortid()
 
         this.streams = {}
         this._started = false
 
-        this.callHandlers = {
-            sig11: CallSig11,
-            sip: CallSip,
-        }
-
         this.busyTone = app.sounds.busyTone
         this.translations = app.helpers.getTranslations().call
 
-        this.id = shortid()
 
         this.state = {
             active: true,
-            direction: null, // incoming or outgoing
+            direction: description.direction, // incoming or outgoing
             endpoint: null,
             hangup: {
                 disabled: false,
@@ -55,10 +57,16 @@ class Call {
             status: description.direction === 'incoming' ? 'invite' : 'new',
         })
 
-        this.app.logger.info(`${this}new ${description.protocol} call`)
-
         const client = this.app.clients[description.protocol]
-        this.handler = new this.callHandlers[description.protocol](client, {description, id: this.id})
+
+        // Call handler is passed from the SIP module.
+        if (description.direction === 'incoming') {
+            this.handler = description.callHandler
+        }
+        if (description.direction === 'outgoing') {
+            this.handler = new callHandlers[description.protocol](client, {description, id: this.id})
+        }
+
         this.handler.on('track', (newStream, track) => {
             this.addStream(newStream, track.kind)
 
@@ -75,6 +83,11 @@ class Call {
 
         this.handler.on('call:message', (message) => {
             console.log(message)
+        })
+
+        this.handler.on('call:incoming', () => {
+            console.log("INCOMING CALL 123")
+            this.incoming()
         })
     }
 
@@ -209,6 +222,7 @@ class Call {
 
     incoming() {
         this.setState(this.state)
+
         if (this.silent) return
 
         const streamType = this.app.state.settings.webrtc.media.stream.type
@@ -223,6 +237,7 @@ class Call {
             window.open(url.replace('{endpoint}', this.state.endpoint), '_blank', 'alwaysLowered=yes')
         }
 
+        console.log("RINGGGG")
         this.app.modules.caller.activateCall(this, true)
         this.app.sounds.ringTone.play({loop: true})
     }

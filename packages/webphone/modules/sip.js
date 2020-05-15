@@ -1,5 +1,4 @@
-
-import CallSIP from '@ca11/sip/call.js'
+import Call from '../lib/call.js'
 import ClientSip from '@ca11/sip/client.js'
 import Module from '../lib/module.js'
 
@@ -62,12 +61,6 @@ class ModuleSIP extends Module {
                 }
             },
         }
-    }
-
-
-    call(description) {
-        console.log('NEW CALL')
-        return new CallSIP(this.app, description)
     }
 
 
@@ -160,7 +153,7 @@ class ModuleSIP extends Module {
     }
 
 
-    onInvite(session) {
+    onInvite(callHandler) {
         this.app.logger.debug(`${this}<event:invite>`)
 
         const deviceReady = this.app.state.settings.webrtc.devices.ready
@@ -171,27 +164,27 @@ class ModuleSIP extends Module {
 
         if (dnd || !microphoneAccess || !deviceReady) {
             acceptCall = false
-            session.terminate()
+            callHandler.terminate()
         }
 
-        if (Object.keys(this.plugin.calls).length) {
-            acceptCall = false
-            session.terminate({
-                reasonPhrase: 'call waiting is not supported',
-                statusCode: 486,
-            })
-        }
+        // if (Object.keys(this.plugin.calls).length) {
+        //     acceptCall = false
+        //     session.terminate({
+        //         reasonPhrase: 'call waiting is not supported',
+        //         statusCode: 486,
+        //     })
+        // }
 
         if (!acceptCall) return
 
         const description = {
+            callHandler,
+            direction: 'incoming',
             protocol: 'sip',
-            session,
+            // session,
         }
 
-        console.log("NEW CALL(INVITE)")
-
-        const call = new CallSIP(this.app, description, {silent: !acceptCall})
+        const call = new Call(this.app, description, {silent: !acceptCall})
         call.start()
         this.app.Vue.set(this.app.state.caller.calls, call.id, call.state)
         this.app.modules.caller.calls[call.id] = call
@@ -241,7 +234,7 @@ class ModuleSIP extends Module {
      */
     userAgent() {
         const env = this.app.env
-        let userAgent = 'CA11/' + globalThis.env.VERSION + ' '
+        let userAgent = 'CA11/' + globalThis.env.version + ' '
         if (env.isLinux) userAgent += '(Linux/'
         else if (env.isMacOS) userAgent += '(MacOS/'
         else if (env.isWindows) userAgent += '(Windows/'
