@@ -28,21 +28,22 @@ class CallSip extends EventEmitter {
 
     accept() {
         this.on('trackAdded', this.onTrack.bind(this))
-        this.session.accept({
-            sessionDescriptionHandlerOptions: {
-                constraints: this.app.media._getUserMediaFlags(),
-            },
-        })
+        // this.session.accept({
+        //     sessionDescriptionHandlerOptions: {
+        //         constraints: this.app.media._getUserMediaFlags(),
+        //     },
+        // })
     }
 
 
     hold() {
-        this.session.hold({
-            sessionDescriptionHandlerOptions: {
-                constraints: this.app.media._getUserMediaFlags(),
-            },
-        })
-        this.setState({hold: {active: true}})
+        console.log("HOLD CALL")
+        // this.session.hold({
+        //     sessionDescriptionHandlerOptions: {
+        //         constraints: this.app.media._getUserMediaFlags(),
+        //     },
+        // })
+        // this.setState({hold: {active: true}})
     }
 
 
@@ -143,7 +144,7 @@ class CallSip extends EventEmitter {
         } else if (message.context.method === 'BYE') {
             console.log("BUEEEE", this.tag)
         } else if (message.context.method === 'MESSAGE') {
-            this.emit('call:message', JSON.parse(message.content))
+            this.emit('call:message', JSON.parse(message.context.content))
         }
     }
 

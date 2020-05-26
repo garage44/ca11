@@ -272,7 +272,7 @@ class CA11 extends App {
 
 
     toString() {
-        return '[ca11] '
+        return '[app] '
     }
 }
 

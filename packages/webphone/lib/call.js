@@ -10,9 +10,9 @@ const callHandlers = {
 class Call {
 
     constructor(app, description) {
-        app.logger.info(`${this}new ${description.protocol} call`)
         this.app = app
         this.id = shortid()
+        app.logger.info(`${this}new ${description.protocol} call`)
 
         this.streams = {}
         this._started = false
@@ -204,6 +204,11 @@ class Call {
     }
 
 
+    accept() {
+        this.handler.accept()
+    }
+
+
     addStream(stream, kind, visible = true) {
         const streamState = {
             id: stream.id,
@@ -237,7 +242,6 @@ class Call {
             window.open(url.replace('{endpoint}', this.state.endpoint), '_blank', 'alwaysLowered=yes')
         }
 
-        console.log("RINGGGG")
         this.app.modules.caller.activateCall(this, true)
         this.app.sounds.ringTone.play({loop: true})
     }
@@ -308,7 +312,7 @@ class Call {
     }
 
     toString() {
-        return `${this.app}[call] [${this.id}] `
+        return `[call] [${this.id}] `
     }
 
 }
