@@ -153,7 +153,7 @@ export class SipResponse {
                 message += `User-Agent: CA11/undefined (Linux/Chrome) ca11\r\n`
             } else if (this.context.code === 180) {
                 message += `SIP/2.0 180 Ringing\r\n`
-                message += `Via: SIP/2.0/WS b55dhqu9asr5.invalid;branch=${this.context.branch}\r\n`
+                message += `Via: SIP/2.0/WS 127.0.0.1:8088;rport;branch=${this.context.branch}\r\n`
                 message += `From: <sip:${this.client.user}@sip.dev.ca11.app>;tag=${this.context.fromTag}\r\n`
                 message += `To: <sip:${this.client.contactName}@127.0.0.1>;tag=${this.context.toTag}\r\n`
                 message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
@@ -163,21 +163,22 @@ export class SipResponse {
                 message += `User-Agent: CA11/undefined (Linux/Chrome) ca11\r\n`
             } else if (this.context.code === 200) {
                 message += `SIP/2.0 200 OK\r\n`
-                message += `Via: SIP/2.0/WS b55dhqu9asr5.invalid;branch=${this.context.branch};alias\r\n`
+                message += `Via: SIP/2.0/WS 127.0.0.1:8088;rport;branch=${this.context.branch};alias\r\n`
                 message += `From: <sip:${this.client.user}@sip.dev.ca11.app>;tag=${this.context.fromTag}\r\n`
                 message += `To: <sip:${this.client.contactName}@127.0.0.1>;tag=${this.context.toTag}\r\n`
                 message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
-                message += `Contact: <sip:${this.client.contactName}@nb4btmdpfcgh.invalid;transport=ws>;expires=600\r\n`
                 message += `Call-ID: ${this.context.callId}\r\n`
                 message += `Supported: outbound\r\n`
                 message += `User-Agent: CA11/undefined (Linux/Chrome) ca11\r\n`
+                message += `Allow: ACK,BYE,CANCEL,INFO,INVITE,MESSAGE,NOTIFY,OPTIONS,PRACK,REFER,REGISTER,SUBSCRIBE\r\n`
+                message += `Contact: <sip:${this.client.contactName}@nb4btmdpfcgh.invalid;transport=ws>\r\n`
                 message += 'Content-Type: application/sdp\r\n'
             }
         }
 
         message += `Content-Length: ${this.context.content.length}\r\n\r\n`
         if (this.context.content.length) {
-            message += `${this.context.content}\r\n`
+            message += `${this.context.content}`
         }
 
         return message

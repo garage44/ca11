@@ -237,7 +237,11 @@ class Call {
 
         this.app.modules.caller.activateCall(this, true)
         this.app.sounds.ringTone.play({loop: true})
-        this.handler.onInvite({context, handler})
+
+        const stream = this.app.state.settings.webrtc.media.stream
+        const localStream = this.app.media.streams[stream[stream.type].id]
+
+        this.handler.onInvite({context, handler, localStream})
     }
 
 
