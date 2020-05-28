@@ -8,27 +8,27 @@
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 **[CA11](https://github.com/garage11/ca11)** was started in 2019 with the
-purpose to make telephony more like the Web; accessible and without a
-need for accounts. CA11 is a WebRTC softphone with flexible support for
-multiple signalling protocols. It implements the existing **SIP** protocol
-and a customized **SIG11** signalling. SIP is oriented towards centralized
-calling using a PBX; SIG11 focusses on P2P calling. CA11 aims to focus on
-the following themes:
+purpose to shape telephony more like the Web; accessible and without a
+need for accounts. CA11 is basically a WebRTC softphone with flexible
+support for multiple signalling protocols. It implements the existing
+**SIP** protocol and a custom one called **SIG11**. SIP is oriented
+towards calling with an intermediary PBX(Asterisk); SIG11 is developed
+to accomodate P2P calling. The CA11 project focusses on these topics:
 
-- Privacy - Calls and Signalling messages must be E2E encrypted where possible
-- Accessibility - SIG11 features an open signalling network as a service
-- Costs - Bringing down hosting costs by decentralizing media flows
-- Compatibility - Calling over existing telephony networks (SIP)
+- Privacy - Calls (**SIP**/**SIG11**) and Signalling(**SIG11**) are E2E encrypted
+- Accessibility - Open accountless signalling service(**SIG11**)
+- Costs - Decentralize media flow(**SIG11**)
+- Compatibility - Use existing telephony networks (**SIP**)
 
 ## Requirements
 
-- Chrom(e/ium) browser
-- Node.js 13+ (Native ESM)
-- Docker (or install manually using Docker as reference)
+- Chromium 74 or later (requires experimental import maps)
+- Node.js 13+ (requires ES-Module support)
+- Docker - or install manually using Docker directives as reference
 
 ## Installation
 
-- Checkout the project & install dependencies:
+- Clone the project & install its dependencies:
 
       git clone git@github.com:garage11/ca11.git
       cd ca11
@@ -37,7 +37,7 @@ the following themes:
       yarn bootstrap
       ./cli.js watch
 
-- Generate a developer certificate & CA to use SSL without warnings on a local domain:
+- Generate a developer SSL certificate & CA to use SSL without warnings on a local domain:
 
       cd ca11/docker/nginx/ssl
       ./ca_cert.sh dev.ca11.app
@@ -48,7 +48,9 @@ the following themes:
 
       sudo ./ca_system.sh
 
-> This shell-script for importing the CA into the system only works on Archlinux at the moment.
+> The CA installation shell-script only works on Archlinux at the moment.
+> Other operating systems require manual installation. Restart the browser
+> for the SSL certificate to be picked up.
 
 - Add local hostname lookup for the default domains:
 
@@ -63,12 +65,15 @@ the following themes:
       docker exec -w /root/asterisk/contrib/ast-db-manage -it asterisk alembic -c config.ini upgrade head
       psql -U asterisk -h 127.0.0.1 asterisk < postgres/sig11_asterisk.sql  # default pw is 'ca11ftw'
 
-- Start the sig11 service
+## Usage
+
+- Start SIG11 service
 
       node packages/sig11/server.js
 
-Restart the browser for the SSL certificate to be picked up and start the [softphone](https://dev.ca11.app).
+- Open a browser tab to the [softphone](https://dev.ca11.app)
+- Call one of the SIP testnumbers in Contacts to verify the SIP stack functionality
+- Call one browser from the other. Start another browser with a fake WebRTC stream
+  in order to make a call from one computer:
 
-## Verification
-
-- Call one of the SIP testnumbers in Contacts to verify the SIP stack functionality.
+      chromium --use-fake-device-for-media-stream --enable-experimental-web-platform-features  --user-data-dir=~/.chromium-tmp
