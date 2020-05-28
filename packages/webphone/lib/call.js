@@ -23,7 +23,6 @@ class Call {
 
         this.state = {
             active: true,
-            direction: description.direction, // incoming or outgoing
             endpoint: null,
             hangup: {
                 disabled: false,
@@ -37,7 +36,6 @@ class Call {
                 active: false,
             },
             name: null,
-            protocol: null,
             status: null,
             streams: {},
             timer: {
@@ -59,11 +57,10 @@ class Call {
 
         const client = this.app.clients[description.protocol]
 
-        // Call handler is passed from the SIP module.
+        // Call handler is passed from the SIP/SIG11 module.
         if (description.direction === 'incoming') {
-            this.handler = description.callHandler
-        }
-        if (description.direction === 'outgoing') {
+            this.handler = description.handler
+        } else if (description.direction === 'outgoing') {
             this.handler = new callHandlers[description.protocol](client, {description, id: this.id})
         }
 
@@ -71,7 +68,6 @@ class Call {
             this.addStream(newStream, track.kind)
 
             const path = `caller.calls.${this.id}.streams.${newStream.id}`
-
             track.onunmute = () => {this.app.setState({muted: false}, {path})}
             track.onmute = () => {this.app.setState({muted: true}, {path})}
             track.onended = () => {
@@ -84,11 +80,6 @@ class Call {
         this.handler.on('call:message', (message) => {
             console.log(message)
         })
-
-        this.handler.on('call:incoming', () => {
-            console.log("INCOMING CALL 123")
-            this.incoming()
-        })
     }
 
 
@@ -97,27 +88,6 @@ class Call {
         const path = `caller.calls.${this.id}.streams.${streamId}`
         this.app.setState(null, {action: 'delete', path})
         delete this.app.media.streams[streamId]
-    }
-
-
-    async _initSinks() {
-        let outputSink
-        const devices = this.app.state.settings.webrtc.devices
-        if (devices.speaker.enabled) outputSink = devices.sinks.speakerOutput.id
-        else outputSink = devices.sinks.headsetOutput.id
-
-        this.app.logger.debug(`${this}change sink of remote video element to ${outputSink}`)
-        // Chrome Android doesn't have setSinkId.
-        if (this.app.media.fallback.remote.setSinkId) {
-            try {
-                await this.app.media.fallback.remote.setSinkId(outputSink)
-            } catch (err) {
-                const message = this.app.$t('failed to set output device!')
-                this.app.notify({icon: 'warning', message, type: 'danger'})
-                // eslint-disable-next-line no-console
-                console.error(err)
-            }
-        }
     }
 
 
@@ -205,7 +175,9 @@ class Call {
 
 
     accept() {
-        this.handler.accept()
+        const stream = this.app.state.settings.webrtc.media.stream
+        const localStream = this.app.media.streams[stream[stream.type].id]
+        this.handler.accept(localStream)
     }
 
 
@@ -225,7 +197,28 @@ class Call {
     }
 
 
-    incoming() {
+    async initSinks() {
+        let outputSink
+        const devices = this.app.state.settings.webrtc.devices
+        if (devices.speaker.enabled) outputSink = devices.sinks.speakerOutput.id
+        else outputSink = devices.sinks.headsetOutput.id
+
+        this.app.logger.debug(`${this}change sink of remote video element to ${outputSink}`)
+        // Chrome Android doesn't have setSinkId.
+        if (this.app.media.fallback.remote.setSinkId) {
+            try {
+                await this.app.media.fallback.remote.setSinkId(outputSink)
+            } catch (err) {
+                const message = this.app.$t('failed to set output device!')
+                this.app.notify({icon: 'warning', message, type: 'danger'})
+                // eslint-disable-next-line no-console
+                console.error(err)
+            }
+        }
+    }
+
+
+    onInvite({context, handler}) {
         this.setState(this.state)
 
         if (this.silent) return
@@ -244,6 +237,7 @@ class Call {
 
         this.app.modules.caller.activateCall(this, true)
         this.app.sounds.ringTone.play({loop: true})
+        this.handler.onInvite({context, handler})
     }
 
 
@@ -274,14 +268,6 @@ class Call {
         this.app._mergeDeep(this.state, state)
     }
 
-
-    async start() {
-        await this._initSinks()
-
-        if (this.state.direction === 'incoming') this.incoming()
-        else if (this.state.direction === 'outgoing') this.outgoing()
-        else throw new Error(`invalid call direction: ${this.state.direction}`)
-    }
 
     terminate(status = null) {
         this.handler.terminate()

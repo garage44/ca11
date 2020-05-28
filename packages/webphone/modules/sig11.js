@@ -49,7 +49,7 @@ class ModuleSIG11 extends Module {
             this.app.Vue.set(this.app.state.caller.calls, call.id, call.state)
             this.calls[call.id] = call
 
-            call.start()
+            call.incoming()
         })
 
 

@@ -57,6 +57,7 @@ class ClientSip extends EventEmitter {
         this.socket.onmessage = (e) => {
             let call = null
             const message = this.parseMessage(e.data)
+
             if (message.context.code === 'PING') return
 
             if (message.context.method === 'OPTIONS') {
@@ -77,12 +78,19 @@ class ClientSip extends EventEmitter {
                 } else if (message.context.method === 'INVITE') {
                     // An incoming call response.
                     if (message instanceof SipRequest) {
+                        console.log("EXTENSION?", message.context)
                         const call = new Call(this, {
+                            description: {
+                                direction: 'incoming',
+                                endpoint: 1000, // message.context.header.From.extension,
+                                protocol: 'sip',
+                            },
                             id: message.context.callId,
                         })
                         this.calls[call.id] = call
-                        // Emit invite up to the SIP module that handles application state.
-                        this.emit('invite', call)
+                        // Emit invite up to the SIP module that handles
+                        // application state.
+                        this.emit('invite', {context: message, handler: call})
                     }
                 }
             }

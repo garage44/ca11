@@ -93,10 +93,6 @@ class ModuleSIP extends Module {
         })
         this.client.on('unregistered', this.onUnregistered.bind(this))
 
-        this.client.on('message', function(message) {
-            console.log("MESSAGE", message.body)
-        })
-
         this.client.on('invite', this.onInvite.bind(this))
 
         this.client.on('sip:dtmf', ({callId, key}) => {
@@ -153,7 +149,7 @@ class ModuleSIP extends Module {
     }
 
 
-    onInvite(callHandler) {
+    onInvite({handler, context}) {
         this.app.logger.debug(`${this}<event:invite>`)
 
         const deviceReady = this.app.state.settings.webrtc.devices.ready
@@ -164,28 +160,21 @@ class ModuleSIP extends Module {
 
         if (dnd || !microphoneAccess || !deviceReady) {
             acceptCall = false
-            callHandler.terminate()
+            handler.terminate()
         }
-
-        // if (Object.keys(this.plugin.calls).length) {
-        //     acceptCall = false
-        //     session.terminate({
-        //         reasonPhrase: 'call waiting is not supported',
-        //         statusCode: 486,
-        //     })
-        // }
 
         if (!acceptCall) return
 
         const description = {
-            callHandler,
             direction: 'incoming',
+            handler,
             protocol: 'sip',
-            // session,
         }
 
         const call = new Call(this.app, description, {silent: !acceptCall})
-        call.start()
+        call.initSinks()
+        call.onInvite({context, handler })
+
         this.app.Vue.set(this.app.state.caller.calls, call.id, call.state)
         this.app.modules.caller.calls[call.id] = call
         this.app.logger.info(`${this}incoming call ${call.id} allowed by invite`)

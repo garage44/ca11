@@ -1,5 +1,5 @@
 import EventEmitter from 'eventemitter3'
-import { SipRequest } from './message.js'
+import { SipRequest, SipResponse, utils } from './message.js'
 
 class CallSip extends EventEmitter {
 
@@ -9,30 +9,57 @@ class CallSip extends EventEmitter {
         this.tracks = {}
         // TODO: Refactor description.endpoint to description.extension
         this.dialog = {
+            branch: null,
             fromTag: null,
-            toTag: null,
+            toTag: utils.token(12),
         }
 
         this.id = id
         this.on('message', this.onMessage.bind(this))
-
-        if (description) {
-            this.callType = 'outgoing'
-            this.description = description
-        } else {
-            // Incoming call...
-            this.callType = 'incoming'
-        }
+        this.description = description
     }
 
 
-    accept() {
-        this.on('trackAdded', this.onTrack.bind(this))
-        // this.session.accept({
-        //     sessionDescriptionHandlerOptions: {
-        //         constraints: this.app.media._getUserMediaFlags(),
-        //     },
-        // })
+    /**
+     * An incoming call is accepted.
+     * @param {*} localStream
+     */
+    async accept(localStream) {
+        this.pc = new RTCPeerConnection({
+            iceServers: this.client.stun.map((i) => ({urls: i})),
+            sdpSemantics:'unified-plan',
+        })
+
+        this.pc.ontrack = this.onTrack.bind(this)
+        this.pc.onicegatheringstatechange = () => {
+            // Send the invite once the candidates are part of the sdp.
+            if (this.pc.iceGatheringState === 'complete') {
+                console.log("READY, SEND OK")
+
+                const inviteOkMessage = new SipResponse(this.client, {
+                    branch: this.dialog.branch,
+                    callId: this.id,
+                    code: 200,
+                    content: this.pc.localDescription.sdp,
+                    cseq: this.inviteCseq,
+                    extension: this.description.endpoint,
+                    fromTag: this.dialog.fromTag,
+                    method: 'INVITE',
+                    toTag: this.dialog.toTag,
+                })
+
+                this.client.socket.send(inviteOkMessage)
+            }
+        }
+
+        for (const track of localStream.getTracks()) {
+            this.pc.addTrack(track, localStream)
+        }
+
+        const offer = await this.pc.createOffer()
+        this.pc.setLocalDescription(offer)
+        console.log('SDIP', this.inviteContext.context.content)
+        await this.pc.setRemoteDescription({sdp: this.inviteContext.context.content, type: 'answer'})
     }
 
 
@@ -47,8 +74,43 @@ class CallSip extends EventEmitter {
     }
 
 
-    incoming() {
+    async onInvite({context}) {
+        const message = context
 
+        this.inviteContext = message
+        // Set remote description as part of an incoming call.
+
+
+        this.dialog.fromTag = message.context.header.From.tag
+        this.dialog.branch = message.context.header.Via.branch
+
+        this.inviteCseq = message.context.cseq
+
+        // const tryingMessage = new SipResponse(this.client, {
+        //     branch: message.context.header.Via.branch,
+        //     callId: this.id,
+        //     code: 100,
+        //     cseq: message.context.cseq,
+        //     extension: this.description.endpoint,
+        //     fromTag:  message.context.header.From.tag,
+        //     method: 'INVITE',
+        // })
+
+        const ringingMessage = new SipResponse(this.client, {
+            branch: message.context.header.Via.branch,
+            callId: this.id,
+            code: 180,
+            cseq: message.context.cseq,
+            extension: this.description.endpoint,
+            fromTag:  this.dialog.fromTag,
+            method: 'INVITE',
+            toTag: this.dialog.toTag,
+        })
+
+        // this.client.socket.send(tryingMessage)
+        this.client.socket.send(ringingMessage)
+
+        // console.log(tryingMessage.toString())
         // this.state.number = this.session.assertedIdentity.uri.user
         // this.state.name = this.session.assertedIdentity.displayName
 
@@ -129,6 +191,8 @@ class CallSip extends EventEmitter {
                 this.dialog.toTag = message.context.header.To.tag
                 this.dialog.fromTag = message.context.header.From.tag
 
+                console.log("SET REMOTE DESCRIPTION")
+                // Set remote description as part of an outgoing call.
                 await this.pc.setRemoteDescription({sdp: message.context.content, type: 'answer'})
 
                 const ackMessage = new SipRequest(this.client, {
@@ -150,6 +214,7 @@ class CallSip extends EventEmitter {
 
 
     onTrack(track) {
+        console.log("TRACK", track)
         const receivers = this.pc.getReceivers()
         if (!receivers.length) return
 

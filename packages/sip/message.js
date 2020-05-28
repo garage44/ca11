@@ -1,6 +1,11 @@
 
 const magicCookie = 'z9hG4bK'
 const hops = 70
+const codeMap = {
+    100: 'Trying',
+    180: 'Ringing',
+    200: 'OK',
+}
 
 /**
  * Utils that help process SIP messages.
@@ -57,6 +62,7 @@ export class SipRequest {
             message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
             message += `Max-Forwards: ${hops}\n`
         } else if (this.context.method === 'BYE') {
+            console.log("BYEEE??!!!")
             message += `${this.context.method} sip:${this.client.endpoint};transport=ws SIP/2.0\r\n`
             message += `From: <sip:${this.client.user}@${this.client.endpoint}>;tag=${this.context.fromTag}\r\n`
             message += `To: <sip:${this.context.extension}@sip.dev.ca11.app>;tag=${this.context.toTag}\r\n`
@@ -115,7 +121,8 @@ export class SipResponse {
         this.header = {}
 
         this.context = context
-        this.content = ''
+
+        if (!this.context.content) this.context.content = ''
     }
 
 
@@ -133,11 +140,44 @@ export class SipResponse {
             message += `User-Agent: CA11/undefined (Linux/Chrome) ca11\r\n`
             message += `Allow: ACK,BYE,CANCEL,INFO,INVITE,MESSAGE,NOTIFY,OPTIONS,PRACK,REFER,REGISTER,SUBSCRIBE\r\n`
             message += `Accept: application/sdp,application/dtmf-relay\r\n`
+        } else if (this.context.method === 'INVITE') {
+
+            if (this.context.code === 100) {
+                message += `SIP/2.0 100 Trying\r\n`
+                message += `Via: SIP/2.0/WS b55dhqu9asr5.invalid;branch=${this.context.branch}\r\n`
+                message += `From: <sip:${this.client.user}@sip.dev.ca11.app>;tag=${this.context.fromTag}\r\n`
+                message += `To: <sip:${this.client.contactName}@127.0.0.1>\r\n`
+                message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
+                message += `Call-ID: ${this.context.callId}\r\n`
+                message += `Supported: outbound\r\n`
+                message += `User-Agent: CA11/undefined (Linux/Chrome) ca11\r\n`
+            } else if (this.context.code === 180) {
+                message += `SIP/2.0 180 Ringing\r\n`
+                message += `Via: SIP/2.0/WS b55dhqu9asr5.invalid;branch=${this.context.branch}\r\n`
+                message += `From: <sip:${this.client.user}@sip.dev.ca11.app>;tag=${this.context.fromTag}\r\n`
+                message += `To: <sip:${this.client.contactName}@127.0.0.1>;tag=${this.context.toTag}\r\n`
+                message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
+                message += `Call-ID: ${this.context.callId}\r\n`
+                message += `Contact: <sip:${this.client.contactName}@nb4btmdpfcgh.invalid;transport=ws>;expires=600\r\n`
+                message += `Supported: outbound\r\n`
+                message += `User-Agent: CA11/undefined (Linux/Chrome) ca11\r\n`
+            } else if (this.context.code === 200) {
+                message += `SIP/2.0 200 OK\r\n`
+                message += `Via: SIP/2.0/WS b55dhqu9asr5.invalid;branch=${this.context.branch};alias\r\n`
+                message += `From: <sip:${this.client.user}@sip.dev.ca11.app>;tag=${this.context.fromTag}\r\n`
+                message += `To: <sip:${this.client.contactName}@127.0.0.1>;tag=${this.context.toTag}\r\n`
+                message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
+                message += `Contact: <sip:${this.client.contactName}@nb4btmdpfcgh.invalid;transport=ws>;expires=600\r\n`
+                message += `Call-ID: ${this.context.callId}\r\n`
+                message += `Supported: outbound\r\n`
+                message += `User-Agent: CA11/undefined (Linux/Chrome) ca11\r\n`
+                message += 'Content-Type: application/sdp\r\n'
+            }
         }
 
-        message += `Content-Length: ${this.content.length}\r\n\r\n`
-        if (this.content.length) {
-            message += `${this.content}\r\n`
+        message += `Content-Length: ${this.context.content.length}\r\n\r\n`
+        if (this.context.content.length) {
+            message += `${this.context.content}\r\n`
         }
 
         return message

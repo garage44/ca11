@@ -8,12 +8,13 @@
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 **[CA11](https://github.com/garage11/ca11)** was started in 2019 with the
-purpose to shape telephony more like the Web; accessible and without a
-need for accounts. CA11 is basically a WebRTC softphone with flexible
-support for multiple signalling protocols. It implements the existing
-**SIP** protocol and a custom one called **SIG11**. SIP is oriented
-towards calling with an intermediary PBX(Asterisk); SIG11 is developed
-to accomodate P2P calling. The CA11 project focusses on these topics:
+purpose to make telephony more like the Web; accessible and without a
+need for accounts or subscriptions. CA11 is basically a WebRTC softphone
+with flexible support for multiple signalling protocols. It implements the
+existing **SIP** protocol and a custom protocol called **SIG11**. SIP is
+oriented towards calling with an intermediary PBX(Asterisk); SIG11 is
+developed to accomodate P2P calling. The CA11 project focusses on
+the following topics:
 
 - Privacy - Calls (**SIP**/**SIG11**) and Signalling(**SIG11**) are E2E encrypted
 - Accessibility - Open accountless signalling service(**SIG11**)
