@@ -60,26 +60,26 @@ export class SipRequest {
             message += `From: <sip:${this.client.user}@${this.client.endpoint}>;tag=${this.context.fromTag}\r\n`
             message += `Call-ID: ${this.context.callId}\r\n`
             message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
-            message += `Max-Forwards: ${hops}\n`
+            message += `Max-Forwards: ${hops}\r\n`
         } else if (this.context.method === 'BYE') {
-            console.log("BYEEE??!!!")
+            console.log("CONTEXT", this.context)
             message += `${this.context.method} sip:${this.client.endpoint};transport=ws SIP/2.0\r\n`
             message += `From: <sip:${this.client.user}@${this.client.endpoint}>;tag=${this.context.fromTag}\r\n`
             message += `To: <sip:${this.context.extension}@sip.dev.ca11.app>;tag=${this.context.toTag}\r\n`
-            message += `Via: SIP/2.0/WSS b55dhqu9asr5.invalid;branch=${magicCookie}1114145\r\n`
+            message += `Via: SIP/2.0/WSS b55dhqu9asr5.invalid;branch=${this.context.branch}\r\n`
             message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
             message += `Call-ID: ${this.context.callId}\r\n`
-            message += `Max-Forwards: ${hops}\n`
+            message += `Max-Forwards: ${hops}\r\n`
             message += `Supported: outbound\r\n`
             message += `User-Agent: CA11/undefined (Linux/Chrome) ca11\r\n`
         } else if (this.context.method === 'INVITE') {
             message += `${this.context.method} sip:${this.context.extension}@${this.client.endpoint} SIP/2.0\r\n`
-            message += `Via: SIP/2.0/WSS b55dhqu9asr5.invalid;branch=${magicCookie}1114145\r\n`
+            message += `Via: SIP/2.0/WS 127.0.0.1:8088;rport;branch=${this.context.branch};alias\r\n`
             message += `To: <sip:${this.context.extension}@sip.dev.ca11.app>\r\n`
             message += `From: <sip:${this.client.user}@${this.client.endpoint}>;tag=${this.context.fromTag}\r\n`
             message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
             message += `Call-ID: ${this.context.callId}\r\n`
-            message += `Max-Forwards: ${hops}\n`
+            message += `Max-Forwards: ${hops}\r\n`
             message += 'Contact: <sip:g2ubil85@b55dhqu9asr5.invalid;transport=ws>;expires=600\r\n'
             message += 'Allow: ACK,CANCEL,INVITE,MESSAGE,BYE,OPTIONS,INFO,NOTIFY,REFER\r\n'
             message += 'Supported: outbound\r\n'
@@ -92,7 +92,7 @@ export class SipRequest {
             message += `From: <sip:${this.client.user}@sip.dev.ca11.app>;tag=${this.context.fromTag}\r\n`
             message += `Call-ID: ${this.client.callId}\r\n`
             message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
-            message += `Max-Forwards: ${hops}\n`
+            message += `Max-Forwards: ${hops}\r\n`
             message += `Contact: <sip:${this.client.contactName}@nb4btmdpfcgh.invalid;transport=ws>;expires=600\r\n`
             message += 'Allow: ACK,CANCEL,INVITE,MESSAGE,BYE,OPTIONS,INFO,NOTIFY,REFER\r\n'
             message += 'Supported: outbound, path, gruu\r\n'
@@ -105,6 +105,7 @@ export class SipRequest {
             message += `${this.client.authorizeMessage(this)}\r\n`
         }
 
+        // Must use two empty lines.
         message += `Content-Length: ${this.context.content.length}\r\n\r\n`
 
         if (this.context.content.length) {
@@ -163,7 +164,7 @@ export class SipResponse {
                 message += `User-Agent: CA11/undefined (Linux/Chrome) ca11\r\n`
             } else if (this.context.code === 200) {
                 message += `SIP/2.0 200 OK\r\n`
-                message += `Via: SIP/2.0/WS 127.0.0.1:8088;rport;branch=${this.context.branch};alias\r\n`
+                message += `Via: SIP/2.0/WS 127.0.0.1:8088;rport;branch=${this.context.branch}\r\n`
                 message += `From: <sip:${this.client.user}@sip.dev.ca11.app>;tag=${this.context.fromTag}\r\n`
                 message += `To: <sip:${this.client.contactName}@127.0.0.1>;tag=${this.context.toTag}\r\n`
                 message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`

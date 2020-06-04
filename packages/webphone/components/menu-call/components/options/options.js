@@ -19,13 +19,13 @@ export default (app) => {
         },
         methods: Object.assign({
             callAccept: function(call) {
-                app.emit('caller:call-accept', {callId: call.id})
+                app.modules.caller.calls[call.id].acceptInvite()
             },
             callDescription: function(...args) {app.modules.caller.call(...args)},
             callTerminate: function(call) {
                 let status = 'bye'
                 if (call.status === 'create') status = 'caller_busy'
-                app.emit('caller:call-terminate', {callId: call.id, status})
+                app.modules.caller.calls[call.id].terminate()
             },
             classes: function(block) {
                 let classes = {}

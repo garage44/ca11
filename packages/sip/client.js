@@ -72,7 +72,6 @@ class ClientSip extends EventEmitter {
                     if (message.context.status === 'OK') {
                         this.emit('registered')
                     } else if (message.context.status === 'Unauthorized') {
-
                         this.register(message)
                     }
                 } else if (message.context.method === 'INVITE') {
@@ -189,7 +188,9 @@ class ClientSip extends EventEmitter {
         context.header.Via = {}
 
         const branch = via.find((i) => i.includes('branch'))
-        if (branch) context.header.Via.branch = branch.split('=')[1]
+        if (branch) {
+            context.header.Via.branch = branch.split('=')[1]
+        }
 
         if (context.header['WWW-Authenticate']) {
             context.digest = utils.commaSepToObject(context.header['WWW-Authenticate'])

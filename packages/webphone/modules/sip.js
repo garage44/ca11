@@ -94,6 +94,10 @@ class ModuleSIP extends Module {
         this.client.on('unregistered', this.onUnregistered.bind(this))
 
         this.client.on('invite', this.onInvite.bind(this))
+        this.client.on('terminate', ({callId}) => {
+            console.log("TERMINATE CALL", callId)
+            this.app.modules.caller.calls[callId].terminate()
+        })
 
         this.client.on('sip:dtmf', ({callId, key}) => {
             this.app.modules.caller.calls[callId].session.dtmf(key)
@@ -173,7 +177,7 @@ class ModuleSIP extends Module {
 
         const call = new Call(this.app, description, {silent: !acceptCall})
         call.initSinks()
-        call.onInvite({context, handler })
+        call.initIncoming({context, handler })
 
         this.app.Vue.set(this.app.state.caller.calls, call.id, call.state)
         this.app.modules.caller.calls[call.id] = call

@@ -14,17 +14,11 @@ class ModuleCaller extends Module {
         // Used to store retry state.
         this.retry = Object.assign({}, this.retryDefault)
 
-        this.app.on('caller:call-accept', ({callId}) => this.calls[callId].accept())
         this.app.on('caller:call-activate', ({callId, holdInactive, unholdActive}) => {
             let call = null
             if (callId) call = this.calls[callId]
 
             this.activateCall(call, holdInactive, unholdActive)
-        })
-
-        this.app.on('caller:call-terminate', ({callId}) => {
-            // Use SIG11 parameters. SIP terminate doesn't have any atm.
-            this.calls[callId].terminate(null, {remote: true})
         })
 
         this.app.on('caller:call-hold', ({callId}) => {
@@ -159,7 +153,7 @@ class ModuleCaller extends Module {
         description.direction = 'outgoing'
 
         const call = this.spawnCall(description)
-        call.outgoing()
+        call.initOutgoing()
         // Sync the transfer state of other calls to the new situation.
         this.transferState()
 

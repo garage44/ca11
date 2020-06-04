@@ -64,6 +64,11 @@ class Call {
             this.handler = new callHandlers[description.protocol](client, {description, id: this.id})
         }
 
+        this.handler.on('terminate', () => {
+            this.setState({status: 'bye'})
+            this._stop()
+        })
+
         this.handler.on('track', (newStream, track) => {
             this.addStream(newStream, track.kind)
 
@@ -77,8 +82,19 @@ class Call {
             }
         })
 
-        this.handler.on('call:message', (message) => {
-            console.log(message)
+        this.handler.on('context', (message) => {
+            console.log('HANDLER CONTEXT:', message)
+        })
+
+        this.handler.on('outgoing-accepted', () => {
+            console.log("OUTGOING ACCEPTED")
+            this._start()
+        })
+
+        this.handler.on('invite-accepted', () => {
+            console.log("INVITE ACCEPTED")
+            this.app.logger.debug(`${this}invite accepted`)
+            this._start()
         })
     }
 
@@ -174,10 +190,14 @@ class Call {
     }
 
 
-    accept() {
+    /**
+     *
+     */
+    acceptInvite() {
+        console.log("ACCEPT INVITE")
         const stream = this.app.state.settings.webrtc.media.stream
         const localStream = this.app.media.streams[stream[stream.type].id]
-        this.handler.accept(localStream)
+        this.handler.acceptInvite(localStream)
     }
 
 
@@ -194,6 +214,54 @@ class Call {
         this.app.media.streams[stream.id] = stream
         const path = `caller.calls.${this.id}.streams.${stream.id}`
         this.app.setState(streamState, {path})
+    }
+
+
+    initIncoming({context, handler}) {
+        this.setState(this.state)
+
+        if (this.silent) return
+
+        const streamType = this.app.state.settings.webrtc.media.stream.type
+        // Switch to the stream-view and activate the local stream.
+        this.app.setState({
+            settings: {webrtc: {media: {stream: {[streamType]: {selected: true}}}}},
+            ui: {layer: 'stream-view', menubar: {event: 'ringing'}},
+        })
+
+        if (this.app.state.settings.webhooks.enabled) {
+            const url = this.app.state.settings.webhooks.url
+            window.open(url.replace('{endpoint}', this.state.endpoint), '_blank', 'alwaysLowered=yes')
+        }
+
+        this.app.modules.caller.activateCall(this, true)
+        this.app.sounds.ringTone.play({loop: true})
+
+        const stream = this.app.state.settings.webrtc.media.stream
+        const localStream = this.app.media.streams[stream[stream.type].id]
+
+        this.handler.initIncoming({context, handler, localStream})
+    }
+
+
+    initOutgoing() {
+        // Try to fill in the name from contacts.
+        const contacts = this.app.state.contacts.contacts
+        let name = ''
+        for (const id of Object.keys(contacts)) {
+            if (contacts[id].endpoint === parseInt(this.endpoint)) {
+                name = contacts[id].name
+            }
+        }
+
+        // Always set this call to be the active call.
+        this.app.modules.caller.activateCall(this, true)
+        this.setState({name, status: 'create'})
+        this.app.setState({ui: {layer: 'stream-view'}})
+
+        const stream = this.app.state.settings.webrtc.media.stream
+        const localStream = this.app.media.streams[stream[stream.type].id]
+        this.handler.initOutgoing(localStream)
     }
 
 
@@ -218,71 +286,20 @@ class Call {
     }
 
 
-    onInvite({context, handler}) {
-        this.setState(this.state)
-
-        if (this.silent) return
-
-        const streamType = this.app.state.settings.webrtc.media.stream.type
-        // Switch to the stream-view and activate the local stream.
-        this.app.setState({
-            settings: {webrtc: {media: {stream: {[streamType]: {selected: true}}}}},
-            ui: {layer: 'stream-view', menubar: {event: 'ringing'}},
-        })
-
-        if (this.app.state.settings.webhooks.enabled) {
-            const url = this.app.state.settings.webhooks.url
-            window.open(url.replace('{endpoint}', this.state.endpoint), '_blank', 'alwaysLowered=yes')
-        }
-
-        this.app.modules.caller.activateCall(this, true)
-        this.app.sounds.ringTone.play({loop: true})
-
-        const stream = this.app.state.settings.webrtc.media.stream
-        const localStream = this.app.media.streams[stream[stream.type].id]
-
-        this.handler.onInvite({context, handler, localStream})
-    }
-
-
-    outgoing() {
-        const stream = this.app.state.settings.webrtc.media.stream
-        const localStream = this.app.media.streams[stream[stream.type].id]
-
-        this.handler.outgoing(localStream)
-
-        // Try to fill in the name from contacts.
-        const contacts = this.app.state.contacts.contacts
-        let name = ''
-        for (const id of Object.keys(contacts)) {
-            if (contacts[id].endpoint === parseInt(this.endpoint)) {
-                name = contacts[id].name
-            }
-        }
-
-        // Always set this call to be the active call.
-        this.app.modules.caller.activateCall(this, true)
-        this.setState({name: name, status: 'create'})
-        this.app.setState({ui: {layer: 'stream-view', menubar: {event: 'ringing'}}})
-    }
-
-
     setState(state) {
         // This merges to the call's local state; not the app's state!
         this.app._mergeDeep(this.state, state)
     }
 
 
-    terminate(status = null) {
+    terminate(status = 'bye') {
         this.handler.terminate()
+        // if (!status) {
+        //     if (this.state.status === 'accepted') status = 'bye'
+        //     else if (this.state.status === 'create') status = 'caller_unavailable'
+        //     else if (this.state.status === 'invite') status = 'callee_busy'
+        // }
 
-        if (!status) {
-            if (this.state.status === 'accepted') status = 'bye'
-            else if (this.state.status === 'create') status = 'caller_unavailable'
-            else if (this.state.status === 'invite') status = 'callee_busy'
-        }
-        this.setState({status})
-        this._stop()
     }
 
 

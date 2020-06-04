@@ -153,7 +153,6 @@ class Call {
             this.pc.close()
         }
 
-        super.terminate(status)
         if (remote) {
             await this.app.sig11.emit(this.node.id, 'call-terminate', {
                 callId: this.id,

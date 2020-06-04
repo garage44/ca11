@@ -15,12 +15,13 @@ class CallSip extends EventEmitter {
         }
 
         this.id = id
+        console.log("NEW CALL", id)
         this.on('message', this.onMessage.bind(this))
         this.description = description
     }
 
 
-    async accept(localStream) {
+    async acceptInvite(localStream) {
         this.pc = new RTCPeerConnection({
             iceServers: this.client.stun.map((i) => ({urls: i})),
             sdpSemantics:'unified-plan',
@@ -41,6 +42,8 @@ class CallSip extends EventEmitter {
         const answer = await this.pc.createAnswer()
         await this.pc.setLocalDescription(answer)
 
+        console.log("BRANCH 1", this.dialog.branch)
+
         this.inviteOkMessage = new SipResponse(this.client, {
             branch: this.dialog.branch,
             callId: this.id,
@@ -54,32 +57,25 @@ class CallSip extends EventEmitter {
         })
 
         this.client.socket.send(this.inviteOkMessage)
+        this.emit('invite-accepted')
     }
 
 
     hold() {
         console.log("HOLD CALL")
-        // this.session.hold({
-        //     sessionDescriptionHandlerOptions: {
-        //         constraints: this.app.media._getUserMediaFlags(),
-        //     },
-        // })
-        // this.setState({hold: {active: true}})
     }
 
 
-    async onInvite({context, localStream}) {
-        console.log("LOCAL STREAM", localStream)
+    async initIncoming({context, localStream}) {
         const message = context
-
-
 
         this.inviteContext = message
         // Set remote description as part of an incoming call.
-
-
         this.dialog.fromTag = message.context.header.From.tag
-        this.dialog.branch = message.context.header.Via.branch
+        if (!this.dialog.branch) {
+            this.dialog.branch = message.context.header.Via.branch
+            console.log("BRANCH 2(SET)", this.dialog.branch)
+        }
 
         this.inviteCseq = message.context.cseq
 
@@ -106,61 +102,38 @@ class CallSip extends EventEmitter {
 
         this.client.socket.send(tryingMessage)
         this.client.socket.send(ringingMessage)
+    }
 
 
-        // console.log(tryingMessage.toString())
-        // this.state.number = this.session.assertedIdentity.uri.user
-        // this.state.name = this.session.assertedIdentity.displayName
+    async initOutgoing(localStream) {
+        this.pc = new RTCPeerConnection({
+            iceServers: this.client.stun.map((i) => ({urls: i})),
+            sdpSemantics:'unified-plan',
+        })
 
+        this.pc.ontrack = this.onTrack.bind(this)
+        this.pc.onicegatheringstatechange = () => {
+            // Send the invite once the candidates are part of the sdp.
+            if (this.pc.iceGatheringState === 'complete') {
+                this.client.invite(this)
+            }
+        }
 
-        // this.session.on('accepted', () => {
-        //     this._start({message: this.translations.accepted})
-        // })
+        for (const track of localStream.getTracks()) {
+            this.pc.addTrack(track, localStream)
+        }
 
-        // this.session.on('bye', () => {
-        //     this.setState({status: 'bye'})
-        //     this._stop({message: this.translations[this.state.status]})
-        // })
-
-        /**
-        * The `failed` status is triggered when a call is rejected, but
-        * also when an incoming calls keeps ringing for a certain amount
-        * of time (60 seconds), and fails due to a timeout. In that case,
-        * no `rejected` event is triggered and we need to kill the
-        * call ASAP, so a new INVITE for the same call will be accepted by
-        * the call module's invite handler.
-        */
-        // this.on('failed', (message) => {
-        //     if (typeof message === 'string') message = this.app.modules.sip.SIP.Parser.parseMessage(message, this.app.sip.ua)
-        //     let reason = message.getHeader('Reason')
-        //     let status = 'caller_unavailable'
-
-        //     if (reason) reason = this._parseHeader(reason).get('text')
-
-        //     if (reason === 'Call completed elsewhere') {
-        //         status = 'answered_elsewhere'
-        //     } else if (message.status_code === 480) {
-        //         // The accepting party terminated the incoming call.
-        //         status = 'callee_unavailable'
-        //     }
-
-        //     super.terminate(status)
-        // })
-
-        // this.on('reinvite', (session) => {
-        //     this.app.logger.debug(`${this}<event:reinvite>`)
-        //     // Seems to be a timing issue in SIP.js. After a transfer,
-        //     // the old name is keps in assertedIdentity, unless a timeout
-        //     // is added.
-        //     setTimeout(() => {
-        //         this.state.name = session.assertedIdentity.uri.user
-        //         this.state.number = session.assertedIdentity.uri.user
-        //     }, 0)
-        // })
+        const offer = await this.pc.createOffer()
+        this.pc.setLocalDescription(offer)
     }
 
 
     async onMessage(message) {
+        console.log("ON MESSAge", this.dialog.branch)
+        if (message.context.header.Via.branch && !this.dialog.branch) {
+            this.dialog.branch = message.context.header.Via.branch
+        }
+
         if (message.context.method === 'INVITE') {
             if (message.context.status === 'Unauthorized') {
                 if (message.context.digest) {
@@ -185,11 +158,8 @@ class CallSip extends EventEmitter {
                     this.client.socket.send(ackMessage)
                 }
             } else if (message.context.status === 'OK') {
-
                 this.dialog.toTag = message.context.header.To.tag
                 this.dialog.fromTag = message.context.header.From.tag
-
-                console.log("SET REMOTE DESCRIPTION OUTGOING", message.context.content)
                 // Set remote description as part of an outgoing call.
                 await this.pc.setRemoteDescription({sdp: message.context.content, type: 'answer'})
 
@@ -201,12 +171,15 @@ class CallSip extends EventEmitter {
                     transport: 'ws',
                 })
 
+                // Outgoing call accepted;
+                this.emit('outgoing-accepted')
+
                 this.client.socket.send(ackMessage)
             }
         } else if (message.context.method === 'BYE') {
-            console.log("BUEEEE", this.tag)
+            this.emit('terminate', {callID: this.id})
         } else if (message.context.method === 'MESSAGE') {
-            this.emit('call:message', JSON.parse(message.context.content))
+            this.emit('context', JSON.parse(message.context.content))
         } else if (message.context.method === 'ACK') {
             console.log("SET REMOTE DESCRIPTION")
         }
@@ -214,7 +187,6 @@ class CallSip extends EventEmitter {
 
 
     onTrack(track) {
-        console.log("TRACK", track)
         const receivers = this.pc.getReceivers()
         if (!receivers.length) return
 
@@ -235,95 +207,10 @@ class CallSip extends EventEmitter {
     }
 
 
-    async outgoing(localStream) {
-        this.pc = new RTCPeerConnection({
-            iceServers: this.client.stun.map((i) => ({urls: i})),
-            sdpSemantics:'unified-plan',
-        })
-
-        this.pc.ontrack = this.onTrack.bind(this)
-        this.pc.onicegatheringstatechange = () => {
-            // Send the invite once the candidates are part of the sdp.
-            if (this.pc.iceGatheringState === 'complete') {
-                this.client.invite(this)
-            }
-        }
-
-        for (const track of localStream.getTracks()) {
-            this.pc.addTrack(track, localStream)
-        }
-
-        const offer = await this.pc.createOffer()
-        this.pc.setLocalDescription(offer)
-
-
-        // this.setState({stats: {callId: this.session.request.call_id}})
-        // this.session.on('trackAdded', this.onTrack.bind(this))
-        // this.session.on('accepted', () => {
-        //     this.app.logger.debug(`${this}<event:accepted>`)
-        //     this._start({message: this.translations.accepted})
-        // })
-        // this.session.on('bye', () => {
-        //     this.app.logger.debug(`${this}<event:bye>`)
-        //     super.terminate('bye')
-        // })
-
-        // /**
-        // * Play a ringback tone on the following status codes:
-        // * 180: Ringing
-        // * 181: Call is Being Forwarded
-        // * 182: Queued
-        // * 183: Session in Progress
-        // */
-        // this.session.on('progress', (e) => {
-        //     this.app.logger.debug(`${this}<event:progress>`)
-        //     if ([180, 181, 182, 183].includes(e.status_code)) {
-        //         this.app.sounds.ringbackTone.play()
-        //     }
-        // })
-
-        // // Blind transfer.
-        // this.session.on('refer', () => {
-        //     this.app.logger.debug(`${this}<event:refer>`)
-        //     this.session.bye()
-        // })
-
-        // // The user is being transferred; update the caller info
-        // // from the P-Asserted-Identity header.
-        // this.session.on('reinvite', (session) => {
-        //     this.app.logger.debug(`${this}<event:reinvite>`)
-        //     // Seems to be a timing issue in SIP.js. After a transfer,
-        //     // the old name is keps in assertedIdentity, unless a timeout
-        //     // is added.
-        //     setTimeout(() => {
-        //         if (session.assertedIdentity) {
-        //             this.state.name = session.assertedIdentity.uri.user
-        //             this.state.number = session.assertedIdentity.uri.user
-        //         } else {
-        //             this.state.name = session.remoteIdentity.uri.user
-        //             this.state.number = session.remoteIdentity.uri.user
-        //         }
-        //     }, 0)
-        // })
-
-        // this.session.on('failed', (message) => {
-        //     let status = 'callee_unavailable'
-        //     // 486 - Busy here; Callee is busy.
-        //     // 487 - Request terminated; Request has terminated by bye or cancel.
-        //     if (message.status_code === 486) {
-        //         status = 'callee_busy'
-        //     } else if (message.status_code === 487) {
-        //         status = 'caller_unavailable'
-        //     }
-
-        //     super.terminate(status)
-        // })
-    }
-
-
     terminate() {
         this.client.cseq += 1
         const byeMessage = new SipRequest(this.client, {
+            branch: this.dialog.branch,
             callId: this.id,
             cseq: this.client.cseq,
             extension: this.description.endpoint,
@@ -332,6 +219,10 @@ class CallSip extends EventEmitter {
             toTag: this.dialog.toTag,
             transport: 'ws',
         })
+
+        console.log("BRANCH 3", this.dialog.branch)
+
+        console.log("SEND BYE", byeMessage)
 
         this.client.socket.send(byeMessage)
     }
