@@ -1,6 +1,8 @@
 
-const magicCookie = 'z9hG4bK'
+export const magicCookie = 'z9hG4bK'
+
 const hops = 70
+
 const codeMap = {
     100: 'Trying',
     180: 'Ringing',
@@ -21,7 +23,6 @@ export const utils = {
         }
         return foo
     },
-
     token(tokenSize = 12) {
         let token = ''
         for (let i = 0; i < tokenSize; i++) {
@@ -38,10 +39,6 @@ export class SipRequest {
         this.client = client
         this.context = context
 
-        if (!this.context.fromTag) {
-            this.context.fromTag = utils.token(10)
-        }
-
         if (!this.context.content) this.context.content = ''
 
         this.header = {}
@@ -55,14 +52,13 @@ export class SipRequest {
             } else {
                 message += `${this.context.method} sip:${this.context.extension}@${this.client.endpoint} SIP/2.0\r\n`
             }
-            message += `Via: SIP/2.0/WSS b55dhqu9asr5.invalid;branch=${magicCookie}1114145\r\n`
-            message += `To: <sip:${this.context.extension}@sip.dev.ca11.app>\r\n`
+            message += `Via: SIP/2.0/WSS b55dhqu9asr5.invalid;branch=${this.context.branch}\r\n`
+            message += `To: <sip:${this.context.extension}@sip.dev.ca11.app>;tag=${this.context.toTag}\r\n`
             message += `From: <sip:${this.client.user}@${this.client.endpoint}>;tag=${this.context.fromTag}\r\n`
             message += `Call-ID: ${this.context.callId}\r\n`
             message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
             message += `Max-Forwards: ${hops}\r\n`
         } else if (this.context.method === 'BYE') {
-            console.log("CONTEXT", this.context)
             message += `${this.context.method} sip:${this.client.endpoint};transport=ws SIP/2.0\r\n`
             message += `From: <sip:${this.client.user}@${this.client.endpoint}>;tag=${this.context.fromTag}\r\n`
             message += `To: <sip:${this.context.extension}@sip.dev.ca11.app>;tag=${this.context.toTag}\r\n`
@@ -73,6 +69,7 @@ export class SipRequest {
             message += `Supported: outbound\r\n`
             message += `User-Agent: CA11/undefined (Linux/Chrome) ca11\r\n`
         } else if (this.context.method === 'INVITE') {
+            console.log("CLIENT ENDPOINT", this.client)
             message += `${this.context.method} sip:${this.context.extension}@${this.client.endpoint} SIP/2.0\r\n`
             message += `Via: SIP/2.0/WS 127.0.0.1:8088;rport;branch=${this.context.branch};alias\r\n`
             message += `To: <sip:${this.context.extension}@sip.dev.ca11.app>\r\n`
@@ -87,7 +84,7 @@ export class SipRequest {
             message += 'User-Agent: CA11/1.0.0 (Linux/Chrome) ca11\r\n'
         } else if (this.context.method === 'REGISTER') {
             message += `${this.context.method} ${this.client.uri} SIP/2.0\r\n`
-            message += `Via: SIP/2.0/WSS nb4btmdpfcgh.invalid;branch=${magicCookie}${utils.token(7)}\r\n`
+            message += `Via: SIP/2.0/WSS nb4btmdpfcgh.invalid;branch=${this.context.branch}\r\n`
             message += `To: <sip:${this.client.user}@sip.dev.ca11.app>\r\n`
             message += `From: <sip:${this.client.user}@sip.dev.ca11.app>;tag=${this.context.fromTag}\r\n`
             message += `Call-ID: ${this.client.callId}\r\n`

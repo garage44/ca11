@@ -2,7 +2,7 @@ import Call from './call.js'
 import EventEmitter from 'eventemitter3'
 import md5 from 'blueimp-md5'
 
-import { SipRequest, SipResponse, utils } from './message.js'
+import { magicCookie, SipRequest, SipResponse, utils } from './message.js'
 
 
 class ClientSip extends EventEmitter {
@@ -13,11 +13,16 @@ class ClientSip extends EventEmitter {
         this.nc = 0
         this.ncHex = '00000000'
         this.cseq = 1
-
         this.calls = {}
+
+        // Local tag for out-of-call dialogs.
+        this.localTag = utils.token(12)
+        this.dialogs = {
+            options: {toTag: null},
+        }
         this.state = 'unregistered'
         Object.assign(this, options)
-
+        console.log("CLIENT ENDPOINT", this.endpoint)
         this.uri = `sip:${this.endpoint}`
         this.contactName = utils.token(8)
     }
@@ -75,9 +80,7 @@ class ClientSip extends EventEmitter {
                         this.register(message)
                     }
                 } else if (message.context.method === 'INVITE') {
-                    // An incoming call response.
                     if (message instanceof SipRequest) {
-                        console.log("EXTENSION?", message.context)
                         const call = new Call(this, {
                             description: {
                                 direction: 'incoming',
@@ -86,6 +89,10 @@ class ClientSip extends EventEmitter {
                             },
                             id: message.context.callId,
                         })
+
+                        // The dialog's To tag is set here on an incoming call/invite.
+                        call.dialogs.invite.toTag = message.context.header.From.tag
+
                         this.calls[call.id] = call
                         // Emit invite up to the SIP module that handles
                         // application state.
@@ -101,28 +108,15 @@ class ClientSip extends EventEmitter {
     }
 
 
-    invite(call) {
-        // Associate call object using the Call-ID header line.
-        this.calls[call.id] = call
-
-        const message = new SipRequest(this, {
-            callId: call.id,
-            content: call.pc.localDescription.sdp,
-            cseq: this.cseq,
-            extension: call.description.endpoint,
-            method: 'INVITE',
-        })
-
-        this.socket.send(message)
-    }
-
-
     options(request) {
+        this.dialogs.options.toTag = request.context.header.From.tag
         const context = Object.assign(JSON.parse(JSON.stringify(request.context)), {
             method: 'OPTIONS',
         })
 
         context.branch = context.header.Via.branch
+        context.toTag = this.localTag
+        context.fromTag = this.dialogs.options.toTag
         const message = new SipResponse(this, context)
         this.socket.send(message)
     }
@@ -183,7 +177,6 @@ class ClientSip extends EventEmitter {
         context.header.From.address = from[0]
         if (from[1]) context.header.From.tag = from[1].split('=')[1]
 
-        // SIP/2.0/WS 127.0.0.1:8088;rport;branch=z9hG4bKPj1b871699-11cc-4ae1-b4f0-08a4d29a81fa;alias
         const via = context.header.Via.split(';')
         context.header.Via = {}
 
@@ -212,6 +205,7 @@ class ClientSip extends EventEmitter {
     register(message) {
         if (!this.callId) this.callId = utils.token(12)
         const context = {
+            branch: `${magicCookie}${utils.token(7)}`,
             cseq: this.cseq,
             method: 'REGISTER',
         }

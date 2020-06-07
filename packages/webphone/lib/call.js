@@ -87,12 +87,11 @@ class Call {
         })
 
         this.handler.on('outgoing-accepted', () => {
-            console.log("OUTGOING ACCEPTED")
+            this.app.logger.debug(`${this}outgoing call accepted`)
             this._start()
         })
 
         this.handler.on('invite-accepted', () => {
-            console.log("INVITE ACCEPTED")
             this.app.logger.debug(`${this}invite accepted`)
             this._start()
         })
@@ -194,7 +193,6 @@ class Call {
      *
      */
     acceptInvite() {
-        console.log("ACCEPT INVITE")
         const stream = this.app.state.settings.webrtc.media.stream
         const localStream = this.app.media.streams[stream[stream.type].id]
         this.handler.acceptInvite(localStream)
