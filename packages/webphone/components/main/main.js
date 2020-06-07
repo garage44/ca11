@@ -31,11 +31,11 @@ export default (app) => {
             logout: function() {
                 app.session.close()
             },
-        }, {}),// app.helpers.sharedMethods()),
+        }, {}),
         mounted: function() {
             splashInterval = setInterval(() => {
                 this.currentSplash = (this.currentSplash + 1) % 7
-            }, 10000)
+            }, 60000)
         },
         store: {
             calls: 'caller.calls',

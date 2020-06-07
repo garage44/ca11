@@ -1,13 +1,12 @@
 
-export const magicCookie = 'z9hG4bK'
-
-const hops = 70
-
 const codeMap = {
     100: 'Trying',
     180: 'Ringing',
     200: 'OK',
 }
+
+const hops = 70
+export const magicCookie = 'z9hG4bK'
 
 /**
  * Utils that help process SIP messages.
@@ -45,66 +44,51 @@ export class SipRequest {
     }
 
     toString() {
-        let message = ''
-        if (this.context.method === 'ACK') {
-            if (this.context.transport) {
-                message += `${this.context.method} sip:${this.client.endpoint};transport=${this.context.transport} SIP/2.0\r\n`
-            } else {
-                message += `${this.context.method} sip:${this.context.extension}@${this.client.endpoint} SIP/2.0\r\n`
-            }
-            message += `Via: SIP/2.0/WSS b55dhqu9asr5.invalid;branch=${this.context.branch}\r\n`
-            message += `To: <sip:${this.context.extension}@sip.dev.ca11.app>;tag=${this.context.toTag}\r\n`
-            message += `From: <sip:${this.client.user}@${this.client.endpoint}>;tag=${this.context.fromTag}\r\n`
-            message += `Call-ID: ${this.context.callId}\r\n`
-            message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
-            message += `Max-Forwards: ${hops}\r\n`
-        } else if (this.context.method === 'BYE') {
-            message += `${this.context.method} sip:${this.client.endpoint};transport=ws SIP/2.0\r\n`
-            message += `From: <sip:${this.client.user}@${this.client.endpoint}>;tag=${this.context.fromTag}\r\n`
-            message += `To: <sip:${this.context.extension}@sip.dev.ca11.app>;tag=${this.context.toTag}\r\n`
-            message += `Via: SIP/2.0/WSS b55dhqu9asr5.invalid;branch=${this.context.branch}\r\n`
-            message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
-            message += `Call-ID: ${this.context.callId}\r\n`
-            message += `Max-Forwards: ${hops}\r\n`
-            message += `Supported: outbound\r\n`
-            message += `User-Agent: CA11/undefined (Linux/Chrome) ca11\r\n`
-        } else if (this.context.method === 'INVITE') {
-            console.log("CLIENT ENDPOINT", this.client)
-            message += `${this.context.method} sip:${this.context.extension}@${this.client.endpoint} SIP/2.0\r\n`
-            message += `Via: SIP/2.0/WS 127.0.0.1:8088;rport;branch=${this.context.branch};alias\r\n`
-            message += `To: <sip:${this.context.extension}@sip.dev.ca11.app>\r\n`
-            message += `From: <sip:${this.client.user}@${this.client.endpoint}>;tag=${this.context.fromTag}\r\n`
-            message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
-            message += `Call-ID: ${this.context.callId}\r\n`
-            message += `Max-Forwards: ${hops}\r\n`
-            message += 'Contact: <sip:g2ubil85@b55dhqu9asr5.invalid;transport=ws>;expires=600\r\n'
-            message += 'Allow: ACK,CANCEL,INVITE,MESSAGE,BYE,OPTIONS,INFO,NOTIFY,REFER\r\n'
-            message += 'Supported: outbound\r\n'
-            message += 'Content-Type: application/sdp\r\n'
-            message += 'User-Agent: CA11/1.0.0 (Linux/Chrome) ca11\r\n'
-        } else if (this.context.method === 'REGISTER') {
-            message += `${this.context.method} ${this.client.uri} SIP/2.0\r\n`
-            message += `Via: SIP/2.0/WSS nb4btmdpfcgh.invalid;branch=${this.context.branch}\r\n`
-            message += `To: <sip:${this.client.user}@sip.dev.ca11.app>\r\n`
-            message += `From: <sip:${this.client.user}@sip.dev.ca11.app>;tag=${this.context.fromTag}\r\n`
-            message += `Call-ID: ${this.client.callId}\r\n`
-            message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
-            message += `Max-Forwards: ${hops}\r\n`
-            message += `Contact: <sip:${this.client.contactName}@nb4btmdpfcgh.invalid;transport=ws>;expires=600\r\n`
-            message += 'Allow: ACK,CANCEL,INVITE,MESSAGE,BYE,OPTIONS,INFO,NOTIFY,REFER\r\n'
-            message += 'Supported: outbound, path, gruu\r\n'
-            message += 'User-Agent: CA11/1.0.0 (Linux/Chrome) ca11\r\n'
+        let methodTarget, toTarget
+        if (this.context.extension) {
+            methodTarget = `sip:${this.context.extension}@${this.client.endpoint}`
+            toTarget = `sip:${this.context.extension}@${this.client.endpoint}`
+
         } else {
-            throw new Error(`request method not implemented: ${this.context.method}`)
+            methodTarget = `sip:${this.client.endpoint}`
+            toTarget = `sip:${this.client.user}@${this.client.endpoint}`
         }
+
+        let message = `${this.context.method} ${methodTarget} SIP/2.0\r\n`
+        message += `Via: SIP/2.0/WSS b55dhqu9asr5.invalid;branch=${this.context.branch}\r\n`
+        message += `Max-Forwards: ${hops}\r\n`
+
+        let toHeader = `To: <${toTarget}>`
+        if (this.context.toTag) toHeader += `;tag=${this.context.toTag}`
+        message += `${toHeader}\r\n`
+
+        let fromHeader = `From: <sip:${this.client.user}@${this.client.endpoint}>`
+        if (this.context.fromTag) fromHeader += `;tag=${this.context.fromTag}`
+        message += `${fromHeader}\r\n`
+
+        let callId = this.context.callId
+        // Fallback to a client defined callId.
+        if (!this.context.callId) callId = this.client.callId
+
+        message += `Call-ID: ${callId}\r\n`
+        message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
+
+        if (['REGISTER', 'INVITE'].includes(this.context.method)) {
+            message += `Contact: <sip:${this.client.contactName}@nb4btmdpfcgh.invalid;transport=ws>;expires=600\r\n`
+        }
+
+        message += 'User-Agent: CA11/1.0.0 (Linux/Chrome) ca11\r\n'
 
         if (this.context.digest) {
             message += `${this.client.authorizeMessage(this)}\r\n`
         }
 
-        // Must use two empty lines.
-        message += `Content-Length: ${this.context.content.length}\r\n\r\n`
+        // Header MUST end with two empty lines at the end.
+        if (this.context.content.length) {
+            message += 'Content-Type: application/sdp\r\n'
+        }
 
+        message += `Content-Length: ${this.context.content.length}\r\n\r\n`
         if (this.context.content.length) {
             message += `${this.context.content}\r\n`
         }
@@ -117,7 +101,6 @@ export class SipResponse {
     constructor(client, context) {
         this.client = client
         this.header = {}
-
         this.context = context
 
         if (!this.context.content) this.context.content = ''
@@ -125,53 +108,29 @@ export class SipResponse {
 
 
     toString() {
-        let message = ''
+        let message = `SIP/2.0 ${this.context.code} ${codeMap[this.context.code]}\r\n`
+        message += `Via: SIP/2.0/WS b55dhqu9asr5.invalid;branch=${this.context.branch}\r\n`
 
-        if (this.context.method === 'OPTIONS') {
-            message += `SIP/2.0 200 OK\r\n`
-            message += `Via: SIP/2.0/WS b55dhqu9asr5.invalid;branch=${this.context.branch}\r\n`
-            message += `From: <sip:${this.client.user}@sip.dev.ca11.app>;tag=${this.context.fromTag}\r\n`
-            message += `To: <sip:${this.client.contactName}@127.0.0.1>;tag=${this.context.toTag}\r\n`
-            message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
-            message += `Call-ID: ${this.context.callId}\r\n`
-            message += `Supported: outbound\r\n`
-            message += `User-Agent: CA11/undefined (Linux/Chrome) ca11\r\n`
-            message += `Allow: ACK,BYE,CANCEL,INFO,INVITE,MESSAGE,NOTIFY,OPTIONS,PRACK,REFER,REGISTER,SUBSCRIBE\r\n`
-            message += `Accept: application/sdp,application/dtmf-relay\r\n`
-        } else if (this.context.method === 'INVITE') {
+        let toTarget = `sip:${this.client.user}@${this.client.endpoint}`
+        let toHeader = `To: <${toTarget}>`
+        if (this.context.toTag) toHeader += `;tag=${this.context.toTag}`
+        message += `${toHeader}\r\n`
 
-            if (this.context.code === 100) {
-                message += `SIP/2.0 100 Trying\r\n`
-                message += `Via: SIP/2.0/WS b55dhqu9asr5.invalid;branch=${this.context.branch}\r\n`
-                message += `From: <sip:${this.client.user}@sip.dev.ca11.app>;tag=${this.context.fromTag}\r\n`
-                message += `To: <sip:${this.client.contactName}@127.0.0.1>\r\n`
-                message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
-                message += `Call-ID: ${this.context.callId}\r\n`
-                message += `Supported: outbound\r\n`
-                message += `User-Agent: CA11/undefined (Linux/Chrome) ca11\r\n`
-            } else if (this.context.code === 180) {
-                message += `SIP/2.0 180 Ringing\r\n`
-                message += `Via: SIP/2.0/WS 127.0.0.1:8088;rport;branch=${this.context.branch}\r\n`
-                message += `From: <sip:${this.client.user}@sip.dev.ca11.app>;tag=${this.context.fromTag}\r\n`
-                message += `To: <sip:${this.client.contactName}@127.0.0.1>;tag=${this.context.toTag}\r\n`
-                message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
-                message += `Call-ID: ${this.context.callId}\r\n`
-                message += `Contact: <sip:${this.client.contactName}@nb4btmdpfcgh.invalid;transport=ws>;expires=600\r\n`
-                message += `Supported: outbound\r\n`
-                message += `User-Agent: CA11/undefined (Linux/Chrome) ca11\r\n`
-            } else if (this.context.code === 200) {
-                message += `SIP/2.0 200 OK\r\n`
-                message += `Via: SIP/2.0/WS 127.0.0.1:8088;rport;branch=${this.context.branch}\r\n`
-                message += `From: <sip:${this.client.user}@sip.dev.ca11.app>;tag=${this.context.fromTag}\r\n`
-                message += `To: <sip:${this.client.contactName}@127.0.0.1>;tag=${this.context.toTag}\r\n`
-                message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
-                message += `Call-ID: ${this.context.callId}\r\n`
-                message += `Supported: outbound\r\n`
-                message += `User-Agent: CA11/undefined (Linux/Chrome) ca11\r\n`
-                message += `Allow: ACK,BYE,CANCEL,INFO,INVITE,MESSAGE,NOTIFY,OPTIONS,PRACK,REFER,REGISTER,SUBSCRIBE\r\n`
-                message += `Contact: <sip:${this.client.contactName}@nb4btmdpfcgh.invalid;transport=ws>\r\n`
-                message += 'Content-Type: application/sdp\r\n'
-            }
+        let fromHeader = `From: <sip:${this.client.user}@${this.client.endpoint}>`
+        if (this.context.fromTag) fromHeader += `;tag=${this.context.fromTag}`
+        message += `${fromHeader}\r\n`
+
+        message += `Call-ID: ${this.context.callId}\r\n`
+        message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
+
+        if ([180, 200].includes(this.context.code)) {
+            message += `Contact: <sip:${this.client.contactName}@nb4btmdpfcgh.invalid;transport=ws>;expires=600\r\n`
+        }
+
+        message += 'User-Agent: CA11/1.0.0 (Linux/Chrome) ca11\r\n'
+
+        if (this.context.content.length) {
+            message += 'Content-Type: application/sdp\r\n'
         }
 
         message += `Content-Length: ${this.context.content.length}\r\n\r\n`

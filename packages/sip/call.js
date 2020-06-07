@@ -137,7 +137,6 @@ class CallSip extends EventEmitter {
                 if (message.context.digest) {
                     // Initiate an outgoing call with credentials.
                     this.dialogs.invite.branch = `${magicCookie}${utils.token(7)}`
-                    console.log("OUTGOING INVITE DIGEST")
                     const inviteRequest = new SipRequest(this.client, {
                         branch: this.dialogs.invite.branch,
                         callId: this.id,
@@ -164,10 +163,8 @@ class CallSip extends EventEmitter {
                 }
             } else if (message.context.status === 'OK') {
                 this.dialogs.invite.toTag = message.context.header.To.tag
-                console.log("SET REMOTE DESCRIPTION", message)
                 await this.pc.setRemoteDescription({sdp: message.context.content, type: 'answer'})
 
-                console.log("SEND ACK REQUEST LOCAL TAG", this.localTag)
                 const ackRequest = new SipRequest(this.client, {
                     branch: this.dialogs.invite.toTag,
                     callId: this.id,
@@ -187,8 +184,6 @@ class CallSip extends EventEmitter {
             this.emit('terminate', {callID: this.id})
         } else if (message.context.method === 'MESSAGE') {
             this.emit('context', JSON.parse(message.context.content))
-        } else if (message.context.method === 'ACK') {
-            console.log("SET REMOTE DESCRIPTION")
         }
     }
 

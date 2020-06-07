@@ -22,7 +22,6 @@ class ClientSip extends EventEmitter {
         }
         this.state = 'unregistered'
         Object.assign(this, options)
-        console.log("CLIENT ENDPOINT", this.endpoint)
         this.uri = `sip:${this.endpoint}`
         this.contactName = utils.token(8)
     }
@@ -66,7 +65,17 @@ class ClientSip extends EventEmitter {
             if (message.context.code === 'PING') return
 
             if (message.context.method === 'OPTIONS') {
-                this.options(message)
+                this.dialogs.options.toTag = message.context.header.From.tag
+                const context = Object.assign(JSON.parse(JSON.stringify(message.context)), {
+                    code: 200,
+                    method: 'OPTIONS',
+                })
+
+                context.branch = context.header.Via.branch
+                context.toTag = this.localTag
+                context.fromTag = this.dialogs.options.toTag
+                const optionsResponse = new SipResponse(this, context)
+                this.socket.send(optionsResponse)
             }
 
             if (this.calls[message.context.header['Call-ID']]) {
@@ -105,20 +114,6 @@ class ClientSip extends EventEmitter {
         this.socket.onclose = () => {
             console.log("CLOSED")
         }
-    }
-
-
-    options(request) {
-        this.dialogs.options.toTag = request.context.header.From.tag
-        const context = Object.assign(JSON.parse(JSON.stringify(request.context)), {
-            method: 'OPTIONS',
-        })
-
-        context.branch = context.header.Via.branch
-        context.toTag = this.localTag
-        context.fromTag = this.dialogs.options.toTag
-        const message = new SipResponse(this, context)
-        this.socket.send(message)
     }
 
 
