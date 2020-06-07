@@ -209,8 +209,8 @@ class ClientSip extends EventEmitter {
             context.digest = message.context.digest
         }
 
-        const request = new SipRequest(this, context)
-        this.socket.send(request)
+        const registerRequest = new SipRequest(this, context)
+        this.socket.send(registerRequest)
     }
 
 }

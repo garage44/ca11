@@ -61,7 +61,7 @@ class CallSip extends EventEmitter {
     }
 
 
-    async initIncoming({context, localStream}) {
+    async initIncoming({context}) {
         const message = context
 
         this.inviteContext = message
@@ -126,6 +126,23 @@ class CallSip extends EventEmitter {
 
         const offer = await this.pc.createOffer()
         this.pc.setLocalDescription(offer)
+    }
+
+
+    keyPress(key) {
+        this.client.cseq += 1
+        const dtmfRequest = new SipRequest(this.client, {
+            branch: this.dialogs.invite.branch,
+            callId: this.id,
+            content: `Signal= ${key}\r\nDuration= 100\r\n`,
+            cseq: this.client.cseq,
+            extension: this.description.endpoint,
+            fromTag: this.localTag,
+            method: 'INFO',
+            toTag: this.dialogs.invite.toTag,
+        })
+
+        this.client.socket.send(dtmfRequest)
     }
 
 

@@ -45,12 +45,14 @@ export class SipRequest {
 
     toString() {
         let methodTarget, toTarget
-        if (this.context.extension) {
-            methodTarget = `sip:${this.context.extension}@${this.client.endpoint}`
-            toTarget = `sip:${this.context.extension}@${this.client.endpoint}`
-
-        } else {
+        if (['INFO','REGISTER'].includes(this.context.method)) {
             methodTarget = `sip:${this.client.endpoint}`
+        } else {
+            methodTarget = `sip:${this.context.extension}@${this.client.endpoint}`
+        }
+        if (this.context.extension) {
+            toTarget = `sip:${this.context.extension}@${this.client.endpoint}`
+        } else {
             toTarget = `sip:${this.client.user}@${this.client.endpoint}`
         }
 
@@ -83,11 +85,13 @@ export class SipRequest {
             message += `${this.client.authorizeMessage(this)}\r\n`
         }
 
-        // Header MUST end with two empty lines at the end.
-        if (this.context.content.length) {
+        if (this.context.method === 'INFO') {
+            message += 'Content-Type: application/dtmf-relay\r\n'
+        } else if (this.context.content.length) {
             message += 'Content-Type: application/sdp\r\n'
         }
 
+        // Header MUST end with two empty lines at the end.
         message += `Content-Length: ${this.context.content.length}\r\n\r\n`
         if (this.context.content.length) {
             message += `${this.context.content}\r\n`

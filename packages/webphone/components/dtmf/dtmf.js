@@ -32,7 +32,7 @@ export default (app) => {
                 app.emit('caller:call-activate', {callId: null})
             },
             press: function(key) {
-                app.emit('sip:dtmf', {callId: this.callActive.id, key})
+                app.modules.caller.calls[this.callActive.id].handler.keyPress(key)
             },
         }, app.helpers.sharedMethods()),
         props: {
