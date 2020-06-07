@@ -148,6 +148,9 @@ class CallSip extends EventEmitter {
 
     async onMessage(message) {
         if (message.context.method === 'INVITE') {
+            if (this.status === 'accepted') {
+                console.log("REINVITE", message)
+            }
             if (message.context.status === 'Unauthorized') {
                 this.dialogs.invite.toTag = message.context.header.To.tag
 
@@ -194,6 +197,7 @@ class CallSip extends EventEmitter {
                 })
                 this.client.socket.send(ackRequest)
                 // Outgoing call accepted;
+                this.status = 'accepted'
                 this.emit('outgoing-accepted')
 
             }
