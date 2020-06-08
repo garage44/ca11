@@ -19,7 +19,7 @@ export default (app) => {
         },
         methods: Object.assign({
             callAccept: function(call) {
-                app.modules.caller.calls[call.id].acceptInvite()
+                app.modules.caller.calls[call.id].acceptCall()
             },
             callDescription: function(...args) {app.modules.caller.call(...args)},
             callTerminate: function(call) {

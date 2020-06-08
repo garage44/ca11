@@ -189,10 +189,10 @@ class Call {
     }
 
 
-    acceptInvite() {
+    acceptCall() {
         const stream = this.app.state.settings.webrtc.media.stream
         const localStream = this.app.media.streams[stream[stream.type].id]
-        this.handler.acceptInvite(localStream)
+        this.handler.acceptCall(localStream)
     }
 
 

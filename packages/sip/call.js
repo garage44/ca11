@@ -21,7 +21,7 @@ class CallSip extends EventEmitter {
     }
 
 
-    async acceptInvite(localStream) {
+    async acceptCall(localStream) {
         this.pc = new RTCPeerConnection({
             iceServers: this.client.stun.map((i) => ({urls: i})),
             sdpSemantics:'unified-plan',
@@ -33,7 +33,6 @@ class CallSip extends EventEmitter {
         for (const track of localStream.getTracks()) {
             this.pc.addTrack(track, localStream)
         }
-
 
         const answer = await this.pc.createAnswer()
         await this.pc.setLocalDescription(answer)
@@ -95,6 +94,7 @@ class CallSip extends EventEmitter {
 
 
     async initOutgoing(localStream) {
+        console.log("INITOUTGOING CALLED")
         this.pc = new RTCPeerConnection({
             iceServers: this.client.stun.map((i) => ({urls: i})),
             sdpSemantics:'unified-plan',
@@ -106,17 +106,22 @@ class CallSip extends EventEmitter {
             if (this.pc.iceGatheringState === 'complete') {
                 this.client.calls[this.id] = this
                 // Send initial invite to retrieve a digest.
-                const inviteRequest = new SipRequest(this.client, {
-                    branch: `${magicCookie}${utils.token(7)}`,
-                    callId: this.id,
-                    content: this.pc.localDescription.sdp,
-                    cseq: this.client.cseq,
-                    extension: this.description.endpoint,
-                    fromTag: this.localTag,
-                    method: 'INVITE',
-                })
 
-                this.client.socket.send(inviteRequest)
+                if (this.status !== 'accepted') {
+                    console.log("INVITE REQUEST 3(ICE GATHERING CHANGE)")
+                    const inviteRequest = new SipRequest(this.client, {
+                        branch: `${magicCookie}${utils.token(7)}`,
+                        callId: this.id,
+                        content: this.pc.localDescription.sdp,
+                        cseq: this.client.cseq,
+                        extension: this.description.endpoint,
+                        fromTag: this.localTag,
+                        method: 'INVITE',
+                    })
+
+                    this.client.socket.send(inviteRequest)
+                }
+
             }
         }
 
@@ -149,14 +154,44 @@ class CallSip extends EventEmitter {
     async onMessage(message) {
         if (message.context.method === 'INVITE') {
             if (this.status === 'accepted') {
-                console.log("REINVITE", message)
+                console.log("REINVITE", message.context.code)
+                if (message instanceof SipRequest) {
+                    await this.pc.setRemoteDescription({sdp: message.context.content, type: 'offer'})
+
+                    // for (const track of localStream.getTracks()) {
+                    //     this.pc.addTrack(track, localStream)
+                    // }
+
+                    const answer = await this.pc.createAnswer()
+                    await this.pc.setLocalDescription(answer)
+
+                    // Incoming call/invite accepted.
+                    const inviteResponse = new SipResponse(this.client, {
+                        branch: this.dialogs.invite.branch,
+                        callId: this.id,
+                        code: 200,
+                        content: answer.sdp,
+                        cseq: message.context.cseq,
+                        digest: this.digest,
+                        extension: this.description.endpoint,
+                        fromTag: this.dialogs.invite.toTag,
+                        method: 'INVITE',
+                        toTag: this.localTag,
+                    })
+
+                    this.client.socket.send(inviteResponse)
+                }
+
             }
             if (message.context.status === 'Unauthorized') {
                 this.dialogs.invite.toTag = message.context.header.To.tag
 
                 if (message.context.digest) {
+                    this.digest = message.context.digest
+
                     // Initiate an outgoing call with credentials.
                     this.dialogs.invite.branch = `${magicCookie}${utils.token(7)}`
+                    console.log("INVITE REQUEST 1")
                     const inviteRequest = new SipRequest(this.client, {
                         branch: this.dialogs.invite.branch,
                         callId: this.id,
@@ -178,10 +213,13 @@ class CallSip extends EventEmitter {
                         toTag: this.dialogs.invite.toTag,
                     })
 
+
+                    console.log("INVITE REQUEST 2")
                     this.client.socket.send(inviteRequest)
                     this.client.socket.send(ackRequest)
                 }
             } else if (message.context.status === 'OK') {
+                console.log("GOT INVITE OK", message)
                 this.dialogs.invite.toTag = message.context.header.To.tag
                 await this.pc.setRemoteDescription({sdp: message.context.content, type: 'answer'})
 
