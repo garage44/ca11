@@ -62,7 +62,7 @@ export class SipRequest {
         }
 
         let message = `${this.context.method} ${methodTarget} SIP/2.0\r\n`
-        message += `Via: SIP/2.0/WSS b55dhqu9asr5.invalid;branch=${this.context.branch}\r\n`
+        message += `Via: SIP/2.0/WSS b55dhqu9asr5.invalid;rport;branch=${this.context.branch}\r\n`
         message += `Max-Forwards: ${hops}\r\n`
 
         let toHeader = `To: <${toTarget}>`
@@ -121,7 +121,7 @@ export class SipResponse {
 
     toString() {
         let message = `SIP/2.0 ${this.context.code} ${codeMap[this.context.code]}\r\n`
-        message += `Via: SIP/2.0/WS b55dhqu9asr5.invalid;branch=${this.context.branch}\r\n`
+        message += `Via: SIP/2.0/WS b55dhqu9asr5.invalid;rport;branch=${this.context.branch}\r\n`
 
         let toTarget = `sip:${this.client.user}@${this.client.endpoint}`
         let toHeader = `To: <${toTarget}>`
