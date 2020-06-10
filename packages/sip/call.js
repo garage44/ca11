@@ -31,6 +31,7 @@ class CallSip extends EventEmitter {
         await this.pc.setRemoteDescription({sdp: this.inviteContext.context.content, type: 'offer'})
 
         for (const track of localStream.getTracks()) {
+            console.log('TRACK', track)
             this.pc.addTrack(track, localStream)
         }
 
@@ -126,6 +127,7 @@ class CallSip extends EventEmitter {
         }
 
         for (const track of localStream.getTracks()) {
+            console.log("LOCAL TRACK", track)
             this.pc.addTrack(track, localStream)
         }
 
@@ -154,8 +156,17 @@ class CallSip extends EventEmitter {
     async onMessage(message) {
         if (message.context.method === 'INVITE') {
             if (this.status === 'accepted') {
-                console.log("REINVITE", message.context.code)
+                this.dialogs.invite.branch = message.context.header.Via.branch
+
                 if (message instanceof SipRequest) {
+                    // Match stream to ConfBridge.
+                    // TODO Match label and stream id with Confbridge stats.
+                    for (const media of message.sdp.media) {
+                        if (media.label) {
+                            console.log("GOT LABEL!", media, media.label)
+                        }
+                    }
+
                     await this.pc.setRemoteDescription({sdp: message.context.content, type: 'offer'})
 
                     // for (const track of localStream.getTracks()) {
@@ -191,7 +202,6 @@ class CallSip extends EventEmitter {
 
                     // Initiate an outgoing call with credentials.
                     this.dialogs.invite.branch = `${magicCookie}${utils.token(7)}`
-                    console.log("INVITE REQUEST 1")
                     const inviteRequest = new SipRequest(this.client, {
                         branch: this.dialogs.invite.branch,
                         callId: this.id,
@@ -213,13 +223,10 @@ class CallSip extends EventEmitter {
                         toTag: this.dialogs.invite.toTag,
                     })
 
-
-                    console.log("INVITE REQUEST 2")
                     this.client.socket.send(inviteRequest)
                     this.client.socket.send(ackRequest)
                 }
             } else if (message.context.status === 'OK') {
-                console.log("GOT INVITE OK", message)
                 this.dialogs.invite.toTag = message.context.header.To.tag
                 await this.pc.setRemoteDescription({sdp: message.context.content, type: 'answer'})
 
@@ -242,29 +249,52 @@ class CallSip extends EventEmitter {
         } else if (message.context.method === 'BYE') {
             this.emit('terminate', {callID: this.id})
         } else if (message.context.method === 'MESSAGE') {
-            this.emit('context', JSON.parse(message.context.content))
+            const infoMsg = JSON.parse(message.context.content)
+            if (['ConfbridgeLeave', 'ConfbridgeJoin', 'ConfbridgeWelcome'].includes(infoMsg.type)) {
+
+                if (infoMsg.type === 'ConfbridgeLeave') {
+                    this.emit('conference', {
+                        action: 'leave',
+                        user: {
+                            displayName: 'Bob',
+                            streamId: null,
+                        },
+                    })
+                } else if (infoMsg.type === 'ConfbridgeJoin') {
+                    this.emit('conference', {
+                        action: 'join',
+                        user: {
+                            displayName: 'Bob',
+                            streamId: null,
+                        },
+                    })
+                } else {
+                    this.emit('conference', {
+                        action: 'enter',
+                        user: {
+                            displayName: 'Bob',
+                            streamId: null,
+                        },
+                    })
+                }
+
+            }
+
         }
     }
 
 
-    onTrack(track) {
-        const receivers = this.pc.getReceivers()
-        if (!receivers.length) return
+    onTrack(rtcTrackEvent) {
+        const track = rtcTrackEvent.receiver.track
+        this.tracks[track.id] = track
+        const newStream = new MediaStream()
+        newStream.addTrack(track)
 
-        const newTracks = []
-        for (const receiver of receivers) {
-            if (!this.tracks[receiver.track.id]) {
-                this.tracks[receiver.track.id] = receiver.track
-                newTracks.push(receiver.track)
-            }
+        track.onended = () => {
+            this.emit('trackended', newStream, track)
+            delete this.tracks[track.id]
         }
-        if (!newTracks.length) return
-
-        for (const track of newTracks) {
-            const newStream = new MediaStream()
-            newStream.addTrack(track)
-            this.emit('track', newStream, track)
-        }
+        this.emit('track', newStream, track)
     }
 
 

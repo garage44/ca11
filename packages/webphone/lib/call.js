@@ -20,7 +20,6 @@ class Call {
         this.busyTone = app.sounds.busyTone
         this.translations = app.helpers.getTranslations().call
 
-
         this.state = {
             active: true,
             endpoint: null,
@@ -73,16 +72,22 @@ class Call {
             this.addStream(newStream, track.kind)
 
             const path = `caller.calls.${this.id}.streams.${newStream.id}`
-            track.onunmute = () => {this.app.setState({muted: false}, {path})}
-            track.onmute = () => {this.app.setState({muted: true}, {path})}
-            track.onended = () => {
-                this.app.logger.debug(`${this}remove ${track.kind} track ${track.id}`)
-                delete this.tracks[track.id]
-                this._cleanupStream(newStream.id)
+            track.onunmute = () => {
+                console.log("TRACK UNMUTE")
+                this.app.setState({muted: false}, {path})
             }
+            track.onmute = () => {this.app.setState({muted: true}, {path})}
+
         })
 
-        this.handler.on('context', (message) => {
+        this.handler.on('trackended', (newStream, track) => {
+            console.log("TRACK ENDED(CALL LIB)")
+            this.app.logger.debug(`${this}remove ${track.kind} track ${track.id}`)
+            this._cleanupStream(newStream.id)
+        })
+
+        // Deal with conference events.
+        this.handler.on('conference', (message) => {
             console.log('HANDLER CONTEXT:', message)
         })
 

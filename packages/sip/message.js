@@ -1,4 +1,6 @@
 
+import * as sdpTransform from 'sdp-transform'
+
 const codeMap = {
     100: 'Trying',
     180: 'Ringing',
@@ -39,6 +41,9 @@ export class SipRequest {
         this.context = context
 
         if (!this.context.content) this.context.content = ''
+        else {
+            this.sdp = sdpTransform.parse(this.context.content)
+        }
 
         this.header = {}
     }
@@ -108,6 +113,9 @@ export class SipResponse {
         this.context = context
 
         if (!this.context.content) this.context.content = ''
+        else {
+            this.sdp = sdpTransform.parse(this.context.content)
+        }
     }
 
 

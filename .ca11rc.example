@@ -19,6 +19,7 @@
             "@garage11/vue-i18n": "./static/web_modules/@garage11/vue-i18n.js",
             "@garage11/vue-i18n/src/store-stash.js": "./static/web_modules/@garage11/vue-i18n/src/store-stash.js",
             "eventemitter3": "./static/web_modules/eventemitter3.js",
+            "sdp-transform": "./static/web_modules/sdp-transform.js",
             "v-click-outside": "./static/web_modules/v-click-outside.js",
             "vue-stash": "./static/web_modules/vue-stash.js",
             "vue-svgicon": "./static/web_modules/vue-svgicon.js",
