@@ -168,11 +168,6 @@ class CallSip extends EventEmitter {
                     }
 
                     await this.pc.setRemoteDescription({sdp: message.context.content, type: 'offer'})
-
-                    // for (const track of localStream.getTracks()) {
-                    //     this.pc.addTrack(track, localStream)
-                    // }
-
                     const answer = await this.pc.createAnswer()
                     await this.pc.setLocalDescription(answer)
 
@@ -223,8 +218,8 @@ class CallSip extends EventEmitter {
                         toTag: this.dialogs.invite.toTag,
                     })
 
-                    this.client.socket.send(inviteRequest)
                     this.client.socket.send(ackRequest)
+                    this.client.socket.send(inviteRequest)
                 }
             } else if (message.context.status === 'OK') {
                 this.dialogs.invite.toTag = message.context.header.To.tag
@@ -250,6 +245,20 @@ class CallSip extends EventEmitter {
             this.emit('terminate', {callID: this.id})
         } else if (message.context.method === 'MESSAGE') {
             const infoMsg = JSON.parse(message.context.content)
+
+            const messageResponse = new SipResponse(this.client, {
+                branch: this.dialogs.invite.branch,
+                callId: this.id,
+                code: 200,
+                cseq: message.context.cseq,
+                extension: this.description.endpoint,
+                fromTag: this.dialogs.invite.toTag,
+                method: 'MESSAGE',
+                toTag: this.localTag,
+            })
+
+            this.client.socket.send(messageResponse)
+
             if (['ConfbridgeLeave', 'ConfbridgeJoin', 'ConfbridgeWelcome'].includes(infoMsg.type)) {
 
                 if (infoMsg.type === 'ConfbridgeLeave') {

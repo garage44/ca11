@@ -65,12 +65,13 @@ class ClientSip extends EventEmitter {
             if (message.context.code === 'PING') return
 
             if (message.context.method === 'OPTIONS') {
-                console.log(message.context.header.To)
                 this.dialogs.options.toTag = message.context.header.From.tag
                 const context = Object.assign(JSON.parse(JSON.stringify(message.context)), {
                     alias: true,
                     code: 200,
+                    fromHost: message.context.header.From.address,
                     method: 'OPTIONS',
+                    rport: true,
                     toTarget: message.context.header.To.address,
                 })
 
