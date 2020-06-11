@@ -1,9 +1,9 @@
 {
   "name": "@ca11/webphone",
   "version": "1.0.0",
-  "author": "Garage11",
+  "author": "https://github.com/garage11/ca11/graphs/contributors",
   "type": "module",
-  "license": "MIT",
+  "license": "Unlicense",
   "repository": {
     "type": "git",
     "url": "https://github.com/garage11/ca11"
