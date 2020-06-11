@@ -2,8 +2,8 @@
   "name": "@ca11/docs",
   "version": "1.0.0",
   "description": "CA11 project documentation",
-  "author": "Garage11",
-  "license": "MIT",
+  "author": "https://github.com/garage11/ca11/graphs/contributors",
+  "license": "Unlicense",
   "homepage": "https://github.com/garage11/ca11#readme",
   "repository": {
     "type": "git",
