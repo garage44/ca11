@@ -65,13 +65,17 @@ class ClientSip extends EventEmitter {
             if (message.context.code === 'PING') return
 
             if (message.context.method === 'OPTIONS') {
+                console.log(message.context.header.To)
                 this.dialogs.options.toTag = message.context.header.From.tag
                 const context = Object.assign(JSON.parse(JSON.stringify(message.context)), {
+                    alias: true,
                     code: 200,
                     method: 'OPTIONS',
+                    toTarget: message.context.header.To.address,
                 })
 
                 context.branch = context.header.Via.branch
+                context.host = message.context.header.Via.host
                 context.toTag = this.localTag
                 context.fromTag = this.dialogs.options.toTag
                 const optionsResponse = new SipResponse(this, context)
@@ -163,22 +167,30 @@ class ClientSip extends EventEmitter {
 
         const to = context.header.To.split(';')
         context.header.To = {}
-        context.header.To.address = to[0]
+        context.header.To.address = to[0].replace('<sip:', '').replace('>', '')
         // Tag from To/From and Call-ID define a Dialog.
         if (to[1]) context.header.To.tag = to[1].split('=')[1]
 
         const from = context.header.From.split(';')
         context.header.From = {}
-        context.header.From.address = from[0]
+        context.header.From.address = from[0].replace('<sip:', '').replace('>', '')
+
         if (from[1]) context.header.From.tag = from[1].split('=')[1]
 
-        const via = context.header.Via.split(';')
-        context.header.Via = {}
+        const via = {}
 
-        const branch = via.find((i) => i.includes('branch'))
-        if (branch) {
-            context.header.Via.branch = branch.split('=')[1]
-        }
+        context.header.Via.split(';')
+            .map((i) => {
+                if (i.includes('SIP/2.0')) {
+                    via.host = i.split(' ')[1]
+                }
+                return i
+            })
+            .filter(i => i.includes('='))
+            .map((i) => i.split('='))
+            .forEach((i) => {via[i[0]] = i[1]})
+
+        context.header.Via = via
 
         if (context.header['WWW-Authenticate']) {
             context.digest = utils.commaSepToObject(context.header['WWW-Authenticate'])

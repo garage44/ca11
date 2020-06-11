@@ -62,16 +62,17 @@ export class SipRequest {
         }
 
         let message = `${this.context.method} ${methodTarget} SIP/2.0\r\n`
-        message += `Via: SIP/2.0/WSS b55dhqu9asr5.invalid;rport;branch=${this.context.branch}\r\n`
+        const host = this.context.host ? this.context.host : 'b55dhqu9asr5.invalid'
+        message += `Via: SIP/2.0/WSS ${host};rport;branch=${this.context.branch}\r\n`
         message += `Max-Forwards: ${hops}\r\n`
-
-        let toHeader = `To: <${toTarget}>`
-        if (this.context.toTag) toHeader += `;tag=${this.context.toTag}`
-        message += `${toHeader}\r\n`
 
         let fromHeader = `From: <sip:${this.client.user}@${this.client.endpoint}>`
         if (this.context.fromTag) fromHeader += `;tag=${this.context.fromTag}`
         message += `${fromHeader}\r\n`
+
+        let toHeader = `To: <${toTarget}>`
+        if (this.context.toTag) toHeader += `;tag=${this.context.toTag}`
+        message += `${toHeader}\r\n`
 
         let callId = this.context.callId
         // Fallback to a client defined callId.
@@ -95,7 +96,7 @@ export class SipRequest {
         } else if (this.context.content.length) {
             message += 'Content-Type: application/sdp\r\n'
         }
-
+        ''
         // Header MUST end with two empty lines at the end.
         message += `Content-Length: ${this.context.content.length}\r\n\r\n`
         if (this.context.content.length) {
@@ -121,25 +122,35 @@ export class SipResponse {
 
     toString() {
         let message = `SIP/2.0 ${this.context.code} ${codeMap[this.context.code]}\r\n`
-        message += `Via: SIP/2.0/WS b55dhqu9asr5.invalid;rport;branch=${this.context.branch}\r\n`
-
-        let toTarget = `sip:${this.client.user}@${this.client.endpoint}`
-        let toHeader = `To: <${toTarget}>`
-        if (this.context.toTag) toHeader += `;tag=${this.context.toTag}`
-        message += `${toHeader}\r\n`
+        const host = this.context.host ? this.context.host : 'b55dhqu9asr5.invalid'
+        message += `Via: SIP/2.0/WS ${host};rport;branch=${this.context.branch}`
+        if (this.context.alias) message += ';alias'
+        message += '\r\n'
 
         let fromHeader = `From: <sip:${this.client.user}@${this.client.endpoint}>`
         if (this.context.fromTag) fromHeader += `;tag=${this.context.fromTag}`
         message += `${fromHeader}\r\n`
 
+        const toTarget = this.context.toTarget ? this.context.toTarget : `${this.client.user}@${this.client.endpoint}`
+        let toHeader = `To: <sip:${toTarget}>`
+        if (this.context.toTag) toHeader += `;tag=${this.context.toTag}`
+
+        message += `${toHeader}\r\n`
+
+        // if ([180, 200].includes(this.context.code)) {
+        //     message += `Contact: <sip:${this.client.contactName}@nb4btmdpfcgh.invalid;transport=ws>;expires=600\r\n`
+        // }
+
         message += `Call-ID: ${this.context.callId}\r\n`
         message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
 
-        if ([180, 200].includes(this.context.code)) {
-            message += `Contact: <sip:${this.client.contactName}@nb4btmdpfcgh.invalid;transport=ws>;expires=600\r\n`
-        }
-
         message += 'User-Agent: CA11/1.0.0 (Linux/Chrome) ca11\r\n'
+
+        if (this.context.method === 'OPTIONS') {
+            message += 'Supported: outbound\r\n'
+            message += 'Allow: ACK,BYE,CANCEL,INFO,INVITE,MESSAGE,NOTIFY,OPTIONS,PRACK,REFER,REGISTER,SUBSCRIBE\r\n'
+            message += 'Accept: application/sdp,application/dtmf-relay\r\n'
+        }
 
         if (this.context.content.length) {
             message += 'Content-Type: application/sdp\r\n'
