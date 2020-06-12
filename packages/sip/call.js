@@ -16,8 +16,8 @@ class CallSip extends EventEmitter {
         this.localTag = utils.token(12)
 
         this.id = id
-        this.on('message', this.onMessage.bind(this))
         this.description = description
+        this.on('message', this.onMessage.bind(this))
     }
 
 
@@ -31,7 +31,6 @@ class CallSip extends EventEmitter {
         await this.pc.setRemoteDescription({sdp: this.inviteContext.context.content, type: 'offer'})
 
         for (const track of localStream.getTracks()) {
-            console.log('TRACK', track)
             this.pc.addTrack(track, localStream)
         }
 
@@ -40,15 +39,15 @@ class CallSip extends EventEmitter {
 
         // Incoming call/invite accepted.
         const inviteResponse = new SipResponse(this.client, {
-            branch: this.dialogs.invite.branch,
             callId: this.id,
             code: 200,
             content: answer.sdp,
             cseq: this.inviteContext.context.cseq,
             extension: this.description.endpoint,
-            fromTag: this.dialogs.invite.toTag,
+            from: {tag: this.dialogs.invite.toTag},
             method: 'INVITE',
-            toTag: this.localTag,
+            to: {tag: this.localTag},
+            via: {branch: this.dialogs.invite.branch},
         })
 
         this.client.socket.send(inviteResponse)
@@ -65,17 +64,17 @@ class CallSip extends EventEmitter {
         const message = context
 
         this.inviteContext = message
-        this.dialogs.invite.branch = message.context.header.Via.branch
+        this.dialogs.invite.branch = message.context.headers.via.branch
         this.inviteCseq = message.context.cseq
 
         const tryingResponse = new SipResponse(this.client, {
-            branch: this.dialogs.invite.branch,
             callId: this.id,
             code: 100,
             cseq: message.context.cseq,
             extension: this.description.endpoint,
-            fromTag:  this.localTag,
+            from: {tag: this.localTag},
             method: 'INVITE',
+            via: {branch: this.dialogs.invite.branch},
         })
 
         const ringingResponse = new SipResponse(this.client, {
@@ -84,9 +83,10 @@ class CallSip extends EventEmitter {
             code: 180,
             cseq: message.context.cseq,
             extension: this.description.endpoint,
-            fromTag:  this.localTag,
+            from: {tag: this.localTag},
             method: 'INVITE',
-            toTag: this.dialogs.invite.toTag,
+            to: {tag: this.dialogs.invite.toTag},
+            via: {branch: this.dialogs.invite.branch},
         })
 
         this.client.socket.send(tryingResponse)
@@ -95,7 +95,6 @@ class CallSip extends EventEmitter {
 
 
     async initOutgoing(localStream) {
-        console.log("INITOUTGOING CALLED")
         this.pc = new RTCPeerConnection({
             iceServers: this.client.stun.map((i) => ({urls: i})),
             sdpSemantics:'unified-plan',
@@ -106,18 +105,15 @@ class CallSip extends EventEmitter {
             // Send the invite once the candidates are part of the sdp.
             if (this.pc.iceGatheringState === 'complete') {
                 this.client.calls[this.id] = this
-                // Send initial invite to retrieve a digest.
-
                 if (this.status !== 'accepted') {
-                    console.log("INVITE REQUEST 3(ICE GATHERING CHANGE)")
                     const inviteRequest = new SipRequest(this.client, {
-                        branch: `${magicCookie}${utils.token(7)}`,
                         callId: this.id,
                         content: this.pc.localDescription.sdp,
                         cseq: this.client.cseq,
                         extension: this.description.endpoint,
-                        fromTag: this.localTag,
+                        from: {tag: this.localTag},
                         method: 'INVITE',
+                        via: {branch: `${magicCookie}${utils.token(7)}`},
                     })
 
                     this.client.socket.send(inviteRequest)
@@ -127,7 +123,6 @@ class CallSip extends EventEmitter {
         }
 
         for (const track of localStream.getTracks()) {
-            console.log("LOCAL TRACK", track)
             this.pc.addTrack(track, localStream)
         }
 
@@ -139,14 +134,14 @@ class CallSip extends EventEmitter {
     keyPress(key) {
         this.client.cseq += 1
         const dtmfRequest = new SipRequest(this.client, {
-            branch: this.dialogs.invite.branch,
             callId: this.id,
             content: `Signal= ${key}\r\nDuration= 100\r\n`,
             cseq: this.client.cseq,
             extension: this.description.endpoint,
-            fromTag: this.localTag,
+            from: {tag: this.localTag},
             method: 'INFO',
-            toTag: this.dialogs.invite.toTag,
+            to: {tag: this.dialogs.invite.toTag},
+            via: {branch: this.dialogs.invite.branch},
         })
 
         this.client.socket.send(dtmfRequest)
@@ -173,16 +168,16 @@ class CallSip extends EventEmitter {
 
                     // Incoming call/invite accepted.
                     const inviteResponse = new SipResponse(this.client, {
-                        branch: this.dialogs.invite.branch,
                         callId: this.id,
                         code: 200,
                         content: answer.sdp,
                         cseq: message.context.cseq,
                         digest: this.digest,
                         extension: this.description.endpoint,
-                        fromTag: this.dialogs.invite.toTag,
+                        from: {tag: this.dialogs.invite.toTag},
                         method: 'INVITE',
-                        toTag: this.localTag,
+                        to: {tag: this.localTag},
+                        via: {branch: this.dialogs.invite.branch},
                     })
 
                     this.client.socket.send(inviteResponse)
@@ -198,14 +193,14 @@ class CallSip extends EventEmitter {
                     // Initiate an outgoing call with credentials.
                     this.dialogs.invite.branch = `${magicCookie}${utils.token(7)}`
                     const inviteRequest = new SipRequest(this.client, {
-                        branch: this.dialogs.invite.branch,
                         callId: this.id,
                         content: this.pc.localDescription.sdp,
                         cseq: message.context.cseq,
                         digest: message.context.digest,
                         extension: this.description.endpoint,
-                        fromTag: this.localTag,
+                        from: {tag: this.localTag},
                         method: 'INVITE',
+                        via: {branch: this.dialogs.invite.branch},
                     })
 
                     const ackRequest = new SipRequest(this.client, {
@@ -213,9 +208,9 @@ class CallSip extends EventEmitter {
                         callId: this.id,
                         cseq: message.context.cseq,
                         extension: this.description.endpoint,
-                        fromTag: this.localTag,
+                        from: {tag: this.localTag},
                         method: 'ACK',
-                        toTag: this.dialogs.invite.toTag,
+                        to: {tag: this.dialogs.invite.toTag},
                     })
 
                     this.client.socket.send(ackRequest)
@@ -225,14 +220,15 @@ class CallSip extends EventEmitter {
                 this.dialogs.invite.toTag = message.context.header.To.tag
                 await this.pc.setRemoteDescription({sdp: message.context.content, type: 'answer'})
 
+                // MISSING AORS
                 const ackRequest = new SipRequest(this.client, {
                     branch: this.dialogs.invite.toTag,
                     callId: this.id,
                     cseq: message.context.cseq,
                     extension: this.description.endpoint,
-                    fromTag: this.localTag,
+                    from: {tag: this.localTag},
                     method: 'ACK',
-                    toTag: this.dialogs.invite.toTag,
+                    to: {tag: this.dialogs.invite.toTag},
                     transport: 'ws',
                 })
                 this.client.socket.send(ackRequest)
@@ -247,14 +243,14 @@ class CallSip extends EventEmitter {
             const infoMsg = JSON.parse(message.context.content)
 
             const messageResponse = new SipResponse(this.client, {
-                branch: this.dialogs.invite.branch,
                 callId: this.id,
-                code: 200,
+                code: 501,
                 cseq: message.context.cseq,
                 extension: this.description.endpoint,
-                fromTag: this.dialogs.invite.toTag,
+                from: {aor: message.context.header.From.raw, tag: this.dialogs.invite.toTag},
                 method: 'MESSAGE',
-                toTag: this.localTag,
+                to: {aor: message.context.header.To.aor, tag: this.localTag},
+                via: {branch: this.dialogs.invite.branch, rport: true},
             })
 
             this.client.socket.send(messageResponse)

@@ -1,16 +1,15 @@
 {
   "private": true,
-  "version": "1.0.0",
-  "type": "module",
   "workspaces": [
     "packages/*"
   ],
+  "version": "1.0.0",
+  "type": "module",
   "engines": {
     "node": ">=13.0.0",
     "yarn": ">= 1.19.0"
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap",
     "build": "./cli.js build",
     "lint": "yarn lint:js;yarn lint:scss",
     "lint:js": "eslint \"packages/**/{*.js,*.vue}\"",
@@ -54,7 +53,6 @@
     "imagemin": "^7.0.1",
     "imagemin-jpegtran": "^6.0.0",
     "imagemin-pngquant": "^8.0.0",
-    "lerna": "^3.19.0",
     "lint-staged": "9.x.x",
     "lodash": "^4.17.15",
     "node-sass": "^4.13.1",

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "author": "https://github.com/garage11/ca11/graphs/contributors",
   "type": "module",
-  "license": "Unlicense",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/garage11/ca11"

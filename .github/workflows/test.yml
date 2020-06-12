@@ -19,9 +19,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: yarn install, build, and test
       run: |
-        yarn global add lerna
-        yarn bootstrap
         yarn
-        npm run lint
+        yarn lint
       env:
         CI: true
