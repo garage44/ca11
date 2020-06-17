@@ -10,8 +10,8 @@ class CallSip extends EventEmitter {
 
         // Keep track of multiple dialogs.
         this.dialogs = {
-            invite: {branch: utils.token(12), toTag: null},
-            options: {toTag: null},
+            invite: {branch: utils.token(12), to: {tag: null}},
+            options: {to: {tag: null}},
         }
         this.localTag = utils.token(12)
 
@@ -44,7 +44,7 @@ class CallSip extends EventEmitter {
             content: answer.sdp,
             cseq: this.inviteContext.context.cseq,
             extension: this.description.endpoint,
-            from: {tag: this.dialogs.invite.toTag},
+            from: {tag: this.dialogs.invite.to.tag},
             method: 'INVITE',
             to: {tag: this.localTag},
             via: {branch: this.dialogs.invite.branch},
@@ -84,7 +84,7 @@ class CallSip extends EventEmitter {
             extension: this.description.endpoint,
             from: {tag: this.localTag},
             method: 'INVITE',
-            to: {tag: this.dialogs.invite.toTag},
+            to: {tag: this.dialogs.invite.to.tag},
             via: {branch: this.dialogs.invite.branch},
         })
 
@@ -139,7 +139,7 @@ class CallSip extends EventEmitter {
             extension: this.description.endpoint,
             from: {tag: this.localTag},
             method: 'INFO',
-            to: {tag: this.dialogs.invite.toTag},
+            to: {tag: this.dialogs.invite.to.tag},
             via: {branch: this.dialogs.invite.branch},
         })
 
@@ -174,7 +174,7 @@ class CallSip extends EventEmitter {
                         cseq: message.context.cseq,
                         digest: this.digest,
                         extension: this.description.endpoint,
-                        from: {tag: this.dialogs.invite.toTag},
+                        from: {tag: this.dialogs.invite.to.tag},
                         method: 'INVITE',
                         to: {tag: this.localTag},
                         via: {branch: this.dialogs.invite.branch},
@@ -184,7 +184,7 @@ class CallSip extends EventEmitter {
                 }
             }
             if (message.context.status === 'Unauthorized') {
-                this.dialogs.invite.toTag = message.context.to.tag
+                this.dialogs.invite.to.tag = message.context.to.tag
 
                 if (message.context.digest) {
                     this.digest = message.context.digest
@@ -209,14 +209,14 @@ class CallSip extends EventEmitter {
                         extension: this.description.endpoint,
                         from: {tag: this.localTag},
                         method: 'ACK',
-                        to: {tag: this.dialogs.invite.toTag},
+                        to: {tag: this.dialogs.invite.to.tag},
                     })
 
                     this.client.socket.send(ackRequest)
                     this.client.socket.send(inviteRequest)
                 }
             } else if (message.context.status === 'OK') {
-                this.dialogs.invite.toTag = message.context.to.tag
+                this.dialogs.invite.to.tag = message.context.to.tag
                 await this.pc.setRemoteDescription({sdp: message.context.content, type: 'answer'})
 
                 // MISSING AORS
@@ -226,9 +226,9 @@ class CallSip extends EventEmitter {
                     extension: this.description.endpoint,
                     from: {tag: this.localTag},
                     method: 'ACK',
-                    to: {tag: this.dialogs.invite.toTag},
+                    to: {tag: this.dialogs.invite.to.tag},
                     transport: 'ws',
-                    via: {branch: this.dialogs.invite.toTag},
+                    via: {branch: this.dialogs.invite.to.tag},
                 })
                 this.client.socket.send(ackRequest)
                 // Outgoing call accepted;
@@ -246,7 +246,7 @@ class CallSip extends EventEmitter {
                 code: 501,
                 cseq: message.context.cseq,
                 extension: this.description.endpoint,
-                from: {raw: message.context.from.raw, tag: this.dialogs.invite.toTag},
+                from: {raw: message.context.from.raw, tag: this.dialogs.invite.to.tag},
                 method: 'MESSAGE',
                 to: {aor: message.context.to.aor, tag: this.localTag},
                 via: {branch: this.dialogs.invite.branch, rport: true},
@@ -310,7 +310,7 @@ class CallSip extends EventEmitter {
             extension: this.description.endpoint,
             from: {tag: this.localTag},
             method: 'BYE',
-            to: {tag: this.dialogs.invite.toTag},
+            to: {tag: this.dialogs.invite.to.tag},
             transport: 'ws',
             via: {branch: this.dialogs.invite.branch},
         })
