@@ -78,7 +78,6 @@ class CallSip extends EventEmitter {
         })
 
         const ringingResponse = new SipResponse(this.client, {
-            branch: this.dialogs.invite.branch,
             callId: this.id,
             code: 180,
             cseq: message.context.cseq,
@@ -222,7 +221,6 @@ class CallSip extends EventEmitter {
 
                 // MISSING AORS
                 const ackRequest = new SipRequest(this.client, {
-                    branch: this.dialogs.invite.toTag,
                     callId: this.id,
                     cseq: message.context.cseq,
                     extension: this.description.endpoint,
@@ -230,6 +228,7 @@ class CallSip extends EventEmitter {
                     method: 'ACK',
                     to: {tag: this.dialogs.invite.toTag},
                     transport: 'ws',
+                    via: {branch: this.dialogs.invite.toTag},
                 })
                 this.client.socket.send(ackRequest)
                 // Outgoing call accepted;
@@ -306,14 +305,14 @@ class CallSip extends EventEmitter {
     terminate() {
         this.client.cseq += 1
         const byeMessage = new SipRequest(this.client, {
-            branch: this.dialogs.invite.branch,
             callId: this.id,
             cseq: this.client.cseq,
             extension: this.description.endpoint,
-            fromTag: this.localTag,
+            from: {tag: this.localTag},
             method: 'BYE',
-            toTag: this.dialogs.invite.toTag,
+            to: {tag: this.dialogs.invite.toTag},
             transport: 'ws',
+            via: {branch: this.dialogs.invite.branch},
         })
 
         this.client.socket.send(byeMessage)
