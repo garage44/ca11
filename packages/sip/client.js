@@ -67,16 +67,16 @@ class ClientSip extends EventEmitter {
             if (message.context.code === 'PING') return
 
             if (message.context.method === 'OPTIONS') {
-                this.dialogs.options.to.tag = message.context.header.From.tag
+                this.dialogs.options.to.tag = message.context.from.tag
                 const context = Object.assign(JSON.parse(JSON.stringify(message.context)), {
                     code: 200,
-                    from: {aor: message.context.header.From.aor, tag: this.dialogs.options.toTag},
-                    host: message.context.header.Via.host,
+                    from: {aor: message.context.from.aor, tag: this.dialogs.options.to.tag},
+                    host: message.context.via.host,
                     method: 'OPTIONS',
-                    to: {aor: message.context.header.To.aor, tag: this.localTag},
+                    to: {aor: message.context.to.aor, tag: this.localTag},
                     via: {
                         alias: true,
-                        branch: context.header.Via.branch,
+                        branch: message.context.via.branch,
                         rport: true,
                     },
                 })
@@ -85,15 +85,15 @@ class ClientSip extends EventEmitter {
                 this.socket.send(optionsResponse)
             }
 
-            if (this.calls[message.context.header['Call-ID']]) {
-                call = this.calls[message.context.header['Call-ID']]
+            if (this.calls[message.context.callId]) {
+                call = this.calls[message.context.callId]
                 call.emit('message', message)
             } else {
                 if(message.context.method === 'REGISTER') {
                     if (message.context.status === 'OK') {
                         this.emit('registered')
                     } else if (message.context.status === 'Unauthorized') {
-                        this.register(message)
+                        this.register(message.context.digest)
                     }
                 } else if (message.context.method === 'INVITE') {
                     if (message instanceof SipRequest) {
@@ -107,8 +107,7 @@ class ClientSip extends EventEmitter {
                         })
 
                         // The dialog's To tag is set here on an incoming call/invite.
-                        call.dialogs.invite.to.tag = message.context.header.From.tag
-
+                        call.dialogs.invite.to.tag = message.context.from.tag
                         this.calls[call.id] = call
                         // Emit invite up to the SIP module that handles
                         // application state.
@@ -149,35 +148,40 @@ class ClientSip extends EventEmitter {
         // Remove the header request/response line.
         data.shift()
 
-        context.headers = {}
+        const rawHeaders = {}
         let isHeaderLine = true
 
         for (const line of data) {
             if (isHeaderLine) {
                 const key = line.split(':')[0]
                 const value = line.replace(`${key}:`, '').trim()
-                context.header[key] = value
+                rawHeaders[key] = value
 
-                if (key === 'Content-Length') {
-                    isHeaderLine = false
-                }
+                if (key === 'Content-Length') isHeaderLine = false
             } else {
                 if (!line) continue
                 context.content += `${line}\r\n`
             }
         }
 
-        const to = context.header.To.split(';')
-        context.headers.to = {aor: to[0].replace('<sip:', '').replace('>', ''), raw: to[0]}
-        if (to[1]) context.header.to.tag = to[1].split('=')[1]
+        const to = rawHeaders.To.split(';')
+        context.to = {
+            aor: to[0].replace('<sip:', '').replace('>', ''),
+            raw: to[0],
+        }
+        if (to[1]) context.to.tag = to[1].split('=')[1]
 
-        const from = context.header.From.split(';')
-        context.headers.from = {aor: from[0].replace('<sip:', '').replace('>', ''), raw: from[0]}
-        if (from[1]) context.header.From.tag = from[1].split('=')[1]
+
+        const from = rawHeaders.From.split(';')
+        context.from = {
+            aor: from[0].replace('<sip:', '').replace('>', ''),
+            raw: from[0],
+        }
+        if (from[1]) context.from.tag = from[1].split('=')[1]
 
         const via = {}
 
-        context.headers.Via.split(';')
+        rawHeaders.Via.split(';')
             .map((i) => {
                 if (i.includes('SIP/2.0')) via.host = i.split(' ')[1]
                 return i
@@ -186,17 +190,14 @@ class ClientSip extends EventEmitter {
             .map((i) => i.split('='))
             .forEach((i) => {via[i[0]] = i[1]})
 
-        context.headers.via = via
+        context.via = via
 
-        if (context.headers['WWW-Authenticate']) {
-            context.digest = utils.commaSepToObject(context.headers['WWW-Authenticate'])
+        if (rawHeaders['WWW-Authenticate']) {
+            context.digest = utils.commaSepToObject(rawHeaders['WWW-Authenticate'])
         }
 
-        if (context.headers['Call-ID']) {
-            context.callId = context.headers['Call-ID']
-        }
-
-        const cseqHeader = context.headers['CSeq'].split(' ')
+        context.callId = rawHeaders['Call-ID']
+        const cseqHeader = rawHeaders['CSeq'].split(' ')
         context.cseq = Number(cseqHeader[0])
         context.method = cseqHeader[1]
 
@@ -205,17 +206,14 @@ class ClientSip extends EventEmitter {
     }
 
 
-    register(message) {
+    register(digest) {
         const context = Object.assign({
             cseq: this.cseq,
             method: 'REGISTER',
             via: {branch: `${magicCookie}${utils.token(7)}`},
         }, this.dialogs.default)
 
-        if (message) {
-            context.digest = message.context.digest
-        }
-
+        if (digest) context.digest = digest
         const registerRequest = new SipRequest(this, context)
         this.socket.send(registerRequest)
     }

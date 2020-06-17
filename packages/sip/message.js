@@ -53,26 +53,45 @@ export class SipRequest {
         }
 
         let message = `${this.context.method} ${methodTarget} SIP/2.0\r\n`
-        const host = this.context.host ? this.context.host : defaultHost
 
-        const viaHeader = [`Via: SIP/2.0/WSS ${host}`]
-        if (this.context.via.rport) viaHeader.push('rport')
-        if (this.context.via.branch) viaHeader.push(`branch=${this.context.via.branch}`)
-        if (this.context.via.alias) viaHeader.push('alias')
+        const viaHeader = []
+        if (this.context.via) {
+            if (this.context.via.host) viaHeader.push(`Via: SIP/2.0/WSS ${this.context.via.host}`)
+            else viaHeader.push(`Via: SIP/2.0/WSS ${defaultHost}`)
+
+            if (this.context.via.rport) viaHeader.push('rport')
+            if (this.context.via.branch) viaHeader.push(`branch=${this.context.via.branch}`)
+            if (this.context.via.alias) viaHeader.push('alias')
+        } else viaHeader.push(`Via: SIP/2.0/WSS ${defaultHost}`)
+
         message += `${viaHeader.join(';')}\r\n`
+
 
         message += `Max-Forwards: ${hops}\r\n`
 
         let fromHeader = []
-        if (this.context.from.aor) fromHeader.push(`From: ${this.context.from.aor}`)
-        else fromHeader.push(`From: <sip:${this.client.user}@${this.client.endpoint}>`)
-        if (this.context.from.tag) fromHeader.push(`tag=${this.context.from.tag}`)
+        if (this.context.from) {
+            if (this.context.from.aor) fromHeader.push(`From: <sip:${this.context.from.aor}>`)
+            else if (this.context.from.raw) fromHeader.push(`From: ${this.context.from.raw}`)
+            else fromHeader.push(`From: <sip:${this.client.user}@${this.client.endpoint}>`)
+            if (this.context.from.tag) fromHeader.push(`tag=${this.context.from.tag}`)
+        }
+        else {
+            fromHeader.push(`From: <sip:${this.client.user}@${this.client.endpoint}>`)
+        }
+
         message += `${fromHeader.join(';')}\r\n`
 
         let toHeader = []
-        if (this.context.to.aor) toHeader.push(`To: ${this.context.to.aor}`)
-        else toHeader.push(`To: <sip:${this.client.user}@${this.client.endpoint}>`)
-        if (this.context.to.tag) toHeader.push(`tag=${this.context.to.tag}`)
+
+        if (this.context.to) {
+            if (this.context.to.aor) toHeader.push(`To: <sip:${this.context.to.aor}>`)
+            else toHeader.push(`To: <sip:${this.client.user}@${this.client.endpoint}>`)
+            if (this.context.to.tag) toHeader.push(`tag=${this.context.to.tag}`)
+        } else {
+            toHeader.push(`To: <sip:${this.client.user}@${this.client.endpoint}>`)
+        }
+
         message += `${toHeader.join(';')}\r\n`
 
         message += `Call-ID: ${this.context.callId}\r\n`
@@ -119,24 +138,39 @@ export class SipResponse {
 
     toString() {
         let message = `SIP/2.0 ${this.context.code} ${codeMap[this.context.code]}\r\n`
-        const host = this.context.host ? this.context.host : defaultHost
 
-        const viaHeader = [`Via: SIP/2.0/WSS ${host}`]
-        if (this.context.via.rport) viaHeader.push('rport')
-        if (this.context.via.branch) viaHeader.push(`branch=${this.context.via.branch}`)
-        if (this.context.via.alias) viaHeader.push('alias')
+        const viaHeader = []
+        if (this.context.via) {
+            if (this.context.via.host) viaHeader.push(`Via: SIP/2.0/WSS ${this.context.via.host}`)
+            else viaHeader.push(`Via: SIP/2.0/WSS ${defaultHost}`)
+
+            if (this.context.via.rport) viaHeader.push('rport')
+            if (this.context.via.branch) viaHeader.push(`branch=${this.context.via.branch}`)
+            if (this.context.via.alias) viaHeader.push('alias')
+        }
+
         message += `${viaHeader.join(';')}\r\n`
-
         let fromHeader = []
-        if (this.context.from.aor) fromHeader.push(`From: ${this.context.from.aor}`)
-        else fromHeader.push(`From: <sip:${this.client.user}@${this.client.endpoint}>`)
-        if (this.context.from.tag) fromHeader.push(`tag=${this.context.from.tag}`)
+
+        if (this.context.from) {
+            if (this.context.from.aor) fromHeader.push(`From: <sip:${this.context.from.aor}>`)
+            else if (this.context.from.raw) fromHeader.push(`From: ${this.context.from.raw}`)
+            else fromHeader.push(`From: <sip:${this.client.user}@${this.client.endpoint}>`)
+            if (this.context.from.tag) fromHeader.push(`tag=${this.context.from.tag}`)
+        } else {
+            fromHeader.push(`From: <sip:${this.client.user}@${this.client.endpoint}>`)
+        }
         message += `${fromHeader.join(';')}\r\n`
 
         let toHeader = []
-        if (this.context.to.aor) toHeader.push(`From: ${this.context.to.aor}`)
-        else toHeader.push(`From: <sip:${this.client.user}@${this.client.endpoint}>`)
-        if (this.context.to.tag) toHeader.push(`tag=${this.context.to.tag}`)
+        if (this.context.to) {
+            if (this.context.to.aor) toHeader.push(`To: <sip:${this.context.to.aor}>`)
+            else toHeader.push(`To: <sip:${this.client.user}@${this.client.endpoint}>`)
+            if (this.context.to.tag) toHeader.push(`tag=${this.context.to.tag}`)
+        } else {
+            toHeader.push(`To: <sip:${this.client.user}@${this.client.endpoint}>`)
+        }
+
         message += `${toHeader.join(';')}\r\n`
 
         // if ([180, 200].includes(this.context.code)) {

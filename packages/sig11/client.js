@@ -70,7 +70,7 @@ class Sig11Client extends EventEmitter {
         this.ws.onmessage = this.onMessage.bind(this)
         this.emit('connected')
     }
-    register(identity) {
+    register() {
         // this.ws.send(this.network.protocol.out('identify', {
         //     headless: this.app.env.isNode,
         //     name: identity.name,
