@@ -246,10 +246,10 @@ class CallSip extends EventEmitter {
                 code: 501,
                 cseq: message.context.cseq,
                 extension: this.description.endpoint,
-                from: {raw: message.context.from.raw, tag: this.dialogs.invite.to.tag},
+                from: {raw: message.context.from.raw, tag: message.context.from.tag},
                 method: 'MESSAGE',
-                to: {aor: message.context.to.aor, tag: this.localTag},
-                via: {branch: this.dialogs.invite.branch, rport: true},
+                to: {aor: message.context.to.aor, tag: message.context.to.tag},
+                via: {branch: message.context.via.branch, rport: true},
             })
 
             this.client.socket.send(messageResponse)

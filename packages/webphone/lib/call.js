@@ -73,7 +73,6 @@ class Call {
 
             const path = `caller.calls.${this.id}.streams.${newStream.id}`
             track.onunmute = () => {
-                console.log("TRACK UNMUTE")
                 this.app.setState({muted: false}, {path})
             }
             track.onmute = () => {this.app.setState({muted: true}, {path})}
