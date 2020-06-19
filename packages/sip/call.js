@@ -1,12 +1,22 @@
 import EventEmitter from 'eventemitter3'
 import { magicCookie, SipRequest, SipResponse, utils } from './message.js'
 
+// Asterisk ConfBridge MESSAGE events.
+const confBridgeEvents = {
+    ConfbridgeJoin: 'join',
+    ConfbridgeLeave: 'leave',
+    ConfbridgeWelcome: 'enter',
+}
+
 class CallSip extends EventEmitter {
 
     constructor(client, {description, id}) {
         super()
         this.client = client
         this.tracks = {}
+        this.isConference = false
+        // Map Confbridge channels to track ids.
+        this.channelTracks = {}
 
         // Keep track of multiple dialogs.
         this.dialogs = {
@@ -158,7 +168,8 @@ class CallSip extends EventEmitter {
                     // TODO Match label and stream id with Confbridge stats.
                     for (const media of message.sdp.media) {
                         if (media.label) {
-                            console.log("GOT LABEL!", media, media.label)
+                            const trackId = media.msid.split(' ')[1]
+                            this.channelTracks[String(media.label)] = trackId
                         }
                     }
 
@@ -241,6 +252,23 @@ class CallSip extends EventEmitter {
         } else if (message.context.method === 'MESSAGE') {
             const infoMsg = JSON.parse(message.context.content)
 
+            if (confBridgeEvents[infoMsg.type]) {
+                this.isConference = true
+                for (const channel of infoMsg.channels) {
+                    // Means there is a track for this channel.
+                    if (this.channelTracks[channel.id]) {
+                        this.emit('track-info', this.channelTracks[channel.id], {
+                            action: confBridgeEvents[infoMsg.type],
+                            info: {
+                                endpoint: channel.caller.number,
+                                name: channel.caller.name,
+                            },
+                        })
+                    }
+                }
+            }
+
+            // MESSAGE response.
             const messageResponse = new SipResponse(this.client, {
                 callId: this.id,
                 code: 501,
@@ -254,36 +282,6 @@ class CallSip extends EventEmitter {
 
             this.client.socket.send(messageResponse)
 
-            if (['ConfbridgeLeave', 'ConfbridgeJoin', 'ConfbridgeWelcome'].includes(infoMsg.type)) {
-
-                if (infoMsg.type === 'ConfbridgeLeave') {
-                    this.emit('conference', {
-                        action: 'leave',
-                        user: {
-                            displayName: 'Bob',
-                            streamId: null,
-                        },
-                    })
-                } else if (infoMsg.type === 'ConfbridgeJoin') {
-                    this.emit('conference', {
-                        action: 'join',
-                        user: {
-                            displayName: 'Bob',
-                            streamId: null,
-                        },
-                    })
-                } else {
-                    this.emit('conference', {
-                        action: 'enter',
-                        user: {
-                            displayName: 'Bob',
-                            streamId: null,
-                        },
-                    })
-                }
-
-            }
-
         }
     }
 
@@ -291,14 +289,12 @@ class CallSip extends EventEmitter {
     onTrack(rtcTrackEvent) {
         const track = rtcTrackEvent.receiver.track
         this.tracks[track.id] = track
-        const newStream = new MediaStream()
-        newStream.addTrack(track)
 
         track.onended = () => {
-            this.emit('trackended', newStream, track)
+            this.emit('track-ended', track)
             delete this.tracks[track.id]
         }
-        this.emit('track', newStream, track)
+        this.emit('track', track)
     }
 
 

@@ -4,8 +4,10 @@
         :key="stream.id"
         class="stream-container"
         v-for="(stream, index) in streams"
+        v-if="stream.ready || (stream.local)"
     >
         <StreamControls :stream="stream" />
         <Stream :stream="stream" />
+        <StreamInfo :stream="stream" />
     </div>
 </component>

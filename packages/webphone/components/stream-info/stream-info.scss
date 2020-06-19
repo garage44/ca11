@@ -1,0 +1,12 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+.c-stream-info {
+    align-items: center;
+    background: var(--bg-default);
+    bottom: 0;
+    color: var(--grey-100);
+    padding: var(--spacer);
+    position: absolute;
+    right: 0;
+}

@@ -28,6 +28,7 @@ import Settings from './components/settings/settings.js'
 import Soundmeter from './components/soundmeter/soundmeter.js'
 import Stream from './components/stream/stream.js'
 import StreamControls from './components/stream-controls/stream-controls.js'
+import StreamInfo from './components/stream-info/stream-info.js'
 import StreamView from './components/stream-view/stream-view.js'
 import templates from './templates.js'
 import Transfer from './components/transfer/transfer.js'
@@ -63,6 +64,7 @@ export default function(app) {
         Soundmeter,
         Stream,
         StreamControls,
+        StreamInfo,
         StreamView,
         Transfer,
     }

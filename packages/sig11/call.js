@@ -87,7 +87,7 @@ class Call {
         const path = `caller.calls.${this.id}.streams.${stream.id}`
         e.track.onunmute = () => {this.app.setState({muted: false}, {path})}
         e.track.onmute = () => {this.app.setState({muted: true}, {path})}
-        e.track.onended = () => {this._cleanupStream(stream.id)}
+        e.track.onended = () => {this.removeStream(stream.id)}
     }
 
     async outgoing() {

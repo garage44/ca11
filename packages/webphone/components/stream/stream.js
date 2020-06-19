@@ -67,8 +67,6 @@ export default (app) => {
                 mediaElement.srcObject = app.media.streams[streamId]
                 if (this.stream.muted) mediaElement.muted = true
 
-
-
                 mediaElement.addEventListener('loadeddata', () => {
                     this.stream.ready = true
                     this.hideStreamTypeIndicator()

@@ -15,6 +15,9 @@ class Call {
         app.logger.info(`${this}new ${description.protocol} call`)
 
         this.streams = {}
+        this.trackStream = {}
+        // Holds contextual information about tracks/streams.
+        this.trackInfo = {}
         this._started = false
 
         this.busyTone = app.sounds.busyTone
@@ -68,26 +71,42 @@ class Call {
             this._stop()
         })
 
-        this.handler.on('track', (newStream, track) => {
-            this.addStream(newStream, track.kind)
+        this.handler.on('track', (track) => {
+            const trackStream = this.addStream(track)
+            const path = `caller.calls.${this.id}.streams.${trackStream.id}`
+            track.onunmute = () => this.app.setState({muted: false}, {path})
+            track.onmute = () => this.app.setState({muted: true}, {path})
 
-            const path = `caller.calls.${this.id}.streams.${newStream.id}`
-            track.onunmute = () => {
-                this.app.setState({muted: false}, {path})
+            if (this.trackInfo[track.id]) {
+                this.app.setState(this.trackInfo[track.id], {path})
+                delete this.trackInfo[track.id]
             }
-            track.onmute = () => {this.app.setState({muted: true}, {path})}
-
         })
 
-        this.handler.on('trackended', (newStream, track) => {
-            console.log("TRACK ENDED(CALL LIB)")
-            this.app.logger.debug(`${this}remove ${track.kind} track ${track.id}`)
-            this._cleanupStream(newStream.id)
+        this.handler.on('track-ended', (track) => {
+            this.app.logger.debug(`${this}remove track stream ${track.kind} track ${track.id}`)
+
+            delete this.trackInfo[track.id]
+
+            this.removeStream(this.trackStream[track.id])
+            delete this.trackStream[track.id]
         })
 
-        // Deal with conference events.
-        this.handler.on('conference', (message) => {
-            console.log('HANDLER CONTEXT:', message)
+        // Additional stream/track information; e.g. name/endpoint.
+        this.handler.on('track-info', (trackId, trackInfo) => {
+            if (trackInfo.action === 'leave') {
+                delete this.trackInfo[trackId]
+            } else {
+                // The stream is already connected; update its info.
+                if (this.trackStream[trackId]) {
+                    const path = `caller.calls.${this.id}.streams.${this.trackStream[trackId].id}`
+                    this.app.setState(trackInfo, {path})
+                } else {
+                    // The track info was emitted before the track event; store
+                    // the state to be added in the track event.
+                    this.trackInfo[trackId] = trackInfo
+                }
+            }
         })
 
         this.handler.on('outgoing-accepted', () => {
@@ -99,14 +118,6 @@ class Call {
             this.app.logger.debug(`${this}invite accepted`)
             this._start()
         })
-    }
-
-
-    _cleanupStream(streamId) {
-        this.app.logger.debug(`${this}cleanup stream: ${streamId}`)
-        const path = `caller.calls.${this.id}.streams.${streamId}`
-        this.app.setState(null, {action: 'delete', path})
-        delete this.app.media.streams[streamId]
     }
 
 
@@ -176,9 +187,9 @@ class Call {
         this.app.modules.ui.notification({message, number: this.state.endpoint, stack: true, title})
 
         // Remove the streams that are associated with this call.
-        for (const streamId of Object.keys(this.streams)) {
-            this.app.logger.debug(`${this}removing stream ${streamId}`)
-            this._cleanupStream(streamId)
+        for (const stream of Object.values(this.streams)) {
+            this.app.logger.debug(`${this}removing stream ${stream.id}`)
+            this.removeStream(stream)
         }
 
         clearInterval(this.timerId)
@@ -200,19 +211,29 @@ class Call {
     }
 
 
-    addStream(stream, kind, visible = true) {
+    addStream(track) {
+        const trackStream = new MediaStream()
+        trackStream.addTrack(track)
+        this.trackStream[track.id] = trackStream
+
         const streamState = {
-            id: stream.id,
-            kind,
+            id: trackStream.id,
+            info: {
+                endpoint: '',
+                name: '',
+            },
+            kind: track.kind,
             local: false,
             muted: false,
             ready: false,
-            visible,
+            visible: true,
         }
 
-        this.app.media.streams[stream.id] = stream
-        const path = `caller.calls.${this.id}.streams.${stream.id}`
+        this.app.media.streams[trackStream.id] = trackStream
+        const path = `caller.calls.${this.id}.streams.${trackStream.id}`
+        // The stream's state is initialized here.
         this.app.setState(streamState, {path})
+        return trackStream
     }
 
 
@@ -282,6 +303,14 @@ class Call {
                 console.error(err)
             }
         }
+    }
+
+
+    removeStream(stream) {
+        this.app.logger.debug(`${this}remove stream: ${stream.id}`)
+        const path = `caller.calls.${this.id}.streams.${stream.id}`
+        this.app.setState(null, {action: 'delete', path})
+        delete this.app.media.streams[stream.id]
     }
 
 
