@@ -7,7 +7,7 @@
         <icon
             class="spinner stream-icon"
             name="spinner"
-            v-if="!stream.ready"
+            v-if="stream.local && !stream.ready"
         />
         <icon
             v-else-if="showType"
@@ -18,6 +18,7 @@
 
     <div class="audio" :class="{visible: (stream.id && stream.kind === 'audio')}">
         <audio
+            :id="`audio-${stream.id}`"
             ref="audio"
             autoplay="true"
             muted="true"
@@ -25,6 +26,7 @@
     </div>
 
     <video
+        :id="`video-${stream.id}`"
         ref="video"
         autoplay="true"
         :class="{visible: (stream.id && stream.kind === 'video')}"
@@ -32,6 +34,7 @@
     />
 
     <video
+        :id="`display-${stream.id}`"
         ref="display"
         autoplay="true"
         :class="{visible: (stream.id && stream.kind === 'display')}"

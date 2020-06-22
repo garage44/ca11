@@ -112,33 +112,46 @@
 
             <FieldText
                 v-if="sip.toggled"
-                v-model="sip.endpoint"
-                elementclass="t-txt-sip-endpoint"
-                help="SIP WebSocket Service"
-                :label="`SIP-WSS ${$t('domain')}`"
-                name="sip_endpoint"
-                placeholder="e.g. sip.websocket.tld"
-                :validation="$v.sip.endpoint"
+                v-model="sip.domain"
+                elementclass="t-txt-sip-domain"
+                :help="$t('domain of the SIP WebSocket service')"
+                :label="`SIP ${$t('domain')}`"
+                name="sip_domain"
+                placeholder="sip.websocket.tld"
+                :validation="$v.sip.domain"
             />
 
             <FieldText
                 v-if="sip.toggled"
-                v-model="sip.account.username"
-                elementclass="t-txt-sip-username"
-                :label="`SIP ${$t('extension')}`"
-                name="sip_username"
+                v-model="sip.identity.name"
+                elementclass="t-txt-sip-name"
+                :help="$t('SIP Contact name')"
+                :label="`${$t('Display name')}`"
+                name="sip_name"
+                placeholder="Alice, Bob, Carol, Dan, Erin..."
+                :validation="$v.sip.identity.endpoint"
+            />
+
+            <FieldText
+                v-if="sip.toggled"
+                v-model="sip.identity.endpoint"
+                elementclass="t-txt-sip-endpoint"
+                :help="$t('also known as the SIP extension')"
+                :label="`${$t('endpoint')}`"
+                name="sip_endpoint"
                 placeholder="1000"
-                :validation="$v.sip.account.username"
+                :validation="$v.sip.identity.endpoint"
             />
 
             <FieldPassword
                 v-if="sip.toggled"
-                v-model="sip.account.password"
+                v-model="sip.identity.password"
                 elementclass="t-txt-sip-password"
-                :label="`SIP ${$t('password')}`"
+                :help="$t('password for the SIP extension')"
+                :label="`${$t('password')}`"
                 name="sip_password"
                 :placeholder="`SIP ${$t('password')}`"
-                :validation="$v.sip.account.password"
+                :validation="$v.sip.identity.password"
             />
         </div>
 
@@ -146,19 +159,19 @@
         <div class="tab" :class="{active: tabs.active === 'sig11'}">
             <FieldCheckbox
                 v-model="sig11.toggled"
-                :help="$t('free, privacy-friendly calling on SIG11 network.')"
+                :help="$t('free as in freedom, privacy-friendly calling on SIG11 network')"
                 :label="`SIG11 ${$t('network')} (${$t('decentralized')})`"
                 name="sig11_enabled"
             />
 
             <FieldText
                 v-if="sig11.toggled"
-                v-model="sig11.endpoint"
-                help="SIG11 WebSocket Service"
+                v-model="sig11.domain"
+                :help="$t('Domain of the SIG11 WebSocket Service')"
                 :label="`SIG11 ${$t('domain')}`"
-                name="sig11_endpoint"
-                placeholder="e.g. sig11.websocket.tld"
-                :validation="$v.sig11.endpoint"
+                name="sig11_domain"
+                placeholder="sig11.websocket.tld"
+                :validation="$v.sig11.domain"
             />
 
             <FieldText
@@ -173,7 +186,7 @@
                 v-if="sig11.toggled"
                 v-model="sig11.identity.number"
                 :help="$t('the number that people can reach you on.')"
-                :label="`SIG11 ${$t('number')}`"
+                :label="`${$t('number')}`"
                 name="sig11_number"
             />
         </div>
@@ -196,7 +209,7 @@
                 :label="`webhook url`"
                 name="sip_endpoint"
                 placeholder="e.g. sip.websocket.tld"
-                :validation="$v.sip.endpoint"
+                :validation="$v.sip.domain"
             />
         </div>
     </content>

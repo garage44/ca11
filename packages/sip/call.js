@@ -103,7 +103,7 @@ class CallSip extends EventEmitter {
     }
 
 
-    async initOutgoing(localStream) {
+    async inviteRemote(localStream) {
         this.pc = new RTCPeerConnection({
             iceServers: this.client.stun.map((i) => ({urls: i})),
             sdpSemantics:'unified-plan',
@@ -310,7 +310,6 @@ class CallSip extends EventEmitter {
             transport: 'ws',
             via: {branch: this.dialogs.invite.branch},
         })
-
         this.client.socket.send(byeMessage)
     }
 

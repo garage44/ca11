@@ -66,7 +66,7 @@ class Call {
             callId: this.id,
         })
 
-        this._start({message: this.translations.accepted})
+        this.startCall({message: this.translations.accepted})
     }
 
 
@@ -141,7 +141,7 @@ class Call {
     */
     async setupAnswer(answer) {
         await this.pc.setRemoteDescription({sdp: answer, type: 'answer'})
-        this._start()
+        this.startCall()
     }
 
 

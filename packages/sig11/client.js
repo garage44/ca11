@@ -19,7 +19,7 @@ class Sig11Client extends EventEmitter {
             return
         }
 
-        this.ws = new WebSocket(`wss://${this.endpoint}`, 'sig11')
+        this.ws = new WebSocket(`wss://${this.domain}`, 'sig11')
         this.ws.onopen = this.onOpen.bind(this)
         this.ws.onclose = this.onClose.bind(this)
     }

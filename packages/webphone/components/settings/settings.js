@@ -30,18 +30,15 @@ export default (app) => {
                     language: this.language,
                     settings,
                     sig11: {
+                        domain: app.state.sig11.domain,
                         enabled: app.state.sig11.toggled,
-                        endpoint: app.state.sig11.endpoint,
                         identity: app.state.sig11.identity,
                         toggled: app.state.sig11.toggled,
                     },
                     sip: {
-                        account: {
-                            password: app.state.sip.account.password,
-                            username: app.state.sip.account.username,
-                        },
+                        domain: app.state.sip.domain,
                         enabled: app.state.sip.toggled,
-                        endpoint: app.state.sip.endpoint,
+                        identity: app.state.sip.identity,
                         toggled: app.state.sip.toggled,
                     },
                 }
@@ -80,21 +77,13 @@ export default (app) => {
         validations: function() {
             let validations = {
                 sig11: {
-                    endpoint: {
-                        requiredIf: v.requiredIf(() => this.sig11.toggled),
-                    },
+                    domain: {requiredIf: v.requiredIf(() => this.sig11.toggled)},
                 },
                 sip: {
-                    account: {
-                        password: {
-                            requiredIf: v.requiredIf(() => this.sip.toggled),
-                        },
-                        username: {
-                            requiredIf: v.requiredIf(() => this.sip.toggled),
-                        },
-                    },
-                    endpoint: {
-                        requiredIf: v.requiredIf(() => this.sip.toggled),
+                    domain: {requiredIf: v.requiredIf(() => this.sip.toggled)},
+                    identity: {
+                        endpoint: {requiredIf: v.requiredIf(() => this.sip.toggled)},
+                        password: {requiredIf: v.requiredIf(() => this.sip.toggled)},
                     },
                 },
             }

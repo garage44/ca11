@@ -30,12 +30,13 @@ class ModuleSIP extends Module {
 
     _initialState() {
         return {
-            account: {
-                password: null,
-                username: null,
-            },
+            domain: globalThis.env.domains.sip,
             enabled: false,
-            endpoint: globalThis.env.endpoints.sip,
+            identity: {
+                endpoint: null,
+                name: null,
+                password: null,
+            },
             status: 'loading',
             toggled: false,
         }
@@ -72,15 +73,12 @@ class ModuleSIP extends Module {
 
         // The default is to reconnect.
         this.reconnect = true
-        const username = this.app.state.sip.account.username
-
 
         this.client = new ClientSip({
-            endpoint: this.app.state.sip.endpoint,
+            domain: this.app.state.sip.domain,
+            identity: this.app.state.sip.identity,
             logger: this.app.logger,
-            password: this.app.state.sip.account.password,
             stun: this.app.state.settings.webrtc.stun,
-            user: username,
         })
 
         this.app.clients.sip = this.client
@@ -109,15 +107,9 @@ class ModuleSIP extends Module {
     }
 
 
-    /**
-     * Graceful stop, do not reconnect automatically.
-     * @param {Boolean} reconnect - Whether try to reconnect.
-     */
     disconnect(reconnect = true) {
         this.app.logger.info(`${this}ua disconnect (reconnect: ${reconnect ? 'yes' : 'no'})`)
         this.reconnect = reconnect
-        this.retry.timeout = 0
-
         this.app.setState({sip: {status: reconnect ? 'loading' : null}})
         this.ua.unregister()
         this.ua.transport.disconnect()

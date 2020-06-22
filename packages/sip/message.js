@@ -47,9 +47,9 @@ export class SipRequest {
     toString() {
         let methodTarget
         if (['INFO','REGISTER'].includes(this.context.method)) {
-            methodTarget = `sip:${this.client.endpoint}`
+            methodTarget = `sip:${this.client.domain}`
         } else {
-            methodTarget = `sip:${this.context.extension}@${this.client.endpoint}`
+            methodTarget = `sip:${this.context.extension}@${this.client.domain}`
         }
 
         let message = `${this.context.method} ${methodTarget} SIP/2.0\r\n`
@@ -73,11 +73,11 @@ export class SipRequest {
         if (this.context.from) {
             if (this.context.from.aor) fromHeader.push(`From: <sip:${this.context.from.aor}>`)
             else if (this.context.from.raw) fromHeader.push(`From: ${this.context.from.raw}`)
-            else fromHeader.push(`From: <sip:${this.client.user}@${this.client.endpoint}>`)
+            else fromHeader.push(`From: <sip:${this.client.identity.endpoint}@${this.client.domain}>`)
             if (this.context.from.tag) fromHeader.push(`tag=${this.context.from.tag}`)
         }
         else {
-            fromHeader.push(`From: <sip:${this.client.user}@${this.client.endpoint}>`)
+            fromHeader.push(`From: <sip:${this.client.identity.endpoint}@${this.client.domain}>`)
         }
 
         message += `${fromHeader.join(';')}\r\n`
@@ -86,10 +86,10 @@ export class SipRequest {
 
         if (this.context.to) {
             if (this.context.to.aor) toHeader.push(`To: <sip:${this.context.to.aor}>`)
-            else toHeader.push(`To: <sip:${this.client.user}@${this.client.endpoint}>`)
+            else toHeader.push(`To: <sip:${this.client.identity.endpoint}@${this.client.domain}>`)
             if (this.context.to.tag) toHeader.push(`tag=${this.context.to.tag}`)
         } else {
-            toHeader.push(`To: <sip:${this.client.user}@${this.client.endpoint}>`)
+            toHeader.push(`To: <sip:${this.client.identity.endpoint}@${this.client.domain}>`)
         }
 
         message += `${toHeader.join(';')}\r\n`
@@ -98,7 +98,7 @@ export class SipRequest {
         message += `CSeq: ${this.context.cseq} ${this.context.method}\r\n`
 
         if (['REGISTER', 'INVITE'].includes(this.context.method)) {
-            message += `Contact: <sip:${this.client.contactName}@${defaultHost};transport=ws;ob>\r\n`
+            message += `Contact: <sip:${this.client.identity.endpoint}@${defaultHost};transport=ws;ob>\r\n`
         }
 
         if (this.context.method === 'INVITE') {
@@ -155,20 +155,20 @@ export class SipResponse {
         if (this.context.from) {
             if (this.context.from.aor) fromHeader.push(`From: <sip:${this.context.from.aor}>`)
             else if (this.context.from.raw) fromHeader.push(`From: ${this.context.from.raw}`)
-            else fromHeader.push(`From: <sip:${this.client.user}@${this.client.endpoint}>`)
+            else fromHeader.push(`From: <sip:${this.client.identity.endpoint}@${this.client.domain}>`)
             if (this.context.from.tag) fromHeader.push(`tag=${this.context.from.tag}`)
         } else {
-            fromHeader.push(`From: <sip:${this.client.user}@${this.client.endpoint}>`)
+            fromHeader.push(`From: <sip:${this.client.identity.endpoint}@${this.client.domain}>`)
         }
         message += `${fromHeader.join(';')}\r\n`
 
         let toHeader = []
         if (this.context.to) {
             if (this.context.to.aor) toHeader.push(`To: <sip:${this.context.to.aor}>`)
-            else toHeader.push(`To: <sip:${this.client.user}@${this.client.endpoint}>`)
+            else toHeader.push(`To: <sip:${this.client.identity.endpoint}@${this.client.domain}>`)
             if (this.context.to.tag) toHeader.push(`tag=${this.context.to.tag}`)
         } else {
-            toHeader.push(`To: <sip:${this.client.user}@${this.client.endpoint}>`)
+            toHeader.push(`To: <sip:${this.client.identity.endpoint}@${this.client.domain}>`)
         }
 
         message += `${toHeader.join(';')}\r\n`

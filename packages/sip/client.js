@@ -25,8 +25,7 @@ class ClientSip extends EventEmitter {
         }
         this.state = 'unregistered'
         Object.assign(this, options)
-        this.uri = `sip:${this.endpoint}`
-        this.contactName = utils.token(8)
+        this.uri = `sip:${this.domain}`
     }
 
 
@@ -36,16 +35,16 @@ class ClientSip extends EventEmitter {
         this.ncHex = '00000000'.substr(0, 8 - hex.length) + hex
 
         this.cnonce = utils.token(12)
-        const hash1 = md5(`${this.user}:${message.context.digest['Digest realm']}:${this.password}`)
+        const hash1 = md5(`${this.identity.endpoint}:${message.context.digest['Digest realm']}:${this.identity.password}`)
         const hash2 = md5(`${message.context.method}:${this.uri}`)
-        const response = md5(`${hash1}:${message.context.digest.nonce}:${this.ncHex}:${this.cnonce}:auth:${hash2}`)
+
         return [
             'Authorization: Digest algorithm=MD5',
-            `username="${this.user}"`,
+            `username="${this.identity.endpoint}"`,
             `realm="${message.context.digest['Digest realm']}"`,
             `nonce="${message.context.digest.nonce}"`,
             `uri="${this.uri}"`,
-            `response="${response}"`,
+            `response="${md5(`${hash1}:${message.context.digest.nonce}:${this.ncHex}:${this.cnonce}:auth:${hash2}`)}"`,
             `opaque="${message.context.digest.opaque}"`,
             'qop=auth',
             `cnonce="${this.cnonce}"`,
@@ -55,7 +54,7 @@ class ClientSip extends EventEmitter {
 
 
     connect() {
-        this.socket = new WebSocket(`wss://${this.endpoint}`, 'sip')
+        this.socket = new WebSocket(`wss://${this.domain}`, 'sip')
         this.socket.onopen = () => {
             // Triggers a 401 to retrieve a 401 with digest.
             this.register()

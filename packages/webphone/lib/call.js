@@ -26,24 +26,14 @@ class Call {
         this.state = {
             active: true,
             endpoint: null,
-            hangup: {
-                disabled: false,
-            },
-            hold: {
-                active: false,
-                disabled: false,
-            },
+            hangup: {disabled: false},
+            hold: {active: false, disabled: false},
             id: this.id,
-            mute: {
-                active: false,
-            },
+            mute: {active: false},
             name: null,
             status: null,
             streams: {},
-            timer: {
-                current: null,
-                start: null,
-            },
+            timer: {current: null, start: null},
             transfer: {
                 active: false,
                 disabled: false,
@@ -68,7 +58,7 @@ class Call {
 
         this.handler.on('terminate', () => {
             this.setState({status: 'bye'})
-            this._stop()
+            this.finishCall()
         })
 
         this.handler.on('track', (track) => {
@@ -111,43 +101,50 @@ class Call {
 
         this.handler.on('outgoing-accepted', () => {
             this.app.logger.debug(`${this}outgoing call accepted`)
-            this._start()
+            this.startCall()
         })
 
         this.handler.on('invite-accepted', () => {
             this.app.logger.debug(`${this}invite accepted`)
-            this._start()
+            this.startCall()
         })
     }
 
 
-    _start() {
-        this._started = true
-        this.app.sounds.ringbackTone.stop()
-        this.app.sounds.ringTone.stop()
+    acceptCall() {
+        const stream = this.app.state.settings.webrtc.media.stream
+        const localStream = this.app.media.streams[stream[stream.type].id]
+        this.handler.acceptCall(localStream)
+    }
 
-        this.setState({
-            status: 'accepted',
-            timer: {
-                current: new Date().getTime(),
-                start: new Date().getTime(),
+
+    addStream(track) {
+        const trackStream = new MediaStream()
+        trackStream.addTrack(track)
+        this.trackStream[track.id] = trackStream
+
+        const streamState = {
+            id: trackStream.id,
+            info: {
+                endpoint: '',
+                name: '',
             },
-        })
+            kind: track.kind,
+            local: false,
+            muted: false,
+            ready: false,
+            visible: true,
+        }
 
-        const streamType = this.app.state.settings.webrtc.media.stream.type
-        this.app.setState({
-            settings: {webrtc: {media: {stream: {[streamType]: {selected: new Date().getTime()}}}}},
-            ui: {menubar: {event: 'calling'}},
-        })
-
-        // Start the call timer.
-        this.timerId = window.setInterval(() => {
-            this.setState({timer: {current: new Date().getTime()}})
-        }, 1000)
+        this.app.media.streams[trackStream.id] = trackStream
+        const path = `caller.calls.${this.id}.streams.${trackStream.id}`
+        // The stream's state is initialized here.
+        this.app.setState(streamState, {path})
+        return trackStream
     }
 
 
-    _stop({timeout = 1000} = {}) {
+    finishCall({timeout = 1000} = {}) {
         this.app.logger.debug(`${this}call is stopping in ${timeout}ms`)
 
         const streamType = this.app.state.settings.webrtc.media.stream.type
@@ -204,39 +201,6 @@ class Call {
     }
 
 
-    acceptCall() {
-        const stream = this.app.state.settings.webrtc.media.stream
-        const localStream = this.app.media.streams[stream[stream.type].id]
-        this.handler.acceptCall(localStream)
-    }
-
-
-    addStream(track) {
-        const trackStream = new MediaStream()
-        trackStream.addTrack(track)
-        this.trackStream[track.id] = trackStream
-
-        const streamState = {
-            id: trackStream.id,
-            info: {
-                endpoint: '',
-                name: '',
-            },
-            kind: track.kind,
-            local: false,
-            muted: false,
-            ready: false,
-            visible: true,
-        }
-
-        this.app.media.streams[trackStream.id] = trackStream
-        const path = `caller.calls.${this.id}.streams.${trackStream.id}`
-        // The stream's state is initialized here.
-        this.app.setState(streamState, {path})
-        return trackStream
-    }
-
-
     initIncoming({context, handler}) {
         this.setState(this.state)
 
@@ -264,27 +228,6 @@ class Call {
     }
 
 
-    initOutgoing() {
-        // Try to fill in the name from contacts.
-        const contacts = this.app.state.contacts.contacts
-        let name = ''
-        for (const id of Object.keys(contacts)) {
-            if (contacts[id].endpoint === parseInt(this.endpoint)) {
-                name = contacts[id].name
-            }
-        }
-
-        // Always set this call to be the active call.
-        this.app.modules.caller.activateCall(this, true)
-        this.setState({name, status: 'create'})
-        this.app.setState({ui: {layer: 'stream-view'}})
-
-        const stream = this.app.state.settings.webrtc.media.stream
-        const localStream = this.app.media.streams[stream[stream.type].id]
-        this.handler.initOutgoing(localStream)
-    }
-
-
     async initSinks() {
         let outputSink
         const devices = this.app.state.settings.webrtc.devices
@@ -306,6 +249,27 @@ class Call {
     }
 
 
+    inviteRemote() {
+        // Try to fill in the name from contacts.
+        const contacts = this.app.state.contacts.contacts
+        let name = ''
+        for (const id of Object.keys(contacts)) {
+            if (contacts[id].endpoint === parseInt(this.endpoint)) {
+                name = contacts[id].name
+            }
+        }
+
+        // Always set this call to be the active call.
+        this.app.modules.caller.activateCall(this, true)
+        this.setState({name, status: 'create'})
+        this.app.setState({ui: {layer: 'stream-view'}})
+
+        const stream = this.app.state.settings.webrtc.media.stream
+        const localStream = this.app.media.streams[stream[stream.type].id]
+        this.handler.inviteRemote(localStream)
+    }
+
+
     removeStream(stream) {
         this.app.logger.debug(`${this}remove stream: ${stream.id}`)
         const path = `caller.calls.${this.id}.streams.${stream.id}`
@@ -317,6 +281,40 @@ class Call {
     setState(state) {
         // This merges to the call's local state; not the app's state!
         this.app._mergeDeep(this.state, state)
+    }
+
+
+    startCall() {
+        this._started = true
+        this.app.sounds.ringbackTone.stop()
+        this.app.sounds.ringTone.stop()
+
+        this.setState({
+            status: 'accepted',
+            timer: {
+                current: new Date().getTime(),
+                start: new Date().getTime(),
+            },
+        })
+
+        const streamType = this.app.state.settings.webrtc.media.stream.type
+        this.app.setState({
+            settings: {
+                webrtc: {media: {stream: {[streamType]: {
+                    info: {
+                        endpoint: this.handler.client.endpoint,
+                        name: this.handler.client.name,
+                    },
+                    selected: new Date().getTime(),
+                }}}},
+            },
+            ui: {menubar: {event: 'calling'}},
+        })
+
+        // Start the call timer.
+        this.timerId = window.setInterval(() => {
+            this.setState({timer: {current: new Date().getTime()}})
+        }, 1000)
     }
 
 

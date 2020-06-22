@@ -126,8 +126,8 @@ class ModuleSIG11 extends Module {
 
     _initialState() {
         return {
+            domain: globalThis.env.domains.sig11,
             enabled: true,
-            endpoint: globalThis.env.endpoints.sig11,
             identity: {
                 id: null,
                 name: '',
@@ -157,13 +157,13 @@ class ModuleSIG11 extends Module {
 
 
     async connect() {
-        const endpoint = this.app.state.sig11.endpoint
+        const domain = this.app.state.sig11.domain
 
-        this.client = new ClientSIG11({endpoint})
+        this.client = new ClientSIG11({domain})
         this.app.clients.sig11 = this.client
 
         this.client.on('connected', () => {
-            this.app.logger.info(`${this}connected with ${endpoint}`)
+            this.app.logger.info(`${this}connected with ${domain}`)
             this.app.setState({sig11: {status: 'connected'}})
             const identity = this.app.state.sig11.identity
             this.client.register(identity)

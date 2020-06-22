@@ -33,12 +33,10 @@ export default (app) => {
                 app.media.query(nextStreamType, {selected: this.stream.selected})
             },
             toggleFullscreen: function() {
-                const mediaElement = this.$refs[this.stream.kind]
-                mediaElement.requestFullscreen({navigationUI: 'hide'})
+                this.mediaElement.requestFullscreen({navigationUI: 'hide'})
             },
             togglePip: function() {
-                const mediaElement = this.$refs[this.stream.kind]
-                mediaElement.requestPictureInPicture()
+                this.mediaElement.requestPictureInPicture()
             },
             toggleRecord: function() {
                 if (!this.recording) {
@@ -67,18 +65,20 @@ export default (app) => {
             },
         },
         mounted: function() {
-            if (this.stream.id) {
-                if (!this.$refs[this.stream.kind]) return
+            this.mediaElement = document.querySelector(`#${this.stream.kind}-${this.stream.id}`)
+            console.log("MEDIA ELEMENT", this.mediaElement)
+            // if (this.stream.id) {
+            //     if (!this.$refs[this.stream.kind]) return
 
-                const mediaElement = this.$refs[this.stream.kind]
-                mediaElement.srcObject = app.media.streams[this.stream.id]
+            //     this.mediaElement.srcObject = app.media.streams[this.stream.id]
+            //
 
-                if (this.stream.muted) mediaElement.muted = true
+            //     if (this.stream.muted) this.mediaElement.muted = true
 
-                mediaElement.addEventListener('loadeddata', () => {
-                    this.stream.ready = true
-                })
-            }
+            //     this.mediaElement.addEventListener('loadeddata', () => {
+            //         this.stream.ready = true
+            //     })
+            // }
         },
         props: {
             stream: {
@@ -93,14 +93,14 @@ export default (app) => {
         watch: {
             'stream.id': function(streamId) {
                 if (!this.$refs[this.stream.kind]) return
-                const mediaElement = this.$refs[this.stream.kind]
+                this.mediaElement = document.querySelector(`#${this.stream.kind}-${this.stream.id}`)
 
-                mediaElement.srcObject = app.media.streams[streamId]
-                if (this.stream.muted) mediaElement.muted = true
+                // mediaElement.srcObject = app.media.streams[streamId]
+                // if (this.stream.muted) mediaElement.muted = true
 
-                mediaElement.addEventListener('loadeddata', () => {
-                    this.stream.ready = true
-                })
+                // mediaElement.addEventListener('loadeddata', () => {
+                //     this.stream.ready = true
+                // })
             },
         },
     }

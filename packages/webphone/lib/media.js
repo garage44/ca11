@@ -61,15 +61,6 @@ class Media {
     }
 
 
-    /**
-    * The getUserMedia permission change doesn't have an event. Instead, the
-    * media devices are queried by this poller for every x ms. This is done in
-    * the foreground to keep the permission UI in-line and up-to-date. The
-    * background uses the same poller to update some properties on a permission
-    * change - like the device list - regardless whether the UI is shown.
-    * 500 ms should be a right balance between responsiveness and a slight
-    * performance loss.
-    */
     poll() {
         this.app.logger.debug(`${this}media poller started`)
         this.intervalId = setInterval(async() => {
@@ -165,9 +156,7 @@ class Media {
         this.streams[stream.id] = stream
         this.app.setState({settings: {webrtc: {media: {
             permission: true,
-            stream: {
-                type,
-            },
+            stream: {type},
         }}}}, {persist: true})
         // (!) The stream id is never persisted; there is stream
         // initialization logic that relies on the absence of the id.

@@ -153,7 +153,7 @@ class ModuleCaller extends Module {
         description.direction = 'outgoing'
 
         const call = this.spawnCall(description)
-        call.initOutgoing()
+        call.inviteRemote()
         // Sync the transfer state of other calls to the new situation.
         this.transferState()
 

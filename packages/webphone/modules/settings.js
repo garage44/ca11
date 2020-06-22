@@ -1,5 +1,13 @@
 import Module from '../lib/module.js'
 
+const streamInfo = {
+    id: null,
+    info: {endpoint: '', name: ''},
+    local: true,
+    muted: false,
+    ready: false,
+    selected: true,
+}
 
 class ModuleSettings extends Module {
 
@@ -40,31 +48,10 @@ class ModuleSettings extends Module {
                 media: {
                     permission: true,
                     stream: {
-                        audio: {
-                            id: null,
-                            kind: 'audio',
-                            local: true,
-                            muted: false,
-                            ready: false,
-                            selected: true,
-                        },
-                        display: {
-                            id: null,
-                            kind: 'display',
-                            local: true,
-                            muted: false,
-                            ready: false,
-                            selected: true,
-                        },
-                        type: 'audio', // Switch between audio, display and video stream.
-                        video: {
-                            id: null,
-                            kind: 'video',
-                            local: true,
-                            muted: false,
-                            ready: false,
-                            selected: false,
-                        },
+                        audio: {kind: 'audio'},
+                        display: {kind: 'display'},
+                        type: 'audio',
+                        video: {kind: 'video'},
                     },
                     type: {
                         options: [
@@ -74,10 +61,14 @@ class ModuleSettings extends Module {
                         selected: {id: 'AUDIO_NOPROCESSING', name: this.app.$t('disabled')},
                     },
                 },
-                stun: globalThis.env.endpoints.stun,
+                stun: globalThis.env.domains.stun,
                 toggle: true,
             },
         }
+
+        Object.assign(state.webrtc.media.stream.audio, streamInfo)
+        Object.assign(state.webrtc.media.stream.display, streamInfo)
+        Object.assign(state.webrtc.media.stream.video, streamInfo)
 
         return state
     }

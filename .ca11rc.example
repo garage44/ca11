@@ -1,6 +1,18 @@
 {
+    "sig11": {
+        "port": 3001,
+        "knex": {
+            "client": "postgresql",
+            "connection": {
+                "host": "127.0.0.1",
+                "user" : "asterisk",
+                "password": "ca11ftw",
+                "database": "asterisk"
+            }
+        }
+    },
     "webphone": {
-        "endpoints": {
+        "domains": {
             "sig11": "sig11.dev.ca11.app",
             "sip": "sip.dev.ca11.app",
             "stun": [
@@ -34,17 +46,5 @@
         "headless": false,
         "port": 3000
     },
-    "theme": "@ca11/webphone-theme",
-    "tower": {
-        "port": 3001,
-        "knex": {
-            "client": "postgresql",
-            "connection": {
-                "host": "127.0.0.1",
-                "user" : "asterisk",
-                "password": "ca11ftw",
-                "database": "asterisk"
-            }
-        }
-    }
+    "theme": "@ca11/webphone-theme"
 }
