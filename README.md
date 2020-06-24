@@ -36,7 +36,6 @@ focusses on the following themes:
       cd ca11
       yarn
       cp .ca11rc.example .ca11rc
-      yarn bootstrap
 
 - Generate a TLS certificate & Certificate Authority (CA) for development
 
@@ -45,11 +44,12 @@ focusses on the following themes:
   > Other operating systems require manual CA installation. Restart the browser
   > to refresh the TLS certificate.
 
-      cd ca11/docker/nginx/ssl
+      cd docker/nginx/ssl
       ./ca_cert.sh dev.ca11.app
       ./ca_cert.sh sip.dev.ca11.app
       ./ca_cert.sh sig11.dev.ca11.app
       sudo ./ca_system.sh
+      cd -
 
 - Add Hostname lookups for the development domains:
 
@@ -61,8 +61,8 @@ focusses on the following themes:
 
       docker-compose -f docker/docker-compose.yml up
       docker exec -w /root/asterisk/contrib/ast-db-manage -it asterisk alembic -c config.ini upgrade head
+      psql -U postgres -h 127.0.0.1 asterisk < docker/postgres/sig11_asterisk.sql
       # Default password is "ca11ftw"
-      psql -U asterisk -h 127.0.0.1 asterisk < postgres/sig11_asterisk.sql
       # CTRL-C Stop all Docker services
 
 ## Development
@@ -82,8 +82,7 @@ focusses on the following themes:
 
       chromium --use-fake-device-for-media-stream --enable-experimental-web-platform-features  --user-data-dir=~/.chromium-tmp
 
-## Licensing
+## License
 
 The CA11 [webphone](/packages/webphone/LICENSE) package is a MIT-licensed descendant
-of the [Vialer-js](https://github.com/vialer/vialer-js) project. The [SIP](https://github.com/garage11/ca11/blob/master/packages/sip/LICENSE)/[SIG11](https://github.com/garage11/ca11/blob/master/packages/sig11/LICENSE)/[Theme](https://github.com/garage11/ca11/blob/master/packages/webphone-theme/LICENSE) packages are all [public domain](https://unlicense.org/)
-and don't have *any* usage restrictions. The theme contains some artwork with deviating licenses; [sound files](https://github.com/garage11/ca11/blob/master/packages/webphone-theme/audio/LICENSE) and [background images](https://github.com/garage11/ca11/blob/master/packages/webphone-theme/img/LICENSE).
+of the [Vialer-js](https://github.com/vialer/vialer-js) project. The [SIP](https://github.com/garage11/ca11/blob/master/packages/sip/LICENSE)/[SIG11](https://github.com/garage11/ca11/blob/master/packages/sig11/LICENSE)/[Theme](https://github.com/garage11/ca11/blob/master/packages/webphone-theme/LICENSE) packages are [public domain](https://unlicense.org/) and don't have usage restrictions. The theme contains some artwork with deviating liberal licenses; [sound files](https://github.com/garage11/ca11/blob/master/packages/webphone-theme/audio/LICENSE) and [background images](https://github.com/garage11/ca11/blob/master/packages/webphone-theme/img/LICENSE).
