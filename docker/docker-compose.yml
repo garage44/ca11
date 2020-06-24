@@ -1,11 +1,11 @@
-version: "3.0"
+version: "3.3"
 services:
   asterisk:
     container_name: asterisk
     image: garage11/asterisk:latest
     depends_on:
-      - db
       - coturn
+      - postgres
       - nginx
     network_mode: host
     volumes:
@@ -13,17 +13,18 @@ services:
       - ./asterisk/config.ini:/root/asterisk/contrib/ast-db-manage/config.ini
       - ./asterisk/odbcinst.ini:/etc/odbcinst.ini
       - ./asterisk/odbc.ini:/etc/odbc.ini
-  db:
+  postgres:
     container_name: postgres
     environment:
-      POSTGRES_USER: asterisk
+      POSTGRES_DB: asterisk
+      POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ca11ftw
     image: postgres:latest
     network_mode: host
-    user: ${CURRENT_UID:-1000:985}
+    user: ${CURRENT_UID:-999:985}
     restart: always
     volumes:
-      - ./postgres/database_data:/var/lib/postgresql/data
+      - postgres:/var/lib/postgresql/data
   nginx:
     container_name: nginx
     image: nginx
@@ -40,3 +41,5 @@ services:
     image: instrumentisto/coturn
     network_mode: host
     restart: always
+volumes:
+  postgres:
