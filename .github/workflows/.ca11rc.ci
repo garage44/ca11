@@ -1,70 +1,50 @@
 {
-    "name": {
-        "alpha": "CA11-alpha",
-        "beta": "CA11-beta",
-        "production": "CA11"
-    },
     "sig11": {
-        "endpoint": "sig11.dev.ca11.app",
-        "port": 3001
-    },
-    "sip": {
-        "endpoint": "sip.dev.ca11.app"
-    },
-    "stun": [
-        "stun:dev.ca11.app"
-    ],
-    "telemetry": {
-        "sentry": {
-            "apiKey": "",
-            "dsn": "",
-            "host": "",
-            "org": "",
-            "project": "ca11"
+        "port": 3001,
+        "knex": {
+            "client": "postgresql",
+            "connection": {
+                "host": "127.0.0.1",
+                "user" : "asterisk",
+                "password": "ca11ftw",
+                "database": "asterisk"
+            }
         }
     },
-    "tests": {
-        "alice": {
-            "session": {
-                "username": "alice",
-                "password": "testing"
-            },
-            "sip": {
-                "number": "1000",
-                "password": "unsecurepassword"
-            },
-            "sig11": {
-                "number": "1100000001"
-            }
+    "webphone": {
+        "domains": {
+            "sig11": "sig11.dev.ca11.app",
+            "sip": "sip.dev.ca11.app",
+            "stun": [
+                "stun:dev.ca11.app"
+            ]
         },
-        "bob": {
-            "session": {
-                "username": "bob",
-                "password": "testing"
-            },
-            "sip": {
-                "number": "2000",
-                "password": "unsecurepassword"
-            },
-            "sig11": {
-                "number": "1100000002"
-            }
-        },
-        "charlie": {
-            "session": {
-                "username": "charlie",
-                "password": "testing"
-            },
-            "sip": {
-                "number": "3000",
-                "password": "unsecurepassword"
-            },
-            "sig11": {
-                "number": "1100000003"
-            }
-        },
+        "imports": {
+            "blueimp-md5": "./static/web_modules/blueimp-md5.js",
+            "@ca11/sig11/call.js": "/packages/sig11/call.js",
+            "@ca11/sig11/client.js": "/packages/sig11/client.js",
+            "@ca11/sig11/lib/crypto.js": "/packages/sig11/lib/crypto.js",
+            "@ca11/sip/client.js": "/packages/sip/client.js",
+            "@ca11/sip/call.js": "/packages/sip/call.js",
+            "@ca11/webphone/lib/call.js": "/packages/webphone/lib/call.js",
+            "@ca11/webphone-theme/icons/index.js": "./static/web_modules/@ca11/webphone-theme/icons/index.js",
+            "@garage11/vue-i18n": "./static/web_modules/@garage11/vue-i18n.js",
+            "@garage11/vue-i18n/src/store-stash.js": "./static/web_modules/@garage11/vue-i18n/src/store-stash.js",
+            "eventemitter3": "./static/web_modules/eventemitter3.js",
+            "sdp-transform": "./static/web_modules/sdp-transform.js",
+            "v-click-outside": "./static/web_modules/v-click-outside.js",
+            "vue-stash": "./static/web_modules/vue-stash.js",
+            "vue-svgicon": "./static/web_modules/vue-svgicon.js",
+            "vue/dist/vue.runtime.js": "./static/web_modules/vue/dist/vue.runtime.js",
+            "vuelidate": "./static/web_modules/vuelidate.js",
+            "vuelidate/dist/validators.min.js": "./static/web_modules/vuelidate/dist/validators.min.js",
+            "shortid/lib/index.js": "./static/web_modules/shortid/lib/index.js",
+            "@/": "./static/"
+        }
+    },
+    "testing": {
         "headless": false,
         "port": 3000
     },
-    "theme": "@garage11/ca11-theme-default"
+    "theme": "@ca11/webphone-theme"
 }

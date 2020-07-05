@@ -3,15 +3,15 @@
   "type": "module",
   "version": "1.0.0",
   "description": "SIG11 signalling protocol",
-  "author": "https://github.com/garage11/ca11/graphs/contributors",
+  "author": "https://github.com/open-voip-alliance/ca11/graphs/contributors",
   "license": "Unlicense",
-  "homepage": "https://github.com/garage11/ca11#readme",
+  "homepage": "https://github.com/open-voip-alliance/ca11#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/garage11/ca11.git"
+    "url": "git+https://github.com/open-voip-alliance/ca11.git"
   },
   "bugs": {
-    "url": "https://github.com/garage11/ca11/issues"
+    "url": "https://github.com/open-voip-alliance/ca11/issues"
   },
   "dependencies": {
     "graphlib": "^2.1.8",

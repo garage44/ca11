@@ -1,15 +1,15 @@
 {
   "name": "@ca11/webphone",
   "version": "1.0.0",
-  "author": "https://github.com/garage11/ca11/graphs/contributors",
+  "author": "https://github.com/open-voip-alliance/ca11/graphs/contributors",
   "type": "module",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/garage11/ca11"
+    "url": "https://github.com/open-voip-alliance/ca11"
   },
   "bugs": {
-    "url": "https://github.com/garage11/ca11/issues"
+    "url": "https://github.com/open-voip-alliance/ca11/issues"
   },
   "scripts": {
     "test:e2e": "gulp test-browser",

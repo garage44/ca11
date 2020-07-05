@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "https://github.com/garage11/ca11/graphs/contributors",
+  "author": "https://github.com/open-voip-alliance/ca11/graphs/contributors",
   "license": "Unlicense",
   "dependencies": {
     "blueimp-md5": "^2.13.0"
