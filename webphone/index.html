@@ -6,10 +6,10 @@
         <meta name="theme-color" content="<%=settings.webphone.theme.colors['brand-color']%>"/>
         <meta name="viewport" content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'/>
         <%if (settings.BUILD_TARGET === 'pwa') { %>
-        <link rel="manifest" href="/static/manifest.json">
+        <link rel="manifest" href="/manifest.json">
         <% } %>
-        <link rel="icon" href="/static/img/logo.png"/>
-        <link href="/static/app.css" rel="stylesheet"/>
+        <link rel="icon" href="/img/logo.png"/>
+        <link href="/app.css" rel="stylesheet"/>
         <script>globalThis.env = <% print(JSON.stringify(settings.webphone)) %></script>
         <%if (settings.webphone.imports) { %>
         <script type="importmap">
@@ -23,7 +23,7 @@
         <div id="app"></div>
     </body>
 
-    <script type="module" src="/static/webphone/ca11.js"></script>
+    <script type="module" src="/ca11.js"></script>
 
     <!-- <%if (settings.BUILD_TARGET === 'pwa') { %>
     <script>

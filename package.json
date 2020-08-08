@@ -13,7 +13,7 @@
     "lint": "yarn lint:js;yarn lint:scss",
     "lint:js": "eslint \"{sip,sig11,theme,webphone}/**/{*.js,*.vue}\"",
     "lint:scss": "stylelint 'webphone/**/*.scss'",
-    "prepare": "yarn icons;snowpack --exclude \"webphone/test/**\" --include \"{webphone/**/*.js,sip/**/*.js}\" --dest build/static/web_modules",
+    "prepare": "yarn icons;snowpack --exclude \"webphone/test/**\" --include \"{webphone/**/*.js,sip/**/*.js}\" --dest build/esm",
     "release": "standard-version"
   },
   "husky": {

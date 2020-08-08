@@ -18,7 +18,6 @@ import VueStash from 'vue-stash'
 import VueSvgicon from 'vue-svgicon'
 // import VueAutosize from 'vue-autosize'
 
-
 Vue.config.ignoredElements = ['component', 'panel', 'content']
 Vue.config.productionTip = false
 Vue.config.devtools = false

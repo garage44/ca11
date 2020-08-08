@@ -54,7 +54,7 @@ tasks.assets = new Task('assets', async function() {
     })
 
     await imagemin([path.join(settings.dir.theme, 'img', '*.{jpg,png}')], {
-        destination: path.join(settings.dir.build, 'static', 'img'),
+        destination: path.join(settings.dir.buildtarget, 'img'),
         plugins: [
             imageminJpegtran(),
             imageminPngquant({
@@ -64,8 +64,8 @@ tasks.assets = new Task('assets', async function() {
     })
 
     await Promise.all([
-        fs.copy(path.join(settings.dir.theme, 'audio'), path.join(settings.dir.build, 'static', 'audio')),
-        fs.copy(path.join(settings.dir.theme, 'fonts'), path.join(settings.dir.build, 'static', 'fonts')),
+        fs.copy(path.join(settings.dir.theme, 'audio'), path.join(settings.dir.buildtarget, 'audio')),
+        fs.copy(path.join(settings.dir.theme, 'fonts'), path.join(settings.dir.buildtarget, 'fonts')),
     ])
 })
 
@@ -84,7 +84,7 @@ tasks.html = new Task('html', async function() {
     const compiled = _.template(indexFile)
     const html = compiled({settings})
 
-    await fs.writeFile(path.join(settings.dir.build, 'index.html'), html)
+    await fs.writeFile(path.join(settings.dir.buildtarget, 'index.html'), html)
 })
 
 tasks.js = new Task('js', async function(file) {
@@ -92,14 +92,19 @@ tasks.js = new Task('js', async function(file) {
         // Snowpack only requires a light-weight copy action to the build dir.
         let targets
         if (file) {
-            await fs.copy(file, path.join(settings.dir.build, 'static', file.replace(settings.dir.webphone, '')))
+            await fs.copy(file, path.join(settings.dir.buildtarget, file.replace(settings.dir.webphone, '')))
         } else {
             targets = (await globby([
-                path.join(settings.dir.base, '**', '*.js'),
-                `!${path.join(settings.dir.base, 'node_modules')}`,
+                path.join(settings.dir.sip, '**', '*.js'),
+                path.join(settings.dir.sig11, '**', '*.js'),
+                path.join(settings.dir.webphone, '**', '*.js'),
+                `!${path.join(settings.dir.webphone, 'test')}`,
             ]))
 
-            targets.map((i) => fs.copy(i, path.join(settings.dir.build, 'static', i.replace(settings.dir.base, ''))))
+            targets.map((i) => {
+                const relpath = i.replace(settings.dir.base, '')
+                return fs.copy(i, path.join(settings.dir.build, relpath))
+            })
             await Promise.all(targets)
         }
 
@@ -114,7 +119,7 @@ tasks.js = new Task('js', async function(file) {
                 })],
         })
 
-        const target = path.join(settings.dir.build, 'static', `${this.ep.filename}.js`)
+        const target = path.join(settings.dir.buildtarget, `${this.ep.filename}.js`)
 
         await bundle.write({
             file: target,
@@ -130,8 +135,8 @@ tasks.js = new Task('js', async function(file) {
 
 tasks.scss = new Task('scss', async function() {
     let target = {
-        css: path.join(settings.dir.build, 'static', `${this.ep.filename}.css`),
-        map: path.join(settings.dir.build, 'static', `${this.ep.filename}.css.map`),
+        css: path.join(settings.dir.buildtarget, `${this.ep.filename}.css`),
+        map: path.join(settings.dir.buildtarget, `${this.ep.filename}.css.map`),
     }
 
     return new Promise((resolve, reject) => {
@@ -179,7 +184,7 @@ tasks.vue = new Task('vue', async function() {
     // a module that is available from Node otherwise.
     await Promise.all([
         fs.writeFile(path.join(settings.dir.webphone, 'templates.js'), templates),
-        fs.writeFile(path.join(settings.dir.build, 'static', 'templates.js'), templates),
+        fs.writeFile(path.join(settings.dir.buildtarget, 'templates.js'), templates),
     ])
 })
 
@@ -187,12 +192,12 @@ tasks.watch = new Task('watch', async function() {
     await tasks.build.start()
     return new Promise((resolve) => {
         var app = connect()
-        app.use(mount('/static', serveStatic(path.join(settings.dir.build, 'static'))))
+        app.use(mount('/static', serveStatic(path.join(settings.dir.buildtarget))))
             .use(async(req, res, next) => {
                 if (req.url.includes('livereload.js')) {
                     next()
                 } else {
-                    const html = await fs.readFile(path.join(settings.dir.build, 'index.html'))
+                    const html = await fs.readFile(path.join(settings.dir.buildtarget, 'index.html'))
                     res.setHeader('Content-Type', 'text/html; charset=UTF-8')
                     res.end(html)
                 }
@@ -249,7 +254,7 @@ tasks.watch = new Task('watch', async function() {
             }
 
             // Make sure the required build directories exist.
-            await fs.mkdirp(path.join(settings.dir.build, 'static', 'js'))
+            await fs.mkdirp(path.join(settings.dir.buildtarget))
             settings.optimized = argv.optimized
             if (settings.optimized) {
                 tasks.watch.log(`build optimization: ${chalk.green('enabled')}`)
@@ -260,10 +265,10 @@ tasks.watch = new Task('watch', async function() {
 
         .command('assets', 'collect and optimize assets', () => {}, () => {tasks.assets.start()})
         .command('build', `build ${settings.build.target} package`, () => {}, () => {tasks.build.start()})
+        .command('config', 'list build config', () => {}, () => buildInfo(cli))
         .command('html', 'generate index.html', () => {}, () => {tasks.html.start(entrypoint.html)})
         .command('js', `prepare ${settings.build.target} JavaScript`, () => {}, () => {tasks.js.start(entrypoint.js)})
         .command('scss', 'compile stylesheets (SCSS)', () => {}, () => {tasks.scss.start(entrypoint.scss)})
-        .command('vars', 'list build variables', () => {}, () => buildInfo(cli))
         .command('vue', 'compile Vue templates (ESM)', () => {}, () => {tasks.vue.start(entrypoint.vue)})
         .command('watch', `${settings.build.target} development modus`, () => {}, () => {tasks.watch.start()})
         .demandCommand()

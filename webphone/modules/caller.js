@@ -23,8 +23,9 @@ class ModuleCaller extends Module {
 
         this.app.on('caller:call-hold', ({callId}) => {
             const call = this.calls[callId]
+
             if (!call.state.hold.active) {
-                call.hold()
+                call.handler.hold()
             } else {
                 // Unhold while the call's transfer is active must also
                 // undo the previously set transfer state on this call and
@@ -134,13 +135,14 @@ class ModuleCaller extends Module {
                 call.setState({active: true})
                 // Only unhold calls that are in the right state.
                 if (unholdOwn && _call.state.status === 'accepted') {
+                    console.log("CALL", _call)
                     _call.unhold()
                 }
             } else {
                 _call.setState({active: false})
                 // Only hold calls that are in the right state.
                 if (holdOthers && _call.state.status === 'accepted') {
-                    _call.hold()
+                    _call.handler.hold()
                 }
             }
         }
@@ -272,7 +274,7 @@ class ModuleCaller extends Module {
                 // switch to the default `attended` mode when activating
                 // transfer mode on a call.
                 sourceCall.setState({keypad: {active: false, endpoint: ''}, transfer: {active: true, type: 'attended'}})
-                sourceCall.hold()
+                sourceCall.handler.hold()
             }
             // Set attended status on other calls.
             for (let _callId of callIds) {
@@ -281,7 +283,7 @@ class ModuleCaller extends Module {
                     _call.setState({transfer: {active: false, type: 'accept'}})
                     // Hold all other ongoing calls.
                     if (!['create', 'invite'].includes(_call.state.status) && !_call.state.hold) {
-                        _call.hold()
+                        _call.handler.hold()
                     }
                 }
             }
@@ -299,7 +301,7 @@ class ModuleCaller extends Module {
                     this.calls[_callId].setState({transfer: {active: false, type: null}})
                     // Make sure all other ongoing calls stay on hold.
                     if (!['create', 'invite'].includes(_call.state.status) && !_call.state.hold) {
-                        _call.hold()
+                        _call.handler.hold()
                     }
                 }
             }

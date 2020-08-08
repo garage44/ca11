@@ -1,7 +1,6 @@
 server {
   listen 443 ssl http2 default_server;
   server_name dev.ca11.app;
-  index index.html;
   access_log /var/log/nginx/dev.ca11.app.access.log;
   error_log /var/log/nginx/dev.ca11.app.error.log;
 
@@ -10,17 +9,19 @@ server {
 
   location / {
     autoindex on;
-    root /usr/share/nginx/html/build;
+    root /usr/share/nginx/html/webphone;
     index index.html;
   }
 
-  location /static {
-    autoindex on;
-    root /usr/share/nginx/html/build/;
+  location /esm {
+    root /usr/share/nginx/html/;
   }
 
-  location /packages {
-    autoindex on;
+  location /sig11 {
+    root /usr/share/nginx/html/;
+  }
+
+  location /sip {
     root /usr/share/nginx/html/;
   }
 }
