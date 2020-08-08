@@ -14,17 +14,17 @@ services:
       - ./asterisk/odbcinst.ini:/etc/odbcinst.ini
       - ./asterisk/odbc.ini:/etc/odbc.ini
   postgres:
+    image: postgres:latest
     container_name: postgres
     environment:
-      POSTGRES_DB: asterisk
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ca11ftw
-    image: postgres:latest
+      POSTGRES_DB: ${POSTGRES_DB:-asterisk}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ca11ftw}
     network_mode: host
     user: ${CURRENT_UID:-999:985}
     restart: always
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
   nginx:
     container_name: nginx
     image: nginx
@@ -42,4 +42,5 @@ services:
     network_mode: host
     restart: always
 volumes:
-  postgres:
+  pgdata:
+    external: true

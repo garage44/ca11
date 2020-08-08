@@ -57,8 +57,9 @@ focusses on the following themes:
       sudo echo "127.0.0.1 sig11.dev.ca11.app" >> /etc/hosts
 
 - Setup the Asterisk database
-
+      docker volume create --name=pgdata
       docker-compose -f docker/docker-compose.yml up
+      # Open another shell...
       docker exec -w /root/asterisk/contrib/ast-db-manage -it asterisk alembic -c config.ini upgrade head
       psql -U postgres -h 127.0.0.1 asterisk < docker/postgres/sig11_asterisk.sql
       # Default password is "ca11ftw"
