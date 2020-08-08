@@ -1,5 +1,5 @@
 {
-  "name": "@ca11/webphone-theme",
+  "name": "@ca11/theme",
   "main": "theme.js",
   "type": "module",
   "version": "1.3.0",

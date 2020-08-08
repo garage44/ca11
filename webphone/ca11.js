@@ -1,5 +1,5 @@
 // Import all vector icons at once.
-import '@ca11/webphone-theme/icons/index.js'
+import '@ca11/theme/icons/index.js'
 
 import App from './lib/app.js'
 import components from './components.js'

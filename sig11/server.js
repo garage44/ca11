@@ -3,9 +3,11 @@ import btoa from 'btoa'
 import Crypto from './lib/crypto.js'
 import Endpoint from './server/endpoint.js'
 import EventEmitter from 'eventemitter3'
+import fs from 'fs-extra'
 import http from 'http'
 import knex from 'knex'
 import Network from './server/network.js'
+import path from 'path'
 import rc from 'rc'
 import WebCrypto from 'node-webcrypto-ossl'
 import WebSocket from 'ws'
@@ -15,11 +17,10 @@ global.btoa = btoa
 
 global.crypto = new WebCrypto()
 
-const settings = {}
+let settings
 
-rc('ca11', settings)
 
-class Ca11Tower extends App {
+class Sig11Service extends App {
 
     constructor() {
         super(settings)
@@ -27,7 +28,7 @@ class Ca11Tower extends App {
         this.crypto = new Crypto(this)
         this.network = new Network(this)
 
-        this.knex = knex(settings.tower.knex)
+        this.knex = knex(settings.knex)
         this.setup()
     }
 
@@ -134,8 +135,8 @@ class Ca11Tower extends App {
         })
 
         this.wss.on('connection', this.onConnection.bind(this))
-        this.server.listen(settings.tower.port, () => [
-            this.logger.info(`listening on port ${settings.tower.port}`),
+        this.server.listen(settings.port, () => [
+            this.logger.info(`listening on port ${settings.port}`),
         ])
     }
 
@@ -145,4 +146,11 @@ class Ca11Tower extends App {
     }
 }
 
-global.ca11tower = new Ca11Tower()
+(async() => {
+    const defaultsTarget = path.join(path.dirname(new URL(import.meta.url).pathname), '.sig11rc.defaults')
+    const defaults = JSON.parse(await fs.readFile(defaultsTarget, 'utf8'))
+    settings = rc('sig11', defaults)
+    global.sig11 = new Sig11Service()
+})()
+
+

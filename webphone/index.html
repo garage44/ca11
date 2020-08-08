@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <title>CA11 - Free Communication</title>
-        <meta name="theme-color" content="<%=settings.theme.colors['brand-color']%>"/>
+        <meta name="theme-color" content="<%=settings.webphone.theme.colors['brand-color']%>"/>
         <meta name="viewport" content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0'/>
         <%if (settings.BUILD_TARGET === 'pwa') { %>
         <link rel="manifest" href="/static/manifest.json">
@@ -23,7 +23,7 @@
         <div id="app"></div>
     </body>
 
-    <script type="module" src="/static/ca11.js"></script>
+    <script type="module" src="/static/webphone/ca11.js"></script>
 
     <!-- <%if (settings.BUILD_TARGET === 'pwa') { %>
     <script>

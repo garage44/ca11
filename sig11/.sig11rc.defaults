@@ -1,0 +1,12 @@
+{
+    "port": 3001,
+    "knex": {
+        "client": "postgresql",
+        "connection": {
+            "host": "127.0.0.1",
+            "user" : "asterisk",
+            "password": "ca11ftw",
+            "database": "asterisk"
+        }
+    }
+}

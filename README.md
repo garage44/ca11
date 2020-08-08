@@ -1,6 +1,6 @@
 # CA11 - Web Telephony
 
-**(!) This project is still in its infancy; don't expect a smooth experience just yet.**
+**(!) This project is in its infancy; don't expect a smooth experience yet.**
 
 <https://ca11.app>
 
@@ -35,7 +35,6 @@ focusses on the following themes:
       git clone git@github.com:open-voip-alliance/ca11.git
       cd ca11
       yarn
-      cp .ca11rc.example .ca11rc
 
 - Generate a TLS certificate & Certificate Authority (CA) for development
 
@@ -67,11 +66,16 @@ focusses on the following themes:
 
 ## Development
 
+- Setup custom config files to test with:
+
+      cp sig11/.sig11rc.defaults .sig11rc
+      cp webphone/.webphonerc.defaults .webphonerc
+
 - Start the development stack
 
       docker-compose -f docker/docker-compose.yml up
       # optionally use nodemon for auto-reload
-      node packages/sig11/server.js
+      node sig11/server.js
       ./cli.js watch
 
 - Open a browser to the [softphone url](https://dev.ca11.app)
@@ -84,5 +88,5 @@ focusses on the following themes:
 
 ## License
 
-The CA11 [webphone](/packages/webphone/LICENSE) package is a MIT-licensed descendant
-of the [Vialer-js](https://github.com/vialer/vialer-js) project. The [SIP](https://github.com/open-voip-alliance/ca11/blob/master/packages/sip/LICENSE)/[SIG11](https://github.com/open-voip-alliance/ca11/blob/master/packages/sig11/LICENSE)/[Theme](https://github.com/open-voip-alliance/ca11/blob/master/packages/webphone-theme/LICENSE) packages are [public domain](https://unlicense.org/) and don't have usage restrictions. The theme contains some artwork with deviating liberal licenses; [sound files](https://github.com/open-voip-alliance/ca11/blob/master/packages/webphone-theme/audio/LICENSE) and [background images](https://github.com/open-voip-alliance/ca11/blob/master/packages/webphone-theme/img/LICENSE).
+The CA11 [webphone](/webphone/LICENSE) package is a MIT-licensed descendant
+of the [Vialer-js](https://github.com/vialer/vialer-js) project. The [SIP](https://github.com/open-voip-alliance/ca11/blob/master/sip/LICENSE)/[SIG11](https://github.com/open-voip-alliance/ca11/blob/master/sig11/LICENSE)/[Theme](https://github.com/open-voip-alliance/ca11/blob/master/theme/LICENSE) packages are [public domain](https://unlicense.org/) and don't have usage restrictions. The theme contains some artwork with deviating liberal licenses; [sound files](https://github.com/open-voip-alliance/ca11/blob/master/theme/audio/LICENSE) and [background images](https://github.com/open-voip-alliance/ca11/blob/master/theme/img/LICENSE).
