@@ -35,7 +35,6 @@ services:
       - ./nginx/sites-enabled:/etc/nginx/sites-enabled
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ../build:/usr/share/nginx/html
-      - ../packages:/usr/share/nginx/html/packages
   coturn:
     container_name: coturn
     image: instrumentisto/coturn
