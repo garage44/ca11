@@ -15,6 +15,15 @@
     width: 100%;
     z-index: 100;
 
+    .phone-id {
+        background: none;
+        border: 0;
+        color: var(--primary-base);
+        font-family: 'Rajdhani';
+        font-size: var(--text-base);
+        font-weight: 600;
+        text-transform: uppercase;
+    }
 
     .call-direction {
         align-items: center;
@@ -22,6 +31,12 @@
         justify-content: center;
         text-align: center;
         width: $space-4;
+
+        .place-call {
+            &:hover {
+                cursor: pointer;
+            }
+        }
 
         svg {
             @include icon-size($spacer * 4);

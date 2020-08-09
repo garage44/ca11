@@ -11,7 +11,7 @@
         class="action button btn-menu t-btn-options-call-start tooltip tooltip-bottom"
         v-if="!callActive"
     >
-        <icon name="phone" />
+        <icon name="call-outgoing" />
     </button>
 
     <ProtocolStatus v-if="!callActive" />

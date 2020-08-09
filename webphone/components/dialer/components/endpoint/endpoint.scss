@@ -8,6 +8,7 @@
     display: flex;
     // flex: 1;
     height: var(--space-4);
+
     // position: absolute;
     // position: relative;
     // width: 100%;
@@ -30,6 +31,7 @@
         padding: var(--spacer);
         text-align: left;
         text-overflow: ellipsis;
+        text-transform: uppercase;
         width: 100%;
 
         &::placeholder {

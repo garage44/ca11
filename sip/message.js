@@ -65,8 +65,6 @@ export class SipRequest {
         } else viaHeader.push(`Via: SIP/2.0/WSS ${defaultHost}`)
 
         message += `${viaHeader.join(';')}\r\n`
-
-
         message += `Max-Forwards: ${hops}\r\n`
 
         let fromHeader = []

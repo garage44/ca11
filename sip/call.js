@@ -23,6 +23,7 @@ class CallSip extends EventEmitter {
             invite: {branch: utils.token(12), to: {tag: null}},
             options: {to: {tag: null}},
         }
+        this.holdModifier = false
         this.localTag = utils.token(12)
 
         this.id = id
@@ -66,7 +67,20 @@ class CallSip extends EventEmitter {
 
 
     hold() {
-        console.log("HOLD CALL")
+        this.holdModifier = true
+
+        this.holdSdp = this.pc.localDescription.sdp.replace('a=sendrecv', 'a=sendonly')
+        const inviteRequest = new SipRequest(this.client, {
+            callId: this.id,
+            content: this.holdSdp,
+            cseq: this.client.cseq,
+            extension: this.description.endpoint,
+            from: {tag: this.localTag},
+            method: 'INVITE',
+            via: {branch: `${magicCookie}${utils.token(7)}`},
+        })
+
+        this.client.socket.send(inviteRequest)
     }
 
 
@@ -127,7 +141,6 @@ class CallSip extends EventEmitter {
 
                     this.client.socket.send(inviteRequest)
                 }
-
             }
         }
 
@@ -204,7 +217,7 @@ class CallSip extends EventEmitter {
                     this.dialogs.invite.branch = `${magicCookie}${utils.token(7)}`
                     const inviteRequest = new SipRequest(this.client, {
                         callId: this.id,
-                        content: this.pc.localDescription.sdp,
+                        content: this.holdModifier ? this.holdSdp : this.pc.localDescription.sdp,
                         cseq: message.context.cseq,
                         digest: message.context.digest,
                         extension: this.description.endpoint,

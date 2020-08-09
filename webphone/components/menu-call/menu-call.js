@@ -13,7 +13,11 @@ export default (app) => {
                 return app.modules.caller.calls[this.call.id].timer().formatted
             },
         }, app.helpers.sharedComputed()),
-        methods: app.helpers.sharedMethods(),
+        methods: {
+            callDescription: function(...args) {
+                app.modules.caller.call(...args)
+            },
+        },
         store: {
             calls: 'caller.calls',
             description: 'caller.description',

@@ -19,7 +19,7 @@
     "ignorePatterns": ["templates.js", "node_modules/", "build/", "lib/utils.js"],
     "overrides": [
         {
-            "files": ["packages/**/*.js", "cli.js"],
+            "files": ["**/*.js"],
             "parser": "espree",
             "extends": [
                 "eslint:recommended"
@@ -88,7 +88,7 @@
         },
         {
             "parser": "@garage11/vue-eslint-parser",
-            "files": ["packages/**/*.vue"],
+            "files": ["**/*.vue"],
             "extends": [
                 "plugin:vue/recommended"
             ],

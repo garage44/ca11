@@ -1,23 +1,31 @@
 <component class="c-caller-bar">
     <div class="call-direction">
         <icon :name="`call-${call.direction}`" v-if="call" />
-        <icon v-else name="call-outgoing" />
+        <button
+            v-else
+            class="btn btn-menu tooltip tooltip-left hint"
+            :data-tooltip="$t('accept call')"
+            :disabled="!description.endpoint"
+            @click="callDescription({description})"
+        >
+            <icon name="call-outgoing" />
+        </button>
     </div>
 
     <div class="call-endpoint">
         <span v-if="call">
-            <span v-if="call.name" class="c-status-call__number">{{ call.name }} - </span>
-            <span class="c-status-call__number">
-                {{ call.number }}
-            </span>
+            <span v-if="call.name" class="phone-id">{{ call.name }} - </span>
+            <span class="phone-id">{{ call.endpoint }}</span>
         </span>
         <span v-else>
-            <span v-if="description.endpoint" class="c-status-call__number">
-                {{ description.endpoint }}
-            </span>
-            <span v-else class="c-status-call__number">
-                {{ `${$t('number to call')}...` }}
-            </span>
+            <input
+                v-model="description.endpoint"
+                autocomplete="off"
+                class="phone-id"
+                name="number-input"
+                :placeholder="`${$t('enter call id')}...`"
+                type="text"
+            >
         </span>
     </div>
 

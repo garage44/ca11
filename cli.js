@@ -92,7 +92,7 @@ tasks.js = new Task('js', async function(file) {
         // Snowpack only requires a light-weight copy action to the build dir.
         let targets
         if (file) {
-            await fs.copy(file, path.join(settings.dir.buildtarget, file.replace(settings.dir.webphone, '')))
+            await fs.copy(file, path.join(settings.dir.build, file.replace(settings.dir.base, '')))
         } else {
             targets = (await globby([
                 path.join(settings.dir.sip, '**', '*.js'),
