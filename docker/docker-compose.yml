@@ -21,8 +21,6 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ca11ftw}
     network_mode: host
-    user: ${CURRENT_UID:-999:985}
-    restart: always
     volumes:
       - pgdata:/var/lib/postgresql/data
   nginx:
