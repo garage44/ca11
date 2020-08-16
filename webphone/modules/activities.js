@@ -27,7 +27,7 @@ class ModuleActivity extends Module {
         this.app.on('caller:call-ended', ({call}) => {
             let activity = {
                 description: {
-                    number: call.number,
+                    number: call.endpoint,
                     protocol: call.protocol,
                 },
                 icon: `call-${call.direction}`,
