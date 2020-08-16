@@ -73,6 +73,7 @@
                             <!-- Show endpoints and their status as dots -->
                             <div
                                 v-for="endpoint in contact.endpoints" v-if="editMode || endpointActive(endpoint)"
+                                :key="endpoint.id"
                                 class="led"
                                 :class="endpoint.status"
                             />

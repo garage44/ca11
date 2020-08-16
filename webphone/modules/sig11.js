@@ -81,7 +81,7 @@ class ModuleSIG11 extends Module {
         // Request comes in to open a new secured session between two nodes.
         this.app.on('sig11:session', async({nodeId, signedPublicKey}) => {
             // Generate rsa public key for advertised nodeId.
-            // const node = this.network.node(nodeId)
+            const node = this.network.node(nodeId)
             if (!node) throw new Error('handshake from unknown node')
 
             const ecdh = await crypto.subtle.generateKey({name: 'ECDH', namedCurve: 'P-256'}, true, ['deriveKey'])
@@ -91,9 +91,9 @@ class ModuleSIG11 extends Module {
             const signedPublicKeyRaw = await this.signEcPublicKey(ecdh)
 
             // Send this side's signed ec public key back.
-            // const data = await this.network.protocol.outRelay(node.id, 'session-ack', {
-            //     signedPublicKey: this.app.crypto.__dataArrayToBase64(signedPublicKeyRaw),
-            // })
+            const data = await this.network.protocol.outRelay(node.id, 'session-ack', {
+                signedPublicKey: this.app.crypto.__dataArrayToBase64(signedPublicKeyRaw),
+            })
             this.ws.send(data)
         })
 
@@ -108,18 +108,6 @@ class ModuleSIG11 extends Module {
             node._negotiating = false
             delete node._sessionPromise
             delete node.ecdh
-        })
-
-
-        // Node is identified on the network.
-        this.app.on('sig11:network', ({edges, identity, nodes}) => {
-            // Add the provider of this network as an endpoint,
-            // because it has a transport.
-            // const endpoint = new Endpoint(this.network, identity, this.ws)
-            // this.network.addEndpoint(endpoint)
-            // Import the remove network layout.
-            // this.network.import({edges, nodes})
-            this.app.setState({sig11: {status: 'registered'}})
         })
     }
 
@@ -178,12 +166,6 @@ class ModuleSIG11 extends Module {
             },
         }
     }
-
-
-
-
-
-
 }
 
 export default ModuleSIG11

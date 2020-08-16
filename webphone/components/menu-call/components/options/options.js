@@ -23,8 +23,6 @@ export default (app) => {
             },
             callDescription: function(...args) {app.modules.caller.call(...args)},
             callTerminate: function(call) {
-                let status = 'bye'
-                if (call.status === 'create') status = 'caller_busy'
                 app.modules.caller.calls[call.id].terminate()
             },
             classes: function(block) {

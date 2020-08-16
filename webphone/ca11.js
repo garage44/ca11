@@ -215,4 +215,4 @@ if (options.env.isBrowser) {
     globalThis.app = app
 }
 
-export default {WebphoneApp, options}
+export default {options, WebphoneApp}

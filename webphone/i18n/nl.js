@@ -1,5 +1,5 @@
-/*eslint max-len:0 */
-/*eslint quote-props: 0 */
+/* eslint max-len:0 */
+/* eslint quote-props: 0 */
 export const nl = {
     '{name} introduces easy, secure and free P2P Web Telephony that protects your privacy.': '{name} introduceert eenvoudige, veilige en gratis P2P Web Telefonie die je privacy waarborgt.',
     '{name} supports connecting to SIP networks, but {vendor} is not a SIP provider.': '{name} ondersteunt bellen via SIP netwerken, maar {vendor} is geen SIP provider.',

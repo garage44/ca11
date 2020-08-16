@@ -319,14 +319,8 @@ class SipCall {
     }
 
 
-    terminate(status = 'bye') {
+    terminate() {
         this.handler.terminate()
-        // if (!status) {
-        //     if (this.state.status === 'accepted') status = 'bye'
-        //     else if (this.state.status === 'create') status = 'caller_unavailable'
-        //     else if (this.state.status === 'invite') status = 'callee_busy'
-        // }
-
     }
 
 

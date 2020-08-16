@@ -66,19 +66,6 @@ export default (app) => {
         },
         mounted: function() {
             this.mediaElement = document.querySelector(`#${this.stream.kind}-${this.stream.id}`)
-
-            // if (this.stream.id) {
-            //     if (!this.$refs[this.stream.kind]) return
-
-            //     this.mediaElement.srcObject = app.media.streams[this.stream.id]
-            //
-
-            //     if (this.stream.muted) this.mediaElement.muted = true
-
-            //     this.mediaElement.addEventListener('loadeddata', () => {
-            //         this.stream.ready = true
-            //     })
-            // }
         },
         props: {
             stream: {
@@ -91,16 +78,9 @@ export default (app) => {
             description: 'caller.description',
         },
         watch: {
-            'stream.id': function(streamId) {
+            'stream.id': function() {
                 if (!this.$refs[this.stream.kind]) return
                 this.mediaElement = document.querySelector(`#${this.stream.kind}-${this.stream.id}`)
-
-                // mediaElement.srcObject = app.media.streams[streamId]
-                // if (this.stream.muted) mediaElement.muted = true
-
-                // mediaElement.addEventListener('loadeddata', () => {
-                //     this.stream.ready = true
-                // })
             },
         },
     }

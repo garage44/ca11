@@ -55,7 +55,8 @@
         </div>
         <div v-else class="items">
             <div
-                v-for="activity of filteredActivities" class="item activity"
+                v-for="activity of filteredActivities" :key="activity.id"
+                class="item activity"
                 :class="{selected: activity.selected}"
                 @click.stop="toggleSelectItem(activity, true)"
             >

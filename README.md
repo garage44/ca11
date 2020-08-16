@@ -57,6 +57,7 @@ focusses on the following themes:
       sudo echo "127.0.0.1 sig11.dev.ca11.app" >> /etc/hosts
 
 - Setup the Asterisk database
+
       docker volume create --name=pgdata
       docker-compose -f docker/docker-compose.yml up
       # Open another shell...
