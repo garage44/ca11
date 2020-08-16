@@ -169,7 +169,7 @@ function helpers(app) {
                 }
             },
             setLayer: function(layerName) {
-                app.logger.info(`${this} switching layer to ${layerName}`)
+                app.logger.info(`switching layer to ${layerName}`)
                 // Haptic feedback for mobile devices.
                 navigator.vibrate(50)
                 app.setState({ui: {layer: layerName}}, {encrypt: false, persist: true})

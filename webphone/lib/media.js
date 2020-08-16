@@ -62,7 +62,7 @@ class Media {
 
 
     poll() {
-        this.app.logger.debug(`${this}media poller started`)
+        this.app.logger.debug(`media poller started`)
         this.intervalId = setInterval(async() => {
             // Only do this when being authenticated; e.g. when there
             // is an active state container around.
@@ -73,13 +73,13 @@ class Media {
 
                     // Disable this poller as soon we got permission.
                     if (stream) {
-                        this.app.logger.debug(`${this}media poller stopped (approved)`)
+                        this.app.logger.debug(`media poller stopped (approved)`)
                         clearInterval(this.intervalId)
                     }
                 } catch (err) {
                     // eslint-disable-next-line no-console
                     console.error(err)
-                    this.app.logger.debug(`${this}media poller stopped (exception: ${err})`)
+                    this.app.logger.debug(`media poller stopped (exception: ${err})`)
                     // An exception means something else than a lack of permission.
                     clearInterval(this.intervalId)
                 }
@@ -102,7 +102,7 @@ class Media {
         let stream = this.streams[streamId]
 
         if (!stream) {
-            this.app.logger.info(`${this}aqcuiring stream type: ${type}`)
+            this.app.logger.info(`aqcuiring stream type: ${type}`)
             try {
                 const flags = this._getUserMediaFlags({audio: true, video: type === 'video' ? true : false})
                 const userMedia = await navigator.mediaDevices.getUserMedia(flags)
@@ -174,11 +174,6 @@ class Media {
             }
             delete this.streams[streamId]
         }
-    }
-
-
-    toString() {
-        return `${this.app}[session] `
     }
 }
 

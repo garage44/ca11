@@ -1,7 +1,8 @@
-class Call {
+import { mergeDeep } from '/webphone/lib/utils.js'
+
+class Sig11Call {
 
     constructor(app, description) {
-        // super(app, description)
 
         this.candidates = []
         this.node = description.node
@@ -22,7 +23,7 @@ class Call {
             state.status = 'invite'
         }
 
-        app._mergeDeep(this.state, state)
+        mergeDeep(this.state, state)
     }
 
 
@@ -35,8 +36,6 @@ class Call {
     * is executed on the initiating side.
     */
     async accept() {
-        // super.accept()
-
         this.pc = new RTCPeerConnection({
             iceServers: this.app.state.settings.webrtc.stun.map((i) => ({urls: i})),
         })
@@ -173,4 +172,4 @@ class Call {
     }
 }
 
-export default Call
+export default Sig11Call

@@ -1,8 +1,11 @@
+import {sortByMultipleKey} from '/webphone/lib/utils.js'
+
+
 export default (app) => {
     return {
         computed: {
             filteredActivities: function() {
-                let activities = this.activities.sort(app.utils.sortByMultipleKey(['date'], -1))
+                let activities = this.activities.sort(sortByMultipleKey(['date'], -1))
                 if (this.filters.reminders) activities = activities.filter((i) => i.remind)
                 if (this.filters.missedIncoming) activities = activities.filter((i) => (i.status === 'missed'))
                 if (this.filters.missedOutgoing) activities = activities.filter((i) => (i.status === 'unanswered'))

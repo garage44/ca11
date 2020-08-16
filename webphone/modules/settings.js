@@ -11,8 +11,9 @@ const streamInfo = {
 
 class ModuleSettings extends Module {
 
-    _initialState() {
-        let state = {
+    state() {
+        let state = {init: {}}
+        state.init = {
             ringtones: {
                 options: [
                     {id: 'default', name: 'default'},
@@ -66,15 +67,15 @@ class ModuleSettings extends Module {
             },
         }
 
-        Object.assign(state.webrtc.media.stream.audio, streamInfo)
-        Object.assign(state.webrtc.media.stream.display, streamInfo)
-        Object.assign(state.webrtc.media.stream.video, streamInfo)
+        Object.assign(state.init.webrtc.media.stream.audio, streamInfo)
+        Object.assign(state.init.webrtc.media.stream.display, streamInfo)
+        Object.assign(state.init.webrtc.media.stream.video, streamInfo)
 
         return state
     }
 
 
-    _watchers() {
+    vmWatchers() {
         return {
             /**
             * The default value is true.
@@ -86,11 +87,6 @@ class ModuleSettings extends Module {
                 }
             },
         }
-    }
-
-
-    toString() {
-        return `${this.app}[mod-settings] `
     }
 }
 

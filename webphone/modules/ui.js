@@ -11,26 +11,7 @@ class PluginUI extends Module {
     }
 
 
-    _initialState() {
-        return {
-            layer: 'login',
-            menubar: {
-                base: 'inactive',
-                event: null,
-            },
-            overlay: null,
-            tabs: {
-                settings: {
-                    active: 'general',
-                },
-            },
-            theme: 'default-dark',
-            visible: false,
-        }
-    }
-
-
-    _ready() {
+    appReady() {
         let state = {ui: {visible: true}}
         this.app.setState(state)
     }
@@ -67,6 +48,27 @@ class PluginUI extends Module {
         }
     }
 
+
+    state() {
+        return {
+            init: {
+                layer: 'login',
+                menubar: {
+                    base: 'inactive',
+                    event: null,
+                },
+                overlay: null,
+                tabs: {
+                    settings: {
+                        active: 'general',
+                    },
+                },
+                theme: 'default-dark',
+                visible: false,
+            },
+
+        }
+    }
 }
 
 export default PluginUI

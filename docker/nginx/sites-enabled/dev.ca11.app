@@ -9,11 +9,11 @@ server {
 
   location / {
     autoindex on;
-    root /usr/share/nginx/html/webphone;
+    root /usr/share/nginx/html/;
     index index.html;
   }
 
-  location /esm {
+  location /lib {
     root /usr/share/nginx/html/;
   }
 

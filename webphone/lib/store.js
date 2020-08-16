@@ -21,6 +21,7 @@ class StateStore {
 
     constructor(app) {
         this.app = app
+        this._writeState = []
         this.schema = 1
 
         this.cache = {
@@ -47,12 +48,29 @@ class StateStore {
 
 
     get(key) {
-        if (this.app.verbose) this.app.logger.debug(`${this}get value for key '${key}'`)
+        if (this.app.verbose) this.app.logger.debug(`get value for key '${key}'`)
         var value = this.store.getItem(key)
         if (value) {
             return JSON.parse(value)
         }
         return null
+    }
+
+
+    processQueue(newTask) {
+        if (newTask) this._writeState.push(newTask)
+        if (this._writeState.length) {
+            // Only fire an action once per call.
+            let actionStarted = false
+            for (const item of this._writeState) {
+                if (item.status === 0 && !actionStarted) {
+                    actionStarted = true
+                    item.action(item)
+                } else if (this._writeState[0].status === 2) {
+                    this._writeState.shift()
+                }
+            }
+        }
     }
 
 
@@ -71,11 +89,6 @@ class StateStore {
     }
 
 
-    toString() {
-        return `${this.app}[store] `
-    }
-
-
     valid() {
         let schema = this.get('schema')
         if (schema === null || schema !== this.schema) {
@@ -86,6 +99,24 @@ class StateStore {
         }
 
         return true
+    }
+
+
+    async writeEncrypted({item, resolve}) {
+        item.status = 1
+        const storeEndpoint = this.app.state.app.session.active
+        if (!storeEndpoint) return
+
+        let storeState = await this.app.crypto.encrypt(
+            this.app.crypto.vaultKey,
+            JSON.stringify(this.cache.encrypted),
+        )
+        this.set(`${storeEndpoint}/state/vault`, storeState)
+        item.status = 2
+        // Process the next queue item in case other
+        // write actions were added in the meantime.
+        resolve()
+        this.processQueue()
     }
 }
 

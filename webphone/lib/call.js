@@ -1,5 +1,6 @@
 import CallSig11 from '@ca11/sig11/call.js'
 import CallSip from '@ca11/sip/call.js'
+import { mergeDeep } from '/webphone/lib/utils.js'
 
 const callHandlers = {
     sig11: CallSig11,
@@ -7,12 +8,12 @@ const callHandlers = {
 }
 
 
-class Call {
+class SipCall {
 
     constructor(app, description) {
         this.app = app
         this.id = shortid()
-        app.logger.info(`${this}new ${description.protocol} call`)
+        app.logger.info(`new ${description.protocol} call`)
 
         this.streams = {}
         this.trackStream = {}
@@ -41,7 +42,7 @@ class Call {
             },
         }
 
-        app._mergeDeep(this.state, {
+        mergeDeep(this.state, {
             direction: description.direction,
             protocol: description.protocol,
             status: description.direction === 'incoming' ? 'invite' : 'new',
@@ -74,7 +75,7 @@ class Call {
         })
 
         this.handler.on('track-ended', (track) => {
-            this.app.logger.debug(`${this}remove track stream ${track.kind} track ${track.id}`)
+            this.app.logger.debug(`remove track stream ${track.kind} track ${track.id}`)
 
             delete this.trackInfo[track.id]
 
@@ -100,12 +101,12 @@ class Call {
         })
 
         this.handler.on('outgoing-accepted', () => {
-            this.app.logger.debug(`${this}outgoing call accepted`)
+            this.app.logger.debug(`outgoing call accepted`)
             this.startCall()
         })
 
         this.handler.on('invite-accepted', () => {
-            this.app.logger.debug(`${this}invite accepted`)
+            this.app.logger.debug(`invite accepted`)
             this.startCall()
         })
     }
@@ -145,7 +146,7 @@ class Call {
 
 
     finishCall({timeout = 1000} = {}) {
-        this.app.logger.debug(`${this}call is stopping in ${timeout}ms`)
+        this.app.logger.debug(`call is stopping in ${timeout}ms`)
 
         const streamType = this.app.state.settings.webrtc.media.stream.type
         this.app.setState({
@@ -185,7 +186,7 @@ class Call {
 
         // Remove the streams that are associated with this call.
         for (const stream of Object.values(this.streams)) {
-            this.app.logger.debug(`${this}removing stream ${stream.id}`)
+            this.app.logger.debug(`removing stream ${stream.id}`)
             this.removeStream(stream)
         }
 
@@ -234,7 +235,7 @@ class Call {
         if (devices.speaker.enabled) outputSink = devices.sinks.speakerOutput.id
         else outputSink = devices.sinks.headsetOutput.id
 
-        this.app.logger.debug(`${this}change sink of remote video element to ${outputSink}`)
+        this.app.logger.debug(`change sink of remote video element to ${outputSink}`)
         // Chrome Android doesn't have setSinkId.
         if (this.app.media.fallback.remote.setSinkId) {
             try {
@@ -271,7 +272,7 @@ class Call {
 
 
     removeStream(stream) {
-        this.app.logger.debug(`${this}remove stream: ${stream.id}`)
+        this.app.logger.debug(`remove stream: ${stream.id}`)
         const path = `caller.calls.${this.id}.streams.${stream.id}`
         this.app.setState(null, {action: 'delete', path})
         delete this.app.media.streams[stream.id]
@@ -280,7 +281,7 @@ class Call {
 
     setState(state) {
         // This merges to the call's local state; not the app's state!
-        this.app._mergeDeep(this.state, state)
+        mergeDeep(this.state, state)
     }
 
 
@@ -343,12 +344,7 @@ class Call {
             formatted, hours, minutes, seconds,
         }
     }
-
-    toString() {
-        return `[call] [${this.id}] `
-    }
-
 }
 
 
-export default Call
+export default SipCall

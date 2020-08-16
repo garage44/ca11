@@ -54,7 +54,7 @@ tasks.assets = new Task('assets', async function() {
     })
 
     await imagemin([path.join(settings.dir.theme, 'img', '*.{jpg,png}')], {
-        destination: path.join(settings.dir.buildtarget, 'img'),
+        destination: path.join(settings.dir.build, 'img'),
         plugins: [
             imageminJpegtran(),
             imageminPngquant({
@@ -64,8 +64,8 @@ tasks.assets = new Task('assets', async function() {
     })
 
     await Promise.all([
-        fs.copy(path.join(settings.dir.theme, 'audio'), path.join(settings.dir.buildtarget, 'audio')),
-        fs.copy(path.join(settings.dir.theme, 'fonts'), path.join(settings.dir.buildtarget, 'fonts')),
+        fs.copy(path.join(settings.dir.theme, 'audio'), path.join(settings.dir.build, 'audio')),
+        fs.copy(path.join(settings.dir.theme, 'fonts'), path.join(settings.dir.build, 'fonts')),
     ])
 })
 
@@ -80,11 +80,16 @@ tasks.build = new Task('build', async function() {
 })
 
 tasks.html = new Task('html', async function() {
+    const importMap = JSON.parse((await fs.readFile(path.join(settings.dir.build, 'lib', 'import-map.json'))))
+    for (let [reference, location] of Object.entries(importMap.imports)) {
+        importMap.imports[reference] = `/${path.join('lib', location)}`
+    }
+
     const indexFile = await fs.readFile(path.join(settings.dir.webphone, 'index.html'))
     const compiled = _.template(indexFile)
-    const html = compiled({settings})
+    const html = compiled(Object.assign({settings}, {imports: importMap.imports}))
 
-    await fs.writeFile(path.join(settings.dir.buildtarget, 'index.html'), html)
+    await fs.writeFile(path.join(settings.dir.build, 'index.html'), html)
 })
 
 tasks.js = new Task('js', async function(file) {
@@ -135,8 +140,8 @@ tasks.js = new Task('js', async function(file) {
 
 tasks.scss = new Task('scss', async function() {
     let target = {
-        css: path.join(settings.dir.buildtarget, `${this.ep.filename}.css`),
-        map: path.join(settings.dir.buildtarget, `${this.ep.filename}.css.map`),
+        css: path.join(settings.dir.build, `${this.ep.filename}.css`),
+        map: path.join(settings.dir.build, `${this.ep.filename}.css.map`),
     }
 
     return new Promise((resolve, reject) => {
@@ -175,15 +180,20 @@ tasks.scss = new Task('scss', async function() {
 
 tasks.vue = new Task('vue', async function() {
     if (!vuePack) {
-        const pathfilter = settings.dir.webphone.split('/').concat(['components']).filter((i) => i)
-        vuePack = new VuePack({pathfilter})
+        const importFilter = settings.dir.base
+        const pathFilter = settings.dir.webphone.split('/').concat(['components'])
+        vuePack = new VuePack({importFilter, pathFilter})
     }
+
     const targets = await globby([path.join(settings.dir.webphone, this.ep.raw)])
-    const templates = await vuePack.compile(targets)
+    const {components, templates} = await vuePack.compile(targets)
+
     // This is an exceptional build target, because it is not
     // a module that is available from Node otherwise.
     await Promise.all([
+        fs.writeFile(path.join(settings.dir.webphone, 'components.js'), components),
         fs.writeFile(path.join(settings.dir.webphone, 'templates.js'), templates),
+        fs.writeFile(path.join(settings.dir.buildtarget, 'components.js'), components),
         fs.writeFile(path.join(settings.dir.buildtarget, 'templates.js'), templates),
     ])
 })

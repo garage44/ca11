@@ -10,7 +10,7 @@ class ModuleSIP extends Module {
 
         this.app.on('ca11:services', () => {
             const enabled = this.app.state.sip.enabled
-            app.logger.debug(`${this}sip ${enabled ? 'enabled' : 'disabled'}`)
+            app.logger.debug(`sip ${enabled ? 'enabled' : 'disabled'}`)
             if (enabled) this.connect()
         })
 
@@ -25,43 +25,6 @@ class ModuleSIP extends Module {
             this.connect()
         })
 
-    }
-
-
-    _initialState() {
-        return {
-            domain: globalThis.env.domains.sip,
-            enabled: false,
-            identity: {
-                endpoint: null,
-                name: null,
-                password: null,
-            },
-            status: 'loading',
-            toggled: false,
-        }
-    }
-
-
-    _watchers() {
-        return {
-            /**
-            * Respond to network changes.
-            * @param {Boolean} online - Whether we are online now.
-            */
-            'store.app.online': (online) => {
-                if (online) {
-                    // We are online again, try to reconnect and refresh API data.
-                    this.app.logger.debug(`${this}reconnect sip service (online modus)`)
-                    this.connect()
-                } else {
-                    // Offline modus is not detected by Sip.js/Websocket.
-                    // Disconnect manually.
-                    this.app.logger.debug(`${this}disconnect sip service (offline modus)`)
-                    this.disconnect(false)
-                }
-            },
-        }
     }
 
 
@@ -108,7 +71,7 @@ class ModuleSIP extends Module {
 
 
     disconnect(reconnect = true) {
-        this.app.logger.info(`${this}ua disconnect (reconnect: ${reconnect ? 'yes' : 'no'})`)
+        this.app.logger.info(`ua disconnect (reconnect: ${reconnect ? 'yes' : 'no'})`)
         this.reconnect = reconnect
         this.app.setState({sip: {status: reconnect ? 'loading' : null}})
         this.ua.unregister()
@@ -121,14 +84,14 @@ class ModuleSIP extends Module {
 
 
     onConnected() {
-        this.app.logger.debug(`${this}ua connected`)
+        this.app.logger.debug(`ua connected`)
         // Reset the retry interval timer..
         this.retry = Object.assign({}, this.retryDefault)
     }
 
 
     onDisconnected() {
-        this.app.logger.debug(`${this}ua disconnected`)
+        this.app.logger.debug(`ua disconnected`)
         this.app.setState({sip: {status: 'disconnected'}})
 
         this.retry = Object.assign({}, this.retryDefault)
@@ -136,7 +99,7 @@ class ModuleSIP extends Module {
 
         if (this.reconnect) {
             // Reconnection timer logic is performed only here.
-            this.app.logger.debug(`${this}reconnect in ${this.retry.timeout} ms`)
+            this.app.logger.debug(`reconnect in ${this.retry.timeout} ms`)
             setTimeout(() => {
                 this.connect({register: this.app.state.settings.webrtc.enabled})
             }, this.retry.timeout)
@@ -146,7 +109,7 @@ class ModuleSIP extends Module {
 
 
     onInvite({handler, context}) {
-        this.app.logger.debug(`${this}<event:invite>`)
+        this.app.logger.debug(`<event:invite>`)
 
         const deviceReady = this.app.state.settings.webrtc.devices.ready
         const dnd = this.app.state.app.dnd
@@ -173,12 +136,12 @@ class ModuleSIP extends Module {
 
         this.app.Vue.set(this.app.state.caller.calls, call.id, call.state)
         this.app.modules.caller.calls[call.id] = call
-        this.app.logger.info(`${this}incoming call ${call.id} allowed by invite`)
+        this.app.logger.info(`incoming call ${call.id} allowed by invite`)
     }
 
 
     onRegistered() {
-        this.app.logger.info(`${this}registered at ${this.client.endpoint}`)
+        this.app.logger.info(`registered at ${this.client.endpoint}`)
         if (this.__registerPromise) {
             this.__registerPromise.resolve()
             delete this.__registerPromise
@@ -189,7 +152,7 @@ class ModuleSIP extends Module {
 
 
     onRegistrationFailed() {
-        this.app.logger.debug(`${this}ua registrationFailed`)
+        this.app.logger.debug(`ua registrationFailed`)
         if (this.__registerPromise) {
             this.__registerPromise.reject()
             this.disconnect()
@@ -200,13 +163,25 @@ class ModuleSIP extends Module {
 
 
     onUnregistered() {
-        this.app.logger.debug(`${this}ua unregistered>`)
+        this.app.logger.debug(`ua unregistered>`)
         this.app.setState({sip: {status: this.ua.transport.isConnected() ? 'connected' : 'disconnected'}})
     }
 
 
-    toString() {
-        return `${this.app}[mod-sip] `
+    state() {
+        return {
+            init: {
+                domain: globalThis.env.domains.sip,
+                enabled: false,
+                identity: {
+                    endpoint: null,
+                    name: null,
+                    password: null,
+                },
+                status: 'loading',
+                toggled: false,
+            },
+        }
     }
 
 
@@ -231,6 +206,56 @@ class ModuleSIP extends Module {
         userAgent += `) ${this.app.state.app.vendor.name}`
         return userAgent
     }
+
+
+    vmWatchers() {
+        return {
+            /**
+            * Respond to network changes.
+            * @param {Boolean} online - Whether we are online now.
+            */
+            'store.app.online': (online) => {
+                if (online) {
+                    // We are online again, try to reconnect and refresh API data.
+                    this.app.logger.debug(`reconnect sip service (online modus)`)
+                    this.connect()
+                } else {
+                    // Offline modus is not detected by Sip.js/Websocket.
+                    // Disconnect manually.
+                    this.app.logger.debug(`disconnect sip service (offline modus)`)
+                    this.disconnect(false)
+                }
+            },
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
 

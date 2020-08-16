@@ -1,15 +1,11 @@
-export default (app, base) => {
-    /**
-    * @memberof fg.components
-    */
-    const FieldTextarea = {
-        extends: base,
-        methods: {
-            updateModel: function(event) {
-                this.$emit('input', event.target.value)
-            },
-        },
-    }
+import Field from '../../field.js'
 
-    return FieldTextarea
+
+export default {
+    extends: Field,
+    methods: {
+        updateModel: function(event) {
+            this.$emit('input', event.target.value)
+        },
+    },
 }

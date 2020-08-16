@@ -11,19 +11,19 @@
         <link rel="icon" href="/img/logo.png"/>
         <link href="/app.css" rel="stylesheet"/>
         <script>globalThis.env = <% print(JSON.stringify(settings.webphone)) %></script>
-        <%if (settings.webphone.imports) { %>
-        <script type="importmap">
-            {
-            "imports": <% - print(JSON.stringify(settings.webphone.imports)); %>
-            }
-        </script>
-        <% } %>
+        <%if (imports) { %>
+            <script type="importmap">
+                {
+                "imports": <% - print(JSON.stringify(imports)); %>
+                }
+            </script>
+            <% } %>
     </head>
     <body>
         <div id="app"></div>
     </body>
 
-    <script type="module" src="/ca11.js"></script>
+    <script type="module" src="/webphone/ca11.js"></script>
 
     <!-- <%if (settings.BUILD_TARGET === 'pwa') { %>
     <script>

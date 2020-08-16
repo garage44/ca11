@@ -1,5 +1,5 @@
-import CallSIG11 from '@ca11/sig11/call.js'
-import ClientSIG11 from '@ca11/sig11/client.js'
+import CallSIG11 from '/sig11/call.js'
+import ClientSIG11 from '/sig11/client.js'
 import Module from '../lib/module.js'
 
 
@@ -45,7 +45,7 @@ class ModuleSIG11 extends Module {
             }
 
             const call = new CallSIG11(this.app, description)
-            this.app.logger.info(`${this}incoming call ${callId}:${nodeId}`)
+            this.app.logger.info(`incoming call ${callId}:${nodeId}`)
             this.app.Vue.set(this.app.state.caller.calls, call.id, call.state)
             this.calls[call.id] = call
 
@@ -72,7 +72,7 @@ class ModuleSIG11 extends Module {
             }
 
             const enabled = this.app.state.sig11.enabled
-            app.logger.debug(`${this}sig11 ${enabled ? 'enabled' : 'disabled'}`)
+            app.logger.debug(`sig11 ${enabled ? 'enabled' : 'disabled'}`)
             if (enabled) {
                 this.connect()
             }
@@ -124,28 +124,6 @@ class ModuleSIG11 extends Module {
     }
 
 
-    _initialState() {
-        return {
-            domain: globalThis.env.domains.sig11,
-            enabled: true,
-            identity: {
-                id: null,
-                name: '',
-                number: '',
-                privateKey: null,
-                publicKey: null,
-            },
-            network: {
-                edges: [],
-                nodes: [],
-                view: false,
-            },
-            status: 'loading',
-            toggled: true,
-        }
-    }
-
-
     call(description) {
         // Search node that has the appropriate number.
         let node = this.app.sig11.network.filterNode({number: description.number})
@@ -154,35 +132,58 @@ class ModuleSIG11 extends Module {
 
         return new CallSIG11(this.app, description)
     }
-
-
     async connect() {
         const domain = this.app.state.sig11.domain
+
 
         this.client = new ClientSIG11({domain})
         this.app.clients.sig11 = this.client
 
         this.client.on('connected', () => {
-            this.app.logger.info(`${this}connected with ${domain}`)
+            this.app.logger.info(`connected with ${domain}`)
             this.app.setState({sig11: {status: 'connected'}})
             const identity = this.app.state.sig11.identity
-            this.client.register(identity)
+            this.client.register(identity, this.app.env)
         })
 
         this.client.on('disconnected', (reconnect) => {
             this.app.setState({sig11: {status: 'disconnected'}})
-            this.app.logger.debug(`${this}transport closed (reconnect: ${reconnect})`)
+            this.app.logger.debug(`transport closed (reconnect: ${reconnect})`)
 
         })
 
         this.client.connect()
-
     }
 
 
-    toString() {
-        return `${this.app}[mod-sig11] `
+    state() {
+        return {
+            init: {
+                domain: globalThis.env.domains.sig11,
+                enabled: true,
+                identity: {
+                    id: null,
+                    name: '',
+                    number: '',
+                    privateKey: null,
+                    publicKey: null,
+                },
+                network: {
+                    edges: [],
+                    nodes: [],
+                    view: false,
+                },
+                status: 'loading',
+                toggled: true,
+            },
+        }
     }
+
+
+
+
+
+
 }
 
 export default ModuleSIG11

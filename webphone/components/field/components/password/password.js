@@ -1,25 +1,22 @@
-export default (app, base) => {
-    /**
-    * @memberof fg.components
-    */
-    const FieldPassword = {
-        data: function() {
-            return {
-                visible: false,
-            }
-        },
-        extends: base,
-        methods: {
-            toggleVisible() {
-                this.visible = !this.visible
-            },
-        },
-        mounted() {
-            if (this.autofocus) {
-                this.$nextTick(() => this.$refs.input.focus())
-            }
-        },
-    }
+import Field from '../../field.js'
 
-    return FieldPassword
+
+export default {
+    data: function() {
+        return {
+            visible: false,
+        }
+    },
+    extends: Field,
+    methods: {
+        toggleVisible() {
+            this.visible = !this.visible
+        },
+    },
+    mounted() {
+        if (this.autofocus) {
+            this.$nextTick(() => this.$refs.input.focus())
+        }
+    },
 }
+

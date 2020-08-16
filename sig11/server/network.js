@@ -14,7 +14,7 @@ class Network {
 
 
     addEndpoint(endpoint, parent = null) {
-        this.app.logger.debug(`${this}endpoint added ${endpoint.id.sid()}`)
+        this.app.logger.debug(`endpoint added ${endpoint.id.sid()}`)
         this.endpoints.set(endpoint.id, endpoint)
         this.addNode(endpoint.serialize(), parent)
     }
@@ -23,7 +23,7 @@ class Network {
     addNode(node, parent = null) {
         this.graph.setNode(node.id, node)
         if (parent) this.graph.setEdge(parent.id, node.id)
-        this.app.logger.debug(`${this}node added ${node.id.sid()} (${this.graph.nodes().length})`)
+        this.app.logger.debug(`node added ${node.id.sid()} (${this.graph.nodes().length})`)
     }
 
 
@@ -36,7 +36,7 @@ class Network {
 
 
     clear() {
-        this.app.logger.debug(`${this}clear graph`)
+        this.app.logger.debug(`clear graph`)
         for (const nodeId of this.graph.nodes()) {
             this.removeNode(nodeId)
         }
@@ -65,7 +65,7 @@ class Network {
 
 
     import({edges, nodes}) {
-        this.app.logger.info(`${this}import network`)
+        this.app.logger.info(`import network`)
         for (const node of nodes) {
             if (!this.graph.node(node.v)) {
                 this.graph.setNode(node.v, node.value)
@@ -98,7 +98,7 @@ class Network {
 
     removeEndpoint(endpoint) {
         this.endpoints.delete(endpoint.id)
-        if (endpoint.id) this.app.logger.debug(`${this}endpoint removed ${endpoint.id.sid()}`)
+        if (endpoint.id) this.app.logger.debug(`endpoint removed ${endpoint.id.sid()}`)
         this.removeNode(endpoint.id)
     }
 
@@ -113,7 +113,7 @@ class Network {
         this.graph.removeNode(nodeId)
 
         if (nodeId) {
-            this.app.logger.debug(`${this}node removed ${nodeId.sid()} (${this.graph.nodes().length})`)
+            this.app.logger.debug(`node removed ${nodeId.sid()} (${this.graph.nodes().length})`)
         }
 
     }
@@ -124,15 +124,10 @@ class Network {
         this.keypair = keypair
         this.identity = await this.app.crypto.serializeIdentity(keypair)
 
-        this.app.logger.info(`${this}peer identity on network: ${this.identity.id.sid()}`)
+        this.app.logger.info(`peer identity on network: ${this.identity.id.sid()}`)
         this.graph.setNode(this.identity.id, this.identity)
         return this.identity
     }
-
-    toString() {
-        return `${this.app}[net] `
-    }
-
 }
 
 export default Network

@@ -1,20 +1,11 @@
+import { mergeDeep } from '/webphone/lib/utils.js'
+import { restoreState } from '/webphone/lib/state.js'
+
 class Session {
 
     constructor(app) {
         this.app = app
-        Object.assign(app._state, this._initialState())
-    }
-
-
-    _initialState() {
-        return {
-            session: {
-                authenticated: false,
-                developer: false,
-                status: null,
-                username: null,
-            },
-        }
+        this._vmWatchers = []
     }
 
 
@@ -46,19 +37,20 @@ class Session {
             this.app.stateStore.cache.unencrypted = {}
         }
 
-        this.app.logger.debug(`${this}switch to session "${sessionId}"`)
+        this.app.logger.debug(`switch to session "${sessionId}"`)
         // Disable all watchers while switching sessions.
-        if (this.app._vueWatchers.length) this._unsetVueWatchers()
+        if (this._vmWatchers.length) this.unsetVmWatchers()
 
         // Overwrite the current state with the initial state.
-        this.app._mergeDeep(this.app.state, this.app._mergeDeep(this.app._initialState(), keptState))
+        const newState = this.initState()
+        mergeDeep(this.app.state, mergeDeep(newState, keptState))
 
         sessionInfo.active = sessionId
         this.app.setState({app: {session: sessionInfo}})
 
         // Copy the unencrypted store of an active session to the state.
         if (sessionId && sessionId !== 'new') {
-            this.app._mergeDeep(this.app.state, this.app.stateStore.get(`${sessionId}/state`))
+            mergeDeep(this.app.state, this.app.stateStore.get(`${sessionId}/state`))
             // Always pin these presets, no matter what the stored setting is.
             if (this.app.state.app.vault.key) {
                 this.app.state.app.vault.unlocked = true
@@ -77,20 +69,46 @@ class Session {
 
 
     async close() {
-        this.app.logger.info(`${this}logging out and cleaning up state`)
-        this.app._unsetVueWatchers()
+        this.app.logger.info(`logging out and cleaning up state`)
+        this.unsetVmWatchers()
         await this.change(null, {}, {logout: true})
 
         this.app.media.stop()
-        this.app._languagePresets()
+        this.app.setLanguage()
     }
 
 
     async destroy(sessionId) {
-        this.app.logger.info(`${this}removing session "${sessionId}"`)
+        this.app.logger.info(`removing session "${sessionId}"`)
         this.app.stateStore.remove(`${sessionId}/state`)
         this.app.stateStore.remove(`${sessionId}/state/vault`)
         await this.change(null)
+    }
+
+
+    initState() {
+        let state = this.state().init
+        for (let name of Object.keys(this.app.modules)) {
+            if (this.app.modules[name].state) {
+                state[name] = this.app.modules[name].state().init
+            }
+        }
+
+        return state
+    }
+
+
+    initVmWatchers() {
+        this.app.logger.info(`set vue watchers`)
+        let watchers = this.vmWatchers()
+
+        for (let plugin of Object.values(this.app.modules)) {
+            if (plugin.vmWatchers) Object.assign(watchers, plugin.vmWatchers())
+        }
+
+        for (const key of Object.keys(watchers)) {
+            this._vmWatchers.push(this.app.vm.$watch(key, watchers[key]))
+        }
     }
 
 
@@ -127,17 +145,18 @@ class Session {
     */
     async open({key = null, password = null} = {}) {
         if (key) {
-            this.app.logger.info(`${this}open session vault`)
+            this.app.logger.info(`open session vault`)
             await this.app.crypto.importVaultKey(key)
         } else if (password) {
             const sessionId = this.app.state.app.session.active
-            this.app.logger.debug(`${this}new session vault: ${sessionId}`)
+            this.app.logger.debug(`new session vault: ${sessionId}`)
             await this.app.crypto.createVaultKey(sessionId, password)
         } else {
             throw new Error('failed to unlock (no session key or credentials)')
         }
 
-        await this.app._restoreState()
+        const state = await restoreState(this.app)
+        await this.app.setState(state)
 
         this.app.setState({
             app: {vault: {unlocked: true}},
@@ -189,7 +208,7 @@ class Session {
 
         try {
             await this.open({password})
-            this.app._setVueWatchers()
+            this.initVmWatchers()
 
             this.app.setState({
                 // The `installed` and `updated` flag are toggled off after login.
@@ -209,7 +228,7 @@ class Session {
                     },
                 },
             }, {persist: true})
-            this.app._languagePresets()
+            this.app.setLanguage()
 
         } catch (err) {
             // eslint-disable-next-line no-console
@@ -223,20 +242,29 @@ class Session {
     }
 
 
-    toString() {
-        return `${this.app}[session] `
+    state() {
+        return {
+            init: {
+                session: {
+                    authenticated: false,
+                    developer: false,
+                    status: null,
+                    username: null,
+                },
+            },
+        }
     }
 
 
     async unlock({username, password}) {
+        this.app.logger.info(`unlocking session "${username}"`)
         this.app.sounds.powerOn.play()
         this.app.setState({session: {status: 'unlock'}})
-        this.app.logger.info(`${this}unlocking session "${username}"`)
 
         try {
             await this.open({password})
-            this.app._setVueWatchers()
-            this.app._languagePresets()
+            this.initVmWatchers()
+            this.app.setLanguage()
             this.app.setState({ui: {layer: 'dialer'}}, {encrypt: false, persist: true})
             this.app.emit('ca11:services')
         } catch (err) {
@@ -250,6 +278,23 @@ class Session {
         } finally {
             this.app.media.query()
             this.app.setState({session: {status: null}})
+        }
+    }
+
+
+    unsetVmWatchers() {
+        this.app.logger.info(`unset ${this._vmWatchers.length} vue watchers`)
+        for (const unwatch of this._vmWatchers) unwatch()
+        this._vmWatchers = []
+    }
+
+
+    vmWatchers() {
+        return {
+            'store.language.selected.id': (languageId) => {
+                this.app.logger.info(`setting language to ${languageId}`)
+                this.app.Vue.i18n.set(languageId)
+            },
         }
     }
 }

@@ -40,19 +40,6 @@ class ModuleActivity extends Module {
     }
 
 
-    _initialState() {
-        return {
-            activities: [],
-            filters: {
-                missedIncoming: false,
-                missedOutgoing: false,
-                reminders: false,
-            },
-            unread: false,
-        }
-    }
-
-
     addActivity(activity) {
         activity.date = new Date().getTime()
         activity.id = shortid()
@@ -80,9 +67,23 @@ class ModuleActivity extends Module {
     }
 
 
-    toString() {
-        return `${this.app}[mod-activity] `
+    state() {
+        return {
+            init: {
+                activities: [],
+                filters: {
+                    missedIncoming: false,
+                    missedOutgoing: false,
+                    reminders: false,
+                },
+                unread: false,
+            },
+
+        }
     }
+
+
+
 }
 
 export default ModuleActivity

@@ -10,6 +10,7 @@
 class Crypto {
 
     constructor(app) {
+
         this.app = app
 
         this.aes = {
@@ -195,7 +196,7 @@ class Crypto {
     * encryption and decryption between endpoints.
     */
     async deriveAESFromECDH(publicKey) {
-        this.app.logger.debug(`${this}deriving common aes-gcm key from ecdh secret`)
+        this.app.logger.debug(`deriving common aes-gcm key from ecdh secret`)
         const aesKey = await crypto.subtle.deriveKey({
             name: 'ECDH',
             namedCurve: 'P-256',
@@ -241,7 +242,7 @@ class Crypto {
         const keydata = await crypto.subtle.exportKey('raw', aesKey)
         // returns the exported key data
         let base64Keydata = this.__dataArrayToBase64(keydata)
-        this.app.logger.debug(`${this}exported AES-GCM session key`)
+        this.app.logger.debug(`exported AES-GCM session key`)
         return base64Keydata
     }
 
@@ -324,7 +325,7 @@ class Crypto {
     * @returns {String} - The base64-encoded vault key.
     */
     async storeVaultKey() {
-        this.app.logger.debug(`${this}enable auto session recovery`)
+        this.app.logger.debug(`enable auto session recovery`)
         const vaultKey = await this.exportAES(this.vaultKey)
         this.app.setState({app: {vault: {key: vaultKey}}}, {encrypt: false, persist: true})
         return vaultKey
@@ -348,14 +349,6 @@ class Crypto {
         return new Buffer(data)
     }
 
-
-    /**
-    * Generate a representational name for this module. Used for logging.
-    * @returns {String} - An identifier for this module.
-    */
-    toString() {
-        return `${this.app}[crypto] `
-    }
 
     // async signPubKey(privateKey, publicKey) {
     //     const result = await crypto.subtle.exportKey('raw', keypair.publicKey)

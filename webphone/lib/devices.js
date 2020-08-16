@@ -1,3 +1,6 @@
+import { copyObject } from '/webphone/lib/utils.js'
+
+
 class Devices {
 
     constructor(app) {
@@ -70,14 +73,9 @@ class Devices {
     }
 
 
-    toString() {
-        return `${this.app}[devices] `
-    }
-
-
     validateSinks({input, output}) {
         const browserSinks = {input, output}
-        let storedDevices = this.app.utils.copyObject({input: this.cached.input, output: this.cached.output})
+        let storedDevices = copyObject({input: this.cached.input, output: this.cached.output})
 
         this.sinks = this.app.state.settings.webrtc.devices.sinks
         let valid = true
@@ -92,7 +90,7 @@ class Devices {
             if (!storedDevice) {
                 // The stored sink is not in the stored input/output device options
                 // anymore. Add the missing option to the stored device list.
-                this.app.logger.debug(`${this}restoring sink '${sink.name}'`)
+                this.app.logger.debug(`restoring sink '${sink.name}'`)
                 storedDevice = sink
                 storedDevice.valid = true
                 storedDevices[sinkType].push(storedDevice)
@@ -108,14 +106,14 @@ class Devices {
 
         storedDevices.ready = valid
         this.app.setState(storedDevices, {path: 'settings.webrtc.devices'})
-        this.app.logger.debug(`${this}audio sink list is ${valid ? 'valid' : 'invalid'}`)
+        this.app.logger.debug(`audio sink list is ${valid ? 'valid' : 'invalid'}`)
         return valid
     }
 
 
     async verifySinks() {
         // Cached query; what currently is in store.
-        this.cached = this.app.utils.copyObject({
+        this.cached = copyObject({
             input: this.app.state.settings.webrtc.devices.input,
             output: this.app.state.settings.webrtc.devices.output,
         })
@@ -123,7 +121,7 @@ class Devices {
         const {input, output} = await this.query()
 
         if (!this.cached.input.length || !this.cached.output.length) {
-            this.app.logger.debug(`${this}no sinks stored yet; store query list`)
+            this.app.logger.debug(`no sinks stored yet; store query list`)
             // No sinks stored before; fill the output and input device options.
             this.app.setState({settings: {webrtc: {devices: {input, output}}}}, {persist: true})
         } else {
@@ -132,7 +130,7 @@ class Devices {
             // Notify about newly connected devices.
             for (const device of sinkDiff.added) {
                 const message = this.app.$t('added: "{name}"', {name: device.name})
-                this.app.logger.info(`${this}${message}`)
+                this.app.logger.info(`${message}`)
                 this.app.notify({icon: 'microphone', message, type: 'info'})
             }
 
@@ -141,7 +139,7 @@ class Devices {
                 // Notify about devices that are *safely* removed from the devices list.
                 for (const device of sinkDiff.removed) {
                     const message = this.app.$t('removed: "{name}"', {name: device.name})
-                    this.app.logger.info(`${this}${message}`)
+                    this.app.logger.info(`${message}`)
                     this.app.notify({icon: 'microphone', message, type: 'info'})
                 }
                 // Only overwrite the device list when the current device

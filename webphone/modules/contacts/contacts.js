@@ -27,74 +27,8 @@ class ModuleContacts extends Module {
     }
 
 
-    _initialState() {
-        return {
-            contacts: {
-                a0000001: {
-                    endpoints: {
-                        aa000001: {
-                            id: 'aa000001',
-                            number: '1111',
-                            protocol: 'sip',
-                            pubkey: '',
-                            status: 'not-set',
-                            subscribe: false,
-                        },
-                    },
-                    favorite: false,
-                    id: 'a0000001',
-                    name: 'Welcome tape',
-                    selected: false,
-                },
-                a0000002: {
-                    endpoints: {
-                        aa000001: {
-                            id: 'aa000001',
-                            number: '2222',
-                            protocol: 'sip',
-                            pubkey: '',
-                            status: 'not-set',
-                            subscribe: false,
-                        },
-                    },
-                    favorite: false,
-                    id: 'a0000002',
-                    name: 'Conference (SFU)',
-                    selected: false,
-                },
-                a0000003: {
-                    endpoints: {
-                        aa000001: {
-                            id: 'aa000001',
-                            number: '3333',
-                            protocol: 'sip',
-                            pubkey: '',
-                            status: 'not-set',
-                            subscribe: false,
-                        },
-                    },
-                    favorite: false,
-                    id: 'a0000003',
-                    name: 'DTMF test',
-                    selected: false,
-                },
-            },
-            filters: {
-                favorites: false,
-                presence: false,
-            },
-            status: null,
-        }
-    }
-
-
-    _ready() {
-        this.state = this.app.state.contacts
-    }
-
-
     resetEndpointsStatus() {
-        for (const contact of Object.values(this.state.contacts)) {
+        for (const contact of Object.values(this.app.state.contacts.contacts)) {
             for (const endpoint of Object.values(contact.endpoints)) {
                 this.app.setState({status: 'not-set'}, {
                     action: 'upsert',
@@ -106,9 +40,72 @@ class ModuleContacts extends Module {
     }
 
 
+    state() {
+        return {
+            init: {
+                contacts: {
+                    a0000001: {
+                        endpoints: {
+                            aa000001: {
+                                id: 'aa000001',
+                                number: '1111',
+                                protocol: 'sip',
+                                pubkey: '',
+                                status: 'not-set',
+                                subscribe: false,
+                            },
+                        },
+                        favorite: false,
+                        id: 'a0000001',
+                        name: 'Welcome tape',
+                        selected: false,
+                    },
+                    a0000002: {
+                        endpoints: {
+                            aa000001: {
+                                id: 'aa000001',
+                                number: '2222',
+                                protocol: 'sip',
+                                pubkey: '',
+                                status: 'not-set',
+                                subscribe: false,
+                            },
+                        },
+                        favorite: false,
+                        id: 'a0000002',
+                        name: 'Conference (SFU)',
+                        selected: false,
+                    },
+                    a0000003: {
+                        endpoints: {
+                            aa000001: {
+                                id: 'aa000001',
+                                number: '3333',
+                                protocol: 'sip',
+                                pubkey: '',
+                                status: 'not-set',
+                                subscribe: false,
+                            },
+                        },
+                        favorite: false,
+                        id: 'a0000003',
+                        name: 'DTMF test',
+                        selected: false,
+                    },
+                },
+                filters: {
+                    favorites: false,
+                    presence: false,
+                },
+                status: null,
+            },
+        }
+    }
+
+
     subscribe(contact, endpoint) {
         if (endpoint.protocol === 'sip') {
-            this.app.logger.info(`${this}subscribe sip endpoint ${endpoint.number}`)
+            this.app.logger.info(`subscribe sip endpoint ${endpoint.number}`)
             this.presence.sip.subscribe(contact, endpoint)
         }
     }
@@ -116,8 +113,8 @@ class ModuleContacts extends Module {
 
     subscribeAll(override = false) {
         this.resetEndpointsStatus()
-        this.app.logger.info(`${this}updating contact endpoint presence status`)
-        for (const contact of Object.values(this.state.contacts)) {
+        this.app.logger.info(`updating contact endpoint presence status`)
+        for (const contact of Object.values(this.app.state.contacts.contacts)) {
             for (const endpoint of Object.values(contact.endpoints)) {
                 if (endpoint.subscribe || override) {
                     this.presence.sip.subscribe(contact, endpoint)
@@ -127,21 +124,16 @@ class ModuleContacts extends Module {
     }
 
 
-    toString() {
-        return `${this.app}[mod-contacts] `
-    }
-
-
     unsubscribe(contact, endpoint) {
         if (endpoint.protocol === 'sip') {
-            this.app.logger.info(`${this}unsubscribe sip endpoint ${endpoint.number}`)
+            this.app.logger.info(`unsubscribe sip endpoint ${endpoint.number}`)
             this.presence.sip.unsubscribe(contact, endpoint)
         }
     }
 
 
     unsubscribeAll(override = false) {
-        for (const contact of Object.values(this.state.contacts)) {
+        for (const contact of Object.values(this.app.state.contacts.contacts)) {
             for (const endpoint of Object.values(contact.endpoints)) {
                 if (endpoint.subscribe || override) {
                     this.presence.sip.unsubscribe(contact, endpoint)

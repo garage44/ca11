@@ -1,21 +1,31 @@
 // Import all vector icons at once.
 import '@ca11/theme/icons/index.js'
 
-import App from './lib/app.js'
-import components from './components.js'
 import Crypto from '@ca11/sig11/lib/crypto.js'
 import Devices from './lib/devices.js'
+import env from './lib/env.js'
+import EventEmitter from 'eventemitter3'
+import filters from './lib/filters.js'
+import helpers from './lib/helpers.js'
+import I18nTranslations from './i18n/i18n.js'
+import Logger from './lib/logger.js'
 import Media from './lib/media.js'
+import { mergeState } from '/webphone/lib/state.js'
 import options from './lib/options.js'
 import Session from './lib/session.js'
+import shortid from 'shortid/lib/index.js'
 import Sounds from './lib/sounds.js'
 
 import StateStore from './lib/store.js'
 import vClickOutside from 'v-click-outside'
 import Vue from 'vue/dist/vue.runtime.js'
+import VueI18n from '@garage11/vue-i18n'
+import VueI18nStash from '@garage11/vue-i18n/src/store-stash.js'
 import Vuelidate from 'vuelidate'
+import vuepack from './vuepack.js'
 import VueStash from 'vue-stash'
 import VueSvgicon from 'vue-svgicon'
+
 // import VueAutosize from 'vue-autosize'
 
 Vue.config.ignoredElements = ['component', 'panel', 'content']
@@ -27,32 +37,44 @@ Vue.use(Vuelidate)
 Vue.use(vClickOutside)
 Vue.use(VueStash)
 
-if (!globalThis.translations) globalThis.translations = {}
+globalThis.shortid = shortid
 
 
-class CA11 extends App {
+class WebphoneApp extends EventEmitter {
 
-    constructor(opts) {
-        super(opts)
+    constructor(settings) {
+        super()
+
+        this.env = env()
         this.Vue = Vue
+
+        this.logger = new Logger(this)
+        this.logger.setLevel('debug')
+
+        this.i18n = new I18nTranslations(this)
+        this.$t = (text) => text
+
+        this.filters = filters(this)
+        this.helpers = helpers(this)
 
         this.session = new Session(this)
         this.stateStore = new StateStore(this)
         this.crypto = new Crypto(this)
 
-        this._writeState = []
-        this._vueWatchers = []
+        this.components = vuepack(this)
 
-        this.components = components(this)
         this.modules = {}
         this.clients = {}
 
-        this._loadModules(this.__modules)
+        for (const builtin of settings.modules) {
+            // Other plugins without any config.
+            this.modules[builtin.name] = new builtin.module(this, null)
+        }
 
         this.media = new Media(this)
         this.sounds = new Sounds(this)
 
-        this._initStore()
+        this.initStore()
     }
 
 
@@ -63,8 +85,18 @@ class CA11 extends App {
     * the ViewModel and check for the data schema. Do a factory reset
     * if the data schema is outdated.
     */
-    async _initStore() {
-        super._initStore()
+    async initStore() {
+        this.state = {
+            env: this.env,
+            language: {
+                options: [
+                    {id: 'en', name: 'english'},
+                    {id: 'nl', name: 'nederlands'},
+                ],
+                selected: {id: null, name: null},
+            },
+        }
+
         await this.session.change('active')
         // The vault always starts in a locked position.
         this.setState({
@@ -72,21 +104,21 @@ class CA11 extends App {
             ui: {menubar: {base: 'inactive', event: null}},
         })
 
+        // No session yet.
         if (!this.state.app.vault.key) {
-            // No session yet.
-            this._initViewModel({main: this.components.Main})
+            this.initVm({main: this.components.Main})
         } else {
             await this.session.open({key: this.state.app.vault.key})
-            // (!) State is reactive after initializing the viewmodel.
-            this._initViewModel({main: this.components.Main})
-            this._setVueWatchers()
+            // (!) State is reactive only after initializing the viewmodel.
+            this.initVm({main: this.components.Main})
+            this.session.initVmWatchers()
         }
 
         this.devices = new Devices(this)
 
         // Call all ready hooks on modules; e.g. the webphone is ready.
         for (let module of Object.keys(this.modules)) {
-            if (this.modules[module]._ready) this.modules[module]._ready()
+            if (this.modules[module].appReady) this.modules[module].appReady()
         }
 
         if (this.state.session.authenticated) {
@@ -113,170 +145,74 @@ class CA11 extends App {
     }
 
 
-    /**
-    * This operation applies the state update and processes unencrypted
-    * writes immediately; these can be done synchronously. Encrypted store
-    * writes are deferred to a write queue.
-    * @param {Object} options - See the parameter description of super.
-    * @returns {null|Promise} - Encrypt operation returns a Promise.
-    */
-    async _mergeState({action = 'upsert', encrypt = true, path = null, persist = false, state}) {
-        const storeEndpoint = this.state.app.session.active
-        // This could happen when an action is still queued, while the user
-        // is logging out at the same moment. The action is then ignored.
-        if (persist && !storeEndpoint) return null
+    initVm({main, settings = {}} = {}) {
+        this.logger.info(`init viewmodel`)
+        const i18nStore = new VueI18nStash(this.state)
+        Vue.use(VueI18n, i18nStore)
 
-        // Apply the state change to the active store.
-        super._mergeState({action, encrypt, path, persist, state})
-        if (!persist) return null
-
-        // Apply the changes to the cached store.
-        let storeState
-        if (!encrypt) storeState = this.stateStore.cache.unencrypted
-        else storeState = this.stateStore.cache.encrypted
-
-        super._mergeState({action, encrypt, path, persist, source: storeState, state})
-
-        // Write synchronously unencrypted data to LocalStorage.
-        if (!encrypt) {
-            this.stateStore.set(`${storeEndpoint}/state`, storeState)
-            return null
+        for (const [id, translation] of Object.entries(this.i18n.translations)) {
+            Vue.i18n.add(id, translation)
         }
 
-        // Data is first encrypted async; then written to LocalStorage.
-        // First make a snapshot and sent the write action to the queue.
-        // All async write actions must be processed in order.
-        return new Promise((resolve) => {
-            this._writeState.push({
-                action: (item) => this._writeEncryptedState({item, resolve}),
-                status: 0,
-            })
+        this.setLanguage()
+        // Add a shortcut to the translation module.
+        this.$t = Vue.i18n.translate
 
-            this._processWriteQueue()
-        })
-    }
+        this.vm = new Vue(Object.assign({
+            data: {store: this.state},
+            render: h => h(main),
+        }, settings))
 
-
-    _processWriteQueue() {
-        if (this._writeState.length) {
-            // Only fire an action once per call.
-            let actionStarted = false
-            for (const item of this._writeState) {
-                if (item.status === 0 && !actionStarted) {
-                    actionStarted = true
-                    item.action(item)
-                } else if (this._writeState[0].status === 2) {
-                    this._writeState.shift()
-                }
-            }
+        if (this.env.isBrowser) {
+            this.logger.info(`mounting vdom`)
+            this.vm.$mount(document.querySelector('#app'))
         }
     }
 
 
-    async _restoreState() {
-        const sessionId = this.state.app.session.active
-
-        let unencryptedState = this.stateStore.get(`${sessionId}/state`)
-        if (!unencryptedState) {
-            throw new Error(`${this}state store for session not found: '${sessionId}'`)
+    notify(notification) {
+        if (typeof notification.timeout === 'undefined') {
+            notification.timeout = 1500
         }
-
-        this.stateStore.cache.unencrypted = unencryptedState
-
-        // Determine if there is an encrypted state vault.
-        let cipherData = this.stateStore.get(`${sessionId}/state/vault`)
-        let decryptedState = {}
-        if (cipherData) {
-            try {
-                decryptedState = JSON.parse(await this.crypto.decrypt(this.crypto.vaultKey, cipherData))
-            } catch (err) {
-                this.logger.debug(`${this}failed to restore encrypted state`)
-                throw new Error('failed to decrypt; wrong password?')
-            }
-
-            this.logger.debug(`${this}session vault decrypted`)
-        } else decryptedState = {}
-        this.stateStore.cache.encrypted = decryptedState
-
-        let state = {}
-        this._mergeDeep(state, decryptedState, unencryptedState)
-
-        for (let module of Object.keys(this.modules)) {
-            if (this.modules[module]._restoreState) {
-                // Nothing persistent in this module yet. Assume an empty
-                // object to start with.
-                if (!state[module]) state[module] = {}
-                this.modules[module]._restoreState(state[module])
-            }
-        }
-        this.logger.debug(`${this}load previous state from session "${sessionId}"`)
-        await this.setState(state)
+        notification.id = shortid()
+        let notifications = this.state.app.notifications
+        notifications.push(notification)
+        this.setState({app: {notifications}})
     }
 
 
-    _setVueWatchers() {
-        this.logger.info(`${this}set vue watchers`)
-        let watchers = this._watchers()
+    setLanguage() {
+        let language = this.state.language.selected
 
-        for (let plugin of Object.values(this.modules)) {
-            if (plugin._watchers) Object.assign(watchers, plugin._watchers())
+        if (!language.id) {
+            const options = this.state.language.options
+            // Try to figure out the language from the environment.
+            // Check only the first part of en-GB/en-US.
+            if (this.env.isBrowser) language = options.find((i) => i.id === navigator.language.split('-')[0])
+
+            // else if (process.env.LANGUAGE) {
+            //     language = options.find((i) => i.id === process.env.LANGUAGE.split('_')[0])
+            // }
+            // Fallback to English language as a last resort.
+            if (!language) language = options.find((i) => i.id === 'en')
         }
 
-        for (const key of Object.keys(watchers)) {
-            this._vueWatchers.push(this.vm.$watch(key, watchers[key]))
-        }
-    }
-
-
-    _unsetVueWatchers() {
-        this.logger.info(`${this}unset ${this._vueWatchers.length} vue watchers`)
-        for (const unwatch of this._vueWatchers) unwatch()
-        this._vueWatchers = []
-    }
-
-
-    _watchers() {
-        return {
-            'store.language.selected.id': (languageId) => {
-                this.logger.info(`${this} setting language to ${languageId}`)
-                Vue.i18n.set(languageId)
-            },
-        }
-    }
-
-
-    async _writeEncryptedState({item, resolve}) {
-        item.status = 1
-        const storeEndpoint = this.state.app.session.active
-        if (!storeEndpoint) return
-
-        let storeState = await this.crypto.encrypt(
-            this.crypto.vaultKey,
-            JSON.stringify(this.stateStore.cache.encrypted),
-        )
-        this.stateStore.set(`${storeEndpoint}/state/vault`, storeState)
-        item.status = 2
-        // Process the next queue item in case other
-        // write actions were added in the meantime.
-        resolve()
-        this._processWriteQueue()
+        this.logger.info(`language: ${language.id}`)
+        this.setState({language: {selected: language}}, {persist: this.state.user && this.state.session.authenticated})
+        Vue.i18n.set(language.id)
     }
 
 
     async setState(state, {action, encrypt, path, persist = false} = {}) {
         if (!action) action = 'upsert'
         // Merge state in the context of the executing script.
-        await this._mergeState({action, encrypt, path, persist, state})
-    }
-
-
-    toString() {
-        return '[app] '
+        await mergeState(this, {action, encrypt, path, persist, state})
     }
 }
 
 if (options.env.isBrowser) {
-    globalThis.ca11 = new CA11(options)
+    const app = new WebphoneApp(options)
+    globalThis.app = app
 }
 
-export default {CA11, options}
+export default {WebphoneApp, options}

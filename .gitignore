@@ -2,6 +2,7 @@ node_modules
 build
 yarn-error.log
 templates.js
+components.js
 theme/icons
 .sig11rc
 .webphonerc

@@ -1,17 +1,14 @@
-export default (app, base) => {
-    /**
-    * @memberof fg.components
-    */
-    const FieldRadio = {
-        data: function() {
-            return {
-                // Postfix in case of multiple instances.
-                postfix: shortid(),
-            }
-        },
-        extends: base,
-        props: ['options'],
-    }
+import Field from '../../field.js'
 
-    return FieldRadio
+
+export default {
+    data: function() {
+        return {
+            // Postfix in case of multiple instances.
+            postfix: shortid(),
+        }
+    },
+    extends: Field,
+    props: ['options'],
+
 }

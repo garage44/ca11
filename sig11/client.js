@@ -20,6 +20,7 @@ class Sig11Client extends EventEmitter {
         }
 
         this.ws = new WebSocket(`wss://${this.domain}`, 'sig11')
+
         this.ws.onopen = this.onOpen.bind(this)
         this.ws.onclose = this.onClose.bind(this)
     }
@@ -52,6 +53,8 @@ class Sig11Client extends EventEmitter {
             this.ws.send(data)
         })
     }
+
+
     onClose() {
         this.emit('disconnected', this.reconnect)
         if (this.reconnect) {
@@ -60,24 +63,32 @@ class Sig11Client extends EventEmitter {
             }, 500)
         }
     }
+
+
     onMessage(e) {
         const msg = JSON.parse(e.data)
         this.network.protocol.in(msg)
     }
+
+
     onOpen() {
         this.connected = true
 
         this.ws.onmessage = this.onMessage.bind(this)
         this.emit('connected')
     }
-    register() {
-        // this.ws.send(this.network.protocol.out('identify', {
-        //     headless: this.app.env.isNode,
-        //     name: identity.name,
-        //     number: identity.number,
-        //     publicKey: identity.publicKey,
-        // }))
+
+
+    register(identity, env) {
+        this.ws.send(this.protocol.out('identify', {
+            headless: env.isNode,
+            name: identity.name,
+            number: identity.number,
+            publicKey: identity.publicKey,
+        }))
     }
+
+
     async signEcPublicKey(ecdh) {
         const publicKeyRaw = await crypto.subtle.exportKey('raw', ecdh.publicKey)
         const signatureRaw = await crypto.subtle.sign(
@@ -89,6 +100,8 @@ class Sig11Client extends EventEmitter {
         signedPublicKeyRaw.set(new Uint8Array(signatureRaw), publicKeyRaw.byteLength)
         return signedPublicKeyRaw
     }
+
+
     /**
      * Send an encrypted message across the SIG11
      * network to a node.

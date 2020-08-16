@@ -66,7 +66,7 @@ export default (app) => {
         },
         mounted: function() {
             this.mediaElement = document.querySelector(`#${this.stream.kind}-${this.stream.id}`)
-            console.log("MEDIA ELEMENT", this.mediaElement)
+
             // if (this.stream.id) {
             //     if (!this.$refs[this.stream.kind]) return
 

@@ -1,4 +1,3 @@
-import App from '@ca11/webphone/lib/app.js'
 import btoa from 'btoa'
 import Crypto from './lib/crypto.js'
 import Endpoint from './server/endpoint.js'
@@ -6,24 +5,31 @@ import EventEmitter from 'eventemitter3'
 import fs from 'fs-extra'
 import http from 'http'
 import knex from 'knex'
+import Logger from '@ca11/webphone/lib/logger.js'
 import Network from './server/network.js'
 import path from 'path'
 import rc from 'rc'
 import WebCrypto from 'node-webcrypto-ossl'
 import WebSocket from 'ws'
+import env from '@ca11/webphone/lib/env.js'
+import utils from '@ca11/webphone/lib/utils.js'
 
 global.EventEmitter = EventEmitter
 global.btoa = btoa
-
 global.crypto = new WebCrypto()
 
 let settings
 
 
-class Sig11Service extends App {
+class Sig11App extends EventEmitter {
 
     constructor() {
-        super(settings)
+        super()
+
+        this.env = env({})
+
+        this.logger = new Logger(this)
+        this.logger.setLevel('debug')
 
         this.crypto = new Crypto(this)
         this.network = new Network(this)
@@ -139,18 +145,13 @@ class Sig11Service extends App {
             this.logger.info(`listening on port ${settings.port}`),
         ])
     }
-
-
-    toString() {
-        return '[sig11] '
-    }
 }
 
 (async() => {
     const defaultsTarget = path.join(path.dirname(new URL(import.meta.url).pathname), '.sig11rc.defaults')
     const defaults = JSON.parse(await fs.readFile(defaultsTarget, 'utf8'))
     settings = rc('sig11', defaults)
-    global.sig11 = new Sig11Service()
+    global.sig11 = new Sig11App()
 })()
 
 

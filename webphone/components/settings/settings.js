@@ -1,3 +1,4 @@
+import { copyObject } from '/webphone/lib/utils.js'
 import v from 'vuelidate/dist/validators.min.js'
 
 export default (app) => {
@@ -22,7 +23,7 @@ export default (app) => {
                 return classes
             },
             save: function() {
-                let settings = app.utils.copyObject(this.settings)
+                let settings = copyObject(this.settings)
                 delete settings.webrtc.media
 
                 let settingsState = {

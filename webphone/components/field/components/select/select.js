@@ -1,10 +1,11 @@
-export default (app, base) => {
-    /**
-    * @memberof fg.components
-    */
-    const FieldSelect = {
+import { copyObject } from '/webphone/lib/utils.js'
+import Field from '../../field.js'
+
+
+export default (app) => {
+    return {
         computed: {
-            filteredOptions(event) {
+            filteredOptions() {
                 let filteredOptions = []
 
                 for (const option of this.options) {
@@ -24,7 +25,7 @@ export default (app, base) => {
                 visible: false,
             }
         },
-        extends: base,
+        extends: Field,
         methods: {
             emptySelectOption: function() {
                 // Handle syncing an empty option to the model.
@@ -85,7 +86,7 @@ export default (app, base) => {
                         this.searchQuery = ''
                         this.visible = false
                         this.searchPlaceholder = this.selectedOption.name
-                        this.$emit('input', app.utils.copyObject(this.selectedOption))
+                        this.$emit('input', copyObject(this.selectedOption))
                     } else {
                         this.visible = true
                     }
@@ -101,7 +102,7 @@ export default (app, base) => {
                 } else {
                     for (const option of this.options) {
                         if (option.id === value) {
-                            this.$emit('input', app.utils.copyObject(option))
+                            this.$emit('input', copyObject(option))
                         }
                     }
                 }
@@ -139,6 +140,4 @@ export default (app, base) => {
             }
         },
     }
-
-    return FieldSelect
 }

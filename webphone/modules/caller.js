@@ -1,4 +1,5 @@
 import Call from '../lib/call.js'
+import { copyObject } from '/webphone/lib/utils.js'
 import Module from '../lib/module.js'
 
 
@@ -78,44 +79,6 @@ class ModuleCaller extends Module {
     }
 
 
-    _initialState() {
-        return {
-            calls: {},
-            description: {
-                endpoint: '',
-                protocol: 'sig11',
-            },
-        }
-    }
-
-
-    _ready() {
-        let state = {}
-        if (!this.app.state.app.online) state.caller = {status: null}
-
-        if (this.app.env.isTel) {
-            state.ui = {layer: 'caller'}
-            state.caller = {description: {endpoint: this.app.env.isTel}}
-            state.sig11 = {network: {view: false}}
-        }
-
-        this.app.setState(state)
-    }
-
-
-    _restoreState(moduleStore) {
-        this.app._mergeDeep(moduleStore, {
-            calls: {},
-            sig11: {
-                status: 'loading',
-            },
-            sip: {
-                status: 'loading',
-            },
-        })
-    }
-
-
     activateCall(call, holdOthers = true, unholdOwn = false) {
         const callIds = Object.keys(this.calls)
 
@@ -148,6 +111,20 @@ class ModuleCaller extends Module {
         }
 
         return call
+    }
+
+
+    appReady() {
+        let state = {}
+        if (!this.app.state.app.online) state.caller = {status: null}
+
+        if (this.app.env.isTel) {
+            state.ui = {layer: 'caller'}
+            state.caller = {description: {endpoint: this.app.env.isTel}}
+            state.sig11 = {network: {view: false}}
+        }
+
+        this.app.setState(state)
     }
 
 
@@ -198,7 +175,7 @@ class ModuleCaller extends Module {
         }
 
         // Finally delete the call and its references.
-        this.app.logger.debug(`${this}delete call ${call.id}`)
+        this.app.logger.debug(`delete call ${call.id}`)
         this.app.setState(null, {action: 'delete', path: `caller.calls.${call.id}`})
         delete this.calls[call.id]
     }
@@ -227,8 +204,8 @@ class ModuleCaller extends Module {
 
 
     spawnCall(description) {
-        const desc = this.app.utils.copyObject(description)
-        this.app.logger.debug(`${this}spawn new ${description.protocol} call`)
+        const desc = copyObject(description)
+        this.app.logger.debug(`spawn new ${description.protocol} call`)
         const call = new Call(this.app, desc)
 
         this.calls[call.state.id] = call
@@ -242,8 +219,25 @@ class ModuleCaller extends Module {
     }
 
 
-    toString() {
-        return `${this.app}[mod-caller] `
+    state() {
+        return {
+            init: {
+                calls: {},
+                description: {
+                    endpoint: '',
+                    protocol: 'sig11',
+                },
+            },
+            restore: {
+                calls: {},
+                sig11: {
+                    status: 'loading',
+                },
+                sip: {
+                    status: 'loading',
+                },
+            },
+        }
     }
 
 
