@@ -33,9 +33,9 @@ Vue.config.productionTip = false
 Vue.config.devtools = false
 
 Vue.use(VueSvgicon, {tagName: 'icon'})
-Vue.use(Vuelidate)
+Vue.use(Vuelidate.default)
 Vue.use(vClickOutside)
-Vue.use(VueStash)
+Vue.use(VueStash.default)
 
 globalThis.shortid = shortid
 
