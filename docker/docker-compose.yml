@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   asterisk:
-    container_name: asterisk
+    container_name: ca11_asterisk
     image: garage11/asterisk:latest
     depends_on:
       - coturn
@@ -15,29 +15,26 @@ services:
       - ./asterisk/odbc.ini:/etc/odbc.ini
   postgres:
     image: postgres:latest
-    container_name: postgres
+    container_name: ca11_postgres
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-asterisk}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ca11ftw}
     network_mode: host
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - ca11_postgres:/var/lib/postgresql/data
   nginx:
-    container_name: nginx
+    container_name: ca11_nginx
     image: nginx
     network_mode: host
-    restart: always
     volumes:
       - ./nginx/ssl:/etc/nginx/ssl
       - ./nginx/sites-enabled:/etc/nginx/sites-enabled
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ../build:/usr/share/nginx/html
   coturn:
-    container_name: coturn
+    container_name: ca11_coturn
     image: instrumentisto/coturn
     network_mode: host
-    restart: always
 volumes:
-  pgdata:
-    external: true
+  ca11_postgres:

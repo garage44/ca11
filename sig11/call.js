@@ -1,4 +1,4 @@
-import { mergeDeep } from '/webphone/lib/utils.js'
+import { mergeDeep } from '../webphone/lib/utils.js'
 
 class Sig11Call {
 

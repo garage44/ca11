@@ -58,10 +58,9 @@ focusses on the following themes:
 
 - Setup the Asterisk database
 
-      docker volume create --name=pgdata
       docker-compose -f docker/docker-compose.yml up
       # Open another shell...
-      docker exec -w /root/asterisk/contrib/ast-db-manage -it asterisk alembic -c config.ini upgrade head
+      docker exec -w /root/asterisk/contrib/ast-db-manage -it ca11_asterisk alembic -c config.ini upgrade head
       psql -U postgres -h 127.0.0.1 asterisk < docker/postgres/sig11_asterisk.sql
       # Default password is "ca11ftw"
       # CTRL-C Stop all Docker services

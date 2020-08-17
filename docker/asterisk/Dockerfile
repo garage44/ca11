@@ -9,7 +9,7 @@ RUN pacman -S git inetutils awk openssh diffutils python-psycopg2 python-alembic
 RUN cd $HOME &&\
  git clone https://github.com/asterisk/asterisk.git &&\
  cd asterisk &&\
- git checkout 17.3.0 &&\
+ git checkout 17.6.0 &&\
  contrib/scripts/install_prereq install
 
 RUN cd $HOME/asterisk &&\
