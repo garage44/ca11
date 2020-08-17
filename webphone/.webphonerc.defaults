@@ -7,28 +7,7 @@
             "stun:dev.ca11.app"
         ]
     },
-    "imports": {
-        "blueimp-md5": "./esm/blueimp-md5.js",
-        "@ca11/sig11/call.js": "./sig11/call.js",
-        "@ca11/sig11/client.js": "./sig11/client.js",
-        "@ca11/sig11/lib/crypto.js": "./sig11/lib/crypto.js",
-        "@ca11/sip/client.js": "./sip/client.js",
-        "@ca11/sip/call.js": "./sip/call.js",
-        "@ca11/webphone/lib/call.js": "/webphone/lib/call.js",
-        "@ca11/theme/icons/index.js": "./esm/@ca11/theme/icons/index.js",
-        "@garage11/vue-i18n": "./esm/@garage11/vue-i18n.js",
-        "@garage11/vue-i18n/src/store-stash.js": "./esm/@garage11/vue-i18n/src/store-stash.js",
-        "eventemitter3": "./esm/eventemitter3.js",
-        "sdp-transform": "./esm/sdp-transform.js",
-        "v-click-outside": "./esm/v-click-outside.js",
-        "vue-stash": "./esm/vue-stash.js",
-        "vue-svgicon": "./esm/vue-svgicon.js",
-        "vue/dist/vue.runtime.js": "./esm/vue/dist/vue.runtime.js",
-        "vuelidate": "./esm/vuelidate.js",
-        "vuelidate/dist/validators.min.js": "./esm/vuelidate/dist/validators.min.js",
-        "shortid/lib/index.js": "./esm/shortid/lib/index.js",
-        "@/": "./"
-    },
+    "language": "nl",
     "testing": {
         "headless": false,
         "port": 3000

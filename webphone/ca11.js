@@ -68,7 +68,6 @@ class WebphoneApp extends EventEmitter {
         this.clients = {}
 
         for (const builtin of settings.modules) {
-            // Other plugins without any config.
             this.modules[builtin.name] = new builtin.module(this, null)
         }
 
@@ -79,13 +78,6 @@ class WebphoneApp extends EventEmitter {
     }
 
 
-    /**
-    * Load store defaults and restore the encrypted state from
-    * localStorage, if the session can be restored immediately.
-    * Load a clean state from defaults otherwise. Then initialize
-    * the ViewModel and check for the data schema. Do a factory reset
-    * if the data schema is outdated.
-    */
     async initStore() {
         this.state = {
             env: this.env,
@@ -105,19 +97,19 @@ class WebphoneApp extends EventEmitter {
             ui: {menubar: {base: 'inactive', event: null}},
         })
 
-        // No session yet.
+        // No session available yet.
         if (!this.state.app.vault.key) {
             this.initVm({main: this.components.Main})
         } else {
             await this.session.open({key: this.state.app.vault.key})
-            // (!) State is reactive only after initializing the viewmodel.
+            // (!) State becomes reactive after initializing the viewmodel.
             this.initVm({main: this.components.Main})
             this.session.initVmWatchers()
         }
 
         this.devices = new Devices(this)
 
-        // Call all ready hooks on modules; e.g. the webphone is ready.
+        // The webphone has initialized; call all ready hooks on modules.
         for (let module of Object.keys(this.modules)) {
             if (this.modules[module].appReady) this.modules[module].appReady()
         }
@@ -156,7 +148,6 @@ class WebphoneApp extends EventEmitter {
         }
 
         this.setLanguage()
-        // Add a shortcut to the translation module.
         this.$t = Vue.i18n.translate
 
         this.vm = new Vue(Object.assign({
@@ -189,11 +180,12 @@ class WebphoneApp extends EventEmitter {
             const options = this.state.language.options
             // Try to figure out the language from the environment.
             // Check only the first part of en-GB/en-US.
-            if (this.env.isBrowser) language = options.find((i) => i.id === navigator.language.split('-')[0])
+            if (globalThis.env.language) {
+                language = options.find((i) => i.id === globalThis.env.language)
+            } else  if (this.env.isBrowser) {
+                language = options.find((i) => i.id === navigator.language.split('-')[0])
+            }
 
-            // else if (process.env.LANGUAGE) {
-            //     language = options.find((i) => i.id === process.env.LANGUAGE.split('_')[0])
-            // }
             // Fallback to English language as a last resort.
             if (!language) language = options.find((i) => i.id === 'en')
         }
