@@ -19,6 +19,7 @@ import Sounds from './lib/sounds.js'
 import StateStore from './lib/store.js'
 import vClickOutside from 'v-click-outside'
 import Vue from 'vue/dist/vue.runtime.js'
+import VueAutosize from 'vue-autosize'
 import VueI18n from '@garage11/vue-i18n'
 import VueI18nStash from '@garage11/vue-i18n/src/store-stash.js'
 import Vuelidate from 'vuelidate'
@@ -26,7 +27,6 @@ import vuepack from './vuepack.js'
 import VueStash from 'vue-stash'
 import VueSvgicon from 'vue-svgicon'
 
-// import VueAutosize from 'vue-autosize'
 
 Vue.config.ignoredElements = ['component', 'panel', 'content']
 Vue.config.productionTip = false
@@ -36,6 +36,7 @@ Vue.use(VueSvgicon, {tagName: 'icon'})
 Vue.use(Vuelidate.default)
 Vue.use(vClickOutside)
 Vue.use(VueStash.default)
+Vue.use(VueAutosize)
 
 globalThis.shortid = shortid
 
