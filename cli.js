@@ -40,7 +40,6 @@ const entrypoint = {
     html: 'index.html',
     js: 'js/app.js',
     scss: 'scss/ca11/app.scss',
-    vue: 'components/**/*.vue',
 }
 
 tasks.assets = new Task('assets', async function() {
@@ -70,7 +69,7 @@ tasks.assets = new Task('assets', async function() {
 })
 
 tasks.build = new Task('build', async function() {
-    await tasks.vue.start(entrypoint.vue)
+    await tasks.vue.start()
     await Promise.all([
         tasks.assets.start(),
         tasks.scss.start(entrypoint.scss),
@@ -179,22 +178,23 @@ tasks.scss = new Task('scss', async function() {
 })
 
 tasks.vue = new Task('vue', async function() {
+    const vueFiles = await globby([path.join(settings.dir.webphone, 'components', '**', '*.vue')])
     if (!vuePack) {
-        const importFilter = settings.dir.base
-        const pathFilter = settings.dir.webphone.split('/').concat(['components'])
-        vuePack = new VuePack({importFilter, pathFilter})
+        vuePack = new VuePack({
+            basePath: settings.dir.base,
+            excludeTokens: ['webphone', 'components'],
+        })
     }
 
-    const targets = await globby([path.join(settings.dir.webphone, this.ep.raw)])
-    const {components, templates} = await vuePack.compile(targets)
+    const {components, templates} = await vuePack.compile(vueFiles, this.ep ? this.ep.raw : null)
 
     // This is an exceptional build target, because it is not
     // a module that is available from Node otherwise.
     await Promise.all([
         fs.writeFile(path.join(settings.dir.webphone, 'components.js'), components),
         fs.writeFile(path.join(settings.dir.webphone, 'templates.js'), templates),
-        fs.writeFile(path.join(settings.dir.buildtarget, 'components.js'), components),
-        fs.writeFile(path.join(settings.dir.buildtarget, 'templates.js'), templates),
+        fs.writeFile(path.join(settings.dir.build, 'webphone',  'components.js'), components),
+        fs.writeFile(path.join(settings.dir.build, 'webphone', 'templates.js'), templates),
     ])
 })
 
@@ -229,8 +229,8 @@ tasks.watch = new Task('watch', async function() {
             tinylr.changed('app.js')
         })
 
-        chokidar.watch(path.join(settings.dir.webphone, '**', '*.vue')).on('change', async() => {
-            await tasks.vue.start(entrypoint.vue)
+        chokidar.watch(path.join(settings.dir.webphone, '**', '*.vue')).on('change', async(file) => {
+            await tasks.vue.start(file)
             tinylr.changed('templates.js')
         })
 
@@ -279,7 +279,7 @@ tasks.watch = new Task('watch', async function() {
         .command('html', 'generate index.html', () => {}, () => {tasks.html.start(entrypoint.html)})
         .command('js', `prepare ${settings.build.target} JavaScript`, () => {}, () => {tasks.js.start(entrypoint.js)})
         .command('scss', 'compile stylesheets (SCSS)', () => {}, () => {tasks.scss.start(entrypoint.scss)})
-        .command('vue', 'compile Vue templates (ESM)', () => {}, () => {tasks.vue.start(entrypoint.vue)})
+        .command('vue', 'compile Vue templates (ESM)', () => {}, () => {tasks.vue.start()})
         .command('watch', `${settings.build.target} development modus`, () => {}, () => {tasks.watch.start()})
         .demandCommand()
         .help('help')

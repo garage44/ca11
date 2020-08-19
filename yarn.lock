@@ -283,10 +283,10 @@
   resolved "https://registry.yarnpkg.com/@garage11/vue-i18n/-/vue-i18n-1.1.0.tgz#9b28b8feb73f2b73d3245c1588766c9c7fd3ab3b"
   integrity sha512-opd73TDfW5qP27Y3RnEs7Akv4laZEDuGpZcTJGFC5HZw0Oe3mOFZgFd9jdZcq5d+Bg1yBH4AqPIQl4hXGC4xtw==
 
-"@garage11/vuepack@2.x.x":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@garage11/vuepack/-/vuepack-2.1.0.tgz#00ad91dd8e87242a420af0965c0ee5dff469f7c5"
-  integrity sha512-GU4DaYkcVQgUV2l/nMTzQwbqWbHGo2E84/OP5xe/MB5itbrYh6QL57MeJytD2MwuU3UOx8HkXloQ9aZt71EKcA==
+"@garage11/vuepack@1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@garage11/vuepack/-/vuepack-1.2.0.tgz#4a640fbf4d27ee704ae1a748dd6215a881c332a4"
+  integrity sha512-zuK1bgdEC3NYB8TH5xAmqdzSlIkEpzqQaX0/cDo46VRjg3nR+idbadsPOcDFCdO+o3eKGTt7xVIkXQ9urmjxsg==
   dependencies:
     vue-template-compiler "2.6.11"
     vue-template-es2015-compiler "1.9.1"

@@ -1,0 +1,27 @@
+networks:
+    ca11:
+      driver: bridge
+services:
+  asterisk:
+    networks:
+      - ca11
+
+  coturn:
+    networks:
+      - ca11
+    ports:
+      - "5349:5349"
+
+  postgresql:
+    networks:
+      - ca11
+    ports:
+     - "5432:5432"
+
+  nginx:
+    networks:
+      - ca11
+    ports:
+      - "443:443"
+
+version: "3.8"

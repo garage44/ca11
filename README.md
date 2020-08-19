@@ -58,7 +58,8 @@ focusses on the following themes:
 
       cp docker/.env.example .env
       vim docker/.env
-      # Use "host" for Linux, "bridge" for MacOS & Windows
+      # Use bridge config for MacOS/Windows, host for Linux
+      #  COMPOSE_FILE=docker-compose.yml:docker-compose.bridge.yml
 
       # Add hostname lookups in case of "host":
       sudo echo "127.0.0.1 asterisk" >> /etc/hosts

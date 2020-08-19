@@ -1,15 +1,7 @@
-
 services:
   asterisk:
     container_name: asterisk
-    depends_on:
-      - coturn
-      - postgresql
     image: garage11/asterisk:latest
-    links:
-      - "coturn:coturn"
-      - "postgresql:postgresql"
-    network_mode: ${NETWORK_MODE:-bridge}
     volumes:
       - ./asterisk/config:/etc/asterisk
       - ./asterisk/config.ini:/root/asterisk/contrib/ast-db-manage/config.ini
@@ -19,9 +11,6 @@ services:
   coturn:
     container_name: coturn
     image: instrumentisto/coturn
-    ports:
-      - 5349:5349
-    network_mode: ${NETWORK_MODE:-bridge}
 
   postgresql:
     container_name: postgresql
@@ -30,21 +19,12 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ca11ftw}
     image: postgres:latest
-    network_mode: ${NETWORK_MODE:-bridge}
-    ports:
-      - 5432:5432
-
     volumes:
       - postgresql:/var/lib/postgresql/data
 
   nginx:
     container_name: nginx
     image: nginx
-    links:
-      - "asterisk:asterisk"
-    network_mode: ${NETWORK_MODE:-bridge}
-    ports:
-      - 443:443
     volumes:
       - ./nginx/ssl:/etc/nginx/ssl
       - ./nginx/sites-enabled:/etc/nginx/sites-enabled

@@ -1,0 +1,11 @@
+services:
+  asterisk:
+    network_mode: host
+  coturn:
+    network_mode: host
+  postgresql:
+    network_mode: host
+  nginx:
+    network_mode: host
+
+version: "3.8"
