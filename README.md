@@ -56,13 +56,21 @@ focusses on the following themes:
       sudo echo "127.0.0.1 sip.dev.ca11.app" >> /etc/hosts
       sudo echo "127.0.0.1 sig11.dev.ca11.app" >> /etc/hosts
 
-- Setup the Asterisk database
+      cp docker/.env.example .env
+      vim docker/.env
+      # Use "host" for Linux, "bridge" for MacOS & Windows
 
+      # Add hostname lookups in case of "host":
+      sudo echo "127.0.0.1 asterisk" >> /etc/hosts
+      sudo echo "127.0.0.1 coturn" >> /etc/hosts
+      sudo echo "127.0.0.1 postgresql" >> /etc/hosts
+
+- Setup Docker services
       docker-compose -f docker/docker-compose.yml up
       # Open another shell...
-      docker exec -w /root/asterisk/contrib/ast-db-manage -it ca11_asterisk alembic -c config.ini upgrade head
-      psql -U postgres -h 127.0.0.1 asterisk < docker/postgres/sig11_asterisk.sql
+      docker exec -w /root/asterisk/contrib/ast-db-manage -it asterisk alembic -c config.ini upgrade head
       # Default password is "ca11ftw"
+      psql -U postgres -h 127.0.0.1 asterisk < docker/postgres/sig11_asterisk.sql
       # CTRL-C Stop all Docker services
 
 ## Development
@@ -75,8 +83,7 @@ focusses on the following themes:
 - Start the development stack
 
       docker-compose -f docker/docker-compose.yml up
-      # optionally use nodemon for auto-reload
-      node sig11/server.js
+      node sig11/server.js # or use nodemon
       ./cli.js watch
 
 - Open a browser to the [softphone url](https://dev.ca11.app)

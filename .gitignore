@@ -7,3 +7,4 @@ theme/icons
 .sig11rc
 .webphonerc
 docker/nginx/ssl
+docker/.env
