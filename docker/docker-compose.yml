@@ -1,6 +1,6 @@
 services:
   asterisk:
-    container_name: asterisk
+    container_name: ca11_asterisk
     image: garage11/asterisk:latest
     volumes:
       - ./asterisk/config:/etc/asterisk
@@ -9,11 +9,11 @@ services:
       - ./asterisk/odbc.ini:/etc/odbc.ini
 
   coturn:
-    container_name: coturn
+    container_name: ca11_coturn
     image: instrumentisto/coturn
 
   postgresql:
-    container_name: postgresql
+    container_name: ca11_postgresql
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-asterisk}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
@@ -23,7 +23,7 @@ services:
       - postgresql:/var/lib/postgresql/data
 
   nginx:
-    container_name: nginx
+    container_name: ca11_nginx
     image: nginx
     volumes:
       - ./nginx/ssl:/etc/nginx/ssl

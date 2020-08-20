@@ -10,6 +10,5 @@
     <MenuContext v-if="session.authenticated" />
     <MenuCommunicate v-if="session.authenticated" :call="callActive" />
     <AudioBg />
-
     <layer :is="layer" v-if="session.authenticated" class="layer" />
 </component>

@@ -12,7 +12,6 @@ import imagemin from 'imagemin'
 import imageminJpegtran from 'imagemin-jpegtran'
 import imageminPngquant from 'imagemin-pngquant'
 import loadSettings from './lib/settings.js'
-import mount from 'connect-mount'
 import path from 'path'
 import rollup from 'rollup'
 import rollupCommonjs from '@rollup/plugin-commonjs'
@@ -20,19 +19,16 @@ import rollupReplace from '@rollup/plugin-replace'
 import rollupResolve from '@rollup/plugin-node-resolve'
 import rollupTerser from 'rollup-plugin-terser'
 import sass from 'node-sass'
-import serveStatic from 'serve-static'
 import svgIcon from 'vue-svgicon/dist/lib/build.js'
 import Task from './lib/task.js'
-
 import tinylr from 'tiny-lr'
 import VuePack from '@garage11/vuepack'
 import yargs from 'yargs'
 
-let settings
-
-const tasks = {}
 
 const cleanCSS = new CleanCSS({level: 2, returnPromise: true, sourceMap: true})
+let settings
+const tasks = {}
 let vuePack
 
 // Maps tasks to entrypoints.
@@ -171,7 +167,6 @@ tasks.scss = new Task('scss', async function() {
 
             promises.push(fs.writeFile(target.css, cssRules))
             await Promise.all(promises)
-
             resolve({size: cssRules.length})
         })
     })
@@ -186,40 +181,33 @@ tasks.vue = new Task('vue', async function() {
         })
     }
 
-    const {components, templates} = await vuePack.compile(vueFiles, this.ep ? this.ep.raw : null)
+    const results = await vuePack.compile(vueFiles, this.ep ? this.ep.raw : null)
+    const promises = []
+    if (results.changed.components) {
+        fs.writeFile(path.join(settings.dir.webphone, 'components.js'), results.components)
+        promises.push(fs.writeFile(path.join(settings.dir.build, 'webphone',  'components.js'), results.components))
+    }
 
-    // This is an exceptional build target, because it is not
-    // a module that is available from Node otherwise.
-    await Promise.all([
-        fs.writeFile(path.join(settings.dir.webphone, 'components.js'), components),
-        fs.writeFile(path.join(settings.dir.webphone, 'templates.js'), templates),
-        fs.writeFile(path.join(settings.dir.build, 'webphone',  'components.js'), components),
-        fs.writeFile(path.join(settings.dir.build, 'webphone', 'templates.js'), templates),
-    ])
+    if (results.changed.templates) {
+        // No need to wait for this write.
+        fs.writeFile(path.join(settings.dir.webphone, 'templates.js'), results.templates)
+        promises.push(fs.writeFile(path.join(settings.dir.build, 'webphone', 'templates.js'), results.templates))
+    }
+    await Promise.all(promises)
 })
 
 tasks.watch = new Task('watch', async function() {
     await tasks.build.start()
     return new Promise((resolve) => {
         var app = connect()
-        app.use(mount('/static', serveStatic(path.join(settings.dir.buildtarget))))
-            .use(async(req, res, next) => {
-                if (req.url.includes('livereload.js')) {
-                    next()
-                } else {
-                    const html = await fs.readFile(path.join(settings.dir.buildtarget, 'index.html'))
-                    res.setHeader('Content-Type', 'text/html; charset=UTF-8')
-                    res.end(html)
-                }
-            })
-            .use(tinylr.middleware({app}))
-
-            .listen({host: settings.dev.host, port: settings.dev.port}, () => {
-                this.log(`development server listening: ${chalk.grey(`${settings.dev.host}:${settings.dev.port}`)}`)
-                resolve()
-            })
+        app.use(tinylr.middleware({app}))
+        app.listen({host: settings.dev.host, port: settings.dev.port}, () => {
+            this.log(`development server listening: ${chalk.grey(`${settings.dev.host}:${settings.dev.port}`)}`)
+            resolve()
+        })
 
         chokidar.watch([
+            path.join('!', settings.dir.webphone, 'js', 'components.js'),
             path.join('!', settings.dir.webphone, 'js', 'templates.js'), // Templates are handled by the Vue task
             path.join(settings.dir.webphone, '**', '*.js'),
             path.join(settings.dir.sig11, '**', '*.js'),
