@@ -32,9 +32,11 @@ focusses on the following themes:
 
 - Clone the project & install its dependencies:
 
-      git clone git@github.com:open-voip-alliance/ca11.git
-      cd ca11
-      yarn
+  ```bash
+  git clone git@github.com:open-voip-alliance/ca11.git
+  cd ca11
+  yarn
+  ```
 
 - Generate a TLS certificate & Certificate Authority (CA) for development
 
@@ -43,59 +45,68 @@ focusses on the following themes:
   > Other operating systems require manual CA installation. Restart the browser
   > to refresh the TLS certificate.
 
-      cd docker/nginx/ssl
-      ./ca_cert.sh dev.ca11.app
-      ./ca_cert.sh sip.dev.ca11.app
-      ./ca_cert.sh sig11.dev.ca11.app
-      sudo ./ca_system.sh
-      cd -
+  ```bash
+  cd docker/nginx/ssl
+  ./ca_cert.sh dev.ca11.app
+  ./ca_cert.sh sip.dev.ca11.app
+  ./ca_cert.sh sig11.dev.ca11.app
+  sudo ./ca_system.sh
+  cd -
+  ```
 
 - Add Hostname lookups for the development domains:
 
-      sudo echo "127.0.0.1 dev.ca11.app" >> /etc/hosts
-      sudo echo "127.0.0.1 sip.dev.ca11.app" >> /etc/hosts
-      sudo echo "127.0.0.1 sig11.dev.ca11.app" >> /etc/hosts
+  ```bash
+  sudo echo "127.0.0.1 dev.ca11.app" >> /etc/hosts
+  sudo echo "127.0.0.1 sip.dev.ca11.app" >> /etc/hosts
+  sudo echo "127.0.0.1 sig11.dev.ca11.app" >> /etc/hosts
 
-      cp docker/.env.example .env
-      vim docker/.env
-      # Use bridge config for MacOS/Windows, host for Linux
-      #  COMPOSE_FILE=docker-compose.yml:docker-compose.bridge.yml
+  cp docker/.env.example .env
+  vim docker/.env
+  # Use bridge config for MacOS/Windows, host for Linux
+  #  COMPOSE_FILE=docker-compose.yml:docker-compose.bridge.yml
 
-      # Add hostname lookups in case of "host":
-      sudo echo "127.0.0.1 asterisk" >> /etc/hosts
-      sudo echo "127.0.0.1 coturn" >> /etc/hosts
+  # Add hostname lookups in case of "host":
+  sudo echo "127.0.0.1 asterisk" >> /etc/hosts
+  sudo echo "127.0.0.1 coturn" >> /etc/hosts
       sudo echo "127.0.0.1 postgresql" >> /etc/hosts
+   ```
 
 - Setup Docker services
-      docker-compose -f docker/docker-compose.yml up
-      # Open another shell...
-      docker exec -w /root/asterisk/contrib/ast-db-manage -it ca11_asterisk alembic -c config.ini upgrade head
-      # Default password is "ca11ftw"
-      psql -U postgres -h 127.0.0.1 asterisk < docker/postgres/sig11_asterisk.sql
-      # CTRL-C Stop all Docker services
+
+  ```bash
+  docker-compose -f docker/docker-compose.yml up
+  # Open another shell...
+  docker exec -w /root/asterisk/contrib/ast-db-manage -it ca11_asterisk alembic -c config.ini upgrade head
+  # Default password is "ca11ftw"
+  psql -U postgres -h 127.0.0.1 asterisk < docker/postgres/sig11_asterisk.sql
+  # CTRL-C Stop all Docker services
+  ```
 
 ## Development
 
 - Setup custom config files to test with:
 
-      cp sig11/.sig11rc.defaults .sig11rc
-      cp webphone/.webphonerc.defaults .webphonerc
+  ```bash
+  cp sig11/.sig11rc.defaults .sig11rc
+  cp webphone/.webphonerc.defaults .webphonerc
+  ```
 
 - Start the development stack
 
-      docker-compose -f docker/docker-compose.yml up
-      node sig11/server.js # or use nodemon
-      ./cli.js watch
+  ```bash
+  docker-compose -f docker/docker-compose.yml up
+  node sig11/server.js # or use nodemon
+  ./cli.js watch
+  ```
 
 - Open a browser to the [softphone url](https://dev.ca11.app)
 
-  > Use the [livereload extension](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei) to autoreload on file-change.
+  > For autoreload, use the
+  [livereload extension](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei)
 - Verify the SIP stack by calling **1111** using the SIP protocol
 - Start a second webphone from another browser with a fake WebRTC video stream:
 
-      chromium --use-fake-device-for-media-stream --enable-experimental-web-platform-features  --user-data-dir=~/.chromium-tmp
-
-## License
-
-The CA11 [webphone](/webphone/LICENSE) package is a MIT-licensed descendant
-of the [Vialer-js](https://github.com/vialer/vialer-js) project. The [SIP](https://github.com/open-voip-alliance/ca11/blob/master/sip/LICENSE)/[SIG11](https://github.com/open-voip-alliance/ca11/blob/master/sig11/LICENSE)/[Theme](https://github.com/open-voip-alliance/ca11/blob/master/theme/LICENSE) packages are [public domain](https://unlicense.org/) and don't have usage restrictions. The theme contains some artwork with deviating liberal licenses; [sound files](https://github.com/open-voip-alliance/ca11/blob/master/theme/audio/LICENSE) and [background images](https://github.com/open-voip-alliance/ca11/blob/master/theme/img/LICENSE).
+  ```bash
+  chromium --use-fake-device-for-media-stream --enable-experimental-web-platform-features  --user-data-dir=~/.chromium-tmp
+  ```
