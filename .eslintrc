@@ -17,7 +17,7 @@
         "shortid": true,
         "$": true
     },
-    "ignorePatterns": ["components.js", "templates.js", "node_modules/", "build/", "lib/utils.js"],
+    "ignorePatterns": ["components.js", "templates.js", "node_modules/", "build/", "cli/utils.js"],
     "overrides": [
         {
             "files": ["**/*.js"],

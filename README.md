@@ -69,13 +69,13 @@ focusses on the following themes:
   # Add hostname lookups in case of "host":
   sudo echo "127.0.0.1 asterisk" >> /etc/hosts
   sudo echo "127.0.0.1 coturn" >> /etc/hosts
-      sudo echo "127.0.0.1 postgresql" >> /etc/hosts
+  sudo echo "127.0.0.1 postgresql" >> /etc/hosts
    ```
 
 - Setup Docker services
 
   ```bash
-  docker-compose -f docker/docker-compose.yml up
+  yarn services
   # Open another shell...
   docker exec -w /root/asterisk/contrib/ast-db-manage -it ca11_asterisk alembic -c config.ini upgrade head
   # Default password is "ca11ftw"
@@ -95,7 +95,7 @@ focusses on the following themes:
 - Start the development stack
 
   ```bash
-  docker-compose -f docker/docker-compose.yml up
+  yarn services
   node sig11/server.js # or use nodemon
   ./cli.js watch
   ```

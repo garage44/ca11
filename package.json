@@ -13,13 +13,15 @@
     "yarn": ">= 1.19.0"
   },
   "scripts": {
-    "build": "./cli.js build",
+    "build": "./cli/cli.js build",
+    "cli": "./cli/cli.js",
     "icons": "vsvg -s theme/svg/ --es6 -t theme/icons",
     "lint": "yarn lint:js;yarn lint:scss",
     "lint:js": "eslint \"{sip,sig11,theme,webphone}/**/{*.js,*.vue}\"",
     "lint:scss": "stylelint 'webphone/**/*.scss'",
     "prepare": "yarn icons;yarn snowpack",
     "release": "standard-version",
+    "services": "docker-compose --env-file ./docker/.env --file ./docker/docker-compose.yml up",
     "snowpack": "snowpack"
   },
   "husky": {
