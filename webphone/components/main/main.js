@@ -35,7 +35,7 @@ export default (app) => {
         mounted: function() {
             splashInterval = setInterval(() => {
                 this.currentSplash = (this.currentSplash + 1) % 7
-            }, 60000)
+            }, 12000)
         },
         store: {
             calls: 'caller.calls',
