@@ -24,4 +24,10 @@ services:
     ports:
       - "443:443"
 
+  sfu:
+    networks:
+      - ca11
+    ports:
+      - "7000:7000"
+
 version: "3.8"

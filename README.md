@@ -41,7 +41,7 @@ focusses on the following themes:
 - Generate a TLS certificate & Certificate Authority (CA) for development
 
   > This is to enable TLS on locally defined domains without annoying the browser.
-  > The CA install script (ca_cert.sh) only works on Archlinux at the moment.
+  > The CA install script (ca_system.sh) only works on Archlinux at the moment.
   > Other operating systems require manual CA installation. Restart the browser
   > to refresh the TLS certificate.
 
@@ -50,6 +50,7 @@ focusses on the following themes:
   ./ca_cert.sh dev.ca11.app
   ./ca_cert.sh sip.dev.ca11.app
   ./ca_cert.sh sig11.dev.ca11.app
+  ./ca_cert.sh sfu.dev.ca11.app
   sudo ./ca_system.sh
   cd -
   ```
@@ -60,16 +61,18 @@ focusses on the following themes:
   sudo echo "127.0.0.1 dev.ca11.app" >> /etc/hosts
   sudo echo "127.0.0.1 sip.dev.ca11.app" >> /etc/hosts
   sudo echo "127.0.0.1 sig11.dev.ca11.app" >> /etc/hosts
+  sudo echo "127.0.0.1 sfu.dev.ca11.app" >> /etc/hosts
 
   cp docker/.env.example .env
   vim docker/.env
-  # Use bridge config for MacOS/Windows, host for Linux
+  # Use "bridge" config for MacOS/Windows and "host" for Linux
   #  COMPOSE_FILE=docker-compose.yml:docker-compose.bridge.yml
 
   # Add hostname lookups in case of "host":
   sudo echo "127.0.0.1 asterisk" >> /etc/hosts
   sudo echo "127.0.0.1 coturn" >> /etc/hosts
   sudo echo "127.0.0.1 postgresql" >> /etc/hosts
+  sudo echo "127.0.0.1 sfu" >> /etc/hosts
    ```
 
 - Setup Docker services

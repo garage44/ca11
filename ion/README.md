@@ -8,7 +8,7 @@ stay as close as possible to the upstream project.
 Compile Ion-SFU and start it with modd(livereload):
 
 ```bash
-go build -o ion-sfu ./cmd/server/main.go && ./ion-sfu -c config.toml
+go build -o ion-sfu ./cmd/main.go && ./ion-sfu -c config.toml
 # Or using livereload during development:
 env GO111MODULE=on go get github.com/cortesi/modd/cmd/modd
 modd

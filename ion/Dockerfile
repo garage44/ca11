@@ -1,12 +1,10 @@
-FROM golang:1.14.10-stretch
+FROM golang:latest
 
 ENV GO111MODULE=on
 
-WORKDIR $GOPATH/src/github.com/pion/ion-sfu
+RUN mkdir /ca11
+ADD . /ca11
 
-COPY go.mod go.sum ./
-RUN cd $GOPATH/src/github.com/pion/ion-sfu && go mod download
-
-COPY pkg/ $GOPATH/src/github.com/pion/ion-sfu/pkg
-COPY cmd/ $GOPATH/src/github.com/pion/ion-sfu/cmd
-COPY config.toml $GOPATH/src/github.com/pion/ion-sfu/config.toml
+WORKDIR /ca11
+RUN go build -o sfu ./cmd/main.go
+CMD ["/ca11/sfu"]

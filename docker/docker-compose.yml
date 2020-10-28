@@ -1,7 +1,7 @@
 services:
   asterisk:
     container_name: ca11_asterisk
-    image: garage11/asterisk:latest
+    image: ca11/asterisk:latest
     volumes:
       - ./asterisk/config:/etc/asterisk
       - ./asterisk/config.ini:/root/asterisk/contrib/ast-db-manage/config.ini
@@ -30,6 +30,12 @@ services:
       - ./nginx/sites-enabled:/etc/nginx/sites-enabled
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ../build:/usr/share/nginx/html
+
+  sfu:
+    container_name: ca11_sfu
+    image: ca11/sfu:latest
+    volumes:
+      - ./sfu/config.toml:/ca11/config.toml
 
 version: "3.8"
 volumes:
