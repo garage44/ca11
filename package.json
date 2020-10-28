@@ -16,6 +16,7 @@
     "backend": "docker-compose --env-file ./docker/.env --file ./docker/docker-compose.yml up",
     "build": "./cli/cli.js build",
     "cli": "./cli/cli.js",
+    "frontend": "./cli/cli.js watch",
     "icons": "vsvg -s theme/svg/ --es6 -t theme/icons",
     "lint": "yarn lint:js;yarn lint:scss",
     "lint:js": "eslint \"{sip,sig11,theme,webphone}/**/{*.js,*.vue}\"",

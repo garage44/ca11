@@ -100,7 +100,7 @@ focusses on the following themes:
   ```bash
   yarn backend
   node sig11/server.js # or use nodemon
-  ./cli.js watch
+  yarn frontend
   ```
 
 - Open a browser to the [softphone url](https://dev.ca11.app)
