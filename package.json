@@ -13,7 +13,8 @@
     "yarn": ">= 1.19.0"
   },
   "scripts": {
-    "backend": "docker-compose --env-file ./docker/.env --file ./docker/docker-compose.yml up",
+    "backend:bridge": "docker-compose -f docker/common.yml -f docker/bridge.yml --project-directory ./docker up",
+    "backend:host": "docker-compose -f docker/common.yml -f docker/host.yml --project-directory ./docker up",
     "build": "./cli/cli.js build",
     "cli": "./cli/cli.js",
     "frontend": "./cli/cli.js watch",
