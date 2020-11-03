@@ -1,8 +1,10 @@
+import CallIon from '@ca11/ion/call.js'
 import CallSig11 from '@ca11/sig11/call.js'
 import CallSip from '@ca11/sip/call.js'
 import { mergeDeep } from '/webphone/lib/utils.js'
 
 const callHandlers = {
+    ion: CallIon,
     sig11: CallSig11,
     sip: CallSip,
 }

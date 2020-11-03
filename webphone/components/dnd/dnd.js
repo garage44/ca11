@@ -15,13 +15,13 @@ export default (app) => {
                 tooltip: 'SIG11: enabled\nSIP:Disabled',
             }
         },
+        methods: {
+            toggleDnd() {
+                app.setState({app: {dnd: !this.dnd}}, {persist: true})
+            },
+        },
         store: {
             dnd: 'app.dnd',
-        },
-        watch: {
-            dnd: function(dnd) {
-                app.setState({app: {dnd}}, {persist: true})
-            },
         },
     }
 }

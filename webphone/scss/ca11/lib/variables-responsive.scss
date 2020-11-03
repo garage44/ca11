@@ -8,20 +8,20 @@
     --secondary-dark: #{palette('secondary', 'dark')};
     --secondary-light: #{palette('secondary', 'light')};
 
-    --bg-light: #{rgba(#575d63, 0.4)};
-    --bg-default: #{rgba(#23282d, 0.8)};
-    --bg-dark: #{rgba(#1b2025, 0.8)};
+    --bg-light: #{rgba(#5e514c, 0.4)};
+    --bg-default: #{rgba(#332824, 0.8)};
+    --bg-dark: #{rgba(#221713, 0.8)};
 
     --green-color: #{$green-color};
     --orange-color: #{$orange-color};
     --red-color: #{$red-color};
 
-    --grey-500: #23282d;
-    --grey-400: #32373c;
-    --grey-300: #303439;
-    --grey-200: #5c6167;
-    --grey-100: #b0b6bd;
-    --grey-50: #e1e6ec;
+    --grey-500: #221713;
+    --grey-400: #342824;
+    --grey-300: #433732;
+    --grey-200: #5e514c;
+    --grey-100: #b1a29d;
+    --grey-50: #e1d1cb;
     --grey-0: #fff;
 }
 

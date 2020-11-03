@@ -4,7 +4,6 @@
     </panel>
 
     <content>
-        <DialerEndpoint />
         <Stream :stream="stream[stream.type]" />
     </content>
 </component>

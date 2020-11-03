@@ -7,6 +7,10 @@ services:
       - ./asterisk/config.ini:/root/asterisk/contrib/ast-db-manage/config.ini
       - ./asterisk/odbcinst.ini:/etc/odbcinst.ini
       - ./asterisk/odbc.ini:/etc/odbc.ini
+    depends_on:
+      - coturn
+      - nginx
+      - postgresql
 
   coturn:
     container_name: ca11_coturn
@@ -36,6 +40,9 @@ services:
     image: ca11/sfu:latest
     volumes:
       - ./sfu/config.toml:/ca11/config.toml
+    depends_on:
+      - nginx
+      - coturn
 
 version: "3.8"
 volumes:

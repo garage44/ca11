@@ -1,7 +1,5 @@
 export default (app) => {
 
-    let splashInterval
-
     return {
         computed: app.helpers.sharedComputed(),
         data: function() {
@@ -9,10 +7,6 @@ export default (app) => {
                 currentSplash: 0,
             }
         },
-        destroyed: function() {
-            clearInterval(splashInterval)
-        },
-
         methods: Object.assign({
             classes: function(block) {
                 let classes = {}
@@ -24,19 +18,12 @@ export default (app) => {
                     if (this.overlay) classes['no-scroll'] = true
                 }
 
-                classes[`splash-${this.currentSplash}`] = true
-
                 return classes
             },
             logout: function() {
                 app.session.close()
             },
         }, {}),
-        mounted: function() {
-            splashInterval = setInterval(() => {
-                this.currentSplash = (this.currentSplash + 1) % 7
-            }, 12000)
-        },
         store: {
             calls: 'caller.calls',
             description: 'caller.description',

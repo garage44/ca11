@@ -1,17 +1,27 @@
 @import 'ca11/lib/mixins';
 @import 'ca11/lib/variables';
 
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
 .c-endpoint {
     align-items: flex-start;
     align-items: stretch;
     color: var(--primary-base);
     display: flex;
-    // flex: 1;
     height: var(--space-4);
-
-    // position: absolute;
-    // position: relative;
-    // width: 100%;
+    width: 100%;
 
     .c-protocol-status {
         .c-radio {
@@ -20,11 +30,12 @@
     }
 
     input {
+        animation: blink 2s ease-out infinite;
         background: none;
         border: 0;
         color: var(--primary-base);
         font-family: 'Rajdhani';
-        font-size: var(--text-huge);
+        font-size: var(--text-large);
         font-weight: 600;
         outline: none;
         overflow: hidden;
@@ -35,6 +46,7 @@
         width: 100%;
 
         &::placeholder {
+            animation: blink 2s linear infinite;
             color: var(--grey-100);
         }
     }

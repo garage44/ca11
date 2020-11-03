@@ -17,6 +17,7 @@ export default (app) => {
                 let protocols = [
                     {disabled: !this.sip.enabled, icon: 'protocol-sip', name: 'SIP', value: 'sip'},
                     {disabled: !this.sig11.enabled, icon: 'protocol-sig11', name: 'SIG11', value: 'sig11'},
+                    {disabled: false, icon: 'protocol-ion', name: 'ION', value: 'ion'},
                 ]
 
                 return protocols

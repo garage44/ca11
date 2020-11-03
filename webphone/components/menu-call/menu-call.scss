@@ -2,9 +2,9 @@
 @import 'ca11/lib/variables';
 
 
-.c-caller-bar {
+.c-menu-call {
     background: var(--bg-default);
-    color: var(--primary-base);
+    color: var(--grey-100);
     display: flex;
     font-family: 'Rajdhani';
     font-weight: 600;
@@ -46,7 +46,7 @@
     .call-endpoint {
         align-items: center;
         display: flex;
-        padding-left: $spacer-05;
+        flex: 1;
         text-transform: uppercase;
     }
 
@@ -57,14 +57,15 @@
         text-transform: uppercase;
 
         svg {
-            @include icon-size($spacer * 3);
+            @include icon-size($spacer * 4);
+            color: var(--primary-base);
             margin: 0 var(--spacer);
+            margin-left: calc(var(--spacer) * 2);
         }
 
         .timer {
             padding-right: var(--spacer);
-            text-align: right;
-            width: $space-4;
+            width: $space-3;
         }
     }
 }

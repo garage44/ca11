@@ -1,0 +1,8 @@
+{
+  "name": "@ca11/ion",
+  "version": "1.0.0",
+  "description": "CA11 ion-sfu client and call signal handler",
+  "main": "client.js",
+  "author": "https://github.com/open-voip-alliance/ca11/graphs/contributors",
+  "license": "UNLICENSED"
+}

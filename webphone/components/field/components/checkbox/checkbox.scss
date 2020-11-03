@@ -1,7 +1,7 @@
 @import 'ca11/lib/mixins';
 @import 'ca11/lib/variables';
 
-.c-checkbox {
+.c-checkbox:not(.extended) {
     .row {
         align-items: center;
         display: flex;
@@ -44,7 +44,6 @@
                     transform: translateX($spacer * 2);
                 }
             }
-
         }
 
         .slider {
@@ -67,55 +66,6 @@
                 position: absolute;
                 transition: 0.4s;
                 width: $spacer * 2;
-            }
-        }
-    }
-
-    &.extended {
-        background: var(--bg-default);
-        margin: 0;
-
-        label.switch {
-            height: 32px;
-            margin: 0;
-            width: 100%;
-
-            input {
-                height: 100%;
-                position: absolute;
-                width: 100%;
-                z-index: 100000;
-
-                &:hover {
-                    cursor: pointer;
-                }
-
-                &:checked {
-                    + span {
-                        background: none;
-
-
-                        &::before {
-                            // background: var(--red-color);
-                            // fill: var(--red-color);
-                            transform: translateX(32px);
-                        }
-                    }
-                }
-            }
-
-            span {
-                background: none;
-                border-radius: 0;
-
-                &::before {
-                    background: var(--grey-500);
-                    border-radius: 0;
-                    bottom: 0;
-                    height: 32px;
-                    left: 0;
-                    width: 32px;
-                }
             }
         }
     }

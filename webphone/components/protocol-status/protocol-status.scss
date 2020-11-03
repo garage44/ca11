@@ -33,9 +33,6 @@
                 color: var(--primary-base);
             }
 
-            svg {
-                @include icon-size($spacer * 2);
-            }
         }
     }
 

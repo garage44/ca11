@@ -78,8 +78,8 @@ focusses on the following themes:
 - Setup Docker services
 
   ```bash
-  # Alternatively, use yarn backend:host when on Linux.
-  yarn backend:bridge
+  # Alternatively, use yarn backend:bridge when on MacOS/Windows.
+  yarn backend
   # Open another shell...
   docker exec -w /root/asterisk/contrib/ast-db-manage -it ca11_asterisk alembic -c config.ini upgrade head
   # Default password is "ca11ftw"
@@ -99,7 +99,7 @@ focusses on the following themes:
 - Start the development stack
 
   ```bash
-  yarn backend:bridge
+  yarn backend
   node sig11/server.js # or use nodemon
   yarn frontend
   ```

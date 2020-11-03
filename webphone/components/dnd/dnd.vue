@@ -1,16 +1,10 @@
 <component class="c-dnd">
-    <FieldCheckbox
-        :data-tooltip="$t('do not disturb')"
-        class="dnd-toggle extended tooltip tooltip-left"
-        component-class
-        name="dnd_availability"
-        v-model="dnd"
+    <icon :data-tooltip="$t('do not disturb')" class="dnd-toggle extended tooltip tooltip-left" name="dnd_availability" />
+    <button
+        class="btn btn-menu tooltip tooltip-left hint"
+        :data-tooltip="$t('accept call')"
+        @click="toggleDnd"
     >
-        <template v-slot:icon-disabled>
-            <icon class="icon-disabled" name="do-not-disturb-off" />
-        </template>
-        <template v-slot:icon-enabled>
-            <icon class="icon-enabled" name="do-not-disturb" />
-        </template>
-    </FieldCheckbox>
+        <icon :name="dnd ? 'do-not-disturb' : 'do-not-disturb-off'" />
+    </button>
 </component>

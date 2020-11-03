@@ -4,6 +4,7 @@
 .c-main {
     align-items: center;
     background-blend-mode: darken;
+    background-image: url('/img/wallpaper.jpg');
     background-size: cover;
     display: grid;
     grid-gap: calc(var(--space-4) / 4);
@@ -19,14 +20,6 @@
     transition: background 2s;
     width: 100vw;
 
-    @media screen and (min-width: $breakpoint-mobile) {
-        grid-gap: calc(var(--space-4) / 2);
-    }
-
-    @media screen and (min-width: $breakpoint-desktop) {
-        grid-gap: var(--space-4);
-    }
-
     .btn-logout {
         grid-area: body-header;
     }
@@ -37,10 +30,6 @@
         grid-area: body-content;
         height: calc(100vh - (var(--space-4) * 2));
         justify-content: center;
-
-        @media screen and (min-width: $breakpoint-mobile) {
-            height: calc(100vh - (var(--space-4) * 4));
-        }
 
         &.grid {
             display: grid;
@@ -170,35 +159,10 @@
                 }
             }
         }
-    }
 
-
-    &.splash-0 {
-        background-image: url('/img/splash-0.jpg');
-    }
-
-    &.splash-1 {
-        background-image: url('/img/splash-1.jpg');
-    }
-
-    &.splash-2 {
-        background-image: url('/img/splash-2.jpg');
-    }
-
-    &.splash-3 {
-        background-image: url('/img/splash-3.jpg');
-    }
-
-    &.splash-4 {
-        background-image: url('/img/splash-4.jpg');
-    }
-
-    &.splash-5 {
-        background-image: url('/img/splash-5.jpg');
-    }
-
-    &.splash-6 {
-        background-image: url('/img/splash-6.jpg');
+        @media screen and (min-width: $breakpoint-mobile) {
+            height: calc(100vh - (var(--space-4) * 4));
+        }
     }
 
     &__content {
@@ -224,5 +188,18 @@
     .tr-caller-bar-enter-to,
     .tr-caller-bar-leave {
         transform: translateY(0);
+    }
+
+    .btn-logout {
+        bottom: 0;
+        position: fixed;
+    }
+
+    @media screen and (min-width: $breakpoint-mobile) {
+        grid-gap: calc(var(--space-4) / 2);
+    }
+
+    @media screen and (min-width: $breakpoint-desktop) {
+        grid-gap: var(--space-4);
     }
 }
