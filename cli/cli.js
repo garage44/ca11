@@ -161,6 +161,7 @@ tasks.scss = new Task('scss', async function() {
             if (settings.optimized) {
                 cssRules = (await cleanCSS.minify(sassObj.css)).styles
             } else {
+                if (!sassObj) return reject()
                 cssRules = sassObj.css
                 promises.push(fs.writeFile(target.map, sassObj.map))
             }

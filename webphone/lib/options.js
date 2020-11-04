@@ -4,6 +4,7 @@ import caller from '../modules/caller.js'
 import contacts from '../modules/contacts/contacts.js'
 import env from './env.js'
 
+import ion from '../modules/ion.js'
 import settings from '../modules/settings.js'
 import sig11 from '../modules/sig11.js'
 import sip from '../modules/sip.js'
@@ -26,6 +27,7 @@ export default (function() {
             {module: settings, name: 'settings'},
             {module: sig11, name: 'sig11'},
             {module: sip, name: 'sip'},
+            {module: ion, name: 'ion'},
             {module: ui, name: 'ui'},
         ],
     }

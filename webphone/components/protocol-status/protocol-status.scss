@@ -2,38 +2,13 @@
 @import 'ca11/lib/variables';
 
 .c-protocol-status {
-    .sip-disabled .label-sip,
-    .sig11-disabled .label-sig11 {
-        color: var(--grey-400);
-    }
+    align-items: center;
+    display: flex;
 
-    .sip-disconnected .label-sip,
-    .sig11-disconnected .label-sig11 {
-        color: var(--red-color);
-    }
-
-    .sig11-registered .radio-sig11:checked + .label-sig11,
-    .sip-registered .radio-sip:checked .label-sip {
-        color: var(--primary-base);
-    }
-
-    .c-radio input:checked + label {
-        background: none;
-    }
-
-    .protocol-status {
-        display: flex;
-        margin-bottom: 0;
-        width: 100%;
-
-        button {
-            padding: $spacer 0;
-
-            &.registered {
-                color: var(--primary-base);
-            }
-
-        }
+    .protocol {
+        margin-top: $spacer;
+        text-align: center;
+        width: $spacer * 8;
     }
 
 }

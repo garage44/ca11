@@ -1,7 +1,10 @@
 <component class="c-protocol-status">
-    <icon
-        :class="classes" :data-tooltip="tooltip"
-        :name="`protocol-${description.protocol}`"
-        class="protocol-status tooltip tooltip-left"
-    />
+    <div class="protocol">
+        <icon
+            :class="classes" :data-tooltip="tooltip"
+            class="protocol-status tooltip tooltip-left"
+            name="signalling-protocol"
+        />
+        {{ description.protocol }}
+    </div>
 </component>

@@ -78,8 +78,7 @@ focusses on the following themes:
 - Setup Docker services
 
   ```bash
-  # Alternatively, use yarn backend:bridge when on MacOS/Windows.
-  yarn backend
+  yarn backend # Use 'yarn backend:bridge' on MacOS/Windows.
   # Open another shell...
   docker exec -w /root/asterisk/contrib/ast-db-manage -it ca11_asterisk alembic -c config.ini upgrade head
   # Default password is "ca11ftw"
