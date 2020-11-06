@@ -50,7 +50,7 @@ focusses on the following themes:
   ./ca_cert.sh dev.ca11.app
   ./ca_cert.sh sip.dev.ca11.app
   ./ca_cert.sh sig11.dev.ca11.app
-  ./ca_cert.sh sfu.dev.ca11.app
+  ./ca_cert.sh ion.dev.ca11.app
   sudo ./ca_system.sh
   cd -
   ```
@@ -61,7 +61,7 @@ focusses on the following themes:
   sudo echo "127.0.0.1 dev.ca11.app" >> /etc/hosts
   sudo echo "127.0.0.1 sip.dev.ca11.app" >> /etc/hosts
   sudo echo "127.0.0.1 sig11.dev.ca11.app" >> /etc/hosts
-  sudo echo "127.0.0.1 sfu.dev.ca11.app" >> /etc/hosts
+  sudo echo "127.0.0.1 ion.dev.ca11.app" >> /etc/hosts
 
   cp docker/.env.example .env
   vim docker/.env
@@ -72,7 +72,7 @@ focusses on the following themes:
   sudo echo "127.0.0.1 asterisk" >> /etc/hosts
   sudo echo "127.0.0.1 coturn" >> /etc/hosts
   sudo echo "127.0.0.1 postgresql" >> /etc/hosts
-  sudo echo "127.0.0.1 sfu" >> /etc/hosts
+  sudo echo "127.0.0.1 ion" >> /etc/hosts
    ```
 
 - Setup Docker services

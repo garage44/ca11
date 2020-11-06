@@ -74,12 +74,12 @@ class ModuleSIP extends Module {
         this.app.logger.info(`ua disconnect (reconnect: ${reconnect ? 'yes' : 'no'})`)
         this.reconnect = reconnect
         this.app.setState({sip: {status: reconnect ? 'loading' : null}})
-        this.ua.unregister()
-        this.ua.transport.disconnect()
-        this.ua.transport.disposeWs()
-        if (reconnect) {
-            this.connect()
-        }
+        // this.ua.unregister()
+        // this.ua.transport.disconnect()
+        // this.ua.transport.disposeWs()
+        // if (reconnect) {
+        //     this.connect()
+        // }
     }
 
 

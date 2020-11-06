@@ -61,6 +61,11 @@ class PluginUI extends Module {
                 tabs: {
                     settings: {
                         active: 'general',
+                        subtabs: {
+                            signalling: {
+                                active: 'ion',
+                            },
+                        },
                     },
                 },
                 theme: 'default-dark',

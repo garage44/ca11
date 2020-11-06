@@ -1,5 +1,5 @@
 <component class="c-dtmf t-dtmf" tabindex="-1">
-    <panel>
+    <panel class="root">
         <div class="actions" />
     </panel>
 

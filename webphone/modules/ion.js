@@ -1,9 +1,9 @@
 import Call from '../lib/call.js'
-import ClientSip from '@ca11/sip/client.js'
+import ClientIon from '@ca11/ion/client.js'
 import Module from '../lib/module.js'
 
 
-class ModuleSIP extends Module {
+class ModuleION extends Module {
 
     constructor(app) {
         super(app)
@@ -14,14 +14,7 @@ class ModuleSIP extends Module {
             if (enabled) this.connect()
         })
 
-        this.app.on('sig11:services', (services) => {
-            this.app.setState({
-                sip: {
-                    account: services.sip.account,
-                    enabled: true,
-                    toggled: true,
-                },
-            }, {persist: true})
+        this.app.on('sig11:services', () => {
             this.connect()
         })
 
@@ -29,7 +22,7 @@ class ModuleSIP extends Module {
 
 
     async connect() {
-        if (['connected', 'registered'].includes(this.app.state.sip.status)) {
+        if (['connected', 'registered'].includes(this.app.state.ion.status)) {
             this.disconnect()
             return
         }
@@ -37,14 +30,15 @@ class ModuleSIP extends Module {
         // The default is to reconnect.
         this.reconnect = true
 
-        this.client = new ClientSip({
-            domain: this.app.state.sip.domain,
-            identity: this.app.state.sip.identity,
+        console.log("STATE", this.app.state.ion.domain)
+
+        this.client = new ClientIon({
+            domain: this.app.state.ion.domain,
             logger: this.app.logger,
             stun: this.app.state.settings.webrtc.stun,
         })
 
-        this.app.clients.sip = this.client
+        this.app.clients.ion = this.client
 
         this.client.on('registered', this.onRegistered.bind(this))
         this.client.on('registrationFailed', this.onRegistrationFailed.bind(this))
@@ -171,40 +165,11 @@ class ModuleSIP extends Module {
     state() {
         return {
             init: {
-                domain: globalThis.env.domains.sip,
+                domain: globalThis.env.domains.ion,
                 enabled: true,
-                identity: {
-                    endpoint: null,
-                    name: null,
-                    password: null,
-                },
                 status: 'loading',
-                toggled: false,
             },
         }
-    }
-
-
-    /**
-     * Build the useragent to identify CA11 with.
-     * The format is `CA11/<VERSION> (<OS/<ENV>) <Vendor>`.
-     * Don't change this string lightly since third-party
-     * applications depend on it.
-     * @returns {String} - Useragent string.
-     */
-    userAgent() {
-        const env = this.app.env
-        let userAgent = 'CA11/' + globalThis.env.version + ' '
-        if (env.isLinux) userAgent += '(Linux/'
-        else if (env.isMacOS) userAgent += '(MacOS/'
-        else if (env.isWindows) userAgent += '(Windows/'
-
-        if (env.isChrome) userAgent += 'Chrome'
-        if (env.isElectron) userAgent += 'Electron'
-        else if (env.isFirefox) userAgent += 'Firefox'
-
-        userAgent += `) ${this.app.state.app.vendor.name}`
-        return userAgent
     }
 
 
@@ -220,8 +185,7 @@ class ModuleSIP extends Module {
                     this.app.logger.debug(`reconnect sip service (online modus)`)
                     this.connect()
                 } else {
-                    // Offline modus is not detected by Sip.js/Websocket.
-                    // Disconnect manually.
+                    // Offline modus is not detected by Websocket; disconnect manually.
                     this.app.logger.debug(`disconnect sip service (offline modus)`)
                     this.disconnect(false)
                 }
@@ -259,4 +223,4 @@ class ModuleSIP extends Module {
 
 }
 
-export default ModuleSIP
+export default ModuleION

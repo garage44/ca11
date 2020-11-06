@@ -3,7 +3,7 @@
         <icon
             :class="classes" :data-tooltip="tooltip"
             class="protocol-status tooltip tooltip-left"
-            name="signalling-protocol"
+            name="signalling"
         />
         {{ description.protocol }}
     </div>

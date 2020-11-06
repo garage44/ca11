@@ -25,6 +25,8 @@ services:
     image: postgres:latest
     volumes:
       - postgresql:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
 
   nginx:
     container_name: ca11_nginx
@@ -43,6 +45,8 @@ services:
     depends_on:
       - nginx
       - coturn
+    ports:
+      - 7000:7000
 
 version: "3.8"
 volumes:

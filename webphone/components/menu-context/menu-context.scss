@@ -3,9 +3,7 @@
 
 .c-menu-context {
     background: var(--bg-default);
-    border-bottom-right-radius: var(--spacer);
-    border-top-right-radius: var(--spacer);
+    flex: 1;
     grid-area: body-gutter-left;
-    padding: calc(var(--space-4) / 2) 0;
-
+    height: 100%;
 }

@@ -6,10 +6,12 @@ export default (app) => {
             },
             callStatus: function() {
                 if (!this.callActive) {
-                    if (this.description.protocol === 'sip') {
+                    if (!this.description.endpoint) {
+                        return `${this.$t('enter a number, name or public key')}`
+                    } else if (this.description.protocol === 'sip') {
                         if (!this.sip.enabled) return this.$t('sip disabled')
                         if (this.sip.status === 'registered') {
-                            return `${this.$t('ready to call')}...`
+                            return `${this.$t('start a new call')}...`
                         }
                         return this.$t(this.sip.status)
 
@@ -19,7 +21,7 @@ export default (app) => {
                         if (!this.ion.enabled) return this.$t('ion disabled')
                     }
 
-                    return `${this.$t('ready to call')}...`
+                    return `${this.$t('start a new call')}...`
                 }
                 const translations = app.helpers.getTranslations().call
                 if (this.call.hold.active) return translations.hold

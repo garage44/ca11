@@ -1,10 +1,13 @@
 <component class="c-menu-context">
+    <Dnd />
+    <Switcher />
+
     <div class="options">
         <button
+            class="btn btn-menu c-status-menu__button t-btn-settings tooltip tooltip-bottom"
             :class="{active: layer === 'settings'}"
             :data-tooltip="$t('settings')"
             @click="setLayer('settings')"
-            class="btn btn-menu c-status-menu__button t-btn-settings tooltip tooltip-bottom"
         >
             <icon name="settings" />
         </button>

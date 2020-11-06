@@ -1,5 +1,5 @@
 <component class="c-contacts module">
-    <panel>
+    <panel class="root">
         <div class="actions">
             <button
                 :class="{'active': editMode}"

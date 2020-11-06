@@ -1,7 +1,4 @@
 
-import * as sdpTransform from 'sdp-transform'
-
-
 export const utils = {
 
     commaSepToObject(val) {

@@ -1,13 +1,14 @@
 {
 
     "domains": {
+        "ion": "ion.dev.ca11.app",
         "sig11": "sig11.dev.ca11.app",
         "sip": "sip.dev.ca11.app",
         "stun": [
             "stun:dev.ca11.app"
         ]
     },
-    "language": "nl",
+    "language": "en",
     "testing": {
         "headless": false,
         "port": 3000

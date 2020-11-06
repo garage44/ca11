@@ -1,198 +1,146 @@
 import Call from './call.js'
 import EventEmitter from 'eventemitter3'
 
-import { magicCookie, SipRequest, SipResponse, utils } from './message.js'
+function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
 
 
-class ClientSip extends EventEmitter {
 
-    constructor(options) {
+class ClientIon extends EventEmitter {
+
+    constructor(config) {
         super()
 
-        this.nc = 0
-        this.ncHex = '00000000'
-        this.cseq = 1
-        this.calls = {}
+        this.config = config
+    }
 
-        // Local tag for out-of-call dialogs.
-        this.localTag = utils.token(12)
-        this.dialogs = {
-            default: {
-                callId: utils.token(12),
+
+    async call(sid) {
+        const offer = await this.pc.createOffer()
+        await this.pc.setLocalDescription(offer)
+        const id = uuidv4()
+
+        this.socket.send(JSON.stringify({
+            id,
+            method: 'join',
+            params: {
+                offer: this.pc.localDescription,
+                sid,
             },
-            options: {to: {tag: null}},
-        }
-        this.state = 'unregistered'
-        Object.assign(this, options)
-        this.uri = `sip:${this.domain}`
+        }))
+
+
+        this.socket.addEventListener('message', (event) => {
+            const resp = JSON.parse(event.data)
+            if (resp.id === id) {
+                this.app.logger.info(`Got publish answer`)
+
+                // Hook this here so it's not called before joining
+                this.pc.onnegotiationneeded = async() => {
+                    this.app.logger.info('Renegotiating')
+                    const offer = await this.pc.createOffer()
+                    await this.pc.setLocalDescription(offer)
+                    const id = uuidv4()
+                    this.socket.send(JSON.stringify({
+                        id,
+                        method: 'offer',
+                        params: { desc: offer },
+                    }))
+
+                    this.socket.addEventListener('message', (event) => {
+                        const resp = JSON.parse(event.data)
+                        if (resp.id === id) {
+                            this.app.logger.info(`Got renegotiation answer`)
+                            this.pc.setRemoteDescription(resp.result)
+                        }
+                    })
+                }
+
+                this.pc.setRemoteDescription(resp.result)
+            }
+        })
     }
 
 
     connect() {
-        console.log("CONNTECT")
-        this.socket = new WebSocket(`wss://${this.domain}`, 'sip')
-        this.socket.onopen = () => {
-            // Triggers a 401 to retrieve a 401 with digest.
-            this.register()
+        this.socket = new WebSocket(`wss://${this.config.domain}/ws`)
+        this.socket.addEventListener('message', this.onMessage.bind(this))
+        this.pc = new RTCPeerConnection({
+            iceServers: [{
+                urls: this.config.stun,
+            }],
+        })
+
+        this.registerPeerEvents()
+    }
+
+
+
+
+
+    async onMessage(event) {
+        const resp = JSON.parse(event.data)
+
+        // Listen for server renegotiation notifications
+        if (!resp.id && resp.method === 'offer') {
+            this.app.logger.info(`Got offer notification`)
+            await this.pc.setRemoteDescription(resp.params)
+            const answer = await this.pc.createAnswer()
+            await this.pc.setLocalDescription(answer)
+
+            const id = uuidv4()
+            this.app.logger.info(`Sending answer`)
+            this.socket.send(JSON.stringify({
+                id,
+                method: 'answer',
+                params: { desc: answer },
+            }))
+        }
+    }
+
+
+    registerPeerEvents() {
+        this.pc.ontrack = ({ track, streams }) => {
+            this.app.state.participants.push(track.id)
+            this.app.logger.info(`ontrack: ${track.id}`)
+            this.app.logger.info('got track')
+            track.onunmute = () => {
+                let el = document.createElement(track.kind)
+                el.srcObject = streams[0]
+                el.autoplay = true
+
+                // document.getElementById('remoteVideos').appendChild(el)
+            }
+
+            // Local track ended.
+            track.onended = () => {
+                console.log("TRACK GONE")
+            }
+
         }
 
-        this.socket.onmessage = (e) => {
-            let call = null
-            const message = this.parseMessage(e.data)
-            if (message.context.code === 'PING') return
+        this.pc.oniceconnectionstatechange = function() {
+            if(this.pc.iceConnectionState == 'disconnected') {
+                console.log('Disconnected');
+            }
+        }
 
-            if (message.context.method === 'OPTIONS') {
-                this.dialogs.options.to.tag = message.context.from.tag
-                const context = Object.assign(JSON.parse(JSON.stringify(message.context)), {
-                    code: 200,
-                    from: {aor: message.context.from.aor, tag: this.dialogs.options.to.tag},
-                    host: message.context.via.host,
-                    method: 'OPTIONS',
-                    to: {aor: message.context.to.aor, tag: this.localTag},
-                    via: {
-                        alias: true,
-                        branch: message.context.via.branch,
-                        rport: true,
+        this.pc.onicecandidate = event => {
+            if (event.candidate !== null) {
+                this.socket.send(JSON.stringify({
+                    method: 'trickle',
+                    params: {
+                        candidate: event.candidate,
                     },
-                })
-
-                const optionsResponse = new SipResponse(this, context)
-                this.socket.send(optionsResponse)
-            }
-
-            if (this.calls[message.context.callId]) {
-                call = this.calls[message.context.callId]
-                call.emit('message', message)
-            } else {
-                if(message.context.method === 'REGISTER') {
-                    if (message.context.status === 'OK') {
-                        this.emit('registered')
-                    } else if (message.context.status === 'Unauthorized') {
-                        this.register(message.context.digest)
-                    }
-                } else if (message.context.method === 'INVITE') {
-                    if (message instanceof SipRequest) {
-                        const call = new Call(this, {
-                            description: {
-                                direction: 'incoming',
-                                endpoint: 1000, // message.context.header.From.extension,
-                                protocol: 'sip',
-                            },
-                            id: message.context.callId,
-                        })
-
-                        // The dialog's To tag is set here on an incoming call/invite.
-                        call.dialogs.invite.to.tag = message.context.from.tag
-                        this.calls[call.id] = call
-                        // Emit invite up to the SIP module that handles
-                        // application state.
-                        this.emit('invite', {context: message, handler: call})
-                    }
-                }
+                }))
             }
         }
-
-        this.socket.onclose = () => {
-            console.log("CLOSED")
-        }
-    }
-
-
-    parseMessage(rawSipMessage) {
-        let type
-        const context = {
-            content: '',
-        }
-
-        let data = rawSipMessage.trim()
-        if (data === '') {
-            context.code = 'PING'
-            return new SipRequest(this, context)
-        }
-        data = data.split('\r\n')
-        const requestLine = data[0].split(' ')
-
-        if (requestLine[0] === 'SIP/2.0') {
-            type = 'response'
-            context.code = requestLine[1]
-            context.status = requestLine[2]
-        } else {
-            type = 'request'
-            context.status = requestLine[0]
-        }
-        // Remove the header request/response line.
-        data.shift()
-
-        const rawHeaders = {}
-        let isHeaderLine = true
-
-        for (const line of data) {
-            if (isHeaderLine) {
-                const key = line.split(':')[0]
-                const value = line.replace(`${key}:`, '').trim()
-                rawHeaders[key] = value
-
-                if (key === 'Content-Length') isHeaderLine = false
-            } else {
-                if (!line) continue
-                context.content += `${line}\r\n`
-            }
-        }
-
-        const to = rawHeaders.To.split(';')
-        context.to = {
-            aor: to[0].replace('<sip:', '').replace('>', ''),
-            raw: to[0],
-        }
-        if (to[1]) context.to.tag = to[1].split('=')[1]
-
-
-        const from = rawHeaders.From.split(';')
-        context.from = {
-            aor: from[0].replace('<sip:', '').replace('>', ''),
-            raw: from[0],
-        }
-        if (from[1]) context.from.tag = from[1].split('=')[1]
-
-        const via = {}
-
-        rawHeaders.Via.split(';')
-            .map((i) => {
-                if (i.includes('SIP/2.0')) via.host = i.split(' ')[1]
-                return i
-            })
-            .filter(i => i.includes('='))
-            .map((i) => i.split('='))
-            .forEach((i) => {via[i[0]] = i[1]})
-
-        context.via = via
-
-        if (rawHeaders['WWW-Authenticate']) {
-            context.digest = utils.commaSepToObject(rawHeaders['WWW-Authenticate'])
-        }
-
-        context.callId = rawHeaders['Call-ID']
-        const cseqHeader = rawHeaders['CSeq'].split(' ')
-        context.cseq = Number(cseqHeader[0])
-        context.method = cseqHeader[1]
-
-        if (type === 'request') return new SipRequest(this, context)
-        else return new SipResponse(this, context)
-    }
-
-
-    register(digest) {
-        const context = Object.assign({
-            cseq: this.cseq,
-            method: 'REGISTER',
-            via: {branch: `${magicCookie}${utils.token(7)}`},
-        }, this.dialogs.default)
-
-        if (digest) context.digest = digest
-        const registerRequest = new SipRequest(this, context)
-        this.socket.send(registerRequest)
     }
 
 }
 
-export default ClientSip
+export default ClientIon

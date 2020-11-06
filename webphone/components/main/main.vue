@@ -8,7 +8,6 @@
 
     <!-- these menus are always visible -->
     <MenuContext v-if="session.authenticated" />
-    <MenuCommunicate v-if="session.authenticated" :call="callActive" />
     <AudioBg />
     <button
         class="btn btn-menu btn-logout tooltip tooltip-left"

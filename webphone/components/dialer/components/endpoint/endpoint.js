@@ -8,7 +8,10 @@ export default () => {
         },
         watch: {
             'description.endpoint': function(endpoint) {
-                console.log('ENDPOINT', endpoint)
+                if (endpoint === '') {
+                    this.description.protocol = ''
+                    return
+                }
                 const isNumeric = /^\d+$/.test(endpoint)
 
                 if (isNumeric) {
