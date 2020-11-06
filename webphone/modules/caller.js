@@ -170,7 +170,7 @@ class ModuleCaller extends Module {
             else if (fallbackCall) this.activateCall(fallbackCall, true, false)
             else {
                 // No more calls active; fallback to the dialer.
-                this.app.setState({ui: {layer: 'dialer'}}, {encrypt: false, persist: true})
+                this.app.setState({ui: {layer: 'lobby'}}, {encrypt: false, persist: true})
             }
         }
 

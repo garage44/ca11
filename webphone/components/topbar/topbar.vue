@@ -1,12 +1,10 @@
 <component class="c-menu-call">
     <div class="call-direction">
-        <icon :name="`call-${call.direction}`" v-if="call" />
         <button
-            v-else
-            class="btn btn-menu tooltip tooltip-left hint"
             :data-tooltip="$t('accept call')"
             :disabled="!description.endpoint"
             @click="callDescription({description})"
+            class="btn btn-menu tooltip tooltip-left hint"
         >
             <icon name="call-outgoing" />
         </button>
@@ -16,7 +14,7 @@
                 <span v-if="call.name" class="phone-id">{{ call.name }} - </span>
                 <span class="phone-id">{{ call.endpoint }}</span>
             </span>
-            <DialerEndpoint v-else />
+            <TopbarCallEndpoint v-else />
         </div>
     </div>
 

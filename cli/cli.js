@@ -110,7 +110,6 @@ tasks.js = new Task('js', async function(file) {
 
             targets.map((i) => {
                 const relpath = i.replace(settings.dir.base, '')
-                console.log(path.join(settings.dir.build, relpath))
                 return fs.copy(i, path.join(settings.dir.build, relpath))
             })
             await Promise.all(targets)

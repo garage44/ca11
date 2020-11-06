@@ -168,7 +168,7 @@ class Session {
 
         // Set the default layer if it's still set to login.
         if (this.app.state.ui.layer === 'login') {
-            this.app.setState({ui: {layer: 'dialer'}}, {encrypt: false, persist: true})
+            this.app.setState({ui: {layer: 'lobby'}}, {encrypt: false, persist: true})
         }
 
         // Make sure the vault key is stored when it is supposed to.
@@ -214,7 +214,7 @@ class Session {
                 // The `installed` and `updated` flag are toggled off after login.
                 app: {installed: false, updated: false},
                 session: {username},
-                ui: {layer: 'dialer'},
+                ui: {layer: 'lobby'},
             }, {encrypt: false, persist: true})
 
             await this.app.setState({
@@ -265,7 +265,7 @@ class Session {
             await this.open({password})
             this.initVmWatchers()
             this.app.setLanguage()
-            this.app.setState({ui: {layer: 'dialer'}}, {encrypt: false, persist: true})
+            this.app.setState({ui: {layer: 'lobby'}}, {encrypt: false, persist: true})
             this.app.emit('ca11:services')
         } catch (err) {
             // Wrong password, resulting in a failure to decrypt.

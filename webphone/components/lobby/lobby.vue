@@ -1,4 +1,4 @@
-<component :class="classes('component')" class="c-dialer t-dialer module">
+<component :class="classes('component')" class="c-lobby module">
     <div class="panel root">
         <StreamControls :stream="stream[stream.type]" />
     </div>

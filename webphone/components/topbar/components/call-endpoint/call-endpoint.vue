@@ -1,4 +1,4 @@
-<component class="c-endpoint">
+<component class="c-call-endpoint">
     <input
         ref="endpoint"
         :placeholder="`${$t('enter call id')}...`"

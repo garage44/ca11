@@ -1,7 +1,7 @@
 <component :class="classes('component')" class="c-main t-main">
     <Notifications />
     <transition appear mode="out-in" name="tr-caller-bar">
-        <Topbar v-if="callsExist || layer === 'dialer'" class="c-main__status" />
+        <Topbar v-if="callsExist || layer === 'lobby'" class="c-main__status" />
     </transition>
 
     <Session v-if="!session.authenticated" />

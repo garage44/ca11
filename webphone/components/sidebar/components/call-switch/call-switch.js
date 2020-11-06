@@ -15,7 +15,7 @@ export default (app) => {
                     })
                     app.setState({ui: {layer: 'stream-view'}})
                 } else {
-                    app.setState({ui: {layer: 'dialer'}}, {encrypt: false, persist: true})
+                    app.setState({ui: {layer: 'lobby'}}, {encrypt: false, persist: true})
                     app.emit('caller:call-activate', {callId: null})
                 }
             },
