@@ -1,9 +1,9 @@
 <component :class="classes('component')" class="c-dialer t-dialer module">
-    <panel class="root">
+    <div class="panel root">
         <StreamControls :stream="stream[stream.type]" />
-    </panel>
+    </div>
 
-    <content>
+    <div class="content">
         <Stream :stream="stream[stream.type]" />
-    </content>
+    </div>
 </component>

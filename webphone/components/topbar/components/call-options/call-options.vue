@@ -1,4 +1,4 @@
-<component class="c-options">
+<component class="c-call-options">
     <button
         :data-tooltip="$t('accept call')"
         @click="callAccept(call)"

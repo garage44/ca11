@@ -1,5 +1,7 @@
 export default (app) => {
 
+    const {setLayer} = app.helpers.sharedMethods()
+
     return {
         computed: app.helpers.sharedComputed(),
         data: function() {
@@ -22,7 +24,11 @@ export default (app) => {
 
                 return classes
             },
-        }, app.helpers.sharedMethods()),
+            logout: function() {
+                app.session.close()
+            },
+            setLayer,
+        }),
         store: {
             app: 'app',
             layer: 'ui.layer',

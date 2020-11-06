@@ -77,9 +77,9 @@ tasks.build = new Task('build', async function() {
 tasks.html = new Task('html', async function() {
     const importMap = JSON.parse((await fs.readFile(path.join(settings.dir.build, 'lib', 'import-map.json'))))
     for (let [reference, location] of Object.entries(importMap.imports)) {
+        // Rewrite to use local packages
         if(reference.startsWith('@ca11') && !reference.startsWith('@ca11/theme')) {
             importMap.imports[reference] = location.replace('./@ca11', '')
-            console.log(reference, location)
         } else {
             importMap.imports[reference] = `/${path.join('lib', location)}`
         }

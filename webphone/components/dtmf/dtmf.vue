@@ -1,9 +1,9 @@
 <component class="c-dtmf t-dtmf" tabindex="-1">
-    <panel class="root">
+    <div class="panel root">
         <div class="actions" />
-    </panel>
+    </div>
 
-    <content>
+    <div class="content">
         <div class="keys-container">
             <button class="key t-btn-keypad-1" @mousedown="press('1')">
                 1<div class="sub">
@@ -68,5 +68,5 @@
                 #
             </button>
         </div>
-    </content>
+    </div>
 </component>

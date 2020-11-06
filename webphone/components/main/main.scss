@@ -7,7 +7,6 @@
     background-image: url('/img/wallpaper.jpg');
     background-size: cover;
     display: grid;
-    // grid-gap: calc(var(--space-4) / 4);
     grid-template-areas:
         'body-gutter-left body-header'
         'body-gutter-left body-content'
@@ -20,18 +19,6 @@
     overflow: hidden;
     transition: background 2s;
     width: 100vw;
-
-    .btn-logout {
-        grid-area: body-header;
-    }
-
-    &__content {
-        .main {
-            padding-right: 0;
-            width: 100%;
-        }
-    }
-
 
     .tr-caller-bar-leave-active,
     .tr-caller-bar-enter-active {
@@ -49,17 +36,4 @@
     .tr-caller-bar-leave {
         transform: translateY(0);
     }
-
-    .btn-logout {
-        bottom: 0;
-        position: fixed;
-    }
-
-    // @media screen and (min-width: $breakpoint-mobile) {
-    //     grid-gap: calc(var(--space-4) / 2);
-    // }
-
-    // @media screen and (min-width: $breakpoint-desktop) {
-    //     grid-gap: var(--space-4);
-    // }
 }

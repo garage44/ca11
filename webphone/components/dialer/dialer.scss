@@ -2,13 +2,13 @@
 @import 'ca11/lib/mixins';
 
 .c-dialer {
-    panel {
+    .panel {
         .c-stream-controls {
             background: none;
         }
     }
 
-    content {
+    .content {
         display: flex;
         flex-direction: column;
         overflow-y: hidden;

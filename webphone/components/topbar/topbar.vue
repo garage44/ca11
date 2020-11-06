@@ -21,7 +21,8 @@
     </div>
 
 
-    <MenuCallOptions v-if="callActive" :call="callActive" />
+    <TopbarCallOptions v-if="callActive" :call="callActive" />
+
     <div class="call-status">
         <span v-if="callActive" class="timer">{{ sessionTime }}</span>
         <span class="text">{{ callStatus }}</span>

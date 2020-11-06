@@ -1,4 +1,4 @@
-<component class="c-call-switcher">
+<component class="c-call-switch">
     <div class="container">
         <button
             :class="classes(call)"

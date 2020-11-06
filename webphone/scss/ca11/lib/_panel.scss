@@ -1,10 +1,9 @@
-panel {
+.panel {
     background: var(--bg-dark);
     border-right: $spacer-05 solid var(--primary-base);
     display: flex;
     flex-direction: column;
     height: 100%;
-
 
     .actions {
         // Border in the same style as the scroll trackbar.
@@ -100,6 +99,7 @@ panel {
 
     &.subpanel {
         background: var(--primary-base);
+        font-weight: bold;
         justify-content: flex-end;
         // Circumvents scrollbar on content.
         overflow: hidden;

@@ -20,9 +20,6 @@ export default (app) => {
 
                 return classes
             },
-            logout: function() {
-                app.session.close()
-            },
         }, {}),
         store: {
             calls: 'caller.calls',

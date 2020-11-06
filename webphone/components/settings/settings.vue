@@ -1,5 +1,5 @@
 <component class="c-settings module t-settings">
-    <panel class="root">
+    <div class="panel root">
         <div class="actions">
             <button
                 :data-tooltip="$t('save settings')"
@@ -10,6 +10,7 @@
                 <icon name="database" />
             </button>
         </div>
+
         <ul class="tabs">
             <li
                 class="btn btn-menu tab tooltip tooltip-bottom"
@@ -44,9 +45,9 @@
                 <icon name="webhooks" />
             </li>
         </ul>
-    </panel>
+    </div>
 
-    <content>
+    <div class="content">
         <!-- Misc settings -->
         <div class="tab" :class="{active: tabs.active === 'misc'}">
             <FieldSelect
@@ -88,7 +89,7 @@
 
         <!-- Signalling preferences -->
         <div class="tab subtabs" :class="{active: tabs.active === 'signalling'}">
-            <panel class="subpanel">
+            <div class="panel subpanel">
                 <ul class="tabs">
                     <li
                         class="btn btn-menu tab tooltip tooltip-bottom"
@@ -115,9 +116,9 @@
                         SIG11
                     </li>
                 </ul>
-            </panel>
+            </div>
 
-            <content class="subcontent">
+            <div class="content subcontent">
                 <!-- SIG11 -->
                 <div class="tab subtab" :class="{active: tabs.subtabs.signalling.active === 'ion'}">
                     <FieldCheckbox
@@ -224,9 +225,8 @@
                         name="sig11_number"
                     />
                 </div>
-            </content>
+            </div>
         </div>
-
 
         <!-- Webhooks settings -->
         <div class="tab" :class="{active: tabs.active === 'webhooks'}">
@@ -249,5 +249,5 @@
                 :validation="$v.sip.domain"
             />
         </div>
-    </content>
+    </div>
 </component>
