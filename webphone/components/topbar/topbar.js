@@ -4,29 +4,6 @@ export default (app) => {
             call: function() {
                 return this.callActive
             },
-            callStatus: function() {
-                if (!this.callActive) {
-                    if (!this.description.endpoint) {
-                        return `${this.$t('enter a number, name or public key')}`
-                    } else if (this.description.protocol === 'sip') {
-                        if (!this.sip.enabled) return this.$t('sip disabled')
-                        if (this.sip.status === 'registered') {
-                            return `${this.$t('start a new call')}...`
-                        }
-                        return this.$t(this.sip.status)
-
-                    } else if (this.description.protocol === 'sig11') {
-                        if (!this.sig11.enabled) return this.$t('sig11 disabled')
-                    } else if (this.description.protocol === 'ion') {
-                        if (!this.ion.enabled) return this.$t('ion disabled')
-                    }
-
-                    return `${this.$t('start a new call')}...`
-                }
-                const translations = app.helpers.getTranslations().call
-                if (this.call.hold.active) return translations.hold
-                return translations[this.call.status]
-            },
             sessionTime: function() {
                 return app.modules.caller.calls[this.call.id].timer().formatted
             },
@@ -39,9 +16,6 @@ export default (app) => {
         store: {
             calls: 'caller.calls',
             description: 'caller.description',
-            ion: 'ion',
-            sig11: 'sig11',
-            sip: 'sip',
         },
     }
 }

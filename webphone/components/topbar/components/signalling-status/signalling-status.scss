@@ -4,11 +4,48 @@
 .c-protocol-status {
     align-items: center;
     display: flex;
+    text-transform: uppercase;
 
     .protocol {
         margin-top: $spacer;
         text-align: center;
         width: $spacer * 8;
+    }
+
+    .text {
+        font-size: 0.8rem;
+        font-style: italic;
+        margin-right: var(--spacer);
+    }
+
+    .timer {
+        padding-right: var(--spacer);
+        width: $space-3;
+    }
+
+    .signalling-protocol {
+        align-items: center;
+        background: var(--primary-base);
+        border-left: 1px solid var(--grey-200);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        justify-content: center;
+        padding-top: $spacer / 4;
+        text-align: center;
+        width: $spacer * 8;
+
+        svg {
+            @include icon-size($spacer * 4.5);
+            color: var(--grey-50);
+            margin-left: var(--spacer);
+        }
+
+        span {
+            color: var(--grey-50);
+            font-size: $text-small;
+            margin-top: $spacer / 4;
+        }
     }
 
 }

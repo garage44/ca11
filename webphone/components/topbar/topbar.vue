@@ -1,5 +1,5 @@
 <component class="c-menu-call">
-    <div class="call-direction">
+    <div class="call-directions">
         <button
             :data-tooltip="$t('accept call')"
             :disabled="!description.endpoint"
@@ -18,22 +18,6 @@
         </div>
     </div>
 
-
     <TopbarCallOptions v-if="callActive" :call="callActive" />
-
-    <div class="call-status">
-        <span v-if="callActive" class="timer">{{ sessionTime }}</span>
-        <span class="text">{{ callStatus }}</span>
-
-        <div class="signalling-protocol">
-            <icon
-                class="protocol-status tooltip tooltip-left" :class="classes"
-                :data-tooltip="tooltip"
-                name="signalling"
-            />
-            <span>
-                {{ description.protocol }}
-            </span>
-        </div>
-    </div>
+    <TopbarSignallingStatus />
 </component>
