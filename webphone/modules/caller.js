@@ -1,4 +1,4 @@
-import Call from '../lib/call.js'
+import CallHandler from '../lib/call.js'
 import { copyObject } from '/webphone/lib/utils.js'
 import Module from '../lib/module.js'
 
@@ -134,8 +134,8 @@ class ModuleCaller extends Module {
         const call = this.spawnCall(description)
         call.inviteRemote()
         // Sync the transfer state of other calls to the new situation.
-        this.transferState()
-
+        // this.transferState()
+        console.log(this.calls)
         // A newly created call is always activated unless another call is already ringing.
         if (!Object.keys(this.calls).find((i) => ['create', 'invite'].includes(this.calls[i].state.status))) {
             this.activateCall(call, true, true)
@@ -206,16 +206,17 @@ class ModuleCaller extends Module {
     spawnCall(description) {
         const desc = copyObject(description)
         this.app.logger.debug(`spawn new ${description.protocol} call`)
-        const call = new Call(this.app, desc)
+        const callhandler = new CallHandler(this.app, desc)
+        this.calls[callhandler.state.id] = callhandler
+        // Make the call available in the context of the protocol client.
+        callhandler.handler.client.calls[callhandler.state.id] = callhandler.handler
 
-        this.calls[call.state.id] = call
+        callhandler.state.endpoint = desc.endpoint
+        callhandler.setState(callhandler.state)
 
-        call.state.endpoint = desc.endpoint
-        call.setState(call.state)
+        this.app.Vue.set(this.app.state.caller.calls, callhandler.state.id, callhandler.state)
 
-        this.app.Vue.set(this.app.state.caller.calls, call.state.id, call.state)
-
-        return call
+        return callhandler
     }
 
 

@@ -10,11 +10,12 @@ const callHandlers = {
 }
 
 
-class SipCall {
+class CallHandler {
 
     constructor(app, description) {
         this.app = app
         this.id = shortid()
+
         app.logger.info(`new ${description.protocol} call`)
 
         this.streams = {}
@@ -52,7 +53,7 @@ class SipCall {
 
         const client = this.app.clients[description.protocol]
 
-        // Call handler is passed from the SIP/SIG11 module.
+        // Call handler is passed from the SIP/SIG11/ION module.
         if (description.direction === 'incoming') {
             this.handler = description.handler
         } else if (description.direction === 'outgoing') {
@@ -343,4 +344,4 @@ class SipCall {
 }
 
 
-export default SipCall
+export default CallHandler

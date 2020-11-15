@@ -29,100 +29,7 @@ class ClientSip extends EventEmitter {
     }
 
 
-    authorizeMessage(message) {
-        this.nc += 1
-        const hex = this.nc.toString(16)
-        this.ncHex = '00000000'.substr(0, 8 - hex.length) + hex
-
-        this.cnonce = utils.token(12)
-        const hash1 = md5(`${this.identity.endpoint}:${message.context.digest['Digest realm']}:${this.identity.password}`)
-        const hash2 = md5(`${message.context.method}:${this.uri}`)
-
-        return [
-            'Authorization: Digest algorithm=MD5',
-            `username="${this.identity.endpoint}"`,
-            `realm="${message.context.digest['Digest realm']}"`,
-            `nonce="${message.context.digest.nonce}"`,
-            `uri="${this.uri}"`,
-            `response="${md5(`${hash1}:${message.context.digest.nonce}:${this.ncHex}:${this.cnonce}:auth:${hash2}`)}"`,
-            `opaque="${message.context.digest.opaque}"`,
-            'qop=auth',
-            `cnonce="${this.cnonce}"`,
-            `nc=${this.ncHex}`,
-        ].join(', ')
-    }
-
-
-    connect() {
-        this.socket = new WebSocket(`wss://${this.domain}`, 'sip')
-        this.socket.onopen = () => {
-            // Triggers a 401 to retrieve a 401 with digest.
-            this.register()
-        }
-
-        this.socket.onmessage = (e) => {
-            let call = null
-            const message = this.parseMessage(e.data)
-            if (message.context.code === 'PING') return
-
-            if (message.context.method === 'OPTIONS') {
-                this.dialogs.options.to.tag = message.context.from.tag
-                const context = Object.assign(JSON.parse(JSON.stringify(message.context)), {
-                    code: 200,
-                    from: {aor: message.context.from.aor, tag: this.dialogs.options.to.tag},
-                    host: message.context.via.host,
-                    method: 'OPTIONS',
-                    to: {aor: message.context.to.aor, tag: this.localTag},
-                    via: {
-                        alias: true,
-                        branch: message.context.via.branch,
-                        rport: true,
-                    },
-                })
-
-                const optionsResponse = new SipResponse(this, context)
-                this.socket.send(optionsResponse)
-            }
-
-            if (this.calls[message.context.callId]) {
-                call = this.calls[message.context.callId]
-                call.emit('message', message)
-            } else {
-                if(message.context.method === 'REGISTER') {
-                    if (message.context.status === 'OK') {
-                        this.emit('registered')
-                    } else if (message.context.status === 'Unauthorized') {
-                        this.register(message.context.digest)
-                    }
-                } else if (message.context.method === 'INVITE') {
-                    if (message instanceof SipRequest) {
-                        const call = new Call(this, {
-                            description: {
-                                direction: 'incoming',
-                                endpoint: 1000, // message.context.header.From.extension,
-                                protocol: 'sip',
-                            },
-                            id: message.context.callId,
-                        })
-
-                        // The dialog's To tag is set here on an incoming call/invite.
-                        call.dialogs.invite.to.tag = message.context.from.tag
-                        this.calls[call.id] = call
-                        // Emit invite up to the SIP module that handles
-                        // application state.
-                        this.emit('invite', {context: message, handler: call})
-                    }
-                }
-            }
-        }
-
-        this.socket.onclose = () => {
-            console.log("CLOSED")
-        }
-    }
-
-
-    parseMessage(rawSipMessage) {
+    _parseMessage(rawSipMessage) {
         let type
         const context = {
             content: '',
@@ -205,7 +112,7 @@ class ClientSip extends EventEmitter {
     }
 
 
-    register(digest) {
+    _register(digest) {
         const context = Object.assign({
             cseq: this.cseq,
             method: 'REGISTER',
@@ -217,6 +124,98 @@ class ClientSip extends EventEmitter {
         this.socket.send(registerRequest)
     }
 
+
+    authorizeMessage(message) {
+        this.nc += 1
+        const hex = this.nc.toString(16)
+        this.ncHex = '00000000'.substr(0, 8 - hex.length) + hex
+
+        this.cnonce = utils.token(12)
+        const hash1 = md5(`${this.identity.endpoint}:${message.context.digest['Digest realm']}:${this.identity.password}`)
+        const hash2 = md5(`${message.context.method}:${this.uri}`)
+
+        return [
+            'Authorization: Digest algorithm=MD5',
+            `username="${this.identity.endpoint}"`,
+            `realm="${message.context.digest['Digest realm']}"`,
+            `nonce="${message.context.digest.nonce}"`,
+            `uri="${this.uri}"`,
+            `response="${md5(`${hash1}:${message.context.digest.nonce}:${this.ncHex}:${this.cnonce}:auth:${hash2}`)}"`,
+            `opaque="${message.context.digest.opaque}"`,
+            'qop=auth',
+            `cnonce="${this.cnonce}"`,
+            `nc=${this.ncHex}`,
+        ].join(', ')
+    }
+
+
+    connect() {
+        this.socket = new WebSocket(`wss://${this.domain}`, 'sip')
+        this.socket.onopen = () => {
+            // Triggers a 401 to retrieve a 401 with digest.
+            this._register()
+        }
+
+        this.socket.onmessage = (e) => {
+            let call = null
+            const message = this._parseMessage(e.data)
+            if (message.context.code === 'PING') return
+
+            if (message.context.method === 'OPTIONS') {
+                this.dialogs.options.to.tag = message.context.from.tag
+                const context = Object.assign(JSON.parse(JSON.stringify(message.context)), {
+                    code: 200,
+                    from: {aor: message.context.from.aor, tag: this.dialogs.options.to.tag},
+                    host: message.context.via.host,
+                    method: 'OPTIONS',
+                    to: {aor: message.context.to.aor, tag: this.localTag},
+                    via: {
+                        alias: true,
+                        branch: message.context.via.branch,
+                        rport: true,
+                    },
+                })
+
+                const optionsResponse = new SipResponse(this, context)
+                this.socket.send(optionsResponse)
+            }
+
+            if (this.calls[message.context.callId]) {
+                call = this.calls[message.context.callId]
+                call.emit('message', message)
+            } else {
+                if(message.context.method === 'REGISTER') {
+                    if (message.context.status === 'OK') {
+                        this.emit('registered')
+                    } else if (message.context.status === 'Unauthorized') {
+                        this._register(message.context.digest)
+                    }
+                } else if (message.context.method === 'INVITE') {
+                    if (message instanceof SipRequest) {
+                        const call = new Call(this, {
+                            description: {
+                                direction: 'incoming',
+                                endpoint: 1000, // message.context.header.From.extension,
+                                protocol: 'sip',
+                            },
+                            id: message.context.callId,
+                        })
+
+                        // The dialog's To tag is set here on an incoming call/invite.
+                        call.dialogs.invite.to.tag = message.context.from.tag
+                        this.calls[call.id] = call
+                        // Emit invite up to the SIP module that handles
+                        // application state.
+                        this.emit('invite', {context: message, handler: call})
+                    }
+                }
+            }
+        }
+
+        this.socket.onclose = () => {
+            console.log("CLOSED")
+        }
+    }
 }
 
 export default ClientSip
