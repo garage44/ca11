@@ -1,0 +1,116 @@
+.panel {
+    background: var(--bg-dark);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .actions {
+        // Border in the same style as the scroll trackbar.
+        color: var(--primary-base);
+        flex: 1;
+        flex-direction: column;
+        width: var(--space-4);
+
+
+        .action {
+            &.active {
+                border-bottom: $spacer-05 solid var(--primary-base);
+
+                svg {
+                    fill: var(--primary-base);
+                }
+            }
+
+            svg {
+                @include icon-size($spacer * 3);
+            }
+        }
+    }
+
+    .filters {
+        display: flex;
+        flex: 1;
+        flex-direction: column-reverse;
+        margin-top: var(--spacer);
+
+        .filter {
+            align-items: center;
+            color: var(--grey-400);
+            display: flex;
+            justify-content: center;
+            // Override .field's margin-bottom.
+            margin: 0;
+            margin-bottom: var(--spacer);
+            padding: 0;
+            user-select: none;
+
+            &:hover,
+            &.active {
+                color: var(--grey-200);
+
+                svg {
+                    border: $spacer / 4 solid var(--primary-base);
+                    fill: var(--primary-base);
+                }
+            }
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            svg {
+                background: var(--grey-400);
+                border: $spacer / 4 solid var(--grey-300);
+                border-radius: 50%;
+                fill: var(--grey-100);
+                height: var(--icon-large);
+                padding: var(--spacer);
+                width: var(--icon-large);
+            }
+        }
+    }
+
+    .tabs {
+        .tab {
+            align-items: center;
+            background: none;
+            border-left: 0;
+            border-right: 0;
+            display: flex;
+            height: $space-4;
+            justify-content: center;
+            width: $space-4;
+
+            &.active {
+                border-bottom: $spacer-05 solid var(--primary-base);
+                color: var(--primary-base);
+            }
+
+            &.disabled {
+                opacity: 0.3;
+
+                &:hover {
+                    cursor: not-allowed;
+                }
+            }
+        }
+    }
+
+    &.subpanel {
+        background: var(--primary-base);
+        font-weight: bold;
+        justify-content: flex-end;
+        // Circumvents scrollbar on content.
+        overflow: hidden;
+
+        .tabs {
+            .tab {
+                color: var(--grey-50);
+
+                &.active {
+                    border-bottom: $spacer-05 solid var(--grey-50);
+                }
+            }
+        }
+    }
+}

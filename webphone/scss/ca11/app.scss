@@ -1,18 +1,3 @@
-@import 'lib/variables';
-@import 'lib/variables-responsive';
-@import 'lib/defaults';
-
-@import 'lib/fonts';
-@import 'lib/button';
-@import 'lib/mixins';
-@import 'lib/tooltip';
-@import 'lib/icons';
-@import 'lib/animations';
-
-@import 'guides';
-@import 'items';
-@import 'notification-box';
-@import 'tabs';
-
+@import 'lib/**.scss';
 // Import Vue component styling using the glob loader.
 @import '../../components/**/*.scss'; /* stylelint-disable-line */

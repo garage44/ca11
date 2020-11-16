@@ -149,7 +149,7 @@ class CallSip extends EventEmitter {
         }
 
         const offer = await this.pc.createOffer()
-        this.pc.setLocalDescription(offer)
+        await this.pc.setLocalDescription(offer)
     }
 
 

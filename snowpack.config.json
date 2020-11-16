@@ -2,8 +2,14 @@
     "exclude": [
         "**/test/**"
     ],
+    "install": [
+        "blueimp-md5",
+        "sdp-transform"
+    ],
     "installOptions": {
         "dest": "build/lib"
     },
-    "mount": {"webphone": "/"}
+    "mount": {
+        "webphone": "/"
+    }
 }

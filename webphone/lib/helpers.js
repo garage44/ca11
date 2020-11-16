@@ -174,9 +174,12 @@ function helpers(app) {
                 navigator.vibrate(50)
                 app.setState({ui: {layer: layerName}}, {encrypt: false, persist: true})
             },
-            setTab: function(category, name, condition = true) {
-                if (!condition) return
-                app.setState({ui: {tabs: {[category]: {active: name}}}}, {encrypt: false, persist: true})
+            setTab: function(category, tab, subtab = null) {
+                if (subtab) {
+                    app.setState({ui: {tabs: {[category]: {active: tab, subtabs: {[tab]: {active: subtab}}}}}}, {encrypt: false, persist: true})
+                } else {
+                    app.setState({ui: {tabs: {[category]: {active: tab}}}}, {encrypt: false, persist: true})
+                }
             },
             setupCall: function(description) {
                 app.modules.caller.call({description, start: true, transfer: false})

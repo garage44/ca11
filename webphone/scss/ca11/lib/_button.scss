@@ -1,0 +1,140 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+.buttons {
+    display: flex;
+    padding: var(--spacer) 0;
+    width: 100%;
+
+    &.is-centered {
+        justify-content: center;
+    }
+}
+
+.btn {
+    color: var(--grey-100);
+    padding: var(--spacer);
+    -webkit-tap-highlight-color: transparent;
+    text-transform: uppercase;
+    transition: color ease 0.5s;
+
+    &.active,
+    &:hover {
+        color: var(--primary-base);
+    }
+
+    &-menu {
+        border-bottom: var(--border) solid transparent;
+        border-top: var(--border) solid transparent;
+        color: var(--grey-100);
+        height: var(--space-4);
+        width: var(--space-4);
+
+        &::before {
+            background: var(--primary-base);
+            bottom: calc(-1 * var(--border));
+            content: '';
+            height: var(--border);
+            left: 0;
+            position: absolute;
+            right: 0;
+            transform: scaleX(0);
+            transform-origin: 0 0;
+            transition: transform 150ms;
+            will-change: transform;
+        }
+
+        &.active,
+        &:not([disabled]):hover {
+            color: var(--primary-base);
+        }
+
+        &:not([disabled]):hover {
+            &::before {
+                transform: scaleX(1);
+            }
+        }
+
+        &.active {
+            border-bottom: var(--border) solid var(--primary-base);
+        }
+
+        &[disabled] {
+            color: var(--grey-200);
+
+            &:hover {
+                color: var(--bg-light);
+            }
+        }
+    }
+
+    &-widget {
+        align-items: center;
+        background: var(--bg-dark);
+        border-bottom: 2px solid transparent;
+        color: var(--grey-100);
+        display: flex;
+        font-family: 'Rajdhani';
+        font-size: 0.9rem;
+        font-weight: 500;
+        height: var(--space-3);
+        justify-content: center;
+        padding: 0 $spacer;
+        position: relative;
+        text-transform: uppercase;
+        width: 100%;
+
+        svg {
+            @include icon-size(var(--icon-normal));
+        }
+
+        .btn-icon {
+            left: var(--spacer);
+            position: absolute;
+        }
+
+        .btn-description {
+            height: var(--space-3);
+            line-height: var(--space-3);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 100%;
+        }
+
+        .btn-actions {
+            position: absolute;
+            right: var(--spacer);
+
+            svg:hover {
+                color: var(--primary-base);
+            }
+        }
+
+        &.active,
+        &:not(disabled):hover {
+            border-bottom: 2px solid var(--primary-base);
+            color: var(--grey-50);
+            cursor: pointer;
+
+            .btn-icon {
+                color: var(--primary-base);
+            }
+        }
+
+        &[disabled] {
+            background: var(--grey-300);
+            border-bottom: 2px solid transparent;
+            color: var(--grey-200);
+
+            &:hover {
+                border-bottom: 2px solid var(--grey-400);
+                color: var(--grey-200);
+            }
+        }
+    }
+
+    svg {
+        @include icon-size(#{$spacer * 3.5});
+    }
+}

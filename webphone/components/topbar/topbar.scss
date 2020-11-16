@@ -1,0 +1,50 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+.c-menu-call {
+    background: var(--bg-default);
+    color: var(--grey-100);
+    display: flex;
+    font-family: 'Rajdhani';
+    font-weight: 600;
+    grid-area: body-header;
+    height: var(--space-4);
+    justify-content: space-between;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+
+    .call-directions {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+
+        .place-call {
+            &:hover {
+                cursor: pointer;
+            }
+        }
+
+        svg {
+            @include icon-size($spacer * 4);
+        }
+    }
+
+    .call-endpoint {
+        align-items: center;
+        display: flex;
+        text-transform: uppercase;
+
+        .phone-id {
+            background: none;
+            border: 0;
+            color: var(--primary-base);
+            font-family: 'Rajdhani';
+            font-size: var(--text-base);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+    }
+
+}

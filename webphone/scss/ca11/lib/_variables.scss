@@ -1,0 +1,31 @@
+// Paths.
+$font-path: '../fonts';
+
+$spacer: 8px;
+$spacer-05: 2px; // static spacer.
+
+$space-4: $spacer * 8;
+$space-3: $space-4 / 4 * 3;
+$space-2: $space-4 / 4 * 2;
+
+$border: 2px;
+$icon-small: $spacer * 2.75;
+$icon-normal: $spacer * 3;
+$icon-large: $spacer * 4.5;
+
+$text-small: 0.85rem;
+$text-base: 1rem;
+$text-large: 1.15rem;
+$text-huge: 1.8rem;
+
+$breakpoint-mobile: 620px;
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 992px;
+
+$android-toolbar-height: 56px;
+
+$primary-color: #cb6c4d !default;
+$secondary-color: adjust_hue($primary-color, 200);
+$red-color: #cb6c4d !default;
+$green-color: #9ddc4b !default;
+$orange-color: #af702d !default;

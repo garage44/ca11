@@ -77,7 +77,12 @@ tasks.build = new Task('build', async function() {
 tasks.html = new Task('html', async function() {
     const importMap = JSON.parse((await fs.readFile(path.join(settings.dir.build, 'lib', 'import-map.json'))))
     for (let [reference, location] of Object.entries(importMap.imports)) {
-        importMap.imports[reference] = `/${path.join('lib', location)}`
+        // Rewrite to use local packages
+        if(reference.startsWith('@ca11') && !reference.startsWith('@ca11/theme')) {
+            importMap.imports[reference] = location.replace('./@ca11', '')
+        } else {
+            importMap.imports[reference] = `/${path.join('lib', location)}`
+        }
     }
 
     const indexFile = await fs.readFile(path.join(settings.dir.webphone, 'index.html'))
@@ -95,8 +100,10 @@ tasks.js = new Task('js', async function(file) {
             await fs.copy(file, path.join(settings.dir.build, file.replace(settings.dir.base, '')))
         } else {
             targets = (await globby([
+                path.join(settings.dir.ion, '**', '*.js'),
                 path.join(settings.dir.sip, '**', '*.js'),
                 path.join(settings.dir.sig11, '**', '*.js'),
+                path.join(settings.dir.theme, '**', '*.js'),
                 path.join(settings.dir.webphone, '**', '*.js'),
                 `!${path.join(settings.dir.webphone, 'test')}`,
             ]))
@@ -161,6 +168,7 @@ tasks.scss = new Task('scss', async function() {
             if (settings.optimized) {
                 cssRules = (await cleanCSS.minify(sassObj.css)).styles
             } else {
+                if (!sassObj) return reject()
                 cssRules = sassObj.css
                 promises.push(fs.writeFile(target.map, sassObj.map))
             }
@@ -212,6 +220,7 @@ tasks.watch = new Task('watch', async function() {
             path.join(settings.dir.webphone, '**', '*.js'),
             path.join(settings.dir.sig11, '**', '*.js'),
             path.join(settings.dir.sip, '**', '*.js'),
+            path.join(settings.dir.ion, '**', '*.js'),
         ]).on('change', async(file) => {
             await tasks.js.start(entrypoint.js, file)
             tinylr.changed('app.js')

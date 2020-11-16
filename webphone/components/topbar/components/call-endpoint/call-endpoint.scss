@@ -1,0 +1,75 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+@keyframes blink {
+    0% {opacity: 1;}
+    50% {opacity: 0.5;}
+    100% {opacity: 1;}
+}
+
+.c-call-endpoint {
+    align-items: flex-start;
+    align-items: stretch;
+    color: var(--primary-base);
+    display: flex;
+    height: var(--space-4);
+    width: 100%;
+
+    .c-protocol-status {
+        .c-radio {
+            flex-direction: column;
+        }
+    }
+
+    input {
+        animation: blink 2s ease-out infinite;
+        background: none;
+        border: 0;
+        color: var(--primary-base);
+        font-family: 'Rajdhani';
+        font-size: var(--text-large);
+        font-weight: 600;
+        outline: none;
+        overflow: hidden;
+        padding: var(--spacer);
+        text-align: left;
+        text-overflow: ellipsis;
+        text-transform: uppercase;
+        width: 100%;
+
+        &::placeholder {
+            animation: blink 2s linear infinite;
+            color: var(--grey-50);
+        }
+    }
+
+    .back-button {
+        color: var(--primary-base);
+        user-select: none;
+
+        &.disabled {
+            opacity: 0.5;
+
+            &:hover {
+                cursor: not-allowed;
+            }
+        }
+
+        svg {
+            height: 1.8rem;
+            width: 1.8rem;
+        }
+
+        &:hover {
+            cursor: pointer;
+            svg {fill: var(--primary-base);}
+        }
+    }
+
+    + .number-input-match {
+        color: var(--grey-400);
+        height: $spacer * 5;
+        line-height: $spacer * 5;
+    }
+
+}

@@ -5,23 +5,11 @@
     class="c-stream-controls actions"
 >
     <button
-        :data-tooltip="$t('start new call')"
-        :disabled="!description.endpoint"
-        @click="callDescription({description})"
-        class="action button btn-menu t-btn-options-call-start tooltip tooltip-bottom"
-        v-if="!callActive"
-    >
-        <icon name="call-outgoing" />
-    </button>
-
-    <ProtocolStatus v-if="!callActive" />
-
-    <button
-        v-if="stream.local"
-        class="action button btn-menu tooltip tooltip-right"
         :class="{active: recording}"
         :data-tooltip="$t('switch media')"
         @click.stop="switchStream()"
+        class="action button btn-menu tooltip tooltip-right"
+        v-if="stream.local"
     >
         <icon :name="stream.kind" />
     </button>

@@ -67,6 +67,7 @@ class WebphoneApp extends EventEmitter {
         this.modules = {}
         this.clients = {}
 
+        console.log(settings)
         for (const builtin of settings.modules) {
             this.modules[builtin.name] = new builtin.module(this, null)
         }

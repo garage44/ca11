@@ -1,0 +1,17 @@
+.tab {
+    display: none;
+    flex: 1;
+    height: 100%;
+    padding: $spacer * 2;
+
+    &.active {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &.subtabs {
+        align-items: flex-end;
+        flex-direction: row;
+        padding: 0;
+    }
+}

@@ -2,7 +2,7 @@
     <div class="c-transfer__text">
         {{$t('transfer this call to')}}:
     </div>
-    <Dialer
+    <Lobby
         :model.sync="description.number"
         :number="description.number"
         mode="call"

@@ -17,8 +17,12 @@ export default (app) => {
             classes: function(block, modifier) {
                 let classes = {}
                 if (block === 'tabs') {
-                    if (modifier === 'devices' && !this.settings.webrtc.enabled) classes.disabled = true
                     if (modifier === this.tabs.active) classes.active = true
+                } else if (block === 'subtabs') {
+                    const subtabs = this.tabs.subtabs[this.tabs.active]
+                    if (subtabs && subtabs.active === modifier) {
+                        classes.active = true
+                    }
                 }
                 return classes
             },
@@ -28,6 +32,9 @@ export default (app) => {
 
                 let settingsState = {
                     app: {dnd: false},
+                    ion: {
+                        enabled: app.state.ion.enabled,
+                    },
                     language: this.language,
                     settings,
                     sig11: {
@@ -67,6 +74,7 @@ export default (app) => {
         store: {
             app: 'app',
             devices: 'settings.webrtc.devices',
+            ion: 'ion',
             language: 'language',
             media: 'settings.webrtc.media',
             settings: 'settings',

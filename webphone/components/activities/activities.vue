@@ -1,5 +1,5 @@
 <component class="c-activities module">
-    <panel>
+    <div class="panel root">
         <div class="actions">
             <button
                 :class="{'active': editMode}"
@@ -47,9 +47,9 @@
                 <icon name="call-missed-outgoing" />
             </button>
         </div>
-    </panel>
+    </div>
 
-    <content v-click-outside="toggleSelectItem" class="scrollable no-padding">
+    <div v-click-outside="toggleSelectItem" class="content scrollable no-padding">
         <div v-if="!filteredActivities.length" class="items-empty">
             <icon class="icon" name="activities" />
         </div>
@@ -108,5 +108,5 @@
                 </div>
             </div>
         </div>
-    </content>
+    </div>
 </component>

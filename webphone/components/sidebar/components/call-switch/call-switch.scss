@@ -1,0 +1,14 @@
+@import 'ca11/lib/mixins';
+@import 'ca11/lib/variables';
+
+
+// The most upper box containing account info and
+// icon-links to several locations.
+.c-call-switch {
+    .container {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        z-index: 10000000;
+    }
+}

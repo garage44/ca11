@@ -1,0 +1,12 @@
+.content {
+    background: var(--bg-dark);
+
+    flex: 1;
+    height: 100%;
+    max-width: 700px;
+    overflow-y: auto;
+
+    &.subcontent {
+        background: none;
+    }
+}

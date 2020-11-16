@@ -1,5 +1,5 @@
 <component class="c-contacts module">
-    <panel>
+    <div class="panel root">
         <div class="actions">
             <button
                 :class="{'active': editMode}"
@@ -45,9 +45,9 @@
                 <icon name="presence" />
             </button>
         </div>
-    </panel>
+    </div>
 
-    <content v-click-outside="toggleSelectItem" class="no-padding">
+    <div v-click-outside="toggleSelectItem" class="content no-padding">
         <div v-if="!filteredContacts.length" class="items-empty">
             <icon class="icon" name="contact" />
         </div>
@@ -177,5 +177,5 @@
                 </div>
             </div>
         </div>
-    </content>
+    </div>
 </component>

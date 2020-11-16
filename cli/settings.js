@@ -20,6 +20,7 @@ export default async() => {
         dir: {
             base,
             build: path.join(base, 'build'),
+            ion: path.resolve(path.join(base, 'ion')),
             node: path.resolve(path.join(base, 'node_modules')),
             sig11: path.resolve(path.join(base, 'sig11')),
             sip: path.resolve(path.join(base, 'sip')),
