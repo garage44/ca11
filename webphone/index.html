@@ -10,14 +10,11 @@
         <% } %>
         <link rel="icon" href="/img/logo.png"/>
         <link href="/app.css" rel="stylesheet"/>
-        <script>globalThis.env = <% print(JSON.stringify(settings.webphone)) %></script>
-        <%if (imports) { %>
-            <script type="importmap">
-                {
-                "imports": <% - print(JSON.stringify(imports)); %>
-                }
-            </script>
-            <% } %>
+        <script>globalThis.env = <%print(JSON.stringify(settings.webphone))%></script>
+        <%if (imports) { %><script type="importmap">
+        {"imports": <% - print(JSON.stringify(imports, null, 4)); %>}
+        </script>
+        <% } %>
     </head>
     <body>
         <div id="app"></div>

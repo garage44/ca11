@@ -1,4 +1,4 @@
-import Call from '../lib/call.js'
+import Call from '../lib/callhandler.js'
 import ClientIon from '@ca11/ion/client.js'
 import Module from '../lib/module.js'
 

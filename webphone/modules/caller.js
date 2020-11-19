@@ -1,4 +1,4 @@
-import CallHandler from '../lib/call.js'
+import CallHandler from '../lib/callhandler.js'
 import { copyObject } from '/webphone/lib/utils.js'
 import Module from '../lib/module.js'
 
