@@ -1,3 +1,5 @@
+NOTE: THIS PRODUCT IS NO LONGER MAINTAINED.
+
 # CA11 - Multi-Protocol Webphone
 
 [![Build status](https://github.com/open-voip-alliance/ca11/workflows/test/badge.svg)](https://github.com/open-voip-alliance/ca11/actions?query=workflow%3Atest)
